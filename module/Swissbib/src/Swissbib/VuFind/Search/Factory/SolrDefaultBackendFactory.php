@@ -139,7 +139,7 @@ class SolrDefaultBackendFactory extends VuFindSolrDefaultBackendFactory
 
 
         $manager = $this->serviceLocator->get('VuFind\RecordDriverPluginManager');
-        $factory = new RecordCollectionFactory(array($manager, 'getSolrRecord'));
+        $factory = new RecordCollectionFactory(array($manager, 'getSolrRecord'), 'Swissbib\VuFindSearch\Backend\Solr\Response\Json\RecordCollection');
         $backend->setRecordCollectionFactory($factory);
         return $backend;
 

@@ -102,6 +102,7 @@ class InjectSwissbibSpellingListener  extends VFSpellingListener {
                 $spellcheck->mergeWith($collection->getSpellcheck());
             }
         */
+
         foreach ( $this->dictionaries as $dictionary) {
             $params = new ParamBag();
             $params->set('spellcheck', 'true');
@@ -110,6 +111,7 @@ class InjectSwissbibSpellingListener  extends VFSpellingListener {
             $collection = $this->backend->search($queryObj, 0, 0, $params);
             $spellcheck->mergeWith($collection->getSpellcheck());
         }
+
 
     }
 }
