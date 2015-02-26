@@ -181,7 +181,8 @@ return array(
         'invokables' => array(
             'VuFindTheme\ResourceContainer'       => 'Swissbib\VuFind\ResourceContainer',
             'Swissbib\QRCode'                     => 'Swissbib\CRCode\QrCodeService',
-            'MarcFormatter'                     => 'Swissbib\XSLT\MARCFormatter'
+            'MarcFormatter'                     => 'Swissbib\XSLT\MARCFormatter',
+            'VuFindSearch\Backend\Solr\Response\Json\Spellcheck'        =>  'Swissbib\VuFindSearch\Backend\Solr\Response\Json\Spellcheck.php',
         ),
         'factories' => array(
             'Swissbib\HoldingsHelper'                       =>  'Swissbib\RecordDriver\Helper\Factory::getHoldingsHelper',

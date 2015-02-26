@@ -17,7 +17,7 @@ class Spellcheck extends VFSearchSpellcheck{
     public function __construct(array $spellcheck, $query)
     {
         parent::__construct($spellcheck, $query);
-    }
+        }
 
 
 }
