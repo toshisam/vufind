@@ -1,0 +1,54 @@
+.panel-group {
+
+  .panel {
+    border: none;
+    border-radius: 0px;
+    margin-bottom: 15px;
+
+    .panel-heading {
+      border-radius: 0px;
+      background-color: #d3d3d3;
+
+      a {
+
+        &:link,
+        &:visited,
+        &:hover,
+        &:active {
+          text-decoration: none;
+        }
+
+        &[aria-expanded=false] {
+          i.fa-minus {
+            display: none;
+          }
+        }
+
+        &[aria-expanded=true] {
+          i.fa-plus {
+            display: none;
+          }
+        }
+      }
+
+    }
+
+    /** 2nd level specific/overwrites **/
+    .panel{
+
+      margin-bottom: 0px;
+
+      .panel-heading {
+        background-color: #ffffff;
+        border-bottom: 1px solid #9b9b9b;
+      }
+
+    }
+
+  }
+
+  .panel + .panel {
+    margin-top: 0;
+  }
+
+}

@@ -24,6 +24,8 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
             <? if (is_array($group['label'])): ?>
               <? $group['label'] = implode('', array_unique($group['label'])); ?>
             <? endif; ?>
+            <i class="fa fa-plus"></i>
+            <i class="fa fa-minus"></i>
             <span><?= $this->zendTranslate($group['label']) ?></span>
           </a>
         </h4>
@@ -31,7 +33,7 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
       <!-- end: group heading -->
       <!-- begin: group content -->
       <div id="collapse-<?= $groupCode ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-<?= $groupCode ?>">
-        <div class="panel-body">
+        <div class="list-group">
 
           <div class="panel-group" id="institutions-<?= $groupCode ?>" role="tablist" aria-multiselectable="true">
           <? foreach ($group['institutions'] as $institutionCode => $institution): ?>
@@ -42,6 +44,8 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
               <div class="panel-heading" role="tab" id="heading-<?= $institutionCode ?>">
                 <h4 class="panel-title">
                   <a data-toggle="collapse" href="#collapse-<?= $institutionCode ?>" aria-expanded="false" aria-controls="collapse-<?= $institutionCode ?>">
+                    <i class="fa fa-plus"></i>
+                    <i class="fa fa-minus"></i>
                     <?= $this->escapeHtml($this->zendTranslate($institution['label'], 'institution')) ?>
                   </a>
                 </h4>
@@ -51,6 +55,7 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
               <!-- begin: institution content -->
               <div id="collapse-<?= $institutionCode ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-<?= $institutionCode ?>">
                 <div class="panel-body">
+                  <p>dummy inhalt</p>
                 </div>
               </div>
               <!-- end: institution content -->
