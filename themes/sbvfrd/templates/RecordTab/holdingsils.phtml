@@ -20,7 +20,7 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
       <!-- begin: group heading -->
       <div class="panel-heading" role="tab" id="heading-<?= $groupCode ?>">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#groups" href="#collapse-<?= $groupCode ?>" aria-expanded="false" aria-controls="collapse-<?= $groupCode ?>">
+          <a data-toggle="collapse" href="#collapse-<?= $groupCode ?>" aria-expanded="false" aria-controls="collapse-<?= $groupCode ?>">
             <? if (is_array($group['label'])): ?>
               <? $group['label'] = implode('', array_unique($group['label'])); ?>
             <? endif; ?>
@@ -41,7 +41,7 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
               <!-- begin: institution heading -->
               <div class="panel-heading" role="tab" id="heading-<?= $institutionCode ?>">
                 <h4 class="panel-title">
-                  <a data-toggle="collapse" data-parent="#institutions-<?= $groupCode ?>" href="#collapse-<?= $institutionCode ?>" aria-expanded="false" aria-controls="collapse-<?= $institutionCode ?>">
+                  <a data-toggle="collapse" href="#collapse-<?= $institutionCode ?>" aria-expanded="false" aria-controls="collapse-<?= $institutionCode ?>">
                     <?= $this->escapeHtml($this->zendTranslate($institution['label'], 'institution')) ?>
                   </a>
                 </h4>
