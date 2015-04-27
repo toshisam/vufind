@@ -1,4 +1,12 @@
+@favorite_dark: @link-color;
+@favorite_light: @highlight-color;
+
+
 .panel-group {
+
+  i {
+    color: @favorite_dark;
+  }
 
   .panel {
     border: none;
@@ -15,7 +23,7 @@
         &:visited,
         &:hover,
         &:active {
-          text-decoration: none;
+          text-decoration: none !important;
         }
 
         &[aria-expanded=false] {

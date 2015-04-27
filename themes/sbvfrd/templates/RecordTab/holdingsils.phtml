@@ -39,10 +39,18 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
           <? foreach ($group['institutions'] as $institutionCode => $institution): ?>
 
             <!-- begin: institution -->
-            <div class="panel panel-default" id="institution-<?= $institutionCode ?>">
+            <div class="panel panel-default institutionBox institution-<?= $institutionCode ?>-box" id="holding-institution-<?= $groupCode ?>-<?= $institutionCode ?>-box">
               <!-- begin: institution heading -->
               <div class="panel-heading" role="tab" id="heading-<?= $institutionCode ?>">
-                <h4 class="panel-title">
+                <h4 class="panel-title clearfix">
+                  <div class="miniactions miniactions-<?= $institutionCode ?> pull-right">
+                    <div class="institutionFavorite">
+                      <a href="javascript:void(0)">
+                        <i class="fa fa-heart"></i>
+                        <i class="fa fa-heart-o"></i>
+                      </a>
+                    </div>
+                  </div>
                   <a data-toggle="collapse" href="#collapse-<?= $institutionCode ?>" aria-expanded="false" aria-controls="collapse-<?= $institutionCode ?>">
                     <i class="fa fa-plus"></i>
                     <i class="fa fa-minus"></i>
