@@ -2,7 +2,7 @@
 @favorite_light: @highlight-color;
 
 
-.panel-group {
+#accordion {
 
   i {
     color: @favorite_dark;
@@ -19,12 +19,7 @@
 
       a {
 
-        &:link,
-        &:visited,
-        &:hover,
-        &:active {
-          text-decoration: none !important;
-        }
+        text-decoration: none !important;
 
         &[aria-expanded=false] {
           i.fa-minus {
@@ -49,6 +44,38 @@
       .panel-heading {
         background-color: #ffffff;
         border-bottom: 1px solid #9b9b9b;
+
+        .institutionFavorite  {
+          & > a {
+            &:hover:before {
+              color: @theme-color;
+            }
+
+            &:before {
+              font-family: FontAwesome;
+              color: @link-color;
+              margin: 0 5px 0 10px;
+              display: inline-block;
+            }
+          }
+        }
+
+        .miniaction_favorite_add  {
+            & > a {
+              &:before {
+                content: '\f08a';
+              }
+            }
+          }
+
+        .miniaction_favorite_remove  {
+          & > a {
+            &:before {
+              content: '\f004';
+            }
+          }
+        }
+
       }
 
     }
