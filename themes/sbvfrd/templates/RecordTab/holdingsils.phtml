@@ -13,14 +13,14 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
 ?>
 <? if ($holdings): ?>
 
-  <div class="panel-group" id="groups" role="tablist" aria-multiselectable="true">
+  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     <? foreach ($holdings as $groupCode => $group): ?>
     <!-- begin: group -->
     <div class="panel panel-default" id="group-<?= $groupCode ?>">
       <!-- begin: group heading -->
       <div class="panel-heading" role="tab" id="heading-<?= $groupCode ?>">
         <h4 class="panel-title">
-          <a data-toggle="collapse" href="#collapse-<?= $groupCode ?>" aria-expanded="false" aria-controls="collapse-<?= $groupCode ?>">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse-<?= $groupCode ?>" aria-expanded="false" aria-controls="collapse-<?= $groupCode ?>">
             <? if (is_array($group['label'])): ?>
               <? $group['label'] = implode('', array_unique($group['label'])); ?>
             <? endif; ?>
