@@ -24,8 +24,6 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
             <? if (is_array($group['label'])): ?>
               <? $group['label'] = implode('', array_unique($group['label'])); ?>
             <? endif; ?>
-            <i class="fa fa-plus"></i>
-            <i class="fa fa-minus"></i>
             <span><?= $this->zendTranslate($group['label']) ?></span>
           </a>
         </h4>
@@ -49,8 +47,6 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
                     </div>
                   </div>
                   <a data-toggle="collapse" href="#collapse-<?= $institutionCode ?>" aria-expanded="false" aria-controls="collapse-<?= $institutionCode ?>">
-                    <i class="fa fa-plus"></i>
-                    <i class="fa fa-minus"></i>
                     <?= $this->escapeHtml($this->zendTranslate($institution['label'], 'institution')) ?>
                   </a>
                 </h4>

@@ -1,6 +1,12 @@
 @favorite_dark: @link-color;
 @favorite_light: @highlight-color;
 
+.icon {
+  font-family: FontAwesome;
+  color: @link-color;
+  margin: 0 5px 0 10px;
+  display: inline-block;
+}
 
 #accordion {
 
@@ -22,15 +28,29 @@
         text-decoration: none !important;
 
         &[aria-expanded=false] {
-          i.fa-minus {
-            display: none;
-          }
+
+            &:hover:before {
+              color: @theme-color;
+            }
+
+            &:before {
+              .icon();
+              content: '\f067';
+            }
+
         }
 
         &[aria-expanded=true] {
-          i.fa-plus {
-            display: none;
-          }
+
+            &:hover:before {
+              color: @theme-color;
+            }
+
+            &:before {
+              .icon();
+              content: '\f068';
+            }
+
         }
       }
 
@@ -45,32 +65,29 @@
         background-color: #ffffff;
         border-bottom: 1px solid #9b9b9b;
 
-        .institutionFavorite  {
+        .miniaction_favorite_add  {
+
           & > a {
             &:hover:before {
               color: @theme-color;
             }
 
             &:before {
-              font-family: FontAwesome;
-              color: @link-color;
-              margin: 0 5px 0 10px;
-              display: inline-block;
+              .icon();
+              content: '\f08a';
             }
           }
         }
 
-        .miniaction_favorite_add  {
-            & > a {
-              &:before {
-                content: '\f08a';
-              }
-            }
-          }
-
         .miniaction_favorite_remove  {
+
           & > a {
+            &:hover:before {
+              color: @theme-color;
+            }
+
             &:before {
+              .icon();
               content: '\f004';
             }
           }
