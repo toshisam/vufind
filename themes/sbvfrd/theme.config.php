@@ -18,7 +18,7 @@ return array(
     'lib/respond.js',
     'lib/html5shiv.js',
 
-    '../themes/bootstrap3/js/vendor/jsTree/jstree.min.js',
+    '/themes/bootstrap3/js/vendor/jsTree/jstree.min.js',
 
     'swissbib/swissbib.js',
     'swissbib/AdvancedSearch.js',
