@@ -9,31 +9,19 @@ return array(
 
   'js'      => array(
     'jquery/ui/jquery-ui.min.js',
-
-    'lib/jstorage.min.js', //used for favorites - there is still some amount of JS code inline of the page -> Todo: Refactoring in upcoming Sprints
-    //wird in swissbib/AdvancedSearch.js verwendet
-    'lib/handlebars.js',
-    'lib/respond.js',
-    'lib/html5shiv.js',
-
-    //https://github.com/jquery/jquery-migrate/ brauchen wir das?
-    'jquery/plugin/jquery-migrate-1.2.1.js',
     'jquery/plugin/jquery.base64.js',
-    //brauchen wir das?
-    //'jquery/plugin/jquery.easing.js',
-    //'jquery/plugin/jquery.debug.js',
-    //wurde im alten Node Layout verwendet
-    //'jquery/plugin/colorbox/jquery.colorbox.js', //popup dialog solution
     'jquery/plugin/jquery.cookie.js',
     'jquery/plugin/jquery.spritely.js', // sprite animation, e.g. for ajax spinner
-    //'jquery/plugin/jquery.validate.min.js',
-    //'jquery/plugin/jquery.hoverintent.js',
     'jquery/plugin/loadmask/jquery.loadmask.js',
+
+    'lib/jstorage.min.js', //used for favorites - there is still some amount of JS code inline of the page -> Todo: Refactoring in upcoming Sprints
+    'lib/handlebars.js', //wird in swissbib/AdvancedSearch.js verwendet
+    'lib/respond.js',
+    'lib/html5shiv.js',
 
     '../themes/bootstrap3/js/vendor/jsTree/jstree.min.js',
 
     'swissbib/swissbib.js',
-
     'swissbib/AdvancedSearch.js',
     'swissbib/Holdings.js',
     'swissbib/HoldingFavorites.js',
