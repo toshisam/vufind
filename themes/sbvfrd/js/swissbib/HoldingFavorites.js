@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Manage favorite actions on record holding tab
  *
