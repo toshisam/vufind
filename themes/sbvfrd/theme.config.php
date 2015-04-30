@@ -11,7 +11,6 @@ return array(
     'jquery/ui/jquery-ui.min.js',
     'jquery/plugin/jquery.base64.js',
     'jquery/plugin/jquery.cookie.js',
-    'jquery/plugin/jquery.spritely.js', // sprite animation, e.g. for ajax spinner
     'jquery/plugin/loadmask/jquery.loadmask.js',
 
     'lib/jstorage.min.js', //used for favorites - there is still some amount of JS code inline of the page -> Todo: Refactoring in upcoming Sprints
