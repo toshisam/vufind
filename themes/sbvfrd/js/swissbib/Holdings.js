@@ -93,10 +93,6 @@ swissbib.Holdings = {
     loaderBox.css({
       display: 'inline-block'
     });
-    loaderBox.find('.spinner').sprite({
-      fps: 10,
-      no_of_frames: 12
-    }).spStart();
   },
 
 
