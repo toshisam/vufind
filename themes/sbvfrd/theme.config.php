@@ -29,22 +29,7 @@ return array(
     //'jquery/plugin/jquery.validate.min.js',
     //'jquery/plugin/jquery.hoverintent.js',
     'jquery/plugin/loadmask/jquery.loadmask.js',
-    //'jquery/plugin/jquery.form.min.js',
-    //von Nose erstellt  - noch benötigt?
-    //'swissbib-jq-plugins/hint.js',
-    //menunav qird von swissbib.js verwendet -
-    //ob wir swissbib.js so noch benötigen ist für mich eine Frage. z.B. AdvancedSearch verwendet zumindest den Namespace
-    //swissbib der in swissbib.js definiert ist. Diese Abhängigkeiten und was genau verwendet wird muss man sich anschauen
-    //'swissbib-jq-plugins/menunav.js',
-    //'swissbib-jq-plugins/info.js',
-    //'swissbib-jq-plugins/info.rollover.js',
-    //'swissbib-jq-plugins/toggler.js',
-    //'swissbib-jq-plugins/checker.js',
-    //'swissbib-jq-plugins/dropdown.js',
-    //'swissbib-jq-plugins/tabbed.js',
-    //'swissbib-jq-plugins/enhancedsearch.js',
-    //scheint durch eine A
-    //'swissbib-jq-plugins/extended.ui.autocomplete.js',
+
     '../themes/bootstrap3/js/vendor/jsTree/jstree.min.js',
 
     'swissbib/swissbib.js',
