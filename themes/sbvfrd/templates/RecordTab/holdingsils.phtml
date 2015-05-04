@@ -80,6 +80,7 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
 
   <!-- old code below - remove after redesign -->
 
+
   <? foreach ($holdings as $groupCode => $group): ?>
     <!-- begin: innerbox <?= $groupCode ?> -->
     <div class="innerbox grey holdingsBox" id="holdings-<?= $groupCode ?>">
@@ -119,7 +120,11 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
         <? if (is_array($group['label'])): ?>
           <? $group['label'] = implode('', array_unique($group['label'])); ?>
         <? endif; ?>
-        <span><?= $this->zendTranslate($group['label']) ?></span>
+        <? if ($group['label'] == 'mylibraries'): ?>
+          <span><?= $this->zendTranslate($group['label']) ?></span>
+          <? else: ?>
+          <span><?= $this->zendTranslate($group['label'], 'group') ?></span>
+        <? endif; ?>
       </h3>
 
       <div class="holding-group-<?= $groupCode ?>">

@@ -25,6 +25,9 @@
                 <li>
                     <a href="<?= $this->url('search-history') ?>"><?= $this->transEsc('History') ?></a>
                 </li>
+                <li>
+                    <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('https://www.swissbib.ch') ?>" target="_blank" title="swissbib">swissbib.ch</a>
+                </li>
                 <!--
               <li><a href="<//?= $this->url('browse-home') ?>"><//?= $this->transEsc('Browse the Catalog') ?></a></li>
               <li><a href="<//?= $this->url('alphabrowse-home') ?>"><//?= $this->transEsc('Browse Alphabetically') ?></a></li>
@@ -66,6 +69,6 @@
     </div>
 </div>
 
-<button id="sidebar-offcanvas-trigger">
+<button id="sidebar-offcanvas-trigger" class="hidden">
     <i class="fa fa-caret-left"></i>
 </button>

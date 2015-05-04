@@ -1,4 +1,33 @@
 <?php
+/**
+ * swissbib / VuFind: Helper class for swissbib holdings
+ *
+ * PHP version 5
+ *
+ * Copyright (C) project swissbib, University Library Basel, Switzerland
+ * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @category swissbib_VuFind2
+ * @package  RecordDriver
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @author   Oliver Schihin <oliver.schihin@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org
+ */
+
 namespace Swissbib\RecordDriver\Helper;
 
 use Zend\Config\Config;
@@ -886,7 +915,7 @@ class Holdings
      *
      * set link to NEBIS Primo View
      *
-     * @todo get user language and ad it to backlink
+     * @todo get user language and add it to backlink
      * @param    String $networkCode
      * @param    String $institutionCode
      * @param    Array $item
@@ -894,11 +923,9 @@ class Holdings
      * @return    String
      */
     protected function getBackLinkNEBIS($networkCode, $institutionCode, $item, array $data) {
-        if (!empty($item['localid'])) {
-            $values = [
-                'bib-system-number' => $item['bibsysnumber'],
+        $values = [
+            'bib-system-number' => $item['bibsysnumber'],
             ];
-        }
         return $this->compileString($data['pattern'], $values);
     }
 
@@ -1055,9 +1082,9 @@ class Holdings
 
 
     /**
-     * Get bib info link
-     * Get false if not found
-     * Array contains url and host value
+     * Get URL for library website (bibinfo)
+     * false if not found or scheme not ok
+     * Array with only url if scheme is ok
      *
      * @param    String $institutionCode
      * @return    Array|Boolean
@@ -1069,13 +1096,16 @@ class Holdings
         if ($bibInfoLink === $institutionCode) {
             $bibInfoLink = false;
         } else {
-            $url = parse_url($bibInfoLink);
-            $bibInfoLink = array(
-                'url' => $bibInfoLink,
-                'host' => $url['host']
-            );
+            $scheme = parse_url($bibInfoLink, PHP_URL_SCHEME);
+            if (preg_match('/http/', $scheme)) {
+                $bibInfoLink = [
+                    'url' => $bibInfoLink,
+                ];
+            }
+            else {
+                $bibInfoLink = false;
+            }
         }
-
         return $bibInfoLink;
     }
 
