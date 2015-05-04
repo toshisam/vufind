@@ -16,7 +16,7 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
   <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     <? foreach ($holdings as $groupCode => $group): ?>
     <!-- begin: group -->
-    <div class="panel panel-default" id="group-<?= $groupCode ?>">
+    <div class="panel panel-default" id="holdings-<?= $groupCode ?>">
       <!-- begin: group heading -->
       <div class="panel-heading" role="tab" id="heading-<?= $groupCode ?>">
         <h4 class="panel-title">
