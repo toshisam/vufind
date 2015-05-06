@@ -1,9 +1,10 @@
-<div id="tabbed-tree" class="tabs">
-  <ul class="recordTabs nav nav-tabs">
+<div id="tabbed-tree" class="tabs" role="tabpanel">
+  <ul class="recordTabs nav nav-tabs" role="tablist">
     <? foreach ($classificationTrees as $facetKey => $tree): ?>
       <li><a href="#tab-tree-<?= $facetKey ?>"><?= $this->translate($facetKey) ?></a></li>
     <? endforeach ?>
   </ul>
+  <div class="tab-content">
   <? foreach ($classificationTrees as $facetKey => $tree): ?>
     <div id="tab-tree-<?= $facetKey ?>">
       <? echo $this->render(
@@ -17,10 +18,5 @@
       <div class="clearfix"></div>
     </div>
   <? endforeach ?>
+  </div>
 </div>
-
-<script>
-  jQuery(function () {
-    jQuery('#tabbed-tree').tabs();
-  });
-</script>

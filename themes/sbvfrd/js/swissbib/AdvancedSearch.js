@@ -22,6 +22,10 @@ swissbib.AdvancedSearch = {
 
       $("#addGroupLink").removeClass("offscreen");
     }
+
+    if (this.isInAdvancedClassificationSearch()) {
+      this.initAdvancedClassificationTabs();
+    }
   },
 
   /**
@@ -52,6 +56,16 @@ swissbib.AdvancedSearch = {
    */
   isInAdvancedSearch: function () {
     return location.pathname.indexOf('/Advanced') >= 0;
+  },
+
+
+  /**
+   * Check whether current view is the advanced classification view
+   *
+   * @return    {Boolean}
+   */
+  isInAdvancedClassificationSearch: function () {
+    return location.pathname.indexOf('/AdvancedClassification') >= 0;
   },
 
 
@@ -388,9 +402,14 @@ swissbib.AdvancedSearch = {
   },
 
 
-  initializeTabs: function (tabContainerId, activeTabId) {
-    var index = $(activeTabId).length > 0 ? $(activeTabId).index() - 1 : 0;
-    $(tabContainerId).tabs({ active: index });
+  /**
+   * Initializes classification tabs
+   */
+  initAdvancedClassificationTabs: function() {
+    $('#tabbed-tree').find('.nav-tabs a').click(function (e) {
+      e.preventDefault()
+      $(this).tab('show')
+    })
   }
 
 };

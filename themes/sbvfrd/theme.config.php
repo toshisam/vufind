@@ -8,7 +8,6 @@ return array(
   ),
 
   'js'      => array(
-    'vendor/jquery/ui/jquery-ui.min.js',
     'vendor/jquery/plugin/jquery.cookie.js',
     'vendor/jquery/plugin/loadmask/jquery.loadmask.js',
 
