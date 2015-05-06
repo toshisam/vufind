@@ -14,6 +14,10 @@
     color: @favorite_dark;
   }
 
+  ul {
+    list-style: none;
+  }
+
   .panel {
     border: none;
     border-radius: 0px;
@@ -28,6 +32,11 @@
 
         text-decoration: none !important;
 
+        &:focus
+        {
+          outline: none;
+        }
+
         &[aria-expanded=false] {
 
             &:hover:before {
@@ -36,7 +45,7 @@
 
             &:before {
               .icon();
-              content: '\f067';
+              content: '\f0da';
             }
 
         }
@@ -49,12 +58,16 @@
 
             &:before {
               .icon();
-              content: '\f068';
+              content: '\f0d7';
             }
 
         }
       }
 
+    }
+
+    .panel-body {
+      padding: 0px;
     }
 
     /** 2nd level specific/overwrites **/
@@ -94,6 +107,12 @@
           }
         }
 
+      }
+
+      .panel-body {
+        .table {
+          margin-bottom: 0px;
+        }
       }
 
     }

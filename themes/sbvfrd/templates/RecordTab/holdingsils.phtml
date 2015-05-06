@@ -19,7 +19,7 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
     <div class="panel panel-default" id="holdings-<?= $groupCode ?>">
       <!-- begin: group heading -->
       <div class="panel-heading" role="tab" id="heading-<?= $groupCode ?>">
-        <h4 class="panel-title">
+        <h3 class="panel-title">
           <a data-toggle="collapse" data-parent="#accordion" href="#collapse-<?= $groupCode ?>" aria-expanded="false" aria-controls="collapse-<?= $groupCode ?>">
             <? if (is_array($group['label'])): ?>
               <? $group['label'] = implode('', array_unique($group['label'])); ?>
@@ -30,7 +30,7 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
               <span><?= $this->zendTranslate($group['label'], 'group') ?></span>
             <? endif; ?>
           </a>
-        </h4>
+        </h3>
       </div>
       <!-- end: group heading -->
       <!-- begin: group content -->
