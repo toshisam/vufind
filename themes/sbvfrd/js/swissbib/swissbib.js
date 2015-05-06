@@ -105,7 +105,9 @@ var swissbib = {
 /**
  * Init swissbib on document ready
  */
-$(document).ready(swissbib.init.bind(swissbib));
+$(document).ready(function() {
+  swissbib.init();
+});
 
 
 /**
@@ -113,10 +115,3 @@ $(document).ready(swissbib.init.bind(swissbib));
  */
 swissbib.updatePageForLoginParent = updatePageForLogin;
 updatePageForLogin = swissbib.updatePageForLogin;
-
-
-/**
- * IE8 base64 support
- */
-window.btoa = window.btoa || jQuery.base64.encode;
-window.atob = window.atob || jQuery.base64.decode;

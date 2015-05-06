@@ -9,7 +9,6 @@ return array(
 
   'js'      => array(
     'jquery/ui/jquery-ui.min.js',
-    'jquery/plugin/jquery.base64.js',
     'jquery/plugin/jquery.cookie.js',
     'jquery/plugin/loadmask/jquery.loadmask.js',
 
