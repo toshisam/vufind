@@ -14,8 +14,8 @@ return array(
 
     'lib/jstorage.min.js', //used for favorites - there is still some amount of JS code inline of the page -> Todo: Refactoring in upcoming Sprints
     'lib/handlebars.js', //wird in swissbib/AdvancedSearch.js verwendet
-    'lib/respond.js',
-    'lib/html5shiv.js',
+    'lib/respond.js:lt IE 9',
+    'lib/html5shiv.js:lt IE 9',
 
     '/themes/bootstrap3/js/vendor/jsTree/jstree.min.js',
 
