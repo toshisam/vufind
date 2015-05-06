@@ -156,6 +156,7 @@ swissbib.Holdings = {
 //      that.setupItemsPopup(dialog);
 //    });
 
+    Lightbox.changeContent('Loading...');
     Lightbox.getByUrl(contentUrl);
   },
 

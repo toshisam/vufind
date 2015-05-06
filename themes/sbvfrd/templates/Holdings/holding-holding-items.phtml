@@ -17,8 +17,8 @@ $institutionLabel = $this->zendTranslate($institution, 'institution');
       <div class="row">
         <div class="col-lg-6">
         <?php if (sizeof($filters['years'])): ?>
-            <label for="holding-items-filter-year"><?= $this->transEsc('Show year') ?></label>
-            <select id="holding-items-filter-year" name="year" onchange="var year=document.getElementById('holding-items-filter-year').value; swissbib.Holdings.openHoldingItemsPopup('<?= $baseUrl . "&year=" ?>'+year, '-')">
+            <label for="holding-items-filter-year"><?= $this->transEsc('Show year') . ':' ?></label>
+            <select id="holding-items-filter-year" class="form-control" name="year" onchange="var year=document.getElementById('holding-items-filter-year').value; swissbib.Holdings.openHoldingItemsPopup('<?= $baseUrl . "&year=" ?>'+year, '-')">
               <option value=""><?= $this->transEsc('All years') ?></option>
               <?php foreach ($filters['years'] as $yearValue): ?>
                 <option <?= ($yearValue == $year ? 'selected="selected"' : '') ?>><?= $yearValue ?></option>
@@ -29,8 +29,8 @@ $institutionLabel = $this->zendTranslate($institution, 'institution');
 
         <div class="col-lg-6">
           <?php if (sizeof($filters['volumes'])): ?>
-            <label for="holding-items-filter-volume"><?= $this->transEsc('Show volumes') ?></label>
-            <select id="holding-items-filter-volume" name="volume" onchange="var volume=document.getElementById('holding-items-filter-volume').value; swissbib.Holdings.openHoldingItemsPopup('<?= $baseUrl . "&volume=" ?>'+volume, '-')">
+            <label for="holding-items-filter-volume"><?= $this->transEsc('Show volumes') . ':' ?></label>
+            <select id="holding-items-filter-volume" class="form-control" name="volume" onchange="var volume=document.getElementById('holding-items-filter-volume').value; swissbib.Holdings.openHoldingItemsPopup('<?= $baseUrl . "&volume=" ?>'+volume, '-')">
               <option value=""><?= $this->transEsc('All volumes') ?></option>
               <?php foreach ($filters['volumes'] as $volumeValue): ?>
                 <option <?= ($volumeValue == $volume ? 'selected="selected"' : '') ?>><?= $volumeValue ?></option>
@@ -43,7 +43,7 @@ $institutionLabel = $this->zendTranslate($institution, 'institution');
         <div class="col-lg-6">
 
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-6 pull-right">
           <?= $this->holdingItemsPaging($baseUrl, $total, $page, $year, $volume) ?>
         </div>
       </div>
@@ -67,7 +67,6 @@ $institutionLabel = $this->zendTranslate($institution, 'institution');
       <?= $this->holdingItemsPaging($baseUrl, $total, $page, $year, $volume) ?>
     </div>
   </div>
-
 
 <?php else: ?>
   <div class="row">
