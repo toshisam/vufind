@@ -13,11 +13,10 @@ $baseUrl = $this->url('holdings-holding-items', $baseUrlParams) . '?';
 $institutionLabel = $this->zendTranslate($institution, 'institution');
 
 ?>
-  <form id="holdings-items-filter-form" action="<?= $this->escapeHtml($baseUrl) ?>">
-    <table id="holdings-items-header">
-      <tr>
-        <td>
-          <?php if (sizeof($filters['years'])): ?>
+    <form id="holdings-items-filter-form" action="<?= $this->escapeHtml($baseUrl) ?>">
+      <div class="row">
+        <div class="col-lg-6">
+        <?php if (sizeof($filters['years'])): ?>
             <label for="holding-items-filter-year"><?= $this->transEsc('Show year') ?></label>
             <select id="holding-items-filter-year" name="year" onchange="var year=document.getElementById('holding-items-filter-year').value; swissbib.Holdings.openHoldingItemsPopup('<?= $baseUrl . "&year=" ?>'+year, '-')">
               <option value=""><?= $this->transEsc('All years') ?></option>
@@ -26,8 +25,9 @@ $institutionLabel = $this->zendTranslate($institution, 'institution');
               <?php endforeach; ?>
             </select>
           <?php endif; ?>
-        </td>
-        <td>
+        </div>
+
+        <div class="col-lg-6">
           <?php if (sizeof($filters['volumes'])): ?>
             <label for="holding-items-filter-volume"><?= $this->transEsc('Show volumes') ?></label>
             <select id="holding-items-filter-volume" name="volume" onchange="var volume=document.getElementById('holding-items-filter-volume').value; swissbib.Holdings.openHoldingItemsPopup('<?= $baseUrl . "&volume=" ?>'+volume, '-')">
@@ -37,19 +37,42 @@ $institutionLabel = $this->zendTranslate($institution, 'institution');
               <?php endforeach; ?>
             </select>
           <?php endif; ?>
-        </td>
-        <td class="pagingHeader">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+
+        </div>
+        <div class="col-lg-6">
           <?= $this->holdingItemsPaging($baseUrl, $total, $page, $year, $volume) ?>
-        </td>
-      </tr>
-    </table>
-
-  </form>
-
-  <h4><?= $this->escapeHtml($institutionLabel) ?></h4>
-
+        </div>
+      </div>
+    </form>
+<div class="row">
+  <div class="col-lg-12">
+    <h4><?= $this->escapeHtml($institutionLabel) ?></h4>
+  </div>
+</div>
 <?php if (sizeof($items)): ?>
-  <?= $this->render('Holdings/items') ?>
+  <div class="row">
+    <div class="col-lg-12">
+      <?= $this->render('Holdings/items') ?>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-6">
+
+    </div>
+    <div class="col-lg-6">
+      <?= $this->holdingItemsPaging($baseUrl, $total, $page, $year, $volume) ?>
+    </div>
+  </div>
+
+
 <?php else: ?>
-  <p><?= $this->transEsc('No Holdings for filters') ?></p>
+  <div class="row">
+    <div class="col-lg-12">
+      <p><?= $this->transEsc('No Holdings for filters') ?></p>
+    </div>
+  </div>
 <?php endif; ?>
