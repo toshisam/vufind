@@ -122,29 +122,29 @@ $(document).ready(function () {
     //when a group is shown, save it as the active accordion group
     $("#accordion").on('shown.bs.collapse', function (e) {
         var target = $(e.target);
-        //only saves state of first hiearchie level
+        //only saves state of first hierachie level
         if(target.attr('level') == 1) {
-            var active = target.attr('id')
-            //for multiple active - use this
-            //var active = $("#accordion .in").attr('id');
+            var active = target.attr('id');
             $.cookie('activeAccordionGroup', active, {path: window.location.pathname});
         }
     });
+    //when a group is closed, remove it as the active accordion group
     $("#accordion").on('hidden.bs.collapse', function (e) {
         var target = $(e.target);
         //only saves state of first hiearchie level
         if(target.attr('level') == 1) {
             $.cookie('activeAccordionGroup', null, {path: window.location.pathname});
+            //collapse childern to
+            target.find('.in').collapse('hide');
         }
     });
+    //on (re)load - check if there an expanded group
     var last = $.cookie('activeAccordionGroup');
     if (last != null) {
         //remove default collapse settings
-        $("#accordion .panel-collapse").removeClass('in');
-        $("a[aria-controls='" + last + "']").attr("aria-expanded","false");
+        $("#accordion .in").collapse('hide');
         //show the account_last visible group
-        $("#" + last).addClass("in");
-        $("a[aria-controls='" + last + "']").attr("aria-expanded","true");
+        $("#" + last).collapse('show');
     }
 });
 
