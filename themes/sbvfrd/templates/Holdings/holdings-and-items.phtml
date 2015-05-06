@@ -35,8 +35,7 @@ $headers = [
                 array(
                     'holding'     => $holding,
                     'record'      => $record,
-                    'recordTitle' => $recordTitle,
-                    'headers'     => $headers
+                    'recordTitle' => $recordTitle
                 )
             );
             $flippedContent .= $this->render(
@@ -45,6 +44,7 @@ $headers = [
                     'holding'     => $holding,
                     'record'      => $record,
                     'recordTitle' => $recordTitle,
+                    'headers'     => $headers,
                     'even'        => (0 === $hkey % 2)
                 )
             );
