@@ -1,0 +1,54 @@
+<?php
+/** @var Array $item */
+/** @var String $record */
+/** @var String $recordTitle */
+/** @var Array $headers */
+/** @var Boolean $even */
+
+$mapLink = '';
+
+// Description (last column)
+$description = !empty($item['description']) ? $item['description'] . '. ' : '';
+if (!empty($item['public_note'])) {
+  $description .= $item['public_note'] . '. ';
+}
+if (!empty($item['opac_note'])) {
+  $description .= $item['opac_note'];
+}
+
+if (isset($item['locationMap']) && $item['locationMap']) {
+  $mapLink = '<a href="' . $item['locationMap'] . '" title="' . $this->transEsc('Show_Location_Map') . '" class="holdingMapLink">' . '<i class="fa fa-map-marker"></i></a>';
+}
+
+?>
+<table class="table table-flipped holdings-holding holdingTable hidden-md hidden-lg <?= 'table-' . ($even ? 'even' : 'odd') ?>">
+<tbody>
+<tr>
+  <th><?= $headers['action'] ?></th>
+  <td><?= $this->holdingActions($item, 'holdingActionsItem') ?> </td>
+</tr>
+<tr>
+  <th><?= $headers['availability'] ?></th>
+  <td><?= $this->availabilityInfo($item['availability']) ?></td>
+</tr>
+<tr>
+  <th><?= $headers['location'] ?></th>
+  <td>
+    <?= $this->escapeHtml($item['locationLabel']) ?>
+    <?= $mapLink ?>
+    <?php if (isset($item['institutionUrl'])): ?>
+      <?php $wrappedURL = $this->redirectProtocolWrapper()->getWrappedURL($item['institutionUrl']) ?>
+      <a href="<?= $this->escapeHtml($wrappedURL) ?>" target="_blank" title="<?=$this->transEsc('Library_Information')?>"> <i class="fa fa-info-circle"></i></a>
+    <?php endif; ?>
+  </td>
+</tr>
+<tr>
+  <th><?= $headers['callnr'] ?></th>
+  <td><?= $this->escapeHtml($item['signature']) ?></td>
+</tr>
+<tr>
+  <th><?= $headers['description'] ?></th>
+  <td><?= $this->escapeHtml($description) ?></td>
+</tr>
+</tbody>
+</table>
