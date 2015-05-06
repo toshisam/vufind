@@ -120,13 +120,22 @@ swissbib.HoldingFavorites = {
 */
 $(document).ready(function () {
     //when a group is shown, save it as the active accordion group
-    $("#accordion").on('shown.bs.collapse', function () {
-        var active = $("#accordion .in").attr('id');
-        $.cookie('activeAccordionGroup', active);
-        //  alert(active);
+    $("#accordion").on('shown.bs.collapse', function (e) {
+        var target = $(e.target);
+        //only saves state of first hiearchie level
+        if(target.attr('level') == 1) {
+            var active = target.attr('id')
+            //for multiple active - use this
+            //var active = $("#accordion .in").attr('id');
+            $.cookie('activeAccordionGroup', active, {path: window.location.pathname});
+        }
     });
-    $("#accordion").on('hidden.bs.collapse', function () {
-        $.cookie('activeAccordionGroup', null);
+    $("#accordion").on('hidden.bs.collapse', function (e) {
+        var target = $(e.target);
+        //only saves state of first hiearchie level
+        if(target.attr('level') == 1) {
+            $.cookie('activeAccordionGroup', null, {path: window.location.pathname});
+        }
     });
     var last = $.cookie('activeAccordionGroup');
     if (last != null) {

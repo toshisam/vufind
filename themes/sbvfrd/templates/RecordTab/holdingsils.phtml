@@ -34,7 +34,7 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
       </div>
       <!-- end: group heading -->
       <!-- begin: group content -->
-      <div id="collapse-<?= $groupCode ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-<?= $groupCode ?>">
+      <div id="collapse-<?= $groupCode ?>" level="1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-<?= $groupCode ?>">
         <div class="list-group">
 
           <div class="panel-group" id="institutions-<?= $groupCode ?>" role="tablist" aria-multiselectable="true">
@@ -59,7 +59,7 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
               <!-- end: institution heading -->
 
               <!-- begin: institution content -->
-              <div id="collapse-<?= $groupCode ?>-<?= $institutionCode ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-<?= $groupCode ?>-<?= $institutionCode ?>">
+              <div id="collapse-<?= $groupCode ?>-<?= $institutionCode ?>" level="2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-<?= $groupCode ?>-<?= $institutionCode ?>">
                 <div class="panel-body">
                   <!--begin: holdings-table -->
                   <div class="holding-institution-<?= $groupCode ?>-<?= $institutionCode ?>" id="holding-institution-<?= $institutionCode ?>">
