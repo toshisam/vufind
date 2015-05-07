@@ -33,10 +33,14 @@ if (!empty($holding['opac_note'])) {
 ?>
 <table class="table table-flipped holdings-holding holdingTable hidden-md hidden-lg <?= 'table-' . ($even ? 'even' : 'odd') ?>">
 <tbody>
+<?
+$holdingActionString = $this->holdingActions($holding, 'holdingActionsHolding');
+if(preg_match('/[\s\S]*<ul[\s\S]*<\/ul>[\s\S]*/', $holdingActionString)): ?>
 <tr>
   <th><?= $headers['action'] ?></th>
-  <td><?=$this->holdingActions($holding, 'holdingActionsHolding')?> </td>
+  <td><?=$holdingActionString?> </td>
 </tr>
+<? endif; ?>
 <tr>
   <th><?= $headers['availability'] ?></th>
   <td><?=$moreDetailsLink?></td>

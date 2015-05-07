@@ -1,6 +1,8 @@
 <?php
 /** @var String $listClass */
 /** @var Array[] $actions */
+
+if (count($actions) > 0):
 ?>
 <ul class="holdingActions <?=$listClass?>">
 
@@ -12,11 +14,6 @@
 			</a>
 		</li>
 
-   <?php endforeach;
-   // add empty li so the table row does not collapse and the markup is valid
-   if (0 === count($actions)) {
-     echo '<li>&nbsp;</li>';
-   }
-   ?>
-
+   <?php endforeach; ?>
 </ul>
+<? endif; ?>
