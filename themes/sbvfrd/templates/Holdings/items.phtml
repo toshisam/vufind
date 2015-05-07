@@ -2,27 +2,24 @@
 /** @var Array[] $items */
 /** @var String $record */
 /** @var String $recordTitle */
+
+$headers = [
+  'actions'      => '&nbsp;',
+  'availability' => $this->transEsc('Availability'),
+  'location'     => $this->transEsc('Location'),
+  'callnr'       => $this->transEsc('Call Number'),
+  'description'  => $this->transEsc('Description')
+];
+
+// Items
+foreach ($items as $ikey => $item) {
+  echo $this->render('Holdings/holding-item-flipped.phtml', array(
+      'item'               => $item,
+      'record'             => $record,
+      'recordTitle'        => $recordTitle,
+      'headers'            => $headers,
+      'even'               => (0 === $ikey % 2),
+      'showInAllViewPorts' => true
+  ));
+}
 ?>
-<table class="holdings-items holdingTable table table-striped">
-  <thead>
-  <tr>
-    <th class="actions">&nbsp;</th>
-    <th class="availability"><?= $this->transEsc('Availability') ?></th>
-    <th class="location"><?= $this->transEsc('Location') ?></th>
-    <th class="callnr"><?= $this->transEsc('Call Number') ?></th>
-    <th class="description"><?= $this->transEsc('Description') ?></th>
-  </tr>
-  </thead>
-  <tbody>
-  <?php
-  // Items
-  foreach ($items as $item) {
-    echo $this->render('Holdings/holding-item.phtml', array(
-        'item' => $item,
-        'record' => $record,
-        'recordTitle' => $recordTitle
-    ));
-  }
-  ?>
-  </tbody>
-</table>

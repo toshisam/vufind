@@ -12,6 +12,10 @@
 			</a>
 		</li>
 
-   <?php endforeach; ?>
+   <?php endforeach;
+   if (0 === count($actions)) {
+     echo '<li>&nbsp;</li>';
+   }
+   ?>
 
 </ul>

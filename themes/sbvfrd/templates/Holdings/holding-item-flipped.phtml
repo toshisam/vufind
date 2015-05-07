@@ -4,8 +4,10 @@
 /** @var String $recordTitle */
 /** @var Array $headers */
 /** @var Boolean $even */
+/** @var Boolean $showInAllViewPorts */
 
 $mapLink = '';
+$showInAllViewPorts = boolval($showInAllViewPorts);
 
 // Description (last column)
 $description = !empty($item['description']) ? $item['description'] . '. ' : '';
@@ -21,7 +23,7 @@ if (isset($item['locationMap']) && $item['locationMap']) {
 }
 
 ?>
-<table class="table table-flipped holdings-holding holdingTable hidden-md hidden-lg <?= 'table-' . ($even ? 'even' : 'odd') ?>">
+<table class="table table-flipped holdings-holding holdingTable <?= ($showInAllViewPorts ? '' : 'hidden-md hidden-lg ') . 'table-' . ($even ? 'even' : 'odd') ?>">
 <tbody>
 <tr>
   <th><?= $headers['action'] ?></th>
