@@ -20,7 +20,7 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
       <!-- begin: group heading -->
       <div class="panel-heading" role="tab" id="heading-<?= $groupCode ?>">
         <h3 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse-<?= $groupCode ?>" aria-expanded="false" aria-controls="collapse-<?= $groupCode ?>">
+          <a data-toggle="collapse" href="#collapse-<?= $groupCode ?>" aria-expanded="false" aria-controls="collapse-<?= $groupCode ?>">
             <? if (is_array($group['label'])): ?>
               <? $group['label'] = implode('', array_unique($group['label'])); ?>
             <? endif; ?>

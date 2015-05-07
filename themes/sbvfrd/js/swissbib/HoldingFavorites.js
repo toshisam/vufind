@@ -110,10 +110,28 @@ swissbib.HoldingFavorites = {
     return $.map(favoriteTogglers, function (node, index) {
       return $(node).attr('id').split('-').pop();
     });
+  },
+
+  saveExpandedGroups: function() {
+      var expandedGroupIds = [];
+
+      $("#accordion .in").each(function (index) {
+          var currentItem = $(this);
+
+          //only saves state of first hierachie level
+          if (currentItem.attr('level') == 1) {
+              expandedGroupIds.push(currentItem.attr('id'));
+          }
+      });
+
+      if(expandedGroupIds.length > 0) {
+          $.cookie('expandedGroups', JSON.stringify(expandedGroupIds), {path: window.location.pathname});
+      } else {
+          $.cookie('expandedGroups', null, {path: window.location.pathname});
+      }
   }
 
 };
-
 
 /**
 * Remains state of expanded accordion group
@@ -122,29 +140,30 @@ $(document).ready(function () {
     //when a group is shown, save it as the active accordion group
     $("#accordion").on('shown.bs.collapse', function (e) {
         var target = $(e.target);
-        //only saves state of first hierachie level
+        //level 1 means group
         if(target.attr('level') == 1) {
-            var active = target.attr('id');
-            $.cookie('activeAccordionGroup', active, {path: window.location.pathname});
+            swissbib.HoldingFavorites.saveExpandedGroups();
         }
     });
+
     //when a group is closed, remove it as the active accordion group
     $("#accordion").on('hidden.bs.collapse', function (e) {
         var target = $(e.target);
-        //only saves state of first hiearchie level
+        //level 1 means group
         if(target.attr('level') == 1) {
-            $.cookie('activeAccordionGroup', null, {path: window.location.pathname});
-            //collapse childern to
+            //collapse childern
             target.find('.in').collapse('hide');
+            swissbib.HoldingFavorites.saveExpandedGroups();
         }
     });
-    //on (re)load - check if there an expanded group
-    var last = $.cookie('activeAccordionGroup');
-    if (last != null) {
-        //remove default collapse settings
-        $("#accordion .in").collapse('hide');
-        //show the account_last visible group
-        $("#" + last).collapse('show');
-    }
+
+    ////on (re)load - check if there an expanded group
+    //var last = $.cookie('activeAccordionGroup');
+    //if (last != null) {
+    //    //remove default collapse settings
+    //    $("#accordion .in").collapse('hide');
+    //    //show the account_last visible group
+    //    $("#" + last).collapse('show');
+    //}
 });
 
