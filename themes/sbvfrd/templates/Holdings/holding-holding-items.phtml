@@ -15,7 +15,7 @@ $institutionLabel = $this->zendTranslate($institution, 'institution');
 ?>
     <form id="holdings-items-filter-form" action="<?= $this->escapeHtml($baseUrl) ?>">
       <div class="row">
-        <div class="col-lg-6">
+        <div class="col-sm-6">
         <?php if (sizeof($filters['years'])): ?>
             <label for="holding-items-filter-year"><?= $this->transEsc('Show year') . ':' ?></label>
             <select id="holding-items-filter-year" class="form-control" name="year" onchange="var year=document.getElementById('holding-items-filter-year').value; swissbib.Holdings.openHoldingItemsPopup('<?= $baseUrl . "&year=" ?>'+year, '-')">
@@ -27,7 +27,7 @@ $institutionLabel = $this->zendTranslate($institution, 'institution');
           <?php endif; ?>
         </div>
 
-        <div class="col-lg-6">
+        <div class="col-sm-6">
           <?php if (sizeof($filters['volumes'])): ?>
             <label for="holding-items-filter-volume"><?= $this->transEsc('Show volumes') . ':' ?></label>
             <select id="holding-items-filter-volume" class="form-control" name="volume" onchange="var volume=document.getElementById('holding-items-filter-volume').value; swissbib.Holdings.openHoldingItemsPopup('<?= $baseUrl . "&volume=" ?>'+volume, '-')">
@@ -40,10 +40,10 @@ $institutionLabel = $this->zendTranslate($institution, 'institution');
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-6">
+        <div class="col-sm-6">
 
         </div>
-        <div class="col-lg-6 pull-right">
+        <div class="col-sm-6 pull-right">
           <?= $this->holdingItemsPaging($baseUrl, $total, $page, $year, $volume) ?>
         </div>
       </div>
@@ -60,10 +60,10 @@ $institutionLabel = $this->zendTranslate($institution, 'institution');
     </div>
   </div>
   <div class="row">
-    <div class="col-lg-6">
+    <div class="col-sm-6">
 
     </div>
-    <div class="col-lg-6">
+    <div class="col-sm-6">
       <?= $this->holdingItemsPaging($baseUrl, $total, $page, $year, $volume) ?>
     </div>
   </div>
