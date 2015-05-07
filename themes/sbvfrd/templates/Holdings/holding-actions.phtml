@@ -13,6 +13,7 @@
 		</li>
 
    <?php endforeach;
+   // add empty li so the table row does not collapse and the markup is valid
    if (0 === count($actions)) {
      echo '<li>&nbsp;</li>';
    }
