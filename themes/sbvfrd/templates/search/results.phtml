@@ -113,6 +113,15 @@
       <?=$this->context($this)->renderInContext('search/bulk-action-buttons.phtml', array('idPrefix' => 'bottom_'))?>
       <?= $this->paginationControl($this->results->getPaginator(), 'Sliding', 'search/pagination.phtml', array('results' => $this->results, 'recordTotal' => $recordTotal, 'params' => $this->params, 'lookfor' => $this->lookfor, 'hideHits' => true)) ?>
     </form>
+<? if (isset($_GET['type']) && 'FRBR' === $_GET['type']): ?>
+      <span class="btn-frbr-back">
+        <a class="btn btn-primary icon_show" href="javascript:history.back();">
+          <span><i class="fa fa-caret-left"></i></span>
+          <span><?=$this->transEsc('navigate_back_list');?></span>
+        </a>
+      </span>
+<? endif; ?>
+
   <? endif; ?>
 </div>
 <? /* End Main Listing */ ?>
