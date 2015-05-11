@@ -9,6 +9,19 @@ swissbib.Accordion = {
    */
   cookieName: 'expandedGroups',
 
+  /**
+   * @var {Number}
+   */
+  idRecord: null,
+
+  /**
+   * Initialize for record
+   *
+   * @param  {Number}  idRecord
+   */
+  initRecord: function(idRecord) {
+      this.idRecord = idRecord;
+  },
 
   /**
    * Saves state of expanded groups
@@ -27,9 +40,11 @@ swissbib.Accordion = {
       });
 
       if(expandedGroupIds.length > 0) {
-          $.cookie(swissbib.Accordion.cookieName, JSON.stringify(expandedGroupIds), {path: window.location.pathname});
+          var cookieData = {};
+          cookieData[this.idRecord] = expandedGroupIds;
+          $.cookie(swissbib.Accordion.cookieName, JSON.stringify(cookieData));
       } else {
-          $.cookie(swissbib.Accordion.cookieName, null, {path: window.location.pathname});
+          $.cookie(swissbib.Accordion.cookieName, null);
       }
   },
 
@@ -81,14 +96,15 @@ $(document).ready(function () {
         $("#accordion a[href='#collapse-" + expandlib + "']").click();
     }
 
-    //on (re)load - open previously expanded groups. if none, open favorites as default
+    //on (re)load - open previously expanded groups. if none, open favorites as default an clear cookie as user opened a new record
     var expandedGroupIds = JSON.parse($.cookie(swissbib.Accordion.cookieName));
-    if (expandedGroupIds != null) {
-        $.each((expandedGroupIds), function (index, value){
+    if (expandedGroupIds != null && expandedGroupIds[swissbib.Accordion.idRecord] != null) {
+        $.each((expandedGroupIds[swissbib.Accordion.idRecord]), function (index, value){
             $("#" + value).collapse('show');
         });
     } else {
         $("#accordion #collapse-favorite").collapse('show')
+        $.cookie(swissbib.Accordion.cookieName, null);
     }
 });
 

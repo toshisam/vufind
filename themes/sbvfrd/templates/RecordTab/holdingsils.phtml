@@ -95,6 +95,7 @@ $this->headTitle($this->translate('Holdings') . ': ' . $this->driver->getBreadcr
   <script type="text/javascript">
     swissbib.Holdings.initRecord('<?=$record->getUniqueID()?>');
     swissbib.HoldingFavorites.initRecord('<?=$record->getUniqueID()?>');
+    swissbib.Accordion.initRecord('<?=$record->getUniqueID()?>');
     vufindString.favoriteReload = '<?=$this->transEsc('mylibraries.reload')?>';
   </script>
 
