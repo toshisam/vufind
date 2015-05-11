@@ -36,6 +36,9 @@ swissbib.Accordion = {
   /**
    * Get QueryString Parameter
    *
+   * param {String} name
+   *
+   * return {String|null}
    */
   getParameterByName: function(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -50,7 +53,7 @@ swissbib.Accordion = {
 * Remains state of expanded accordion group
 */
 $(document).ready(function () {
-    //when a group is shown, save it as the active accordion group
+    //when a group is shown, save state of expanded groups
     $("#accordion").on('shown.bs.collapse', function (e) {
         var target = $(e.target);
         //level 1 means group
@@ -59,7 +62,7 @@ $(document).ready(function () {
         }
     });
 
-    //when a group is closed, remove it as the active accordion group
+    //when a group is closed, save state of expanded groups
     $("#accordion").on('hidden.bs.collapse', function (e) {
         var target = $(e.target);
         //level 1 means group
@@ -71,7 +74,7 @@ $(document).ready(function () {
     });
 
 
-    //open direct link library
+    //on (re)load - open direct link library
     var expandlib = swissbib.Accordion.getParameterByName('expandlib');
     if (expandlib != null) {
         $("#accordion #collapse-" + expandlib.split('-')[0]).collapse('show');
