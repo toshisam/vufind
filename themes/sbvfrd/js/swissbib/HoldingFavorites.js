@@ -129,6 +129,13 @@ swissbib.HoldingFavorites = {
       } else {
           $.cookie('expandedGroups', null, {path: window.location.pathname});
       }
+  },
+
+  getParameterByName: function(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
 
 };
@@ -157,13 +164,20 @@ $(document).ready(function () {
         }
     });
 
+
+    //open direct link library
+    var expandlib = swissbib.HoldingFavorites.getParameterByName('expandlib');
+    if (expandlib != null) {
+        $("#accordion #collapse-" + expandlib.split('-')[0]).collapse('show');
+        $("#accordion a[href='#collapse-" + expandlib + "']").click();
+    }
+
     //on (re)load - open previously expanded groups. if none, open favorites as default
     var expandedGroupIds = JSON.parse($.cookie('expandedGroups'));
     if (expandedGroupIds != null) {
         $.each((expandedGroupIds), function (index, value){
             $("#" + value).collapse('show');
         });
-
     } else {
         $("#accordion #collapse-favorite").collapse('show')
     }
