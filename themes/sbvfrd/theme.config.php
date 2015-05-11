@@ -3,7 +3,7 @@ return array(
   'extends' => 'bootstrap3',
 
   'less' => array(
-    'active' => false,
+    'active' => true,
     'compiled.less'
   ),
 
@@ -53,6 +53,7 @@ return array(
     'swissbib/Holdings.js',
     'swissbib/HoldingFavorites.js',
     'swissbib/FavoriteInstitutions.js',
+    'swissbib/Accordion.js',
     'swissbib/Account.js',
     'swissbib/Settings.js',
     'swissbib/OffCanvas.js',
