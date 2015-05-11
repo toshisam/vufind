@@ -157,13 +157,15 @@ $(document).ready(function () {
         }
     });
 
-    ////on (re)load - check if there an expanded group
-    //var last = $.cookie('activeAccordionGroup');
-    //if (last != null) {
-    //    //remove default collapse settings
-    //    $("#accordion .in").collapse('hide');
-    //    //show the account_last visible group
-    //    $("#" + last).collapse('show');
-    //}
+    //on (re)load - open previously expanded groups. if none, open favorites as default
+    var expandedGroupIds = JSON.parse($.cookie('expandedGroups'));
+    if (expandedGroupIds != null) {
+        $.each((expandedGroupIds), function (index, value){
+            $("#" + value).collapse('show');
+        });
+
+    } else {
+        $("#accordion #collapse-favorite").collapse('show')
+    }
 });
 
