@@ -28,8 +28,9 @@ $headers = [
     </thead>
     <tbody>
     <?php
+    $index = 0;
     if (!empty($holdings)) {
-        foreach ($holdings as $hkey => $holding) {
+        foreach ($holdings as $holding) {
             echo $this->render(
                 'Holdings/holding-holding.phtml',
                 array(
@@ -45,13 +46,13 @@ $headers = [
                     'record'      => $record,
                     'recordTitle' => $recordTitle,
                     'headers'     => $headers,
-                    'even'        => (0 === $hkey % 2)
+                    'even'        => (0 === $index++ % 2)
                 )
             );
         }
     }
     if (!empty($items)) {
-        foreach ($items as $ikey => $item) {
+        foreach ($items as $item) {
             echo $this->render(
                 'Holdings/holding-item.phtml',
                 array(
@@ -68,7 +69,7 @@ $headers = [
                     'record'      => $record,
                     'recordTitle' => $recordTitle,
                     'headers'     => $headers,
-                    'even'        => (0 === $ikey % 2)
+                    'even'        => (0 === $index++ % 2)
                 )
             );
         }
