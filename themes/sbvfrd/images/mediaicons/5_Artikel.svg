@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 18.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
-<svg version="1.0" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="54px" height="79px" viewBox="0 0 54 79" enable-background="new 0 0 54 79" xml:space="preserve">
-<g>
-	<rect x="9" y="11" fill="#3C4250" width="36" height="14"/>
-	<rect x="9" y="30" fill="#3C4250" width="36" height="4"/>
-	<rect x="9" y="39" fill="#3C4250" width="36" height="4"/>
-	<rect x="9" y="48" fill="#3C4250" width="36" height="4"/>
-	<rect x="9" y="57" fill="#3C4250" width="36" height="4"/>
-	<path fill="#3C4250" d="M0,0v79h54V0H0z M49,75H5V5h44V75z"/>
-</g>
+<!-- Generator: Adobe Illustrator 18.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="89px" height="73px" viewBox="0 0 89 73" enable-background="new 0 0 89 73" xml:space="preserve">
+<path fill="#3C4250" d="M0,0v64h48V0H0z M45,61H3V3h42V61z M39,51H9v-3h30V51z M39,44H9v-3h30V44z M39,37H9v-3h30V37z M39,30H9v-3
+	h30V30z M39,23H9V9h30V23z"/>
 </svg>
