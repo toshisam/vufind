@@ -1,6 +1,8 @@
 <?php
 /** @var String $listClass */
 /** @var Array[] $actions */
+
+if (count($actions) > 0):
 ?>
 <ul class="holdingActions <?=$listClass?>">
 
@@ -13,5 +15,5 @@
 		</li>
 
    <?php endforeach; ?>
-
 </ul>
+<? endif; ?>

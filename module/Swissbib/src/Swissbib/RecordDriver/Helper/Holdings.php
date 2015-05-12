@@ -681,9 +681,9 @@ class Holdings
         $label = '';
 
         // Has informations with translation?
-        if (isset($item['location_code']) && isset($item['institution_chb']) && isset($item['network'])) {
+        if (isset($item['location_code']) && isset($item['institution']) && isset($item['network'])) {
             // @todo keep strtolower or fix in tab40.sync
-            $labelKey = strtolower($item['institution_chb'] . '_' . $item['location_code']);
+            $labelKey = strtolower($item['institution'] . '_' . $item['location_code']);
             $textDomain = 'location-' . strtolower($item['network']);
             $translated = $this->translator->translate($labelKey, $textDomain);
 
@@ -915,7 +915,6 @@ class Holdings
      *
      * set link to NEBIS Primo View
      *
-     * @todo get user language and add it to backlink
      * @param    String $networkCode
      * @param    String $institutionCode
      * @param    Array $item
@@ -926,6 +925,24 @@ class Holdings
         $values = [
             'bib-system-number' => $item['bibsysnumber'],
             ];
+        return $this->compileString($data['pattern'], $values);
+    }
+
+    /**
+     * Get backlink for IDSLU
+     *
+     * set link to iluplus Primo View
+     *
+     * @param    String $networkCode
+     * @param    String $institutionCode
+     * @param    Array $item
+     * @param    Array $data
+     * @return    String
+     */
+    protected function getBackLinkIDSLU($networkCode, $institutionCode, $item, array $data) {
+        $values = [
+            'bib-system-number' => $item['bibsysnumber'],
+        ];
         return $this->compileString($data['pattern'], $values);
     }
 
