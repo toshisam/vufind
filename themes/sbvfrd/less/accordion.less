@@ -20,13 +20,13 @@
 
   .panel {
     border: none;
-    border-radius: 0px;
+    border-radius: 0;
     margin-bottom: 15px;
 
     .panel-heading {
-      border-radius: 0px;
+      border-radius: 0;
       background-color: #d3d3d3;
-      padding: 10px 0px;
+      padding: 10px 0;
 
       a {
 
@@ -67,13 +67,13 @@
     }
 
     .panel-body {
-      padding: 0px;
+      padding: 0;
     }
 
     /** 2nd level specific/overwrites **/
-    .panel{
+    .panel {
 
-      margin-bottom: 0px;
+      margin-bottom: 0;
 
       .panel-heading {
         background-color: #ffffff;
@@ -111,10 +111,29 @@
 
       .panel-body {
         .table {
-          margin-bottom: 0px;
+          margin-bottom: 0;
+        }
+
+        div {
+          .table-flipped {
+            margin-bottom: 10px;
+
+            &:nth-child(2) {
+              border-top-width: 0;
+
+              tr:first-child {
+                th, td {
+                  border-top-width: 0;
+                }
+              }
+            }
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
         }
       }
-
     }
 
   }
