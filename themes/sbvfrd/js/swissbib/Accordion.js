@@ -30,7 +30,7 @@ swissbib.Accordion = {
   saveExpandedGroups: function() {
       var expandedGroupIds = [];
 
-      $("#accordion .in").each(function (index) {
+      $("#accordion").find(".in").each(function (index) {
           var currentItem = $(this);
 
           //only saves state of first hierachie level
@@ -68,8 +68,10 @@ swissbib.Accordion = {
 * Remains state of expanded accordion group
 */
 $(document).ready(function () {
+    var accordionContainer = $("#accordion");
+
     //when a group is shown, save state of expanded groups
-    $("#accordion").on('shown.bs.collapse', function (e) {
+    accordionContainer.on('shown.bs.collapse', function (e) {
         var target = $(e.target);
         //level 1 means group
         if(target.attr('level') == 1) {
@@ -78,7 +80,7 @@ $(document).ready(function () {
     });
 
     //when a group is closed, save state of expanded groups
-    $("#accordion").on('hidden.bs.collapse', function (e) {
+    accordionContainer.on('hidden.bs.collapse', function (e) {
         var target = $(e.target);
         //level 1 means group
         if(target.attr('level') == 1) {
@@ -92,8 +94,8 @@ $(document).ready(function () {
     //on (re)load - open direct link library
     var expandlib = swissbib.Accordion.getParameterByName('expandlib');
     if (expandlib != null) {
-        $("#accordion #collapse-" + expandlib.split('-')[0]).collapse('show');
-        $("#accordion a[href='#collapse-" + expandlib + "']").click();
+        accordionContainer.find("#collapse-" + expandlib.split('-')[0]).collapse('show');
+        accordionContainer.find("a[href='#collapse-" + expandlib + "']").click();
     }
 
     //on (re)load - open previously expanded groups. if none, open favorites as default an clear cookie as user opened a new record
@@ -103,7 +105,7 @@ $(document).ready(function () {
             $("#" + value).collapse('show');
         });
     } else {
-        $("#accordion #collapse-favorite").collapse('show')
+        accordionContainer.find("#collapse-favorite").collapse('show');
         $.cookie(swissbib.Accordion.cookieName, null);
     }
 });
