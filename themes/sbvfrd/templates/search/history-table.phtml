@@ -16,7 +16,7 @@ $flippedContent = '';
         <th><?=$headers['history_search']?></th>
         <th><?=$headers['history_limits']?></th>
         <th><?=$headers['history_results']?></th>
-        <th><?=$headers['action']?></th>
+        <th class="hidden-print"><?=$headers['action']?></th>
     </tr>
   </thead>
   <tbody>
@@ -52,7 +52,7 @@ $flippedContent = '';
         endforeach; ?>
       </td>
       <td><?=$this->localizedNumber($info->getResultTotal())?></td>
-      <td>
+      <td class="hidden-print">
         <? if ($this->showSaved): ?>
           <a href="<?=$this->url('myresearch-savesearch')?>?delete=<?=urlencode($info->getSearchId())?>&amp;mode=history"><i class="fa fa-trash"></i> <?=$this->transEsc("history_delete_link")?></a>
         <? else: ?>
