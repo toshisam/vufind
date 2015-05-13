@@ -23,6 +23,7 @@ class URLDisplay extends AbstractHelper
         $retval           = array();
         $retval['online'] = $driver->getOnlineStatus();
         $retval['unions'] = $driver->getUnions();
+        $retval['institutions'] = $driver->getInstitutions();
         $retval['format'] = $driver->getFormatsRaw();
         $retval['urls']   = $driver->getURLs();
 
