@@ -20,7 +20,7 @@ $query = $this->results->getUrlQuery();
 
     <div class="alert">
     <h4><?=$this->transEsc('nohit_spelling') ?></h4>
-    <!--            <span>suggestions for: --><?//= $suggestions->getSpellingQuery()->getString() ?><!--</span>-->
+    <!--            <span>suggestions for: --><?//= $suggestions->getSpellingQuery()->getAllTerms() ?><!--</span>-->
 
     <? if ($suggestions->hasCollocations()) :?>
         <!--            <p>Collocation queries</p>-->
