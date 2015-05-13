@@ -502,7 +502,7 @@ a.list-group-item.active:focus {
   }
 }
 
-.table-even {
+.table-even, .even {
   background: @sidebar-title-color;
 }
 
@@ -858,6 +858,40 @@ div.memorize {
   overflow-y: auto;
 }
 
+
+.favorites {
+  .form-group {
+
+    label.control-label {
+      text-align: left;
+    }
+
+    input.form-control {
+      max-width: 800px;
+    }
+  }
+
+  .table {
+    & > tbody {
+      & > tr {
+        & > th {
+          background-color: @sidebar-background-color;
+        }
+        & > td {
+          border-width: 0;
+
+          &.action {
+            text-align: right;
+          }
+        }
+
+        &.favorites-group {
+          border-top: 1px solid @border-color;
+        }
+      }
+    }
+  }
+}
 
 .searchHomeContent {
 
