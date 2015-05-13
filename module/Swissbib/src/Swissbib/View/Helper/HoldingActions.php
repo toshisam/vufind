@@ -33,34 +33,34 @@ class HoldingActions extends AbstractTranslatorHelper
         }
 
         if (isset($item['userActions'])) {
-            if ($item['userActions']['login']) {
+            if (isset($item['userActions']['login']) && $item['userActions']['login']) {
                 // show different label and sign in
                 $actions['sign_in'] = array(
                     'label'  => $this->translate('Login'),
                     'href'   => $loginURL,
                 );
             }
-            if ($item['userActions']['hold']) {
+            if (isset($item['userActions']['hold']) && $item['userActions']['hold']) {
                 $actions['hold'] = array(
                     $itemkey = key($item['availability']),
                     'label' => array_search('lendable_borrowed', $item['availability'][$itemkey]) ? $this->translate('Recall This') : $this->translate('hold_place'),
                     'href'  => $recordLink->getHoldUrl($item['holdLink'])
                 );
             }
-            if ($item['userActions']['shortLoan']) {
+            if (isset($item['userActions']['shortLoan']) && $item['userActions']['shortLoan']) {
                 $actions['shortloan'] = array(
                     'label' => $this->translate('hold_shortloan'),
                     'href'  => 'javascript:alert(\'Not implemented yet\')'
                 );
             }
-            if ($item['userActions']['photorequest']) {
+            if (isset($item['userActions']['photorequest']) && $item['userActions']['photorequest']) {
                 $actions['photocopy'] = array(
                     'label' => $this->translate('hold_copy'),
                     'href'  => $item['userActions']['photoRequestLink'],
                     'target' => '_blank',
                 );
             }
-            if ($item['userActions']['bookingrequest']) {
+            if (isset($item['userActions']['bookingrequest']) && $item['userActions']['bookingrequest']) {
                 $actions['booking'] = array(
                     'label'  => $this->translate('hold_booking'),
                     'href'   => $item['userActions']['bookingRequestLink'],
