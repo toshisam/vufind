@@ -94,8 +94,16 @@ $(document).ready(function () {
     //on (re)load - open direct link library
     var expandlib = swissbib.Accordion.getParameterByName('expandlib');
     if (expandlib != null) {
-        accordionContainer.find("#collapse-" + expandlib.split('-')[0]).collapse('show');
-        accordionContainer.find("a[href='#collapse-" + expandlib + "']").click();
+        var favoriteId = "favorite";
+        var groupId =  expandlib.split('-')[0];
+        var institutionId =  expandlib.split('-')[1];
+
+        //open library in favorites to
+        accordionContainer.find("#collapse-" + favoriteId).collapse('show');
+        accordionContainer.find("a[href='#collapse-" + favoriteId + "-" + institutionId + "']").click();
+
+        accordionContainer.find("#collapse-" + groupId).collapse('show');
+        accordionContainer.find("a[href='#collapse-" + groupId + "-" + institutionId + "']").click();
     }
 
     //on (re)load - open previously expanded groups. if none, open favorites as default an clear cookie as user opened a new record
