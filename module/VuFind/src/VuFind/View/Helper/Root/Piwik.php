@@ -97,7 +97,8 @@ class Piwik extends \Zend\View\Helper\AbstractHelper
         }
 
         $inlineScript = $this->getView()->plugin('inlinescript');
-        return $inlineScript(\Zend\View\Helper\HeadScript::SCRIPT, $code, 'SET')->prependFile($this->url . 'piwik.js');
+        return $inlineScript(\Zend\View\Helper\HeadScript::SCRIPT, $code, 'SET')
+                   ->prependFile($this->url . 'piwik.js');
     }
 
     /**
