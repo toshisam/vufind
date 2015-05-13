@@ -1,11 +1,20 @@
-<table class="table table-striped">
+<?
+$headers = [
+  'history_time'    => $this->transEsc('history_time'),
+  'history_search'  => $this->transEsc('history_search'),
+  'history_limits'  => $this->transEsc('history_limits'),
+  'history_results' => $this->transEsc('history_results'),
+  'action'          => $this->transEsc('history_' . ($this->showSaved ? 'delete' : 'save'))
+];
+?>
+<table class="table table-striped hidden-sm">
   <thead>
     <tr>
-        <th width="20%"><?=$this->transEsc("history_time")?></th>
-        <th><?=$this->transEsc("history_search")?></th>
-        <th><?=$this->transEsc("history_limits")?></th>
-        <th><?=$this->transEsc("history_results")?></th>
-        <th><?=$this->transEsc($this->showSaved ? "history_delete" : "history_save")?></th>
+        <th width="20%"><?=$headers['history_time']?></th>
+        <th><?=$headers['history_search']?></th>
+        <th><?=$headers['history_limits']?></th>
+        <th><?=$headers['history_results']?></th>
+        <th><?=$headers['action']?></th>
     </tr>
   </thead>
   <tbody>
@@ -23,12 +32,16 @@
         <? endif; ?>
       </td>
       <td>
-        <? $info->getParams()->activateAllFacets(); foreach ($info->getParams()->getFilterList() as $field => $filters): ?>
-          <? foreach ($filters as $i => $filter): ?>
-            <? if ($filter['operator'] == 'NOT') echo $this->transEsc('NOT') . ' '; if ($filter['operator'] == 'OR' && $i > 0) echo $this->transEsc('OR') . ' '; ?>
+        <?
+        $info->getParams()->activateAllFacets();
+        foreach ($info->getParams()->getFilterList() as $field => $filters):
+          foreach ($filters as $i => $filter):
+            if ($filter['operator'] == 'NOT') echo $this->transEsc('NOT') . ' ';
+            if ($filter['operator'] == 'OR' && $i > 0) echo $this->transEsc('OR') . ' ';
+            ?>
             <strong><?=$this->transEsc($field)?></strong>: <?=$this->escapeHtml($filter['displayText'])?><br/>
-          <? endforeach; ?>
-        <? endforeach; ?>
+          <? endforeach;
+        endforeach; ?>
       </td>
       <td><?=$this->localizedNumber($info->getResultTotal())?></td>
       <td>
