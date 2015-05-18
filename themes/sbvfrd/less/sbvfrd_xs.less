@@ -110,10 +110,16 @@
     padding-left: 0;
     padding-right: 0;
   }
-  
-  .meta {
+
+  .resultView .row.result .meta {
     span {
-      display: block;
+      display: inline-block;
+      padding-top: 3px;
+      padding-bottom: 3px;
+
+      & > span {
+        padding: 0;
+      }
     }
   }
 
