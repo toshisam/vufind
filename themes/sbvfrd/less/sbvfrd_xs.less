@@ -110,10 +110,24 @@
     padding-left: 0;
     padding-right: 0;
   }
-  
-  .meta {
-    span {
-      display: block;
+
+  .resultView {
+    .row.result {
+
+      padding-top: 13px !important;
+      padding-bottom: 13px !important;
+
+      .meta {
+        span {
+          display: inline-block;
+          padding-top: 3px !important;
+          padding-bottom: 3px !important;
+
+          & > span {
+            padding: 0;
+          }
+        }
+      }
     }
   }
 
