@@ -409,7 +409,7 @@ a.list-group-item.active:focus {
 .table {
   tr {
     &:last-child {
-      border-bottom: 1px solid @black;
+      border-bottom: 1px solid @border-color;
     }
   }
 
@@ -417,9 +417,9 @@ a.list-group-item.active:focus {
     & > tr {
       & > th {
         background: @sidebar-background-color;
-        font-weight: bold;
+        font-weight: normal;
         .mixin-table-border;
-        border-bottom: 1px solid @black;
+        border-bottom: 1px solid @border-color;
 
         &:last-child {
           border-right: none;
@@ -458,6 +458,52 @@ a.list-group-item.active:focus {
       }
     }
   }
+
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 0;
+
+    li {
+      a {
+        text-decoration: underline;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+.table-flipped {
+  & tr {
+    & > th {
+      .mixin-table-border;
+
+      background: @sidebar-background-color;
+      font-weight: normal;
+      border-bottom: 1px solid @border-color;
+      border-top: 1px solid @border-color;
+      border-right: none;
+      width: 31%;
+      word-wrap: break-word;
+    }
+  }
+
+  & > tbody {
+    & > tr {
+      & > th, > td, > td:last-child {
+        border-bottom: 1px solid @border-color;
+        border-top: 1px solid @border-color;
+        border-right: none;
+      }
+    }
+  }
+}
+
+.table-even {
+  background: @sidebar-title-color;
 }
 
 .pager & > li:first-child & > a,
@@ -812,46 +858,6 @@ div.memorize {
   overflow-y: auto;
 }
 
-#holdings-tab {
-  ul {
-    list-style: none;
-    padding-left: 0;
-  }
-
-  .institutionBox {
-    h4 {
-      font-size: 18px;
-      cursor: pointer;
-      padding-left: 10px;
-      margin-top: 14px;
-    }
-  }
-
-  h3 {
-    border-bottom: 1px solid @black;
-    padding: 0 0 16px 10px;
-  }
-
-  a {
-    text-decoration: underline;
-  }
-
-  .institutionFavorite  {
-    & > a {
-      &:hover:before {
-        color: @theme-color;
-      }
-
-      &:before {
-        font-family: FontAwesome;
-        content: '\f004';
-        color: @link-color;
-        margin: 0 5px 0 10px;
-        display: inline-block;
-      }
-    }
-  }
-}
 
 .searchHomeContent {
 
