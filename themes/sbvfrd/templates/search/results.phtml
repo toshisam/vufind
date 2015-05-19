@@ -25,12 +25,16 @@
 
   // Set up breadcrumbs:
   $type = (isset($_GET['type']) ? $_GET['type'] : '');
+  $originalSort = (isset($_GET['originalSort']) ? $_GET['originalSort'] : '');
   if (isset($this->overrideTitle)) {
     $this->layout()->breadcrumbs .= '<li class="active">' . $this->escapeHtml($this->overrideTitle) . '</li>';
   } else {
     $getFieldName = ('FRBR' === $type ? 'name' : 'lookfor');
     $this->layout()->breadcrumbs .= '<li class="active">
-        <a href="' . $this->url('search-results') . '?lookfor=' . $this->escapeHtml($_GET[$getFieldName]) . '&limit=' . $results->getParams()->getLimit() . '&sort=publishDateSort+desc">' .
+        <a href="' . $this->url('search-results') .
+          '?lookfor=' . $this->escapeHtml($_GET[$getFieldName]) .
+          '&limit=' . $results->getParams()->getLimit() .
+          '&sort=' . $this->escapeHtml($originalSort) . '">' .
           $this->transEsc('Search') . ': ' . $this->escapeHtml($_GET[$getFieldName]) .
         '</a></li>';
   }
