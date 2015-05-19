@@ -30,13 +30,8 @@
     $this->layout()->breadcrumbs .= '<li class="active">' . $this->escapeHtml($this->overrideTitle) . '</li>';
   } else {
     $getFieldName = ('FRBR' === $type ? 'name' : 'lookfor');
-    $this->layout()->breadcrumbs .= '<li class="active">
-        <a href="' . $this->url('search-results') .
-          '?lookfor=' . $this->escapeHtml($_GET[$getFieldName]) .
-          '&limit=' . $results->getParams()->getLimit() .
-          '&sort=' . $this->escapeHtml($originalSort) . '">' .
-          $this->transEsc('Search') . ': ' . $this->escapeHtml($_GET[$getFieldName]) .
-        '</a></li>';
+    $this->layout()->breadcrumbs .= '<li class="active">' .
+          $this->getLastSearchLink($this->transEsc('Search'), '', '</li> ');
   }
   if ('FRBR' === $type) {
     $this->layout()->breadcrumbs .= '<li class="active">' . sprintf($this->transEsc('search_breadcrumb_frbr'), $this->escapeHtml($this->lookfor)) . '</li>';
