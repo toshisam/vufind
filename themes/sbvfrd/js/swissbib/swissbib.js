@@ -529,6 +529,8 @@ $(document).ready(function () {
 });
 
 $(document).ajaxComplete(swissbib.initBackgrounds);
+$(document).on('show.bs.collapse', swissbib.initBackgrounds);
+$(document).on('hide.bs.collapse', swissbib.initBackgrounds);
 
 
 /**
