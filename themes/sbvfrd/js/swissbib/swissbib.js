@@ -13,6 +13,8 @@ var swissbib = {
   /** @var    {Boolean}    ie6 */
   ie6: false,
 
+  currentTimeout: null,
+
 
   /**
    * Initialize on ready.
@@ -516,6 +518,27 @@ var swissbib = {
     } else {
       parentElement.removeClass('bg-grey').addClass('bg-white');
     }
+  },
+
+  /**
+   * init backgrounds during transition to prevent flickering
+   */
+  initBackgroundsRecursive: function(count) {
+    swissbib.initBackgrounds();
+    swissbib.currentTimeout = setTimeout(
+        function() {
+          swissbib.initBackgroundsRecursive();
+        },
+        1
+    );
+  },
+
+  /**
+   * clear the init background initiation
+   */
+  destructBackgroundsRecursive: function() {
+    swissbib.initBackgrounds();
+    clearTimeout(swissbib.currentTimeout);
   }
 };
 
@@ -529,8 +552,10 @@ $(document).ready(function () {
 });
 
 $(document).ajaxComplete(swissbib.initBackgrounds);
-$(document).on('show.bs.collapse', swissbib.initBackgrounds);
-$(document).on('hide.bs.collapse', swissbib.initBackgrounds);
+$(document).on('show.bs.collapse', swissbib.initBackgroundsRecursive);
+$(document).on('hide.bs.collapse', swissbib.initBackgroundsRecursive);
+$(document).on('shown.bs.collapse', swissbib.destructBackgroundsRecursive);
+$(document).on('hidden.bs.collapse', swissbib.destructBackgroundsRecursive);
 
 
 /**
