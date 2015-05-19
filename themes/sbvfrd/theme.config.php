@@ -48,6 +48,7 @@ return array(
     '../themes/bootstrap3/js/vendor/jsTree/jstree.min.js',
 
     'swissbib/swissbib.js',
+    'swissbib/common.js',
 
     'swissbib/AdvancedSearch.js',
     'swissbib/Holdings.js',
