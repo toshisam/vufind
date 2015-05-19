@@ -16,6 +16,7 @@ local/log/*
 module/**/autoload_classmap.php
 public/.htaccess
 themes/**/compiled.css
+themes/*/css/less/
 vendor/**/autoload_classmap.php
 
 # while testing:

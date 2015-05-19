@@ -1,11 +1,22 @@
-<table class="table table-striped">
+<?
+$headers = [
+  'history_time'    => $this->transEsc('history_time'),
+  'history_search'  => $this->transEsc('history_search'),
+  'history_limits'  => $this->transEsc('history_limits'),
+  'history_results' => $this->transEsc('history_results'),
+  'action'          => $this->transEsc('history_' . ($this->showSaved ? 'delete' : 'save'))
+];
+
+$flippedContent = '';
+?>
+<table class="table table-striped hidden-xs hidden-sm">
   <thead>
     <tr>
-        <th width="20%"><?=$this->transEsc("history_time")?></th>
-        <th><?=$this->transEsc("history_search")?></th>
-        <th><?=$this->transEsc("history_limits")?></th>
-        <th><?=$this->transEsc("history_results")?></th>
-        <th><?=$this->transEsc($this->showSaved ? "history_delete" : "history_save")?></th>
+        <th><?=$headers['history_time']?></th>
+        <th><?=$headers['history_search']?></th>
+        <th><?=$headers['history_limits']?></th>
+        <th><?=$headers['history_results']?></th>
+        <th class="hidden-print"><?=$headers['action']?></th>
     </tr>
   </thead>
   <tbody>
@@ -17,21 +28,31 @@
             <?
           $desc = $info->getParams()->getDisplayQuery();
           echo empty($desc) ? $this->transEsc("history_empty_search") : $this->escapeHtml($desc);
+
+            $flippedContent .= $this->render('search/history-table-flipped.phtml', array(
+                'info'    => $info,
+                'headers' => $headers,
+                'even'    => (0 === $iteration % 2)
+            ));
         ?></a>
         <? if (method_exists($info,'getTarget')): ?>
            <br /><span class="meta"><?=$this->transEsc('tab.' . $info->getTarget())?></span>
         <? endif; ?>
       </td>
       <td>
-        <? $info->getParams()->activateAllFacets(); foreach ($info->getParams()->getFilterList() as $field => $filters): ?>
-          <? foreach ($filters as $i => $filter): ?>
-            <? if ($filter['operator'] == 'NOT') echo $this->transEsc('NOT') . ' '; if ($filter['operator'] == 'OR' && $i > 0) echo $this->transEsc('OR') . ' '; ?>
+        <?
+        $info->getParams()->activateAllFacets();
+        foreach ($info->getParams()->getFilterList() as $field => $filters):
+          foreach ($filters as $i => $filter):
+            if ($filter['operator'] == 'NOT') echo $this->transEsc('NOT') . ' ';
+            if ($filter['operator'] == 'OR' && $i > 0) echo $this->transEsc('OR') . ' ';
+            ?>
             <strong><?=$this->transEsc($field)?></strong>: <?=$this->escapeHtml($filter['displayText'])?><br/>
-          <? endforeach; ?>
-        <? endforeach; ?>
+          <? endforeach;
+        endforeach; ?>
       </td>
       <td><?=$this->localizedNumber($info->getResultTotal())?></td>
-      <td>
+      <td class="hidden-print">
         <? if ($this->showSaved): ?>
           <a href="<?=$this->url('myresearch-savesearch')?>?delete=<?=urlencode($info->getSearchId())?>&amp;mode=history"><i class="fa fa-trash"></i> <?=$this->transEsc("history_delete_link")?></a>
         <? else: ?>
@@ -42,3 +63,4 @@
   <? endforeach; ?>
   </tbody>
 </table>
+<?=$flippedContent;?>

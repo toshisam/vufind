@@ -110,6 +110,29 @@
       }
     }
   }
+
+  #advSearchForm {
+    .col-sm-12 {
+      label {
+        &.limit {
+          margin-top: 42px;
+        }
+      }
+    }
+  }
+}
+
+// firefox specific
+@media (min-width: 768px) {
+  @-moz-document url-prefix() {
+    #advSearchForm {
+      .col-sm-12 {
+        label.limit {
+          margin-top: 33px;
+        }
+      }
+    }
+  }
 }
 
 @media (min-width: 768px) and (max-width: 992px) {

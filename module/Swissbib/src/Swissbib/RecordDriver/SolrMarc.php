@@ -668,6 +668,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             return array();
         }
         foreach ($fields as $field) {
+            if (!isset($field['union'])) continue;
+
             if ($field['union'] === 'RERO' && $field['tag'] === '856') {
                 if (preg_match('/^.*v_bcu\/media\/images/', $field['sf_u'])) {
                     return 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath='
@@ -864,11 +866,17 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getMostSpecificFormat()
     {
-        $formatsRaw = $this->fields["format_str_mv"];
-        natsort($formatsRaw);
-        $formatsRaw = array_values(array_reverse($formatsRaw));
+        if (isset($this->fields["format_str_mv"])) {
+            $formatsRaw = $this->fields["format_str_mv"];
+            natsort($formatsRaw);
+            $formatsRaw = array_values(array_reverse($formatsRaw));
 
-        return array($formatsRaw[0]);
+            return array($formatsRaw[0]);
+
+        } else {
+            return [];
+        }
+
     }
 
 
