@@ -103,15 +103,15 @@ trait PersonalSettingsHelper {
                 }
             } else
             {
-                //check if there is a value stored for sort in the database
-                //if not use the request or default value
+                $tSort = $request->get('sort');
+                $sort = !empty($tSort) ? $tSort : $defaultSort;
+
+                //overwrite sort if value is set in database
                 if ($user->default_sort) {
                     $userDefaultSort = unserialize($user->default_sort);
-                    $userDefaultSort = $userDefaultSort[$target];
-                    $sort = $userDefaultSort;
-                } else {
-                    $tSort = $request->get('sort');
-                    $sort = !empty($tSort) ? $tSort : $defaultSort;
+                    if (isset($userDefaultSort[$target])) {
+                        $sort = $userDefaultSort[$target];
+                    }
                 }
             }
         } else {

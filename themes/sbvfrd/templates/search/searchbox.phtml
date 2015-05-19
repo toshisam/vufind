@@ -59,6 +59,7 @@
     </div>
     <div class="input-group">
         <span class="searchBoxWrapper">
+           <label class="sr-only" for="searchForm_lookfor"><?=$this->transEsc("Search For")?></label>
            <input class="form-control search-query<? if($this->searchbox()->autocompleteEnabled($this->searchClassId)):?> autocomplete searcher:<?=$this->escapeHtmlAttr($this->searchClassId) ?><? endif ?>" id="searchForm_lookfor" type="text" name="lookfor" value="<?=$this->escapeHtmlAttr($this->lookfor)?>"/>
         </span>
         <span class="input-group-btn">

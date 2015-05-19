@@ -279,7 +279,7 @@ swissbib.AdvancedSearch = {
           groupIndex: groupIndex,
           fieldIndex: fieldIndex,
           label: this.searchLabels.searchLabel,
-          classes: fieldIndex ? 'hide' : ''
+          classes: 'sr-only'
         };
 
     return template(data);

@@ -20,7 +20,7 @@ $query = $this->results->getUrlQuery();
 
     <div class="alert">
     <h4><?=$this->transEsc('nohit_spelling') ?></h4>
-    <!--            <span>suggestions for: --><?//= $suggestions->getSpellingQuery()->getString() ?><!--</span>-->
+    <!--            <span>suggestions for: --><?//= $suggestions->getSpellingQuery()->getAllTerms() ?><!--</span>-->
 
     <? if ($suggestions->hasCollocations()) :?>
         <!--            <p>Collocation queries</p>-->
@@ -87,7 +87,8 @@ $query = $this->results->getUrlQuery();
 
     <div class="alert">
         <h4><?=$this->transEsc('nohit_tip') ?></h4>
-        <p><a href="<?=$this->url('help-page')?>"><?=$this->transEsc('helppage')?></a> <?=$this->transEsc('nohit_text4') ?> </p>
+        <p><a href="<?=$this->url('help-page', array('topic' => 'search'))?>"><?=$this->transEsc('Search Tips')?></a></p>
+        <p><a href="<?=$this->url('help-page', array('topic' => 'faq'))?>"><?=$this->transEsc('helppage.faq')?></a></p>
         <p><a href="<?=$this->url('search-advanced')?>"><?=$this->transEsc('Advanced Search')?></a> <?=$this->transEsc('nohit_text5') ?> </p>
     </div>
 <? endif; ?>

@@ -436,6 +436,10 @@ class Aleph extends VuFindDriver
         if (!isset($user['college'])) {
             $user['college'] = $this->useradm;
         }
+        if (!isset($user['cat_password'])) {
+            //because getMyProfile gets also called without a password in VuFind
+            $user['cat_password'] = '';
+        }
         $xml = $this->doXRequest(
             "bor-auth",
             //array(
