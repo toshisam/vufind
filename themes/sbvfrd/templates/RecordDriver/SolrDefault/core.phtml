@@ -196,8 +196,7 @@ else {
       <?php if (!empty($showFRBR) && $showFRBR && !empty($groupID)) : ?>
        <span class="hidden-xs">
          <a href="<?=
-          $this->url('search-results') . '?lookfor=' . $groupID . "&type=FRBR"
-          . "&sort=publishDateSort+desc" ?>"
+          $this->url('search-results') . '?lookfor=' . $groupID . "&type=FRBR&sort=publishDateSort+desc" ?>"
              class="btn btn-primary icon_show" title="<?= $this->transEsc('Other Editions') ?>">
               <span><?= $this->transEsc('Other Editions') ?></span>
           </a>
