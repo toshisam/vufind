@@ -33,6 +33,8 @@
  */
 namespace Swissbib\View\Helper;
 
+use Swissbib\RecordDriver\Summon as SwissbibSummon;
+
 use VuFind\RecordDriver\Summon;
 use VuFind\View\Helper\Root\Record as VuFindRecord;
 
@@ -122,10 +124,21 @@ class Record extends VuFindRecord
      *
      * @return array
      */
-    public function getExtendedLinkDetails($localRestrictions = array(), $globalRestrictions = array())
+    public function getExtendedLinkDetails()
     {
-        // See if there are any links available:
+        if ($this->driver instanceof Summon) return null;
 
+        if ($this->config->Site->theme === 'sbvfrdmulti') {
+            $localunions = array('IDSBB','SNL', 'RETROS', 'FREE');
+            $localtags = array('856');
+            $localRestrictions = compact('localunions','localtags');
+
+            $globalunions = array('IDSBB','SNL');
+            $tags = array('956');
+            $globalRestrictions = compact('globalunions','tags');
+        }
+
+        // See if there are any links available:
         if (empty($localRestrictions)) {
             $localtags = array('856','956');
 
@@ -406,5 +419,34 @@ class Record extends VuFindRecord
         };
 
         return '';
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getOpenUrl() {
+        $this->driver instanceof Summon ? $this->driver->getOpenURL() : null;
+    }
+
+    /**
+     * @return null
+     */
+    public function getLink360() {
+        return $this->driver instanceof SwissbibSummon ? $this->driver->getLink() : null;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getLinkSFX() {
+        if ( !($this->driver instanceof Summon) ) return null;
+
+        $linkSFX = $this->view->openUrl($this->driver->getOpenURL());
+        $linkSFX_param = 'title = "' . $this->transEsc('articles.linkSFX') . '" target="_blank"';
+        $linkSFX = str_replace("<a ", "<a $linkSFX_param ", $linkSFX);
+        $linkSFX = str_replace($this->transEsc('Get full text'), "SFX Services", $linkSFX);
+        $linkSFX = str_replace('class="openUrl"', 'class="openUrl hidden"', $linkSFX);
+
+        return $linkSFX;
     }
 }
