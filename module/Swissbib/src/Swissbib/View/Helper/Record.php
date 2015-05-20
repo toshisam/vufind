@@ -33,9 +33,6 @@
  */
 namespace Swissbib\View\Helper;
 
-use Swissbib\RecordDriver\Summon as SwissbibSummon;
-
-use VuFind\RecordDriver\Summon;
 use VuFind\View\Helper\Root\Record as VuFindRecord;
 
 /**
@@ -126,7 +123,7 @@ class Record extends VuFindRecord
      */
     public function getExtendedLinkDetails()
     {
-        if ($this->driver instanceof Summon) return null;
+        if ($this->driver instanceof \VuFind\RecordDriver\Summon) return null;
 
         if ($this->config->Site->theme === 'sbvfrdmulti') {
             $localunions = array('IDSBB','SNL', 'RETROS', 'FREE');
@@ -317,7 +314,7 @@ class Record extends VuFindRecord
     
     public function getResponsible($titleStatement, $record)
     {
-        if ($record instanceof Summon)
+        if ($record instanceof \VuFind\RecordDriver\Summon)
         {
             if ($record->getAuthor()) {
                 return $record->getAuthor();
@@ -425,26 +422,26 @@ class Record extends VuFindRecord
      * @return null|string
      */
     public function getOpenUrl() {
-        $this->driver instanceof Summon ? $this->driver->getOpenURL() : null;
+        return $this->driver instanceof \VuFind\RecordDriver\Summon ? $this->driver->getOpenURL() : null;
     }
 
     /**
      * @return null
      */
     public function getLink360() {
-        return $this->driver instanceof SwissbibSummon ? $this->driver->getLink() : null;
+        return $this->driver instanceof \Swissbib\RecordDriver\Summon ? $this->driver->getLink() : null;
     }
 
     /**
      * @return mixed|null
      */
     public function getLinkSFX() {
-        if ( !($this->driver instanceof Summon) ) return null;
+        if ( !($this->driver instanceof \VuFind\RecordDriver\Summon) ) return null;
 
         $linkSFX = $this->view->openUrl($this->driver->getOpenURL());
-        $linkSFX_param = 'title = "' . $this->transEsc('articles.linkSFX') . '" target="_blank"';
+        $linkSFX_param = 'title = "' . $this->view->transEsc('articles.linkSFX') . '" target="_blank"';
         $linkSFX = str_replace("<a ", "<a $linkSFX_param ", $linkSFX);
-        $linkSFX = str_replace($this->transEsc('Get full text'), "SFX Services", $linkSFX);
+        $linkSFX = str_replace($this->view->transEsc('Get full text'), "SFX Services", $linkSFX);
         $linkSFX = str_replace('class="openUrl"', 'class="openUrl hidden"', $linkSFX);
 
         return $linkSFX;
