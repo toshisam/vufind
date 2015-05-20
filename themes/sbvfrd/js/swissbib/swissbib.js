@@ -519,6 +519,10 @@ var swissbib = {
       parentElement.children('div:first-of-type').removeClass('bg-grey').addClass('bg-white');
     } else {
       parentElement.removeClass('bg-grey').addClass('bg-white');
+
+      if (sidebarFound) {
+        parentElement.children('div.sidebar').addClass('invisible');
+      }
     }
   },
 
