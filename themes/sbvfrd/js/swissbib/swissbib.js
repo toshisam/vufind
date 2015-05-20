@@ -520,7 +520,7 @@ var swissbib = {
     } else {
       parentElement.removeClass('bg-grey').addClass('bg-white');
 
-      if (sidebarFound) {
+      if (sidebarFound && !hasChildren) {
         parentElement.children('div.sidebar').addClass('invisible');
       }
     }
