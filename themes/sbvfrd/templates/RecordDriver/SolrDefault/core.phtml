@@ -60,7 +60,7 @@ else {
   <div class="col-sm-3 hidden-xs">
     <div class="thumbDetailView hidden-print">
       <? /* Display thumbnail if appropriate: */ ?>
-      <? $mediumThumb = $this->record($this->driver)->getThumbnail('medium'); $largeThumb = $this->record($this->driver)->getThumbnail('large'); ?>
+      <? $mediumThumb = $viewRecord->getThumbnail('medium'); $largeThumb = $viewRecord->getThumbnail('large'); ?>
       <? if ($mediumThumb): ?>
         <? if ($largeThumb): ?><a href="<?=$this->escapeHtmlAttr($largeThumb)?>"><? endif; ?>
           <img alt="<?=$this->transEsc('Cover Image')?>" class="recordcover" src="<?=$this->escapeHtmlAttr($mediumThumb);?>"/>
@@ -70,7 +70,7 @@ else {
       <? endif; ?>
 
       <? /* Display qrcode if appropriate: */ ?>
-      <? $QRCode = $this->record($this->driver)->getQRCode("core"); ?>
+      <? $QRCode = $viewRecord->getQRCode("core"); ?>
       <? if($QRCode): ?>
         <span class="hidden-xs">
           <br/><img alt="<?=$this->transEsc('QR Code')?>" class="qrcode" src="<?=$this->escapeHtmlAttr($QRCode);?>"/>
@@ -82,7 +82,7 @@ else {
     // from this area of the record view, this can be split into
     // getPreviewData() (should stay here) and
     // getPreviewLink() (can go in your desired tab) ?>
-    <?=$this->record($this->driver)->getPreviews()?>
+    <?=$viewRecord->getPreviews()?>
   </div>
 
   <div class="col-sm-9 col-xs-12">
