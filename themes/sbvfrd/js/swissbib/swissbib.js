@@ -497,12 +497,14 @@ var swissbib = {
     var sidebarHeight = 0,
         elementHeight = 0,
         parentElement = $('.dirty-hack-column > .row').first(),
-        sidebarFound = false;
+        sidebarFound = false,
+        hasChildren = false;
 
     parentElement.children().each(function(index, element) {
         if($(element).hasClass('sidebar')) {
           sidebarHeight = $(element).outerHeight(true);
           sidebarFound = true;
+          hasChildren = $(element).children().length > 0;
         } else {
           var tempHeight = $(element).outerHeight(true);
 
@@ -512,7 +514,7 @@ var swissbib = {
         }
     });
 
-    if (elementHeight > sidebarHeight && sidebarFound) {
+    if (elementHeight > sidebarHeight && sidebarFound && hasChildren) {
       parentElement.removeClass('bg-white').addClass('bg-grey');
       parentElement.children('div:first-of-type').removeClass('bg-grey').addClass('bg-white');
     } else {
