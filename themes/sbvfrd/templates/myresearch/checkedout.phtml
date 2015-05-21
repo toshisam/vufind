@@ -51,8 +51,9 @@
           <?
           $flippedContent .= $this->render('myresearch/checkedout-flipped.phtml', array(
           'ilsDetails'    => $ilsDetails,
-          'renewForm'  => $renewForm,
-          'renewResult' => $renewResult,
+          'resource'   => $resource,
+          'renewForm'  => $this->renewForm,
+          'renewResult' => $this->renewResult,
           'headers' => $headers,
           'even'    => (0 === $iteration % 2)
           ));
