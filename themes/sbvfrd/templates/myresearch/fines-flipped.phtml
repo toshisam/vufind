@@ -22,7 +22,7 @@
           <th><?=$headers['library_callno']?></th>
           <td>
               <? if (!empty($record['institution'])): ?>
-                  <?=$this->escapeHtml($this->zendTranslate($record['institution'], 'institution'))?><br />
+                  <?=$this->escapeHtml($this->zendTranslate($record['institution'], 'institution'))?>,
               <? endif; ?>
 
               <? if (!empty($record['signature'])): ?>
