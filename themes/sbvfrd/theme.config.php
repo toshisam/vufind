@@ -59,7 +59,7 @@ return array(
     'swissbib/Settings.js',
     'swissbib/OffCanvas.js',
   ),
-
+  'favicon' => 'favicon.ico',
   'helpers' => array(
     'factories'  => array(
       'record'                    => 'Swissbib\View\Helper\Swissbib\Factory::getRecordHelper',
