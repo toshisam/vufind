@@ -920,13 +920,16 @@ class Holdings
      * @param    Array $item
      * @param    Array $data
      * @return    String
-     */
+     *
+     * Links to Primo work, but login after permalink leads to crashes in Primo. Therefore, use Aleph until Primo allows safe login after permalink
+
     protected function getBackLinkNEBIS($networkCode, $institutionCode, $item, array $data) {
         $values = [
             'bib-system-number' => $item['bibsysnumber'],
             ];
         return $this->compileString($data['pattern'], $values);
     }
+     */
 
     /**
      * Get backlink for IDSLU
@@ -938,13 +941,16 @@ class Holdings
      * @param    Array $item
      * @param    Array $data
      * @return    String
-     */
+     *
+     * Links to Primo work, but login after permalink leads to crashes in Primo. Therefore, use Aleph until Primo allows safe login after permalink
+     *
     protected function getBackLinkIDSLU($networkCode, $institutionCode, $item, array $data) {
         $values = [
             'bib-system-number' => $item['bibsysnumber'],
         ];
         return $this->compileString($data['pattern'], $values);
     }
+     * /
 
     /**
      * Get back link for IDSSG (self-developed-non-aleph-request)
