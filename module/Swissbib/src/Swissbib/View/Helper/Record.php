@@ -69,11 +69,11 @@ class Record extends VuFindRecord
                 )
             ),
             'exclude' => array(
-                '956' => array(
-                    'x|VIEW && y|Porträt'
-                ),
                 '856' => array(
                     'u|helveticarchives'
+                ),
+                '956' => array(
+                    'x|VIEW && y|Porträt'
                 )
             )
         ),
