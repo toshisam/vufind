@@ -42,17 +42,22 @@ use VuFind\View\Helper\Root\Record as VuFindRecord;
  */
 class Record extends VuFindRecord
 {
-
-    public function getLocalValues( $params = array()) {
-
-
+    /**
+     * @param array $params
+     * @return mixed
+     */
+    public function getLocalValues($params = array())
+    {
         $allParams = array('localunions' => array(), 'localtags'  => array(), 'indicators' => array(), 'subfields' => array());
         $diffarray =  array_merge(array_diff_key($allParams, $params),$params);
-        $diffArrayInCorrectOrder = array('localunions' => $diffarray['localunions'],'localtags' => $diffarray['localtags'], 'indicators' => $diffarray['indicators'], 'subfields' => $diffarray['subfields']);
+        $diffArrayInCorrectOrder = array(
+            'localunions' => $diffarray['localunions'],
+            'localtags' => $diffarray['localtags'],
+            'indicators' => $diffarray['indicators'],
+            'subfields' => $diffarray['subfields']
+        );
 
         return  $this->driver->tryMethod('getLocalValues',$diffArrayInCorrectOrder);
-
-
     }
 
     /**
@@ -224,15 +229,11 @@ class Record extends VuFindRecord
         return $this->createUniqueLinks(array_map($formatLink, $collectedLinks));
     }
 
-
-
-
     /**
      * @param string $format Format text to convert into CSS class
      *
      * @return string
      */
-
     public function getFormatClass($format)
     {
         if (!($this->driver instanceof \Swissbib\RecordDriver\SolrMarc) || !$this->driver->getUseMostSpecificFormat()) return parent::getFormatClass($format);
@@ -248,7 +249,6 @@ class Record extends VuFindRecord
      *
      * @return string
      */
-
     public function getSubtitle($titleStatement)
     {
         $parts = $parts_amount = $parts_name = $title_remainder = null;
@@ -311,7 +311,6 @@ class Record extends VuFindRecord
      *
      * @return string
      */
-    
     public function getResponsible($titleStatement, $record)
     {
         if ($record instanceof \VuFind\RecordDriver\Summon)
@@ -410,7 +409,8 @@ class Record extends VuFindRecord
      * @param string $tab
      * @return string
      */
-    public function getTabVisibility($tab) {
+    public function getTabVisibility($tab)
+    {
         if (isset($this->config->RecordTabVisiblity->$tab)) {
             return $this->config->RecordTabVisiblity->$tab;
         };
@@ -419,23 +419,26 @@ class Record extends VuFindRecord
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
-    public function getOpenUrl() {
+    public function getOpenUrl()
+    {
         return $this->driver instanceof \VuFind\RecordDriver\Summon ? $this->driver->getOpenURL() : null;
     }
 
     /**
-     * @return null
+     * @return string|null
      */
-    public function getLink360() {
+    public function getLink360()
+    {
         return $this->driver instanceof \Swissbib\RecordDriver\Summon ? $this->driver->getLink() : null;
     }
 
     /**
-     * @return mixed|null
+     * @return string|null
      */
-    public function getLinkSFX() {
+    public function getLinkSFX()
+    {
         if ( !($this->driver instanceof \VuFind\RecordDriver\Summon) ) return null;
 
         $linkSFX = $this->view->openUrl($this->driver->getOpenURL());
