@@ -42,6 +42,75 @@ use VuFind\View\Helper\Root\Record as VuFindRecord;
  */
 class Record extends VuFindRecord
 {
+    protected $urlFilter = array(
+        'sbvfrdmulti' => array(
+            'Solr' => array(
+                'select' => array(
+                    '950' => array(
+                        'url' => array('u'),
+                        'desc' => array('z', '3'), //url as fallback description
+                        'conditions' => array( //OR, first match wins
+                            array( //AND
+                                array(
+                                    'subfield' => 'B',
+                                    'subfieldValue' => 'IDSBB'
+                                )
+                            ),
+                            array(
+                                array(
+                                    'subfield' => 'z',
+                                    'subfieldValue' => 'Inhaltstext'
+                                )
+                            )
+                        )
+                    )
+                ),
+                'exclude' => array(
+                    '856' => array(
+                        'conditions' => array( //OR, first match wins
+                            array( //AND
+                                array(
+                                    'subfield' => 'z',
+                                    'subfieldValue' => 'Porträt'
+                                )
+                            )
+                        )
+                    ),
+                    '950' => array(
+                        'conditions' => array( //OR, first match wins
+                            array( //AND
+                                array(
+                                    'subfield' => 'z',
+                                    'subfieldValue' => 'Inhaltsv'
+                                )
+                            ),
+                            array( //AND
+                                array(
+                                    'subfield' => 'z',
+                                    'subfieldValue' => 'Porträt'
+                                )
+                            )
+                        )
+                    ),
+                    '956' => array(
+                        'conditions' => array(
+                            array(
+                                array(
+                                    'subfield' => 'x',
+                                    'subfieldValue' => 'VIEW'
+                                ),
+                                array(
+                                    'subfield' => 'y',
+                                    'subfieldValue' => 'Porträt'
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    );
+
     /**
      * @param array $params
      * @return mixed
@@ -72,8 +141,8 @@ class Record extends VuFindRecord
      * create_multiple_856_links = true
      *
      */
-    private function createUniqueLinks($urlArray) {
-
+    private function createUniqueLinks($urlArray)
+    {
         $urlArray = $this->getCorrectedURLS($urlArray);
 
         $config = $this->driver->getServiceLocator()->get('VuFind\Config')->get('config');
@@ -118,6 +187,95 @@ class Record extends VuFindRecord
         }
 
         return $newUrlArray;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getNewExtendedLinkDetails()
+    {
+        if (!isset($this->urlFilter[$this->config->Site->theme]) ||
+            !isset($this->urlFilter[$this->config->Site->theme][$this->view->searchClassId])) return null;
+
+        $select = $this->urlFilter[$this->config->Site->theme][$this->view->searchClassId]['select'];
+        $exclude = $this->urlFilter[$this->config->Site->theme][$this->view->searchClassId]['exclude'];
+        $filteredLinks = array();
+
+        foreach ($select as $field => $selectFieldConfig) {
+            $driverFields = $this->driver->getMarcRecord()->getFields($field);
+
+            if (!empty($driverFields)) {
+                /** @var \File_MARC_Data_Field $marcDataField */
+                foreach ($driverFields as $marcDataField) {
+                    $url = $this->getFirstSubfieldMatch($selectFieldConfig['url'], $marcDataField);
+
+                    if ($url === null) continue;
+
+                    if (!$this->matchesConditions($selectFieldConfig['conditions'], $marcDataField) ||
+                        isset($exclude[$field]) && $this->matchesConditions($exclude[$field]['conditions'], $marcDataField)) continue;
+
+                    $desc = $this->getFirstSubfieldMatch($selectFieldConfig['desc'], $marcDataField);
+
+                    if ($desc === null) {
+                        $desc = $url;
+                    };
+
+                    $filteredLinks[] = array('url' => $url, 'desc' => $desc);
+                    break 2;
+                }
+            }
+        }
+
+        return $this->getCorrectedURLS($filteredLinks);
+    }
+
+    /**
+     * @param array $fields
+     * @param \File_MARC_Data_Field $marcDataField
+     *
+     * @return null|string
+     */
+    private function getFirstSubfieldMatch(array $fields, \File_MARC_Data_Field $marcDataField)
+    {
+        foreach ($fields as $field) {
+            if ($marcDataField->getSubfield($field)) {
+                return $marcDataField->getSubfield($field)->getData();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array $conditions
+     * @param \File_MARC_Data_Field $marcRecord
+     *
+     * @return bool
+     */
+    private function matchesConditions(array $conditions, \File_MARC_Data_Field $marcRecord)
+    {
+        $matchesOr = false;
+        $orConditionsCount = count($conditions);
+        $i=0;
+
+        while (!$matchesOr && $i < $orConditionsCount) {
+            $j=0;
+            $matchesAnd = true;
+            $andConditionsCount = count($conditions[$i]);
+
+            while ($matchesAnd && $j < $andConditionsCount) {
+                $subfield = $marcRecord->getSubfield($conditions[$i][$j]['subfield']);
+                $matchesAnd = $subfield && preg_match('/' . $conditions[$i][$j]['subfieldValue'] . '/', $subfield->getData());
+                $j++;
+            }
+
+            $matchesOr = $matchesOr || $matchesAnd;
+
+            $i++;
+        }
+
+
+        return $matchesOr;
     }
 
     /**
