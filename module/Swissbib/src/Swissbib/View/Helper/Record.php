@@ -50,61 +50,20 @@ class Record extends VuFindRecord
                         'url' => array('u'),
                         'desc' => array('z', '3'), //url as fallback description
                         'conditions' => array( //OR, first match wins
-                            array( //AND
-                                array(
-                                    'subfield' => 'B',
-                                    'subfieldValue' => 'IDSBB'
-                                )
-                            ),
-                            array(
-                                array(
-                                    'subfield' => 'z',
-                                    'subfieldValue' => 'Inhaltstext'
-                                )
-                            )
+                            'B|IDSBB && z|Inhaltstext'
+                        )
+                    ),
+                    '856' => array(
+                        'url' => array('u'),
+                        'desc' => array('z', '3'), //url as fallback description
+                        'conditions' => array( //OR, first match wins
+                            'z|Porträt'
                         )
                     )
                 ),
                 'exclude' => array(
                     '856' => array(
-                        'conditions' => array( //OR, first match wins
-                            array( //AND
-                                array(
-                                    'subfield' => 'z',
-                                    'subfieldValue' => 'Porträt'
-                                )
-                            )
-                        )
-                    ),
-                    '950' => array(
-                        'conditions' => array( //OR, first match wins
-                            array( //AND
-                                array(
-                                    'subfield' => 'z',
-                                    'subfieldValue' => 'Inhaltsv'
-                                )
-                            ),
-                            array( //AND
-                                array(
-                                    'subfield' => 'z',
-                                    'subfieldValue' => 'Porträt'
-                                )
-                            )
-                        )
-                    ),
-                    '956' => array(
-                        'conditions' => array(
-                            array(
-                                array(
-                                    'subfield' => 'x',
-                                    'subfieldValue' => 'VIEW'
-                                ),
-                                array(
-                                    'subfield' => 'y',
-                                    'subfieldValue' => 'Porträt'
-                                )
-                            )
-                        )
+                        'z|Porträt'
                     )
                 )
             )
@@ -212,7 +171,7 @@ class Record extends VuFindRecord
                     if ($url === null) continue;
 
                     if (!$this->matchesConditions($selectFieldConfig['conditions'], $marcDataField) ||
-                        isset($exclude[$field]) && $this->matchesConditions($exclude[$field]['conditions'], $marcDataField)) continue;
+                        isset($exclude[$field]) && $this->matchesConditions($exclude[$field], $marcDataField)) continue;
 
                     $desc = $this->getFirstSubfieldMatch($selectFieldConfig['desc'], $marcDataField);
 
@@ -261,11 +220,13 @@ class Record extends VuFindRecord
         while (!$matchesOr && $i < $orConditionsCount) {
             $j=0;
             $matchesAnd = true;
-            $andConditionsCount = count($conditions[$i]);
+            $andConditions = explode('&&', str_replace(' ', '', $conditions[$i]));
+            $andConditionsCount = count($andConditions);
 
             while ($matchesAnd && $j < $andConditionsCount) {
-                $subfield = $marcRecord->getSubfield($conditions[$i][$j]['subfield']);
-                $matchesAnd = $subfield && preg_match('/' . $conditions[$i][$j]['subfieldValue'] . '/', $subfield->getData());
+                list($subfieldKey, $subfieldValue) = explode('|', $andConditions[$j]);
+                $subfield = $marcRecord->getSubfield($subfieldKey);
+                $matchesAnd = $subfield && preg_match('/' . $subfieldValue . '/', $subfield->getData());
                 $j++;
             }
 
