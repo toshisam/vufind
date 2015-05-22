@@ -46,49 +46,51 @@ class Record extends VuFindRecord
     /**
      * @var array
      */
-
-/*
-'IDSBB','SNL', 'RETROS', 'FREE');
-$localtags = array('856');
-
-
-            '856' => ['y', 'z'],   // Standard URL
-            '555' => ['a']         // Cumulative index/finding aids
-            $globalunions = array('IDSBB','SNL');
-            $tags = array('956');
-
-
-            '856' => array('u', '3'), // Standard URL
-            '956' => array('u', 'y','B'), // Standard URL
-
-*/
     protected $urlFilter = array(
         'sbvfrdmulti' => array(
             'select' => array(
-                '950' => array( //localvalues
-                    'url' => array('u'),
-                    'desc' => array('z', '3'), //url as fallback description
-                    'conditions' => array( //OR, first match wins
-                        'B|IDSBB && P|856',
-                        'B|SNL && P|856',
-                        'B|RETROS && P|856',
-                        'B|FREE && P|856'
-                    )
-                ),
-                '856' => array(
+                '950' => array(
                     'url' => array('u'),
                     'desc' => array('z', '3'),
                     'conditions' => array(
-                        'P|856 && z|Inhalt',
-                        'P|856 && u|^http.d-nb.04$'
+                        'B|^IDSBB$ && P|^856$',
+                        'B|^SNL$ && P|^856$',
+                        'B|^RETROS$ && P|^856$',
+                        'B|^FREE$ && P|^856$'
+                    )
+                ),
+                '956' => array(
+                    'url' => array('u'),
+                    'desc' => array('y'),
+                    'conditions' => array(
+                        'y|^Inhaltsverzeichnis',
+                        'y|^Abstract'
                     )
                 )
             ),
             'exclude' => array(
                 '956' => array(
                     'x|VIEW && y|Porträt'
+                ),
+                '856' => array(
+                    'u|helveticarchives'
                 )
             )
+        ),
+        'sbvfrdsingle' => array(
+            'select' => array(
+                '950' => array(
+                    'url' => array('u'),
+                    'desc' => array('z', '3'),
+                    'conditions' => array()
+                ),
+                '956' => array(
+                    'url' => array('u'),
+                    'desc' => array('y'),
+                    'conditions' => array()
+                )
+            ),
+            'exclude' => array()
         )
     );
 
@@ -202,12 +204,11 @@ $localtags = array('856');
                     };
 
                     $filteredLinks[] = array('url' => $url, 'desc' => $desc);
-                    break 2;
                 }
             }
         }
 
-        return $this->getCorrectedURLS($filteredLinks);
+        return $this->createUniqueLinks($filteredLinks);
     }
 
     /**
@@ -235,6 +236,8 @@ $localtags = array('856');
      */
     private function matchesConditions(array $conditions, \File_MARC_Data_Field $marcRecord)
     {
+        if (empty($conditions)) return true;
+
         $matchesOr = false;
         $orConditionsCount = count($conditions);
         $i=0;
@@ -247,11 +250,9 @@ $localtags = array('856');
 
             while ($matchesAnd && $j < $andConditionsCount) {
                 list($subfieldKey, $subfieldValue) = explode('|', $andConditions[$j]);
-                $subfieldKey = trim($subfieldKey);
-                $subfieldValue = trim($subfieldValue);
-                $subfield = $marcRecord->getSubfield($subfieldKey);
+                $subfield = $marcRecord->getSubfield(trim($subfieldKey));
 
-                $matchesAnd = $subfield && preg_match('/' . $subfieldValue . '/', $subfield->getData());
+                $matchesAnd = $subfield && preg_match('/' . trim($subfieldValue) . '/', $subfield->getData());
 
                 $j++;
             }
@@ -260,7 +261,6 @@ $localtags = array('856');
 
             $i++;
         }
-
 
         return $matchesOr;
     }
