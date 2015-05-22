@@ -33,6 +33,7 @@
  */
 namespace Swissbib\View\Helper;
 
+use VuFind\RecordDriver\SolrMarc;
 use VuFind\View\Helper\Root\Record as VuFindRecord;
 
 /**
@@ -42,29 +43,50 @@ use VuFind\View\Helper\Root\Record as VuFindRecord;
  */
 class Record extends VuFindRecord
 {
+    /**
+     * @var array
+     */
+
+/*
+'IDSBB','SNL', 'RETROS', 'FREE');
+$localtags = array('856');
+
+
+            '856' => ['y', 'z'],   // Standard URL
+            '555' => ['a']         // Cumulative index/finding aids
+            $globalunions = array('IDSBB','SNL');
+            $tags = array('956');
+
+
+            '856' => array('u', '3'), // Standard URL
+            '956' => array('u', 'y','B'), // Standard URL
+
+*/
     protected $urlFilter = array(
         'sbvfrdmulti' => array(
-            'Solr' => array(
-                'select' => array(
-                    '950' => array(
-                        'url' => array('u'),
-                        'desc' => array('z', '3'), //url as fallback description
-                        'conditions' => array( //OR, first match wins
-                            'B|IDSBB && z|Inhaltstext'
-                        )
-                    ),
-                    '856' => array(
-                        'url' => array('u'),
-                        'desc' => array('z', '3'), //url as fallback description
-                        'conditions' => array( //OR, first match wins
-                            'z|Porträt'
-                        )
+            'select' => array(
+                '950' => array( //localvalues
+                    'url' => array('u'),
+                    'desc' => array('z', '3'), //url as fallback description
+                    'conditions' => array( //OR, first match wins
+                        'B|IDSBB && P|856',
+                        'B|SNL && P|856',
+                        'B|RETROS && P|856',
+                        'B|FREE && P|856'
                     )
                 ),
-                'exclude' => array(
-                    '856' => array(
-                        'z|Porträt'
+                '856' => array(
+                    'url' => array('u'),
+                    'desc' => array('z', '3'),
+                    'conditions' => array(
+                        'P|856 && z|Inhalt',
+                        'P|856 && u|^http.d-nb.04$'
                     )
+                )
+            ),
+            'exclude' => array(
+                '956' => array(
+                    'x|VIEW && y|Porträt'
                 )
             )
         )
@@ -154,10 +176,10 @@ class Record extends VuFindRecord
     public function getNewExtendedLinkDetails()
     {
         if (!isset($this->urlFilter[$this->config->Site->theme]) ||
-            !isset($this->urlFilter[$this->config->Site->theme][$this->view->searchClassId])) return null;
+            !($this->driver instanceof \VuFind\RecordDriver\SolrMarc)) return null;
 
-        $select = $this->urlFilter[$this->config->Site->theme][$this->view->searchClassId]['select'];
-        $exclude = $this->urlFilter[$this->config->Site->theme][$this->view->searchClassId]['exclude'];
+        $select = $this->urlFilter[$this->config->Site->theme]['select'];
+        $exclude = $this->urlFilter[$this->config->Site->theme]['exclude'];
         $filteredLinks = array();
 
         foreach ($select as $field => $selectFieldConfig) {
@@ -220,13 +242,17 @@ class Record extends VuFindRecord
         while (!$matchesOr && $i < $orConditionsCount) {
             $j=0;
             $matchesAnd = true;
-            $andConditions = explode('&&', str_replace(' ', '', $conditions[$i]));
+            $andConditions = explode('&&', $conditions[$i]);
             $andConditionsCount = count($andConditions);
 
             while ($matchesAnd && $j < $andConditionsCount) {
                 list($subfieldKey, $subfieldValue) = explode('|', $andConditions[$j]);
+                $subfieldKey = trim($subfieldKey);
+                $subfieldValue = trim($subfieldValue);
                 $subfield = $marcRecord->getSubfield($subfieldKey);
+
                 $matchesAnd = $subfield && preg_match('/' . $subfieldValue . '/', $subfield->getData());
+
                 $j++;
             }
 
