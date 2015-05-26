@@ -47,6 +47,30 @@ class Record extends VuFindRecord
      * @var array
      */
     protected $urlFilter = array(
+        'sbvfrdsingle' => array(
+            'select' => array(
+                '950' => array(
+                    'url' => array('u'),
+                    'desc' => array('z', '3'),
+                    'conditions' => array(
+                        'P|^856$'
+                    )
+                ),
+                '956' => array(
+                    'url' => array('u'),
+                    'desc' => array('y'),
+                    'conditions' => array()
+                )
+            ),
+            'exclude' => array(
+                '856' => array(
+                    'u|helveticarchives'
+                ),
+                '956' => array(
+                    'x|VIEW && y|Porträt'
+                )
+            )
+        ),
         'sbvfrdmulti' => array(
             'select' => array(
                 '950' => array(
@@ -77,12 +101,14 @@ class Record extends VuFindRecord
                 )
             )
         ),
-        'sbvfrdsingle' => array(
+        'sbvfrdjus' => array(
             'select' => array(
                 '950' => array(
                     'url' => array('u'),
                     'desc' => array('z', '3'),
-                    'conditions' => array()
+                    'conditions' => array(
+                        'P|^856$'
+                    )
                 ),
                 '956' => array(
                     'url' => array('u'),
@@ -90,8 +116,15 @@ class Record extends VuFindRecord
                     'conditions' => array()
                 )
             ),
-            'exclude' => array()
-        )
+            'exclude' => array(
+                '856' => array(
+                    'u|helveticarchives'
+                ),
+                '956' => array(
+                    'x|VIEW && y|Porträt'
+                )
+            )
+        ),
     );
 
     /**
