@@ -46,89 +46,89 @@ class Record extends VuFindRecord
     /**
      * @var array
      */
-    protected $urlFilter = array(
-        'sbvfrdsingle' => array(
-            'select' => array(
-                '950' => array(
-                    'url' => array('u'),
-                    'desc' => array('z', '3'),
-                    'conditions' => array(
+    protected $urlFilter = [
+        'sbvfrdsingle' => [
+            'select' => [
+                '950' => [
+                    'url' => ['u'],
+                    'desc' => ['z', '3'],
+                    'conditions' => [
                         'P|^856$'
-                    )
-                ),
-                '956' => array(
-                    'url' => array('u'),
-                    'desc' => array('y'),
-                    'conditions' => array(),
-                    'preferredMatches' => array(
+                    ]
+                ],
+                '956' => [
+                    'url' => ['u'],
+                    'desc' => ['y'],
+                    'conditions' => [],
+                    'preferredMatches' => [
                         'y|Titelblatt und Inhaltsverzeichnis'
-                    )
-                )
-            ),
-            'exclude' => array(
-                '856' => array(
+                    ]
+                ]
+            ],
+            'exclude' => [
+                '856' => [
                     'u|helveticarchives'
-                ),
-                '956' => array(
+                ],
+                '956' => [
                     'x|VIEW && y|Porträt'
-                )
-            )
-        ),
-        'sbvfrdmulti' => array(
-            'select' => array(
-                '950' => array(
-                    'url' => array('u'),
-                    'desc' => array('z', '3'),
-                    'conditions' => array(
+                ]
+            ]
+        ],
+        'sbvfrdmulti' => [
+            'select' => [
+                '950' => [
+                    'url' => ['u'],
+                    'desc' => ['z', '3'],
+                    'conditions' => [
                         'B|^IDSBB$ && P|^856$',
                         'B|^SNL$ && P|^856$',
                         'B|^RETROS$ && P|^856$',
                         'B|^FREE$ && P|^856$'
-                    )
-                ),
-                '956' => array(
-                    'url' => array('u'),
-                    'desc' => array('y'),
-                    'conditions' => array(
+                    ]
+                ],
+                '956' => [
+                    'url' => ['u'],
+                    'desc' => ['y'],
+                    'conditions' => [
                         'y|^Inhaltsverzeichnis',
                         'y|^Abstract'
-                    )
-                )
-            ),
-            'exclude' => array(
-                '856' => array(
+                    ]
+                ]
+            ],
+            'exclude' => [
+                '856' => [
                     'u|helveticarchives'
-                ),
-                '956' => array(
+                ],
+                '956' => [
                     'x|VIEW && y|Porträt'
-                )
-            )
-        ),
-        'sbvfrdjus' => array(
-            'select' => array(
-                '950' => array(
-                    'url' => array('u'),
-                    'desc' => array('z', '3'),
-                    'conditions' => array(
+                ]
+            ]
+        ],
+        'sbvfrdjus' => [
+            'select' => [
+                '950' => [
+                    'url' => ['u'],
+                    'desc' => ['z', '3'],
+                    'conditions' => [
                         'P|^856$'
-                    )
-                ),
-                '956' => array(
-                    'url' => array('u'),
-                    'desc' => array('y'),
-                    'conditions' => array()
-                )
-            ),
-            'exclude' => array(
-                '856' => array(
+                    ]
+                ],
+                '956' => [
+                    'url' => ['u'],
+                    'desc' => ['y'],
+                    'conditions' => []
+                ]
+            ],
+            'exclude' => [
+                '856' => [
                     'u|helveticarchives'
-                ),
-                '956' => array(
+                ],
+                '956' => [
                     'x|VIEW && y|Porträt'
-                )
-            )
-        ),
-    );
+                ]
+            ]
+        ],
+    ];
 
     /**
      * @param array $params
@@ -218,7 +218,7 @@ class Record extends VuFindRecord
 
         $select = $this->urlFilter[$this->config->Site->theme]['select'];
         $exclude = $this->urlFilter[$this->config->Site->theme]['exclude'];
-        $filteredLinks = array();
+        $filteredLinks = [];
 
         foreach ($select as $field => $selectFieldConfig) {
             $driverFields = $this->driver->getMarcRecord()->getFields($field);
@@ -239,14 +239,14 @@ class Record extends VuFindRecord
                         $desc = $url;
                     };
 
-                    $filteredLinks[] = array('url' => $url, 'desc' => $desc);
+                    $filteredLinks[] = ['url' => $url, 'desc' => $desc];
 
                     if (isset($selectFieldConfig['preferredMatches']) &&
                         $this->matchesConditions($selectFieldConfig['preferredMatches'], $marcDataField)) {
 
-                        $filteredLinks = array(
-                            array('url' => $url, 'desc' => $desc)
-                        );
+                        $filteredLinks = [
+                            ['url' => $url, 'desc' => $desc]
+                        ];
 
                         break 2;
                     }
