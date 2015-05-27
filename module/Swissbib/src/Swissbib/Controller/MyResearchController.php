@@ -474,4 +474,19 @@ class MyResearchController extends VuFindMyResearchController
     return $sortOptions;
   }
 
+    /**
+     * @return ViewModel
+     */
+    public function changeAddressAction()
+    {
+        if (!is_array($patron = $this->catalogLogin())) {
+            return $patron;
+        }
+
+        $view = $this->createViewModel();
+        $view->address = $this->getILS()->getMyAddress($patron);
+
+        return $view;
+    }
+
 }

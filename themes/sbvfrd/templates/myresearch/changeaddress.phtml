@@ -1,0 +1,17 @@
+<?
+$this->headTitle($this->translate('changeaddress'));
+
+$this->layout()->breadcrumbs = '<li><a href="' . $this->url('myresearch-home') . '">' . $this->transEsc('Your Account') . '</a></li>'
+    . '<li class="active">' . $this->transEsc('changeaddress') . '</li>';
+?>
+
+<div class="<?=$this->layoutClass('mainbody')?>">
+    <h2><?=$this->transEsc('changeaddress') ?></h2>
+    <?=$this->flashmessages() ?>
+
+    <?=$this->address?>
+</div>
+
+<div class="<?=$this->layoutClass('sidebar')?>">
+  <?=$this->context($this)->renderInContext("myresearch/menu.phtml", array('active' => 'changeaddress'))?>
+</div>

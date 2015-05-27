@@ -113,6 +113,16 @@ return array(
                 )
               )
             ),
+            'myresearch-changeaddress' => array(
+                'type'    => 'literal',
+                'options' => array(
+                    'route'    => '/MyResearch/Address',
+                    'defaults' => array(
+                        'controller' => 'my-research',
+                        'action'     => 'changeAddress'
+                    )
+                )
+            ),
         )
     ),
     'console' => array(

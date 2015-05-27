@@ -181,4 +181,20 @@ class MultiBackend extends VFMultiBackend {
         return parent::getDriverConfig($source);
     }
 
+    /**
+     * @param array
+     *
+     * @return mixed
+     */
+    public function getMyAddress($patron)
+    {
+        $source = $this->getSource($patron['cat_username'], 'login');
+        $driver = $this->getDriver($source);
+        if ($driver) {
+            $profile = $driver->getMyAddress($this->stripIdPrefixes($patron, $source));
+
+            return $this->addIdPrefixes($profile, $source);
+        }
+        return [];
+    }
 }

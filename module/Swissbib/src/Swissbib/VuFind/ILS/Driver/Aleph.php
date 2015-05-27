@@ -826,4 +826,20 @@ EOT;
 
         return ['success' => true, 'status' => 'change_password_ok'];
     }
+
+    /**
+     * @return string
+     */
+    public function getMyAddress($user) {
+        $recordList=array();
+
+        $result = $this->doRestDLFRequest(
+            [
+                'patron', $user['id'], 'patronInformation', 'address'
+            ],
+            null, 'GET'
+        );
+
+        return (string) $result->{'address-information'}->{'z304-address-1'};
+    }
 }
