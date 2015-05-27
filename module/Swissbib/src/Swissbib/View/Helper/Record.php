@@ -59,10 +59,7 @@ class Record extends VuFindRecord
                 '956' => [
                     'url' => ['u'],
                     'desc' => ['y'],
-                    'conditions' => [],
-                    'preferredMatches' => [
-                        'y|Titelblatt und Inhaltsverzeichnis'
-                    ]
+                    'conditions' => []
                 ]
             ],
             'exclude' => [
@@ -240,16 +237,6 @@ class Record extends VuFindRecord
                     };
 
                     $filteredLinks[] = ['url' => $url, 'desc' => $desc];
-
-                    if (isset($selectFieldConfig['preferredMatches']) &&
-                        $this->matchesConditions($selectFieldConfig['preferredMatches'], $marcDataField)) {
-
-                        $filteredLinks = [
-                            ['url' => $url, 'desc' => $desc]
-                        ];
-
-                        break 2;
-                    }
                 }
             }
         }
