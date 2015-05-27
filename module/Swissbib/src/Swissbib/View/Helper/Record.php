@@ -69,6 +69,12 @@ class Record extends VuFindRecord
                 '956' => [
                     'x|VIEW && y|Porträt'
                 ]
+            ],
+            'preferredDescriptions' => [
+                'Titelblatt und Inhaltsverzeichnis',
+                'Inhalts',
+                'download \(pdf\)',
+                'opac.admin.ch'
             ]
         ],
         'sbvfrdmulti' => [
@@ -241,7 +247,39 @@ class Record extends VuFindRecord
             }
         }
 
-        return $this->createUniqueLinks($filteredLinks);
+        return $this->filterPreferredDescriptions($this->createUniqueLinks($filteredLinks));
+    }
+
+    /**
+     * @param array $links
+     * @return array
+     */
+    private function filterPreferredDescriptions(array $links) {
+        if (empty($this->urlFilter[$this->config->Site->theme]['preferredDescriptions'])) return $links;
+
+        $preferredDescriptions = $this->urlFilter[$this->config->Site->theme]['preferredDescriptions'];
+        $filteredLinks = [];
+        $preferredLinks = [];
+
+        foreach($links as $link) {
+            $isPreferredLink = false;
+
+            foreach($preferredDescriptions as $index => $preferredDescription) {
+                if (preg_match('/' . $preferredDescription . '/', $link['desc'])) {
+                    $preferredLinks[$index] = $link;
+                    $isPreferredLink = true;
+                }
+            }
+
+            if (!$isPreferredLink) $filteredLinks[] = $link;
+        }
+
+        if (!empty($preferredLinks)) {
+            ksort($preferredLinks);
+            $filteredLinks[] = reset($preferredLinks);
+        }
+
+        return $filteredLinks;
     }
 
     /**
