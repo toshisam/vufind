@@ -91,14 +91,15 @@ class Record extends VuFindRecord
                     'url' => ['u'],
                     'desc' => ['y'],
                     'conditions' => [
-                        'y|^Inhaltsverzeichnis',
-                        'y|^Abstract'
+                        'B|^IDSBB$',
+                        'B|^SNL$'
                     ]
                 ]
             ],
             'exclude' => [
                 '956' => [
-                    'x|VIEW && y|Porträt'
+                    'x|^VIEW && y|^Porträt',
+                    'x|^VIEW && y|^Vorschau zum Bild'
                 ]
             ]
         ],
