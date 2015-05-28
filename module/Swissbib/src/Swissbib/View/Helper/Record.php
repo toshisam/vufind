@@ -64,16 +64,17 @@ class Record extends VuFindRecord
             ],
             'exclude' => [
                 '856' => [
-                    'u|helveticarchives'
+                    'u|^helveticarchives'
                 ],
                 '956' => [
-                    'x|VIEW && y|Porträt'
+                    'x|^VIEW && y|^Porträt'
                 ]
             ],
             'preferredDescriptions' => [
-                'Titelblatt und Inhaltsverzeichnis',
-                'Inhalts',
-                'download \(pdf\)',
+                '^Titelblatt und Inhaltsverzeichnis$',
+                '^Inhaltsverzeichnis',
+                '^Inhaltstext',
+                '^download \(pdf\)',
                 'opac.admin.ch'
             ]
         ],
@@ -124,11 +125,18 @@ class Record extends VuFindRecord
             ],
             'exclude' => [
                 '856' => [
-                    'u|helveticarchives'
+                    'u|^helveticarchives'
                 ],
                 '956' => [
-                    'x|VIEW && y|Porträt'
+                    'x|^VIEW && y|^Porträt'
                 ]
+            ],
+            'preferredDescriptions' => [
+                '^Titelblatt und Inhaltsverzeichnis$',
+                '^Inhaltsverzeichnis',
+                '^Inhaltstext',
+                '^download \(pdf\)',
+                'opac.admin.ch'
             ]
         ],
     ];

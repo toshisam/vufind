@@ -34,11 +34,9 @@ $linkSFX = $viewRecord->getLinkSFX();
   <div class="col-sm-3 hidden-xs">
     <div class="thumbDetailView hidden-print">
       <? /* Display thumbnail if appropriate: */ ?>
-      <? $mediumThumb = $viewRecord->getThumbnail('medium'); $largeThumb = $viewRecord->getThumbnail('large'); ?>
+      <? $mediumThumb = $viewRecord->getThumbnail('medium'); ?>
       <? if ($mediumThumb): ?>
-        <? if ($largeThumb): ?><a href="<?=$this->escapeHtmlAttr($largeThumb)?>"><? endif; ?>
           <img alt="<?=$this->transEsc('Cover Image')?>" class="recordcover" src="<?=$this->escapeHtmlAttr($mediumThumb);?>"/>
-        <? if ($largeThumb): ?></a><? endif; ?>
       <? else: ?>
           <div class="thumbico <?= $viewRecord->getThumbnailPlaceholder() ?> bigico"></div>
       <? endif; ?>
@@ -143,7 +141,7 @@ $linkSFX = $viewRecord->getLinkSFX();
         <span class="label"><?=$this->transEsc('Online Access')?>: </span>
         <span><br />
           <? foreach ($urls as $current): ?>
-            <a href="<?=$this->escapeHtmlAttr($this->proxyUrl($current['url']))?>" target="_blank" title="<?=$this->escapeHtml($current['desc'])?>">
+            <a href="<?=$this->escapeHtmlAttr($this->proxyUrl($this->redirectProtocolWrapper()->getWrappedURL($current['url'])))?>" target="_blank" title="<?=$this->escapeHtml($current['desc'])?>">
                 <?=$this->escapeHtml($current['desc'])?>
             </a><br/>
           <? endforeach; ?>
@@ -157,7 +155,7 @@ $linkSFX = $viewRecord->getLinkSFX();
         <? if (is_array($newUrls)): ?>
             <span><br />
                 <? foreach ($newUrls as $current): ?>
-                    <a href="<?=$this->escapeHtmlAttr($this->proxyUrl($current['url']))?>" target="_blank" title="<?=$this->escapeHtml($current['desc'])?>">
+                    <a href="<?=$this->escapeHtmlAttr($this->proxyUrl($this->redirectProtocolWrapper()->getWrappedURL($current['url'])))?>" target="_blank" title="<?=$this->escapeHtml($current['desc'])?>">
                         <?=$this->escapeHtml($current['desc'])?>
                     </a><br/>
                 <? endforeach; ?>
