@@ -63,9 +63,6 @@ class Record extends VuFindRecord
                 ]
             ],
             'exclude' => [
-                '856' => [
-                    'u|^helveticarchives'
-                ],
                 '956' => [
                     'x|^VIEW && y|^Porträt'
                 ]
@@ -100,9 +97,6 @@ class Record extends VuFindRecord
                 ]
             ],
             'exclude' => [
-                '856' => [
-                    'u|helveticarchives'
-                ],
                 '956' => [
                     'x|VIEW && y|Porträt'
                 ]
@@ -124,9 +118,6 @@ class Record extends VuFindRecord
                 ]
             ],
             'exclude' => [
-                '856' => [
-                    'u|^helveticarchives'
-                ],
                 '956' => [
                     'x|^VIEW && y|^Porträt'
                 ]
