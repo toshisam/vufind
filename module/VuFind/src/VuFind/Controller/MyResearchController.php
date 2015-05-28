@@ -357,8 +357,13 @@ class MyResearchController extends AbstractBase
      */
     public function catalogloginAction()
     {
-        // No special action needed -- just display form
-        return $this->createViewModel();
+        // Connect to the ILS and check if multiple target support is available:
+        $targets = null;
+        $catalog = $this->getILS();
+        if ($catalog->checkCapability('getLoginDrivers')) {
+            $targets = $catalog->getLoginDrivers();
+        }
+        return $this->createViewModel(['targets' => $targets]);
     }
 
     /**
@@ -450,7 +455,7 @@ class MyResearchController extends AbstractBase
         }
 
         // Perform delete and send appropriate flash message:
-        if (!is_null($listID)) {
+        if (null !== $listID) {
             // ...Specific List
             $table = $this->getTable('UserList');
             $list = $table->getExisting($listID);
@@ -639,7 +644,6 @@ class MyResearchController extends AbstractBase
             $results = $this->getServiceLocator()
                 ->get('VuFind\SearchResultsPluginManager')->get('Favorites');
             $params = $results->getParams();
-            $params->setAuthManager($this->getAuthManager());
 
             // We want to merge together GET, POST and route parameters to
             // initialize our search object:
