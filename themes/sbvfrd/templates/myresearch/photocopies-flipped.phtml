@@ -1,0 +1,69 @@
+<?
+/** @var array $headers */
+/** @var mixed $photoCopy */
+/** @var Boolean $even */
+?>
+
+<table class="table table-flipped hidden-md hidden-lg <?= 'table-' . ($even ? 'even' : 'odd') ?>">
+    <tbody>
+    <tr>
+        <th><?=$headers['title']?></th>
+        <td>
+            <?= $this->escapeHtml($photoCopy['title']) ?>
+            <? if (!empty($photoCopy['description'])): ?>
+                , <?= $this->escapeHtml($photoCopy['description']) ?>
+            <? endif; ?>
+        </td>
+    </tr>
+    <tr>
+        <th><?=$headers['library_callno']?></th>
+        <td>
+            <? if (!empty($photoCopy['library'])): ?>
+                <?=$this->escapeHtml($photoCopy['library'])?>,
+            <? endif; ?>
+
+            <? if (!empty($photoCopy['callNumber'])): ?>
+                <?=$this->escapeHtml($photoCopy['callNumber'])?>
+            <? endif; ?>
+        </td>
+    </tr>
+    <tr>
+        <th><?=$headers['pick_up_location']?></th>
+        <td>
+            <?=$this->transEsc($photoCopy['pickup']) ?>
+        </td>
+    </tr>
+    <tr>
+        <th><?=$headers['created']?></th>
+        <td>
+            <?=$this->escapeHtml($photoCopy['dateOpen']) ?>
+        </td>
+    </tr>
+    <tr>
+        <th><?=$headers['status']?></th>
+        <td>
+            <?=$this->transEsc($photoCopy['status']) ?>
+        </td>
+    </tr>
+    <tr>
+        <th><?=$headers['note']?></th>
+        <td>
+            <? if (!empty($photoCopy['title2'])): ?>
+                <?=$this->escapeHtml($photoCopy['title2'] . ' / ') ?>
+            <? endif; ?>
+            <? if (!empty($photoCopy['author'])): ?>
+                <?=$this->escapeHtml($photoCopy['author'] . '. ') ?>
+            <? endif; ?>
+            <? if (!empty($photoCopy['note1'])): ?>
+                <?=$this->escapeHtml($photoCopy['note1'] . ', ') ?>
+            <? endif; ?>
+            <? if (!empty($photoCopy['pages'])): ?>
+                <?=$this->escapeHtml($photoCopy['pages']) . '. ' ?>
+            <? endif; ?>
+            <? if (!empty($photoCopy['note2'])): ?>
+                <?=$this->escapeHtml($photoCopy['note2']) ?>
+            <? endif; ?>
+        </td>
+    </tr>
+    </tbody>
+</table>

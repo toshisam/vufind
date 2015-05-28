@@ -7,7 +7,7 @@
 /** @var Boolean $showInAllViewPorts */
 
 $mapLink = '';
-$showInAllViewPorts = (bool) $showInAllViewPorts;
+$showInAllViewPorts = isset($showInAllViewPorts) && $showInAllViewPorts;
 
 // Description (last column)
 $description = !empty($item['description']) ? $item['description'] . '. ' : '';
