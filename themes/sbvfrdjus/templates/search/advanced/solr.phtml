@@ -37,6 +37,7 @@
       <? endif; ?>
       <div class="row">
         <? foreach ($this->facetList as $field => $list): ?>
+          <? if ($field === 'navDrsys_Gen' || $field === 'navDrsys_D') continue; ?>
           <div class="col-sm-6">
             <label for="limit_<?=$this->escapeHtmlAttr(str_replace(' ', '', $field))?>"><?=$this->transEsc($list['label'])?></label>
             <select class="form-control" id="limit_<?=$this->escapeHtmlAttr(str_replace(' ', '', $field))?>" name="filter[]" multiple="multiple" size="10">
