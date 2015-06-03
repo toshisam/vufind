@@ -1,0 +1,10 @@
+<div class="form-group">
+    <label class="col-sm-3 control-label"><?= $this->translate($field->getLabel()) ?></label>
+    <div class="col-sm-9">
+        <input class="form-control"
+               type="<?= $field->getAttribute('type') ?>"
+               name="<?= $field->getAttribute('name') ?>"
+               value="<?= $field->getValue() ?>">
+        <div class="help-block with-errors"></div>
+    </div>
+</div>

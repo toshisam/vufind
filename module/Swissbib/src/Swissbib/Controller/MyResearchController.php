@@ -2,7 +2,11 @@
 namespace Swissbib\Controller;
 
 use VuFindSearch\Service;
+use Zend\Form\Annotation\AnnotationBuilder;
+use Zend\Form\Element;
+use Zend\Form\Form;
 use Zend\ServiceManager\ServiceManager;
+use Zend\Validator\EmailAddress;
 use Zend\View\Model\ViewModel,
     Zend\Http\Response as HttpResponse,
     VuFind\Controller\MyResearchController as VuFindMyResearchController,
@@ -485,6 +489,37 @@ class MyResearchController extends VuFindMyResearchController
 
         $view = $this->createViewModel();
         $view->address = $this->getILS()->getMyAddress($patron);
+
+        $name = new Element\Text('name');
+        $name->setLabel('bookbag_delete_selected');
+        $name->setAttributes(array(
+            'type'  => 'text'
+        ));
+
+        $form = new Form();
+
+        $form->add($name)->add([
+            'name' => 'phoneNumber',
+            'options' => [
+                'label' => 'Your phone number'
+            ],
+            'attributes' => [
+                'type' => 'tel',
+                'required' => 'required',
+                'pattern'  => '^a$'
+            ],
+            'validator' => [new EmailAddress()]
+        ])->add([
+            'name' => 'submit',
+            'attributes' => [
+                'type' => 'submit',
+                'value' => 'Send',
+            ],
+        ]);
+
+        $view->form = $form;
+
+        $form->setData($this->request->getPost());
 
         return $view;
     }

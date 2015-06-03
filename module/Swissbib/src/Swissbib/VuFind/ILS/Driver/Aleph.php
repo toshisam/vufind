@@ -831,8 +831,6 @@ EOT;
      * @return string
      */
     public function getMyAddress($user) {
-        $recordList=array();
-
         $result = $this->doRestDLFRequest(
             [
                 'patron', $user['id'], 'patronInformation', 'address'
