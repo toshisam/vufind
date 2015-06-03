@@ -33,7 +33,7 @@ swissbib.AdvancedSearch = {
     var el = jQuery('#' + data.selected[0]);
 
     el.toggleClass("selected");
-    el.hasClass("selected") ? el.find("input").attr("name", "filter[]") : el.find("input").removeAttr("name");
+    el.hasClass("selected") ? el.find("input").first().attr("name", "filter[]") : el.find("input").first().removeAttr("name");
 
     if (swissbib.AdvancedSearch.catTreeAutoSend)  swissbib.AdvancedSearch.sendForm(el);
   },
