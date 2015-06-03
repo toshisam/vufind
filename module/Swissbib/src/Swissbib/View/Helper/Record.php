@@ -67,7 +67,7 @@ class Record extends VuFindRecord
                     'x|^VIEW && y|^Porträt'
                 ]
             ],
-            'preferredDescriptions' => [
+            'mergeLinksByDescription' => [
                 '^Titelblatt und Inhaltsverzeichnis$',
                 '^Inhaltsverzeichnis',
                 '^Inhaltstext',
@@ -123,7 +123,7 @@ class Record extends VuFindRecord
                     'x|^VIEW && y|^Porträt'
                 ]
             ],
-            'preferredDescriptions' => [
+            'mergeLinksByDescription' => [
                 '^Titelblatt und Inhaltsverzeichnis$',
                 '^Inhaltsverzeichnis',
                 '^Inhaltstext',
@@ -247,25 +247,25 @@ class Record extends VuFindRecord
             }
         }
 
-        return $this->filterPreferredDescriptions($this->createUniqueLinks($filteredLinks));
+        return $this->mergeLinksByDescription($this->createUniqueLinks($filteredLinks));
     }
 
     /**
      * @param array $links
      * @return array
      */
-    private function filterPreferredDescriptions(array $links) {
-        if (empty($this->urlFilter[$this->config->Site->theme]['preferredDescriptions'])) return $links;
+    private function mergeLinksByDescription(array $links) {
+        if (empty($this->urlFilter[$this->config->Site->theme]['mergeLinksByDescription'])) return $links;
 
-        $preferredDescriptions = $this->urlFilter[$this->config->Site->theme]['preferredDescriptions'];
+        $mergeLinksByDescription = $this->urlFilter[$this->config->Site->theme]['mergeLinksByDescription'];
         $filteredLinks = [];
         $preferredLinks = [];
 
         foreach($links as $link) {
             $isPreferredLink = false;
 
-            foreach($preferredDescriptions as $index => $preferredDescription) {
-                if (preg_match('/' . $preferredDescription . '/', $link['desc'])) {
+            foreach($mergeLinksByDescription as $index => $description) {
+                if (preg_match('/' . $description . '/', $link['desc'])) {
                     $preferredLinks[$index] = $link;
                     $isPreferredLink = true;
                 }
