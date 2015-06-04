@@ -84,7 +84,7 @@ class Record extends VuFindRecord
                         'B|^IDSBB$ && P|^856$',
                         'B|^SNL$ && P|^856$',
                         'B|^RETROS$ && P|^856$',
-                        'B|^FREE$ && P|^856$'
+                        'B|^BORIS && P|^856$'
                     ]
                 ],
                 '956' => [
