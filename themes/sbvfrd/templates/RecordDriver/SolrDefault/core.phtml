@@ -136,7 +136,7 @@ $linkSFX = $viewRecord->getLinkSFX();
         <span property="bookEdition"><?=$this->escapeHtml($edition)?></span><br />
       <? endif; ?>
 
-      <? if (is_array($urls)): ?>
+      <? if (!empty($urls)): ?>
         <span class="label"><?=$this->transEsc('Online Access')?>: </span>
         <span><br />
           <? foreach ($urls as $current): ?>
