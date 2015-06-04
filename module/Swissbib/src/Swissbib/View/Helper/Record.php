@@ -134,87 +134,12 @@ class Record extends VuFindRecord
     ];
 
     /**
-     * @param array $params
-     * @return mixed
-     */
-    public function getLocalValues($params = array())
-    {
-        $allParams = array('localunions' => array(), 'localtags'  => array(), 'indicators' => array(), 'subfields' => array());
-        $diffarray =  array_merge(array_diff_key($allParams, $params),$params);
-        $diffArrayInCorrectOrder = array(
-            'localunions' => $diffarray['localunions'],
-            'localtags' => $diffarray['localtags'],
-            'indicators' => $diffarray['indicators'],
-            'subfields' => $diffarray['subfields']
-        );
-
-        return  $this->driver->tryMethod('getLocalValues',$diffArrayInCorrectOrder);
-    }
-
-    /**
-     * @param $urlArray
-     * @return array
+     * getExtendedLinkDetails
+     * get links for display according to view based configuration in $urlFilter
      *
-     * Default: when $urlArray contains multiple links with the same URL,
-     * only the first will be kept.
-     *
-     * If you prefer to display all links, define this value in config.ini:
-     * [Record]
-     * create_multiple_856_links = true
-     *
-     */
-    private function createUniqueLinks($urlArray)
-    {
-        $urlArray = $this->getCorrectedURLS($urlArray);
-
-        $config = $this->driver->getServiceLocator()->get('VuFind\Config')->get('config');
-        if ( $config ) {
-            $config = $config->get('Record');
-            if ( $config ) {
-                $config = $config->get('create_multiple_856_links');
-                if ( $config ) {
-                    return $urlArray;
-                }
-            }
-        }
-
-        $uniqueURLs = array();
-        $collectedArrays = array();
-
-        foreach ($urlArray as $url) {
-            if (!array_key_exists($url['url'],$uniqueURLs)) {
-                $uniqueURLs[$url['url']] = "";
-                $collectedArrays[] = $url;
-            }
-        }
-
-        return $collectedArrays;
-    }
-
-    /**
-     * get corrected URLs
-     * changes content in URL, at the moment, just one case from helveticarchives
-     *
-     * @param $urlArray
-     *
-     * @return array
-     */
-    private function getCorrectedURLS($urlArray)
-    {
-        $newUrlArray = array();
-
-        foreach ($urlArray as $url) {
-            $url['url'] = preg_replace('/www\.helveticarchives\.ch\/getimage/', 'www.helveticarchives.ch/bild', $url['url']);
-            $newUrlArray[] = $url;
-        }
-
-        return $newUrlArray;
-    }
-
-    /**
      * @return array|null
      */
-    public function getNewExtendedLinkDetails()
+    public function getExtendedLinkDetails()
     {
         if (!isset($this->urlFilter[$this->config->Site->theme]) ||
             !($this->driver instanceof \VuFind\RecordDriver\SolrMarc)) return null;
@@ -249,6 +174,57 @@ class Record extends VuFindRecord
 
         return $this->mergeLinksByDescription($this->createUniqueLinks($filteredLinks));
     }
+
+    /**
+     * createUniqueLinks
+     * Default: when $urlArray contains multiple links with identical URL strings
+     * only the first will be kept.
+     * Overwrite configuration in local config.ini if you want to display all URLs
+     *
+     * @param $urlArray
+     * @return array
+     *
+     */
+    private function createUniqueLinks($urlArray)
+    {
+        $urlArray = $this->getCorrectedURLS($urlArray);
+
+        $config = $this->config->get('Record')->get('display_identical_urls');
+        if ($config) {
+            return $urlArray;
+        }
+        else {
+            $uniqueURLs = [];
+            $collectedArrays = [];
+            foreach ($urlArray as $url) {
+                if (!array_key_exists($url['url'],$uniqueURLs)) {
+                    $uniqueURLs[$url['url']] = "";
+                    $collectedArrays[] = $url;
+                }
+            }
+            return $collectedArrays;
+        }
+    }
+
+    /**
+     * get corrected URLs
+     * changes content in URL, at the moment, just one case from helveticarchives
+     *
+     * @param $urlArray
+     *
+     * @return array
+     */
+    private function getCorrectedURLS($urlArray)
+    {
+        $newUrlArray = [];
+
+        foreach ($urlArray as $url) {
+            $url['url'] = preg_replace('/www\.helveticarchives\.ch\/getimage/', 'www.helveticarchives.ch/bild', $url['url']);
+            $newUrlArray[] = $url;
+        }
+        return $newUrlArray;
+    }
+
 
     /**
      * @param array $links
@@ -336,114 +312,6 @@ class Record extends VuFindRecord
         return $matchesOr;
     }
 
-    /**
-     * Get all the links associated with this record.  Returns an array of
-     * associative arrays each containing 'desc' and 'url' keys.
-     *
-     * @return array
-     */
-    public function getExtendedLinkDetails()
-    {
-        if ($this->driver instanceof \VuFind\RecordDriver\Summon) return null;
-
-        if ($this->config->Site->theme === 'sbvfrdmulti') {
-            $localunions = array('IDSBB','SNL', 'RETROS', 'FREE');
-            $localtags = array('856');
-            $localRestrictions = compact('localunions','localtags');
-
-            $globalunions = array('IDSBB','SNL');
-            $tags = array('956');
-            $globalRestrictions = compact('globalunions','tags');
-        }
-
-        // See if there are any links available:
-        if (empty($localRestrictions)) {
-            $localtags = array('856','956');
-
-            //$indicators = array('7','-');
-            //$params = compact('unions' => array(),'700',array('1','-'),array('a','x'));
-            //$params = compact('localtags','indicators');
-            $params = compact('localtags');
-            $linksInLocalFields = $this->getLocalValues($params);
-
-        } else {
-            $linksInLocalFields = $this->getLocalValues($localRestrictions);
-        }
-
-
-        $collectedLinks = array();
-
-        foreach ($linksInLocalFields as $linkData) {
-
-            $linkID = isset($linkData['subfields']['u']) ? $linkData['subfields']['u'] : null ;
-            if (isset($linkData['subfields']['z'])) {
-                $linkDescription = $linkData['subfields']['z'];
-            }
-            elseif (isset($linkData['subfields']['3'])) {
-                $linkDescription = $linkData['subfields']['3'];
-            }
-            else $linkDescription = null;
-            if ($linkID) {
-                if (! $linkDescription) {
-                    $linkDescription = $linkID;
-                }
-                $collectedLinks[] = array('url' => $linkID, 'desc' => $linkDescription);
-            }
-
-        }
-
-        if (empty($globalRestrictions)) {
-            //fetch 'all' the links you can find in 856 / 956
-            $urls = $this->driver->tryMethod('getURLs');
-            $collectedLinks = array_merge($collectedLinks,$urls);
-        } else {
-
-            $allParamsGlobalTags = array('globalunions' => array(), 'tags'  => array());
-            $diffarray =  array_merge(array_diff_key($allParamsGlobalTags, $globalRestrictions),$globalRestrictions);
-            $diffArrayInCorrectOrder = array('globalunions' => $diffarray['globalunions'],'tags' => $diffarray['tags']);
-
-            $urls =  $this->driver->tryMethod('getExtendedURLs',$diffArrayInCorrectOrder);
-            $collectedLinks = array_merge($collectedLinks,$urls);
-
-        }
-
-
-        // If we found links, we may need to convert from the "route" format
-        // to the "full URL" format.
-        $urlHelper = $this->getView()->plugin('url');
-        $serverUrlHelper = $this->getView()->plugin('serverurl');
-        $formatLink = function ($link) use ($urlHelper, $serverUrlHelper) {
-            // Error if route AND URL are missing at this point!
-            if (!isset($link['route']) && !isset($link['url'])) {
-                throw new \Exception('Invalid URL array.');
-            }
-
-            // Build URL from route/query details if missing:
-            if (!isset($link['url'])) {
-                $routeParams = isset($link['routeParams'])
-                    ? $link['routeParams'] : array();
-
-                $link['url'] = $serverUrlHelper(
-                    $urlHelper($link['route'], $routeParams)
-                );
-                if (isset($link['queryString'])) {
-                    $link['url'] .= $link['queryString'];
-                }
-            }
-
-            // Apply prefix if found
-            if (isset($link['prefix'])) {
-                $link['url'] = $link['prefix'] . $link['url'];
-            }
-            // Use URL as description if missing:
-            if (!isset($link['desc'])) {
-                $link['desc'] = $link['url'];
-            }
-            return $link;
-        };
-
-        return $this->createUniqueLinks(array_map($formatLink, $collectedLinks));
-    }
 
     /**
      * @param string $format Format text to convert into CSS class

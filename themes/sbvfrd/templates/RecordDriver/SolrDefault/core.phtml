@@ -23,7 +23,6 @@ $showFRBR = $this->configAccess()->Site->displayFrbr;
 $groupID  = $this->driver->getGroup(true);
 
 $urls = $viewRecord->getExtendedLinkDetails();
-$newUrls = $viewRecord->getNewExtendedLinkDetails();
 $link360 = $viewRecord->getLink360();
 $linkSFX = $viewRecord->getLinkSFX();
 
@@ -150,20 +149,6 @@ $linkSFX = $viewRecord->getLinkSFX();
           <? endif; ?>
         </span><br />
       <? endif; ?>
-
-        <span class="label">newUrls</span>
-        <? if (is_array($newUrls)): ?>
-            <span><br />
-                <? foreach ($newUrls as $current): ?>
-                    <a href="<?=$this->escapeHtmlAttr($this->proxyUrl($this->redirectProtocolWrapper()->getWrappedURL($current['url'])))?>" target="_blank" title="<?=$this->escapeHtml($current['desc'])?>">
-                        <?=$this->escapeHtml($current['desc'])?>
-                    </a><br/>
-                <? endforeach; ?>
-                <? if ($linkSFX): ?>
-                    <?= $linkSFX ?><br/>
-                <? endif; ?>
-        </span><br />
-        <? endif; ?>
 
       <? if (!empty($link360) || $linkSFX): ?>
          <span class="label"><?= $this->transEsc('Online Access') ?>: </span>
