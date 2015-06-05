@@ -1,0 +1,93 @@
+<div class="row">
+    <div class="col-sm-4">
+        <div class="row">
+            <h2><?= $this->transEsc('menu.swissbib') ?></h2>
+            <ul>
+                <li>
+                    <a href="<?= $this->url('myresearch-favorite-institutions') ?>"><?= $this->transEsc('mylibraries') ?></a>
+                </li>
+                <li>
+                    <a href="<?= $this->url('myresearch-favorites')?>"><?= $this->transEsc('memorizelist') ?></a>
+                </li>
+                <li>
+                    <a href="<?= $this->url('myresearch-settings'); ?>"><?= $this->transEsc('My_Search_Settings') ?></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="row">
+            <h2><?= $this->transEsc('Search Options') ?></h2>
+            <ul>
+                <li class="hidden-xs">
+                    <a href="<?= $this->url('search-advanced') ?>" class="advancedSearchLink"><?= $this->transEsc('Advanced Search') ?></a>
+                </li>
+                <li>
+                    <a href="<?= $this->url('search-history') ?>"><?= $this->transEsc('History') ?></a>
+                </li>
+                <li>
+                    <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://bar.admin.ch') ?>" target="_blank" title="swissbib">swissbib.ch</a>
+                </li>
+                <!--
+              <li><a href="<//?= $this->url('browse-home') ?>"><//?= $this->transEsc('Browse the Catalog') ?></a></li>
+              <li><a href="<//?= $this->url('alphabrowse-home') ?>"><//?= $this->transEsc('Browse Alphabetically') ?></a></li>
+              <li><a href="<//?= $this->url('search-reserves') ?>"><//?= $this->transEsc('Course Reserves') ?></a></li>
+              <li><a href="<//?= $this->url('search-newitem') ?>"><//?= $this->transEsc('New Items') ?></a></li>
+              -->
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="row">
+            <h2><?= $this->transEsc('information') ?></h2>
+            <ul>hier könnte eine hilfeseite stehen
+                <!--  <li><a href="--><? //=$this->url('help-home')?><!--?topic=search" class="help-link" title="-->
+                <? //=$this->transEsc('Search Tips')?><!--">--><? //=$this->transEsc('Search Tips')?><!--</a></li>-->
+                <!--
+              <li><a href="#"><//?= $this->transEsc('Ask a Librarian') ?></a></li>
+              <li><a href="#"><//?= $this->transEsc('FAQs') ?></a></li>
+              -->
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4">
+        <div class="row">
+            <span class=""><?= $this->getVersion(); ?> on <?= $_SERVER['SERVER_ADDR'] ?></span>
+        </div>
+    </div>
+    <div class="col-sm-4">
+    </div>
+    <div class="col-sm-4">
+        <div class="row">
+            <a target="_blank" href="https://www.urz.unibas.ch" title="IT-Services der Universität Basel">
+                <img alt="<?= $this->transEsc('powered_by') ?>" src="<?= $this->basePath('themes/sbvfrd/images/poweredby_unibasel_transparent.gif') ?>">
+            </a>
+        </div>
+    </div>
+</div>
+
+<button id="sidebar-offcanvas-trigger" class="hidden">
+    <i class="fa fa-caret-left"></i>
+</button>
+
+<!-- swissmetrix.ch -->
+<script type="text/javascript">
+    var _paq = _paq || [];
+    _paq.push(["trackPageView"]);
+    _paq.push(["enableLinkTracking"]);
+
+    (function () {
+        var u = (("https:" == document.location.protocol) ? "https" : "http") + "://www.swissmetrix.ch/analytics/";
+        _paq.push(["setTrackerUrl", u + "smx.php"]);
+        _paq.push(["setSiteId", "23"]);
+        var d = document, g = d.createElement("script"), s = d.getElementsByTagName("script")[0];
+        g.type = "text/javascript";
+        g.defer = true;
+        g.async = true;
+        g.src = u + "smx.js";
+        s.parentNode.insertBefore(g, s);
+    })();
+</script>
+<!-- End swissmetrix.ch -->
