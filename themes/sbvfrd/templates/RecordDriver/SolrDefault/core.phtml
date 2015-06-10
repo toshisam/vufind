@@ -1,5 +1,7 @@
 <?
+/** @var VuFind\RecordDriver\SolrDefault $record */
 $record         = $this->driver;
+/** @var Swissbib\View\Helper\Record $viewRecord */
 $viewRecord     = $this->record($record);
 
 $id                   = $record->getUniqueId();
@@ -19,40 +21,11 @@ $highlightedFulltext  = $record->getHighlightedFulltext();
 
 $showFRBR = $this->configAccess()->Site->displayFrbr;
 $groupID  = $this->driver->getGroup(true);
-$theme    = $this->configAccess()->Site->theme;
 
-$urls = null;
-$openUrl = null;
-$link360 = null;
-$linkSFX = null;
+$urls = $viewRecord->getExtendedLinkDetails();
+$link360 = $viewRecord->getLink360();
+$linkSFX = $viewRecord->getLinkSFX();
 
-if ($searchClassId != 'Summon') {
-    if (strcmp(strtolower($theme),'sbvfrdmulti') != 0) {
-        $urls = $viewRecord->getExtendedLinkDetails();
-    }
-    else {
-        $localunions = array('IDSBB','SNL', 'RETROS', 'FREE', 'BORIS');
-        $localtags = array('856');
-        $localRestrictions = compact('localunions','localtags');
-
-        $globalunions = array('IDSBB','SNL');
-        $tags = array('956');
-        $globalRestrictions = compact('globalunions','tags');
-
-        $urls = $viewRecord->getExtendedLinkDetails($localRestrictions,$globalRestrictions);
-    }
-}
-else {
-    $urls = null;
-    $openUrl = null;
-    $link360 = $record->getLink();
-    $openURL = $record->getOpenURL();
-    $linkSFX = $this->openUrl($openURL);
-    $linkSFX_param = 'title = "' . $this->transEsc('articles.linkSFX') . '" target="_blank"';
-    $linkSFX = str_replace("<a ", "<a $linkSFX_param ", $linkSFX);
-    $linkSFX = str_replace($this->transEsc('Get full text'), "SFX Services", $linkSFX);
-    $linkSFX = str_replace('class="openUrl"', 'class="openUrl hidden"', $linkSFX);
-}
 ?>
 
 <div class="row" vocab="http://schema.org/" resource="#record" typeof="<?=$this->driver->getSchemaOrgFormats()?> Product">
@@ -60,17 +33,15 @@ else {
   <div class="col-sm-3 hidden-xs">
     <div class="thumbDetailView hidden-print">
       <? /* Display thumbnail if appropriate: */ ?>
-      <? $mediumThumb = $this->record($this->driver)->getThumbnail('medium'); $largeThumb = $this->record($this->driver)->getThumbnail('large'); ?>
+      <? $mediumThumb = $viewRecord->getThumbnail('medium'); ?>
       <? if ($mediumThumb): ?>
-        <? if ($largeThumb): ?><a href="<?=$this->escapeHtmlAttr($largeThumb)?>"><? endif; ?>
           <img alt="<?=$this->transEsc('Cover Image')?>" class="recordcover" src="<?=$this->escapeHtmlAttr($mediumThumb);?>"/>
-        <? if ($largeThumb): ?></a><? endif; ?>
       <? else: ?>
           <div class="thumbico <?= $viewRecord->getThumbnailPlaceholder() ?> bigico"></div>
       <? endif; ?>
 
       <? /* Display qrcode if appropriate: */ ?>
-      <? $QRCode = $this->record($this->driver)->getQRCode("core"); ?>
+      <? $QRCode = $viewRecord->getQRCode("core"); ?>
       <? if($QRCode): ?>
         <span class="hidden-xs">
           <br/><img alt="<?=$this->transEsc('QR Code')?>" class="qrcode" src="<?=$this->escapeHtmlAttr($QRCode);?>"/>
@@ -82,7 +53,7 @@ else {
     // from this area of the record view, this can be split into
     // getPreviewData() (should stay here) and
     // getPreviewLink() (can go in your desired tab) ?>
-    <?=$this->record($this->driver)->getPreviews()?>
+    <?=$viewRecord->getPreviews()?>
   </div>
 
   <div class="col-sm-9 col-xs-12">
@@ -165,11 +136,11 @@ else {
         <span property="bookEdition"><?=$this->escapeHtml($edition)?></span><br />
       <? endif; ?>
 
-      <? if (!empty($urls) || $openUrl): ?>
+      <? if (!empty($urls)): ?>
         <span class="label"><?=$this->transEsc('Online Access')?>: </span>
         <span><br />
           <? foreach ($urls as $current): ?>
-            <a href="<?=$this->escapeHtmlAttr($this->proxyUrl($current['url']))?>" target="_blank" title="<?=$this->escapeHtml($current['desc'])?>">
+            <a href="<?=$this->escapeHtmlAttr($this->proxyUrl($this->redirectProtocolWrapper()->getWrappedURL($current['url'])))?>" target="_blank" title="<?=$this->escapeHtml($current['desc'])?>">
                 <?=$this->escapeHtml($current['desc'])?>
             </a><br/>
           <? endforeach; ?>
