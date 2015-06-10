@@ -30,10 +30,22 @@ swissbib.AdvancedSearch = {
     jQuery(".classification-tree").bind("close_node.jstree", this.onJsTreeCloseNode);
   },
 
+  /**
+   * @param {Event} event
+   * @param {Object} data
+   *
+   * @return void
+   */
   onJsTreeCloseNode: function(event, data) {
     data.instance.deselect_node(data.node);
   },
 
+  /**
+   * @param {Event} event
+   * @param {Object} data
+   *
+   * @return void
+   */
   onJsTreeSelectNode: function (event, data) {
     var el = jQuery('#' + data.selected[0]);
 
@@ -50,6 +62,11 @@ swissbib.AdvancedSearch = {
     }
   },
 
+  /**
+   * @param {Element} el
+   *
+   * @return void
+   */
   sendForm: function (el) {
     jQuery(el).parents('form:first').submit();
   },
