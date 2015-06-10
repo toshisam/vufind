@@ -110,6 +110,12 @@
             </td>
         </tr>
         <? endif; ?>
+        <? if (strtotime(str_replace('-', '/', $this->profile['expire'])) < strtotime('now')): ?>
+        <tr>
+            <th><?=$this->escapeHtml($this->transEsc('Account blocked'))?></th>
+            <td><?=$this->transEsc('Account expired') ?></td>
+        </tr>
+        <? endif; ?>
     </table>
   </div>
 
