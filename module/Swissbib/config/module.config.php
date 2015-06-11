@@ -113,6 +113,16 @@ return array(
                 )
               )
             ),
+            'record-copy' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/Record/:id/Copy',
+                    'defaults' => array(
+                        'controller' => 'record',
+                        'action'     => 'copy'
+                    )
+                )
+            ),
         )
     ),
     'console' => array(

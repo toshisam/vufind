@@ -266,6 +266,69 @@ class RecordController extends VuFindRecordController
     }
 
     /**
+     * @return ViewModel
+     */
+    public function copyAction()
+    {
+        $driver = $this->loadRecord();
+
+        if (!is_array($patron = $this->catalogLogin())) {
+            return $patron;
+        }
+
+        $catalog = $this->getILS();
+/*
+        $checkHolds = $catalog->checkFunction(
+            'Photo',
+            array(
+                'id' => $driver->getUniqueID(),
+                'patron' => $patron
+            )
+        );
+        if (!$checkHolds) {
+            return $this->forwardTo('Record', 'Home');
+        }
+
+        // Block invalid requests:
+        if (!$catalog->checkRequestIsValid(
+            $driver->getUniqueID(), $gatheredDetails, $patron
+        )) {
+            return $this->blockedholdAction();
+        }
+
+*/
+        //todo possibly only necessary for holdings --> Holdings->getHoldLink()
+        $checkHolds = [];
+        $checkHolds['HMACKeys'] = ['recordId', 'itemId'];
+
+        $gatheredDetails = $this->holds()->validateRequest($checkHolds['HMACKeys']);
+        if (!$gatheredDetails) {
+            //return $this->redirectToRecord();
+        }
+
+        /*
+
+        // Block invalid requests:
+        if (!$catalog->checkRequestIsValid(
+            $driver->getUniqueID(), $gatheredDetails, $patron
+        )) {
+            return $this->blockedholdAction();
+        }
+
+*/
+
+        $recordId = $this->request->getQuery('recordId');
+        $itemId = $this->request->getQuery('itemId');
+
+        //Record/265436710
+        // todo verify pickuplocations vs response from http://alephschool.unibas.ch:1891/rest-dlf/patron/B547523/record/DSV01000013294/items/DSV51000013294000010/photo
+        $pickup = $catalog->getPickUpLocations($patron, ['id' => $recordId, 'item_id' => $itemId]);
+
+
+        return new ViewModel();
+    }
+
+    /**
      * @return mixed
      */
     public function ajaxtabAction()

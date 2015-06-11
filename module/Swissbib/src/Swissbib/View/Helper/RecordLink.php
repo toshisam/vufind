@@ -23,8 +23,6 @@ class RecordLink extends VfRecordLink
         }
     }
 
-
-
     /**
      * Build link for ctrlnum
      *
@@ -42,5 +40,27 @@ class RecordLink extends VfRecordLink
                 . '&type=ctrlnum&jumpto=1';
 
         return $escape ? $escapeHelper($url) : $url;
+    }
+
+    /**
+     * @param array $item
+     * @param string $recordId
+     *
+     * @return string
+     */
+    public function getCopyUrl(array $item, $recordId)
+    {
+        if (!isset($item['adm_code']) || !isset($item['localid']) || !isset($item['sequencenumber'])) return $item['userActions']['photoRequestLink'];
+
+        $urlHelper    = $this->getView()->plugin('url');
+        $escapeHelper = $this->getView()->plugin('escapeHtml');
+        $bibRecordId = $item['bib_library'] . $item['bibsysnumber'];
+        $itemId = $item['adm_code'] . $item['localid'] . $item['sequencenumber']; //todo siehe Holdings->buildItemId()
+
+        // http://alephschool.unibas.ch:1891/rest-dlf/patron/B547523/record/DSV01000013294/items/DSV51000013294000010/photo
+
+        $url = $urlHelper('record-copy', ['id' => $recordId]) . '?recordId=' . $bibRecordId . '&itemId=' . $itemId;
+
+        return $escapeHelper($url);
     }
 }
