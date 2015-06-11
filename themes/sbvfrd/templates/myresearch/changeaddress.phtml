@@ -38,6 +38,7 @@ $loginlink = 'http://aleph.unibas.ch/F/?func=file&file_name=login-session';
             <?= $this->render('form/form-group.phtml', ['field' => $form->get('z304-telephone-4')]) ?>
 
             <?= $this->formRow($form->get('security')) ?>
+            <input type="hidden" name="form-name" value="changeaddress">
 
             <div class="form-group">
                 <div class="col-sm-9 col-sm-offset-3">

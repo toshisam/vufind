@@ -493,7 +493,7 @@ class MyResearchController extends VuFindMyResearchController
         $addressForm = $this->serviceLocator->get('Swissbib\MyResearch\Form\AddressForm');
 
         try {
-            if ($this->request->isPost()) {
+            if ($this->request->isPost() && $this->request->getPost('form-name') === 'changeaddress') {
                 $addressForm->setData($this->request->getPost());
 
                 if ($addressForm->isValid()) {
