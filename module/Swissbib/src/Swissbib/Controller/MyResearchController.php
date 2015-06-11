@@ -1,11 +1,14 @@
 <?php
 namespace Swissbib\Controller;
 
+use VuFind\Exception\ILS;
+use VuFind\ILS\Driver\AlephRestfulException;
 use VuFindSearch\Service;
 use Zend\Form\Annotation\AnnotationBuilder;
 use Zend\Form\Element;
 use Zend\Form\Form;
 use Zend\ServiceManager\ServiceManager;
+use Zend\Session\Storage\SessionStorage;
 use Zend\Validator\EmailAddress;
 use Zend\View\Model\ViewModel,
     Zend\Http\Response as HttpResponse,
@@ -487,41 +490,38 @@ class MyResearchController extends VuFindMyResearchController
             return $patron;
         }
 
-        $view = $this->createViewModel();
-        $view->address = $this->getILS()->getMyAddress($patron);
+        $addressForm = $this->serviceLocator->get('Swissbib\MyResearch\Form\AddressForm');
 
-        $name = new Element\Text('name');
-        $name->setLabel('bookbag_delete_selected');
-        $name->setAttributes(array(
-            'type'  => 'text'
-        ));
+        try {
+            if ($this->request->isPost()) {
+                $addressForm->setData($this->request->getPost());
 
-        $form = new Form();
+                if ($addressForm->isValid()) {
+                    $address = $this->getILS()->getMyAddress($patron);
+                    $newAddress = $addressForm->getData();
+                    $newAddress['z304-address-1'] = $address['z304-address-1']; //make sure nobody changes his name
+                    $newAddress['z304-date-from'] = $address['z304-date-from'];
+                    $newAddress['z304-date-to'] = $address['z304-date-to'];
 
-        $form->add($name)->add([
-            'name' => 'phoneNumber',
-            'options' => [
-                'label' => 'Your phone number'
-            ],
-            'attributes' => [
-                'type' => 'tel',
-                'required' => 'required',
-                'pattern'  => '^a$'
-            ],
-            'validator' => [new EmailAddress()]
-        ])->add([
-            'name' => 'submit',
-            'attributes' => [
-                'type' => 'submit',
-                'value' => 'Send',
-            ],
+                    $this->getILS()->changeMyAddress($patron, $newAddress);
+                    $this->flashMessenger()->setNamespace('info')->addMessage('save_address_success');
+                } else {
+                    $this->flashMessenger()->setNamespace('error')->addMessage('save_address_error');
+                }
+            } else {
+                $addressForm->setData($this->getILS()->getMyAddress($patron));
+            }
+        } catch (AlephRestfulException $e) {
+            $this->flashMessenger()->setNamespace('error')->addMessage('address_error');
+        } catch (ILS $e) {
+            $this->flashMessenger()->setNamespace('error')->addMessage('address_error');
+
+            return $this->createViewModel();
+        }
+
+        return $this->createViewModel([
+            'form' => $addressForm
         ]);
-
-        $view->form = $form;
-
-        $form->setData($this->request->getPost());
-
-        return $view;
     }
 
 }

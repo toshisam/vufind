@@ -186,15 +186,32 @@ class MultiBackend extends VFMultiBackend {
      *
      * @return mixed
      */
-    public function getMyAddress($patron)
+    public function getMyAddress(array $patron)
     {
         $source = $this->getSource($patron['cat_username'], 'login');
         $driver = $this->getDriver($source);
-        if ($driver) {
-            $profile = $driver->getMyAddress($this->stripIdPrefixes($patron, $source));
 
-            return $this->addIdPrefixes($profile, $source);
+        if ($driver && $this->methodSupported($driver, 'getMyAddress')) {
+            return $driver->getMyAddress($this->stripIdPrefixes($patron, $source));
         }
+
+        return [];
+    }
+
+    /**
+     * @param array
+     *
+     * @return mixed
+     */
+    public function changeMyAddress(array $patron, array $newAddress)
+    {
+        $source = $this->getSource($patron['cat_username'], 'login');
+        $driver = $this->getDriver($source);
+
+        if ($driver && $this->methodSupported($driver, 'changeMyAddress')) {
+            return $driver->changeMyAddress($this->stripIdPrefixes($patron, $source), $newAddress);
+        }
+
         return [];
     }
 }

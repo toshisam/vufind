@@ -1,10 +1,24 @@
+<?
+/** @var \Zend\Form\Element $field */
+
+$readonly = isset($readonly) && $readonly;
+?>
 <div class="form-group">
-    <label class="col-sm-3 control-label"><?= $this->translate($field->getLabel()) ?></label>
+    <label class="col-sm-3 control-label">
+        <? if ($field->getLabel() !== null): ?>
+            <?= $this->translate($field->getLabel()) ?>
+        <? endif; ?>
+    </label>
     <div class="col-sm-9">
         <input class="form-control"
                type="<?= $field->getAttribute('type') ?>"
                name="<?= $field->getAttribute('name') ?>"
-               value="<?= $field->getValue() ?>">
-        <div class="help-block with-errors"></div>
+               value="<?= $field->getValue() ?>"
+               <?= $readonly ? ' readonly' : '' ?>>
+        <div class="help-block with-errors">
+            <? foreach($field->getMessages() as $message): ?>
+                <?= $message ?><br>
+            <? endforeach; ?>
+        </div>
     </div>
 </div>
