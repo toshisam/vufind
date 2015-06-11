@@ -17,7 +17,7 @@ $readonly = isset($readonly) && $readonly;
                <?= $readonly ? ' readonly' : '' ?>>
         <div class="help-block with-errors">
             <? foreach($field->getMessages() as $message): ?>
-                <?= $message ?><br>
+                <?= $this->transEsc($message) ?><br>
             <? endforeach; ?>
         </div>
     </div>
