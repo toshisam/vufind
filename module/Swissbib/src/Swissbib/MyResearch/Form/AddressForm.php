@@ -23,7 +23,7 @@ class AddressForm
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":50}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),-]*$/u"}})
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),&-]*$/u"}})
      * @Annotation\ErrorMessage("input_too_long_or_disallowed")
      */
     public $z304_address_2;
@@ -35,7 +35,7 @@ class AddressForm
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":50}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),-]*$/u"}})
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),&-]*$/u"}})
      * @Annotation\ErrorMessage("input_too_long_or_disallowed")
      */
     public $z304_address_3;
@@ -47,7 +47,7 @@ class AddressForm
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":50}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),-]*$/u"}})
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),&-]*$/u"}})
      * @Annotation\ErrorMessage("input_too_long_or_disallowed")
      */
     public $z304_address_4;
@@ -59,7 +59,7 @@ class AddressForm
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":50}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),-]*$/u"}})
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),&-]*$/u"}})
      * @Annotation\ErrorMessage("input_too_long_or_disallowed")
      */
     public $z304_address_5;
@@ -70,7 +70,7 @@ class AddressForm
      * @Annotation\AllowEmpty(true)
      * @Annotation\Type("Zend\Form\Element\Email")
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":60}})
-     * @Annotation\Validator({"name":"EmailAddress", "options":{"min":0, "max":60}})
+     * @Annotation\Validator({"name":"EmailAddress"})
      * @Annotation\ErrorMessage("Email address is invalid")
      */
     public $z304_email_address;
