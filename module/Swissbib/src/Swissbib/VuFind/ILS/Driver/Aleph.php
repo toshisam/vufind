@@ -900,22 +900,33 @@ EOT;
      */
     public function changeMyAddress($user, $newAddress)
     {
+        $z304_address_1 = $this->maskXmlString($newAddress['z304-address-1']);
+        $z304_address_2 = $this->maskXmlString($newAddress['z304-address-2']);
+        $z304_address_3 = $this->maskXmlString($newAddress['z304-address-3']);
+        $z304_address_4 = $this->maskXmlString($newAddress['z304-address-4']);
+        $z304_address_5 = $this->maskXmlString($newAddress['z304-address-5']);
+        $z304_email_address = $this->maskXmlString($newAddress['z304-email-address']);
+        $z304_telephone_1 = $this->maskXmlString($newAddress['z304-telephone-1']);
+        $z304_telephone_2 = $this->maskXmlString($newAddress['z304-telephone-2']);
+        $z304_telephone_3 = $this->maskXmlString($newAddress['z304-telephone-3']);
+        $z304_telephone_4 = $this->maskXmlString($newAddress['z304-telephone-4']);
+
         $xml =  <<<EOT
 post_xml=<?xml version = "1.0" encoding = "UTF-8"?>
 <get-pat-adrs>
   <address-information>
-    <z304-address-1><![CDATA[{$newAddress['z304-address-1']}]]></z304-address-1>
-    <z304-address-2><![CDATA[{$newAddress['z304-address-2']}]]></z304-address-2>
-    <z304-address-3><![CDATA[{$newAddress['z304-address-3']}]]></z304-address-3>
-    <z304-address-4><![CDATA[{$newAddress['z304-address-4']}]]></z304-address-4>
-    <z304-address-5><![CDATA[{$newAddress['z304-address-5']}]]></z304-address-5>
-    <z304-email-address><![CDATA[{$newAddress['z304-email-address']}]]></z304-email-address>
-    <z304-telephone-1><![CDATA[{$newAddress['z304-telephone-1']}]]></z304-telephone-1>
-    <z304-telephone-2><![CDATA[{$newAddress['z304-telephone-2']}]]></z304-telephone-2>
-    <z304-telephone-3><![CDATA[{$newAddress['z304-telephone-3']}]]></z304-telephone-3>
-    <z304-telephone-4><![CDATA[{$newAddress['z304-telephone-4']}]]></z304-telephone-4>
-    <z304-date-from><![CDATA[{$newAddress['z304-date-from']}]]></z304-date-from>
-    <z304-date-to><![CDATA[{$newAddress['z304-date-to']}]]></z304-date-to>
+    <z304-address-1>{$z304_address_1}</z304-address-1>
+    <z304-address-2>{$z304_address_2}</z304-address-2>
+    <z304-address-3>{$z304_address_3}</z304-address-3>
+    <z304-address-4>{$z304_address_4}</z304-address-4>
+    <z304-address-5>{$z304_address_5}</z304-address-5>
+    <z304-email-address>{$z304_email_address}</z304-email-address>
+    <z304-telephone-1>{$z304_telephone_1}</z304-telephone-1>
+    <z304-telephone-2>{$z304_telephone_2}</z304-telephone-2>
+    <z304-telephone-3>{$z304_telephone_3}</z304-telephone-3>
+    <z304-telephone-4>{$z304_telephone_4}</z304-telephone-4>
+    <z304-date-from>{$newAddress['z304-date-from']}</z304-date-from>
+    <z304-date-to>{$newAddress['z304-date-to']}</z304-date-to>
   </address-information>
 </get-pat-adrs>
 EOT;
@@ -959,5 +970,15 @@ EOT;
             ['patron', $patron['id'], 'record', $resource, 'items', $group, 'photo'],
             null, 'PUT', $xml
         );
+    }
+
+    /**
+     * @param string $content
+     *
+     * @return string
+     */
+    protected function maskXmlString($content)
+    {
+        return rawurlencode(htmlspecialchars($content, ENT_COMPAT, 'UTF-8'));
     }
 }
