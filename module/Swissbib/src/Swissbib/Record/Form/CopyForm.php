@@ -11,11 +11,11 @@ use Zend\Form\Annotation;
 class CopyForm
 {
     /**
-     * @Annotation\Name("pickup-locations")
+     * @Annotation\Name("pickup-location")
      * @Annotation\Options({"label":"pick_up_location"})
      * @Annotation\Type("Zend\Form\Element\Select")
      */
-    public $pickup_locations;
+    public $pickup_location;
 
     /**
      * @Annotation\Name("sub-author")

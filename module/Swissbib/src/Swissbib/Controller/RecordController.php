@@ -283,7 +283,7 @@ class RecordController extends VuFindRecordController
         $recordId = $this->request->getQuery('recordId');
         $itemId = $this->request->getQuery('itemId');
         $pickup = $catalog->getCopyPickUpLocations($patron, $recordId, $itemId);
-        $pickupLocationsField = $copyForm->get('pickup-locations');
+        $pickupLocationsField = $copyForm->get('pickup-location');
         $pickupLocationsField->setOptions(['value_options' => $pickup]);
 
         try {
@@ -292,10 +292,13 @@ class RecordController extends VuFindRecordController
 
                 if ($copyForm->isValid()) {
 
-                    $this->getILS()->putCopy($patron, $copyForm->getData());
-                    //$this->flashMessenger()->setNamespace('info')->addMessage('save_address_success');
+                    $this->getILS()->putCopy($patron, $recordId, $itemId, $copyForm->getData());
+
+                    $this->flashMessenger()->setNamespace('info')->addMessage('hold_place_success');
+
+                    return $this->redirectToRecord();;
                 } else {
-                    //$this->flashMessenger()->setNamespace('error')->addMessage('save_address_error');
+                    $this->flashMessenger()->setNamespace('error')->addMessage('save_address_error');
                 }
             }
         } catch (AlephRestfulException $e) {

@@ -929,36 +929,35 @@ EOT;
     }
 
     /**
-     * @return array
+     * @param array $patron
+     * @param string $id
+     * @param string $group
+     * @param array $copyRequest
+     *
+     * @return \VuFind\ILS\Driver\SimpleXMLElement
      *
      * @throws AlephRestfulException
      */
-    public function getCopy($user , $recordId, $itemId) {
+    public function putCopy(array $patron, $id, $group, array $copyRequest) {
+        list($bib, $sys_no) = $this->parseId($id);
+        $resource = $bib . $sys_no;
+
         $xml =  <<<EOT
-post_xml=<?xml version = "1.0" encoding = "UTF-8"?>
-<get-pat-adrs>
-  <address-information>
-    <z304-address-1><![CDATA[{$newAddress['z304-address-1']}]]></z304-address-1>
-    <z304-address-2><![CDATA[{$newAddress['z304-address-2']}]]></z304-address-2>
-    <z304-address-3><![CDATA[{$newAddress['z304-address-3']}]]></z304-address-3>
-    <z304-address-4><![CDATA[{$newAddress['z304-address-4']}]]></z304-address-4>
-    <z304-address-5><![CDATA[{$newAddress['z304-address-5']}]]></z304-address-5>
-    <z304-email-address><![CDATA[{$newAddress['z304-email-address']}]]></z304-email-address>
-    <z304-telephone-1><![CDATA[{$newAddress['z304-telephone-1']}]]></z304-telephone-1>
-    <z304-telephone-2><![CDATA[{$newAddress['z304-telephone-2']}]]></z304-telephone-2>
-    <z304-telephone-3><![CDATA[{$newAddress['z304-telephone-3']}]]></z304-telephone-3>
-    <z304-telephone-4><![CDATA[{$newAddress['z304-telephone-4']}]]></z304-telephone-4>
-    <z304-date-from><![CDATA[{$newAddress['z304-date-from']}]]></z304-date-from>
-    <z304-date-to><![CDATA[{$newAddress['z304-date-to']}]]></z304-date-to>
-  </address-information>
-</get-pat-adrs>
+post_xml=<?xml version="1.0"?>
+<photo-request-parameters>
+    <pickup-location>{$copyRequest['pickup-location']}</pickup-location>
+    <sub-author>{$copyRequest['sub-author']}</sub-author>
+    <sub-title>{$copyRequest['sub-title']}</sub-title>
+    <pages>{$copyRequest['pages']}</pages>
+    <note1>{$copyRequest['note1']}</note1>
+    <note2>{$copyRequest['note2']}</note2>
+</photo-request-parameters>
 EOT;
 
+
         return $this->doRestDLFRequest(
-            [
-                'patron', $user['id'], 'items', 'address'
-            ],
-            null, 'GET', $xml
+            ['patron', $patron['id'], 'record', $resource, 'items', $group, 'photo'],
+            null, 'PUT', $xml
         );
     }
 }

@@ -233,4 +233,23 @@ class MultiBackend extends VFMultiBackend {
 
         return [];
     }
+
+    /**
+     * @param array $patron
+     * @param string $id
+     * @param string $group
+     * @param array $copyRequest
+     *
+     * @return array
+     */
+    public function putCopy(array $patron, $id, $group, array $copyRequest) {
+        $source = $this->getSource($patron['cat_username'], 'login');
+        $driver = $this->getDriver($source);
+
+        if ($driver && $this->methodSupported($driver, 'changeMyAddress')) {
+            return $driver->putCopy($this->stripIdPrefixes($patron, $source), $id, $group, $copyRequest);
+        }
+
+        return [];
+    }
 }
