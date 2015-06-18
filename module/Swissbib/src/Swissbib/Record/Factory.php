@@ -23,7 +23,7 @@ class Factory
             'name' => 'submit',
             'type'  => 'Submit',
             'attributes' => [
-                'value' => 'Save',
+                'value' => 'Order',
             ],
         ]);
 

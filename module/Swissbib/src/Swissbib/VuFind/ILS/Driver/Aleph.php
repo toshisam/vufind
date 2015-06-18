@@ -789,6 +789,37 @@ class Aleph extends VuFindDriver
     }
 
     /**
+     * Get Pick Up Locations
+     *
+     * @throws ILSException
+     * @return array        An array of associative arrays with locationID and
+     * locationDisplay keys
+     */
+    public function getCopyPickUpLocations(array $patron, $id, $group)
+    {
+        list($bib, $sys_no) = $this->parseId($id);
+        $resource = $bib . $sys_no;
+        $xml = $this->doRestDLFRequest(
+            ['patron', $patron['id'], 'record', $resource, 'items', $group, 'photo']
+        );
+
+        $locations = [];
+        $part = $xml->xpath('//pickup-locations');
+        if ($part) {
+            foreach ($part[0]->children() as $node) {
+                $arr = $node->attributes();
+                $code = (string) $arr['code'];
+                $loc_name = (string) $node;
+                $locations[$code] = $loc_name;
+            }
+        } else {
+            throw new ILSException('No pickup locations');
+        }
+
+        return $locations;
+    }
+
+    /**
      * Change Password
      *
      * Attempts to change patron password (PIN code)
@@ -859,7 +890,6 @@ EOT;
         ];
     }
 
-
     /**
      * @param $user
      * @param $newAddress
@@ -895,6 +925,40 @@ EOT;
                 'patron', $user['id'], 'patronInformation', 'address'
             ],
             null, 'POST', $xml
+        );
+    }
+
+    /**
+     * @return array
+     *
+     * @throws AlephRestfulException
+     */
+    public function getCopy($user , $recordId, $itemId) {
+        $xml =  <<<EOT
+post_xml=<?xml version = "1.0" encoding = "UTF-8"?>
+<get-pat-adrs>
+  <address-information>
+    <z304-address-1><![CDATA[{$newAddress['z304-address-1']}]]></z304-address-1>
+    <z304-address-2><![CDATA[{$newAddress['z304-address-2']}]]></z304-address-2>
+    <z304-address-3><![CDATA[{$newAddress['z304-address-3']}]]></z304-address-3>
+    <z304-address-4><![CDATA[{$newAddress['z304-address-4']}]]></z304-address-4>
+    <z304-address-5><![CDATA[{$newAddress['z304-address-5']}]]></z304-address-5>
+    <z304-email-address><![CDATA[{$newAddress['z304-email-address']}]]></z304-email-address>
+    <z304-telephone-1><![CDATA[{$newAddress['z304-telephone-1']}]]></z304-telephone-1>
+    <z304-telephone-2><![CDATA[{$newAddress['z304-telephone-2']}]]></z304-telephone-2>
+    <z304-telephone-3><![CDATA[{$newAddress['z304-telephone-3']}]]></z304-telephone-3>
+    <z304-telephone-4><![CDATA[{$newAddress['z304-telephone-4']}]]></z304-telephone-4>
+    <z304-date-from><![CDATA[{$newAddress['z304-date-from']}]]></z304-date-from>
+    <z304-date-to><![CDATA[{$newAddress['z304-date-to']}]]></z304-date-to>
+  </address-information>
+</get-pat-adrs>
+EOT;
+
+        return $this->doRestDLFRequest(
+            [
+                'patron', $user['id'], 'items', 'address'
+            ],
+            null, 'GET', $xml
         );
     }
 }

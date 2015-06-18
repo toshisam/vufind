@@ -1,6 +1,9 @@
 <?php
 namespace Swissbib\Controller;
 
+use VuFind\Exception\ILS;
+use VuFind\ILS\Driver\AlephRestfulException;
+use Zend\Form\Form;
 use Zend\View\Model\ViewModel,
     VuFind\Controller\RecordController as VuFindRecordController,
     VuFind\Exception\RecordMissing as RecordMissingException,
@@ -270,65 +273,42 @@ class RecordController extends VuFindRecordController
      */
     public function copyAction()
     {
-        $driver = $this->loadRecord();
-
         if (!is_array($patron = $this->catalogLogin())) {
             return $patron;
         }
 
         $catalog = $this->getILS();
-/*
-        $checkHolds = $catalog->checkFunction(
-            'Photo',
-            array(
-                'id' => $driver->getUniqueID(),
-                'patron' => $patron
-            )
-        );
-        if (!$checkHolds) {
-            return $this->forwardTo('Record', 'Home');
-        }
-
-        // Block invalid requests:
-        if (!$catalog->checkRequestIsValid(
-            $driver->getUniqueID(), $gatheredDetails, $patron
-        )) {
-            return $this->blockedholdAction();
-        }
-
-*/
-        //todo possibly only necessary for holdings --> Holdings->getHoldLink()
-        $checkHolds = [];
-        $checkHolds['HMACKeys'] = ['recordId', 'itemId'];
-
-        $gatheredDetails = $this->holds()->validateRequest($checkHolds['HMACKeys']);
-        if (!$gatheredDetails) {
-            //return $this->redirectToRecord();
-        }
-
-        /*
-
-        // Block invalid requests:
-        if (!$catalog->checkRequestIsValid(
-            $driver->getUniqueID(), $gatheredDetails, $patron
-        )) {
-            return $this->blockedholdAction();
-        }
-
-*/
-
-        $form = $this->serviceLocator->get('Swissbib\Record\Form\CopyForm');
-
+        /** @var Form $copyForm */
+        $copyForm = $this->serviceLocator->get('Swissbib\Record\Form\CopyForm');
         $recordId = $this->request->getQuery('recordId');
         $itemId = $this->request->getQuery('itemId');
+        $pickup = $catalog->getCopyPickUpLocations($patron, $recordId, $itemId);
+        $pickupLocationsField = $copyForm->get('pickup-locations');
+        $pickupLocationsField->setOptions(['value_options' => $pickup]);
 
-        //Record/265436710
-        // todo verify pickuplocations vs response from http://alephschool.unibas.ch:1891/rest-dlf/patron/B547523/record/DSV01000013294/items/DSV51000013294000010/photo
-        $pickup = $catalog->getPickUpLocations($patron, ['id' => $recordId, 'item_id' => $itemId]);
+        try {
+            if ($this->request->isPost() && $this->request->getPost('form-name') === 'order-copy') {
+                $copyForm->setData($this->request->getPost());
 
+                if ($copyForm->isValid()) {
+
+                    $this->getILS()->putCopy($patron, $copyForm->getData());
+                    //$this->flashMessenger()->setNamespace('info')->addMessage('save_address_success');
+                } else {
+                    //$this->flashMessenger()->setNamespace('error')->addMessage('save_address_error');
+                }
+            }
+        } catch (AlephRestfulException $e) {
+            $this->flashMessenger()->setNamespace('error')->addMessage('address_error');
+        } catch (ILS $e) {
+            $this->flashMessenger()->setNamespace('error')->addMessage('address_error');
+
+            return $this->createViewModel();
+        }
 
         return $this->createViewModel([
-            'form' => $form
+            'form' => $copyForm,
+            'driver' => $this->loadRecord(),
         ]);
     }
 

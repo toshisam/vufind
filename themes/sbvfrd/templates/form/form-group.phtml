@@ -6,15 +6,37 @@ $readonly = isset($readonly) && $readonly;
 <div class="form-group">
     <label class="col-sm-3 control-label">
         <? if ($field->getLabel() !== null): ?>
-            <?= $this->translate($field->getLabel()) ?>
+            <?= $this->transEsc($field->getLabel()) ?>
         <? endif; ?>
     </label>
     <div class="col-sm-9">
-        <input class="form-control"
-               type="<?= $field->getAttribute('type') ?>"
-               name="<?= $field->getAttribute('name') ?>"
-               value="<?= $field->getValue() ?>"
-               <?= $readonly ? ' readonly' : '' ?>>
+        <? switch($field->getAttribute('type')):
+           case 'text': case 'tel': case 'email':?>
+            <input class="form-control"
+                   type="<?= $this->escapeHtmlAttr($field->getAttribute('type')) ?>"
+                   name="<?= $this->escapeHtmlAttr($field->getAttribute('name')) ?>"
+                   value="<?= $this->escapeHtmlAttr($field->getValue()) ?>"
+                <?= $readonly ? ' readonly' : '' ?>>
+            <? break; ?>
+        <? case 'textarea': ?>
+            <textarea class="form-control" name="<?= $this->escapeHtmlAttr($field->getAttribute('name')) ?>"><?= $this->escapeHtml($field->getValue()) ?></textarea>
+            <? break; ?>
+        <? case 'select': ?>
+            <select class="form-control" name="<?= $this->escapeHtmlAttr($field->getAttribute('name')) ?>">
+                <? $fieldValue = $field->getValue(); ?>
+                <? if (empty($fieldValue)): ?>
+                    <option value="">
+                        -
+                    </option>
+                <? endif; ?>
+                <? foreach ($field->getOptions()['value_options'] as $key => $value): ?>
+                    <option value="<?=$this->escapeHtmlAttr($key)?>" <?= $key === $fieldValue ? ' selected' : '' ?>>
+                        <?=$this->escapeHtml($value)?>
+                    </option>
+                <? endforeach; ?>
+            </select>
+            <? break; ?>
+        <? endswitch; ?>
         <div class="help-block with-errors">
             <? foreach($field->getMessages() as $message): ?>
                 <?= $this->transEsc($message) ?><br>

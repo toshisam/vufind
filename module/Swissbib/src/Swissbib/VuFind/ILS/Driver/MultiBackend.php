@@ -214,4 +214,23 @@ class MultiBackend extends VFMultiBackend {
 
         return [];
     }
+
+    /**
+     * @param array $patron
+     * @param string $id
+     * @param string $group
+     *
+     * @return array
+     */
+    public function getCopyPickUpLocations(array $patron, $id, $group)
+    {
+        $source = $this->getSource($patron['cat_username'], 'login');
+        $driver = $this->getDriver($source);
+
+        if ($driver && $this->methodSupported($driver, 'getCopyPickUpLocations')) {
+            return $driver->getCopyPickUpLocations($this->stripIdPrefixes($patron, $source), $id, $group);
+        }
+
+        return [];
+    }
 }
