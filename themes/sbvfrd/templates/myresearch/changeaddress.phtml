@@ -1,0 +1,58 @@
+<?
+$this->headTitle($this->translate('changeaddress'));
+
+$this->layout()->breadcrumbs = '<li><a href="' . $this->url('myresearch-home') . '">' . $this->transEsc('Your Account') . '</a></li>'
+    . '<li class="active">' . $this->transEsc('changeaddress') . '</li>';
+
+/** @var \Zend\Form\Form $form */
+if (isset($form)) {
+    $form->setAttribute('action', '');
+    $form->setAttribute('method', 'post');
+    $form->setAttribute('class', 'form-horizontal');
+    $form->prepare();
+    $submit = $form->get('submit');
+}
+
+$loginlink = 'http://aleph.unibas.ch/F/?func=file&file_name=login-session';
+
+?>
+
+<div class="<?=$this->layoutClass('mainbody')?>">
+    <h2><?=$this->transEsc('changeaddress') ?></h2>
+    <?=$this->flashmessages() ?>
+
+    <? if (isset($form)): ?>
+        <?= $this->form()->openTag($form) ?>
+
+            <?= $this->render('form/form-group.phtml', ['field' => $form->get('z304-address-1'), 'readonly' => true]) ?>
+            <?= $this->render('form/form-group.phtml', ['field' => $form->get('z304-address-2')]) ?>
+            <?= $this->render('form/form-group.phtml', ['field' => $form->get('z304-address-3')]) ?>
+            <?= $this->render('form/form-group.phtml', ['field' => $form->get('z304-address-4')]) ?>
+            <?= $this->render('form/form-group.phtml', ['field' => $form->get('z304-address-5')]) ?>
+
+            <?= $this->render('form/form-group.phtml', ['field' => $form->get('z304-email-address')]) ?>
+
+            <?= $this->render('form/form-group.phtml', ['field' => $form->get('z304-telephone-1')]) ?>
+            <?= $this->render('form/form-group.phtml', ['field' => $form->get('z304-telephone-2')]) ?>
+            <?= $this->render('form/form-group.phtml', ['field' => $form->get('z304-telephone-3')]) ?>
+            <?= $this->render('form/form-group.phtml', ['field' => $form->get('z304-telephone-4')]) ?>
+
+            <?= $this->formRow($form->get('security')) ?>
+            <input type="hidden" name="form-name" value="changeaddress">
+
+            <div class="form-group">
+                <div class="col-sm-9 col-sm-offset-3">
+                    <input class="btn btn-primary" name="<?= $submit->getName() ?>" type="submit" value="<?= $this->transEsc($submit->getValue()) ?>">
+                </div>
+            </div>
+
+        <?= $this->form()->closeTag() ?>
+    <? else: ?>
+        <?= $this->transEsc('address_aleph') ?> <br>
+        <a href="<?= $loginlink ?>" target="_blank"><?= $this->transEsc('Login') ?></a>
+    <? endif; ?>
+</div>
+
+<div class="<?=$this->layoutClass('sidebar')?>">
+  <?=$this->context($this)->renderInContext("myresearch/menu.phtml", array('active' => 'changeaddress'))?>
+</div>

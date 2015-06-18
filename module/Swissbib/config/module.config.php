@@ -113,6 +113,16 @@ return array(
                 )
               )
             ),
+            'myresearch-changeaddress' => array(
+                'type'    => 'literal',
+                'options' => array(
+                    'route'    => '/MyResearch/Address',
+                    'defaults' => array(
+                        'controller' => 'my-research',
+                        'action'     => 'changeAddress'
+                    )
+                )
+            ),
             'record-copy' => array(
                 'type'    => 'segment',
                 'options' => array(
@@ -182,9 +192,6 @@ return array(
             'cart'                 => 'Swissbib\Controller\CartController',
             'shibtest'             => 'Swissbib\Controller\ShibtestController',
             'ajax'                 => 'Swissbib\Controller\AjaxController',
-            'upgrade'              => 'Swissbib\Controller\NoProductiveSupportController',
-            'install'              => 'Swissbib\Controller\NoProductiveSupportController',
-
         ),
         'factories' => array(
             'record' => 'Swissbib\Controller\Factory::getRecordController',
@@ -225,7 +232,9 @@ return array(
             'sbSpellingResults'                            =>  'Swissbib\VuFind\Search\Solr\Factory::getSpellingResults',
 
             'Swissbib\Hierarchy\SimpleTreeGenerator'        =>  'Swissbib\Hierarchy\Factory::getSimpleTreeGenerator',
-            'Swissbib\Hierarchy\MultiTreeGenerator'         =>  'Swissbib\Hierarchy\Factory::getMultiTreeGenerator'
+            'Swissbib\Hierarchy\MultiTreeGenerator'         =>  'Swissbib\Hierarchy\Factory::getMultiTreeGenerator',
+
+            'Swissbib\MyResearch\Form\AddressForm'          =>  'Swissbib\MyResearch\Factory::getAddressForm'
         )
     ),
     'view_helpers'    => array(

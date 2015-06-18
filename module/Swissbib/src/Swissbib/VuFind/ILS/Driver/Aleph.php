@@ -3,6 +3,7 @@ namespace Swissbib\VuFind\ILS\Driver;
 
 use VuFind\ILS\Driver\Aleph as VuFindDriver;
 use \SimpleXMLElement;
+use VuFind\ILS\Driver\AlephRestfulException;
 use VuFind\Exception\ILS as ILSException;
 use DateTime;
 
@@ -825,5 +826,75 @@ EOT;
         );
 
         return ['success' => true, 'status' => 'change_password_ok'];
+    }
+
+    /**
+     * @return array
+     *
+     * @throws AlephRestfulException
+     */
+    public function getMyAddress($user) {
+        $result = $this->doRestDLFRequest(
+            [
+                'patron', $user['id'], 'patronInformation', 'address'
+            ],
+            null, 'GET'
+        );
+
+        $addressInformation = $result->{'address-information'};
+
+        return [
+            'z304-address-1' => (string) $addressInformation->{'z304-address-1'},
+            'z304-address-2' => (string) $addressInformation->{'z304-address-2'},
+            'z304-address-3' => (string) $addressInformation->{'z304-address-3'},
+            'z304-address-4' => (string) $addressInformation->{'z304-address-4'},
+            'z304-address-5' => (string) $addressInformation->{'z304-address-5'},
+            'z304-email-address' => (string) $addressInformation->{'z304-email-address'},
+            'z304-telephone-1' => (string) $addressInformation->{'z304-telephone-1'},
+            'z304-telephone-2' => (string) $addressInformation->{'z304-telephone-2'},
+            'z304-telephone-3' => (string) $addressInformation->{'z304-telephone-3'},
+            'z304-telephone-4' => (string) $addressInformation->{'z304-telephone-4'},
+            'z304-date-from' => (string) $addressInformation->{'z304-date-from'},
+            'z304-date-to' => (string) $addressInformation->{'z304-date-to'},
+        ];
+    }
+
+
+    /**
+     * @param $user
+     * @param $newAddress
+     *
+     * @return SimpleXMLElement
+     *
+     * @throws AlephRestfulException
+     */
+    public function changeMyAddress($user, $newAddress)
+    {
+        $xml =  <<<EOT
+post_xml=<?xml version = "1.0" encoding = "UTF-8"?>
+<get-pat-adrs>
+  <address-information>
+    <z304-address-1><![CDATA[{$newAddress['z304-address-1']}]]></z304-address-1>
+    <z304-address-2><![CDATA[{$newAddress['z304-address-2']}]]></z304-address-2>
+    <z304-address-3><![CDATA[{$newAddress['z304-address-3']}]]></z304-address-3>
+    <z304-address-4><![CDATA[{$newAddress['z304-address-4']}]]></z304-address-4>
+    <z304-address-5><![CDATA[{$newAddress['z304-address-5']}]]></z304-address-5>
+    <z304-email-address><![CDATA[{$newAddress['z304-email-address']}]]></z304-email-address>
+    <z304-telephone-1><![CDATA[{$newAddress['z304-telephone-1']}]]></z304-telephone-1>
+    <z304-telephone-2><![CDATA[{$newAddress['z304-telephone-2']}]]></z304-telephone-2>
+    <z304-telephone-3><![CDATA[{$newAddress['z304-telephone-3']}]]></z304-telephone-3>
+    <z304-telephone-4><![CDATA[{$newAddress['z304-telephone-4']}]]></z304-telephone-4>
+    <z304-date-from><![CDATA[{$newAddress['z304-date-from']}]]></z304-date-from>
+    <z304-date-to><![CDATA[{$newAddress['z304-date-to']}]]></z304-date-to>
+  </address-information>
+</get-pat-adrs>
+EOT;
+
+        return $this->doRestDLFRequest(
+            [
+                'patron', $user['id'], 'patronInformation', 'address'
+            ],
+            null, 'POST', $xml
+        );
     }
 }
