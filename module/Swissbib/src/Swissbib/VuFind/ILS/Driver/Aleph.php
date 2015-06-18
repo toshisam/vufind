@@ -957,15 +957,22 @@ EOT;
         list($bib, $sys_no) = $this->parseId($id);
         $resource = $bib . $sys_no;
 
+        $pickup_location = $this->maskXmlString($copyRequest['pickup-location']);
+        $sub_author = $this->maskXmlString($copyRequest['sub-author']);
+        $sub_title = $this->maskXmlString($copyRequest['sub-title']);
+        $pages = $this->maskXmlString($copyRequest['pages']);
+        $note1 = $this->maskXmlString($copyRequest['note1']);
+        $note2 = $this->maskXmlString($copyRequest['note2']);
+
         $xml =  <<<EOT
 post_xml=<?xml version="1.0"?>
 <photo-request-parameters>
-    <pickup-location>{$copyRequest['pickup-location']}</pickup-location>
-    <sub-author>{$copyRequest['sub-author']}</sub-author>
-    <sub-title>{$copyRequest['sub-title']}</sub-title>
-    <pages>{$copyRequest['pages']}</pages>
-    <note1>{$copyRequest['note1']}</note1>
-    <note2>{$copyRequest['note2']}</note2>
+    <pickup-location>{$pickup_location}</pickup-location>
+    <sub-author>{$sub_author}</sub-author>
+    <sub-title>{$sub_title}</sub-title>
+    <pages>{$pages}</pages>
+    <note1>{$note1}</note1>
+    <note2>{$note2}</note2>
 </photo-request-parameters>
 EOT;
 

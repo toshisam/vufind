@@ -282,11 +282,12 @@ class RecordController extends VuFindRecordController
         $copyForm = $this->serviceLocator->get('Swissbib\Record\Form\CopyForm');
         $recordId = $this->request->getQuery('recordId');
         $itemId = $this->request->getQuery('itemId');
-        $pickup = $catalog->getCopyPickUpLocations($patron, $recordId, $itemId);
-        $pickupLocationsField = $copyForm->get('pickup-location');
-        $pickupLocationsField->setOptions(['value_options' => $pickup]);
 
         try {
+            $pickupLocations = $catalog->getCopyPickUpLocations($patron, $recordId, $itemId);
+            $pickupLocationsField = $copyForm->get('pickup-location');
+            $pickupLocationsField->setOptions(['value_options' => $pickupLocations]);
+
             if ($this->request->isPost() && $this->request->getPost('form-name') === 'order-copy') {
                 $copyForm->setData($this->request->getPost());
 
@@ -294,17 +295,17 @@ class RecordController extends VuFindRecordController
 
                     $this->getILS()->putCopy($patron, $recordId, $itemId, $copyForm->getData());
 
-                    $this->flashMessenger()->setNamespace('info')->addMessage('hold_place_success');
+                    $this->flashMessenger()->setNamespace('info')->addMessage('copy_place_success');
 
-                    return $this->redirectToRecord();;
+                    return $this->redirectToRecord();
                 } else {
-                    $this->flashMessenger()->setNamespace('error')->addMessage('save_address_error');
+                    $this->flashMessenger()->setNamespace('error')->addMessage('copy_place_error');
                 }
             }
         } catch (AlephRestfulException $e) {
-            $this->flashMessenger()->setNamespace('error')->addMessage('address_error');
+            $this->flashMessenger()->setNamespace('error')->addMessage('copy_error');
         } catch (ILS $e) {
-            $this->flashMessenger()->setNamespace('error')->addMessage('address_error');
+            $this->flashMessenger()->setNamespace('error')->addMessage('copy_error');
 
             return $this->createViewModel();
         }

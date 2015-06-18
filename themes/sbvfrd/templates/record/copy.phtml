@@ -1,12 +1,14 @@
 <?
-    // Set page title.
+// Set page title.
 
-    $this->headTitle($this->translate('request_place_text') . ': ' . $this->driver->getBreadcrumb());
+$this->headTitle($this->translate('request_place_text') . ': ' . $this->driver->getBreadcrumb());
 
-    // Set up breadcrumbs:
-    $this->layout()->breadcrumbs = '<li>' . $this->getLastSearchLink($this->transEsc('Search'), '', '</li> ')
-        . '<li>' . $this->recordLink()->getBreadcrumb($this->driver) . '</li> '
-        . '<li class="active">' . $this->transEsc('request_place_text') . '</li>';
+// Set up breadcrumbs:
+$this->layout()->breadcrumbs = '<li>' . $this->getLastSearchLink($this->transEsc('Search'), '', '</li> ')
+    . '<li>' . $this->recordLink()->getBreadcrumb($this->driver) . '</li> '
+    . '<li class="active">' . $this->transEsc('request_place_text') . '</li>';
+
+$loginlink = 'http://aleph.unibas.ch/F/?func=file&file_name=login-session';
 
 /** @var \Zend\Form\Form $form */
 if (isset($form)) {
@@ -43,7 +45,9 @@ if (isset($form)) {
 
         <?= $this->form()->closeTag() ?>
     <? else: ?>
-        <?= $this->transEsc('address_aleph') ?>
+        <?= $this->transEsc('copy_place_error') ?> <br>
+        <?= $this->transEsc('copy_aleph') ?> <br>
+        <a href="<?= $loginlink ?>" target="_blank"><?= $this->transEsc('Login') ?></a>
     <? endif; ?>
 
 </div>
