@@ -860,14 +860,17 @@ EOT;
     }
 
     /**
+     * @param array $patron
+     *
      * @return array
      *
      * @throws AlephRestfulException
      */
-    public function getMyAddress($user) {
+    public function getMyAddress(array $patron)
+    {
         $result = $this->doRestDLFRequest(
             [
-                'patron', $user['id'], 'patronInformation', 'address'
+                'patron', $patron['id'], 'patronInformation', 'address'
             ],
             null, 'GET'
         );
@@ -891,14 +894,14 @@ EOT;
     }
 
     /**
-     * @param $user
-     * @param $newAddress
+     * @param array $patron
+     * @param array $newAddress
      *
      * @return SimpleXMLElement
      *
      * @throws AlephRestfulException
      */
-    public function changeMyAddress($user, $newAddress)
+    public function changeMyAddress(array $patron, array $newAddress)
     {
         $z304_address_1 = $this->maskXmlString($newAddress['z304-address-1']);
         $z304_address_2 = $this->maskXmlString($newAddress['z304-address-2']);
@@ -933,7 +936,7 @@ EOT;
 
         return $this->doRestDLFRequest(
             [
-                'patron', $user['id'], 'patronInformation', 'address'
+                'patron', $patron['id'], 'patronInformation', 'address'
             ],
             null, 'POST', $xml
         );
@@ -949,7 +952,8 @@ EOT;
      *
      * @throws AlephRestfulException
      */
-    public function putCopy(array $patron, $id, $group, array $copyRequest) {
+    public function putCopy(array $patron, $id, $group, array $copyRequest)
+    {
         list($bib, $sys_no) = $this->parseId($id);
         $resource = $bib . $sys_no;
 
@@ -964,7 +968,6 @@ post_xml=<?xml version="1.0"?>
     <note2>{$copyRequest['note2']}</note2>
 </photo-request-parameters>
 EOT;
-
 
         return $this->doRestDLFRequest(
             ['patron', $patron['id'], 'record', $resource, 'items', $group, 'photo'],
