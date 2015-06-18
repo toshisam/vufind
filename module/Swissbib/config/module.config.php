@@ -192,6 +192,9 @@ return array(
             'cart'                 => 'Swissbib\Controller\CartController',
             'shibtest'             => 'Swissbib\Controller\ShibtestController',
             'ajax'                 => 'Swissbib\Controller\AjaxController',
+            'upgrade'              => 'Swissbib\Controller\NoProductiveSupportController',
+            'install'              => 'Swissbib\Controller\NoProductiveSupportController',
+
         ),
         'factories' => array(
             'record' => 'Swissbib\Controller\Factory::getRecordController',
@@ -234,7 +237,8 @@ return array(
             'Swissbib\Hierarchy\SimpleTreeGenerator'        =>  'Swissbib\Hierarchy\Factory::getSimpleTreeGenerator',
             'Swissbib\Hierarchy\MultiTreeGenerator'         =>  'Swissbib\Hierarchy\Factory::getMultiTreeGenerator',
 
-            'Swissbib\MyResearch\Form\AddressForm'          =>  'Swissbib\MyResearch\Factory::getAddressForm'
+            'Swissbib\Record\Form\CopyForm'                 =>  'Swissbib\Record\Factory::getCopyForm',
+            'Swissbib\MyResearch\Form\AddressForm'          =>  'Swissbib\MyResearch\Factory::getAddressForm',
         )
     ),
     'view_helpers'    => array(

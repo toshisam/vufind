@@ -1,0 +1,55 @@
+<?
+    // Set page title.
+    /*
+    $this->headTitle($this->translate('request_place_text') . ': ' . $this->driver->getBreadcrumb());
+
+    // Set up breadcrumbs:
+    $this->layout()->breadcrumbs = '<li>' . $this->getLastSearchLink($this->transEsc('Search'), '', '</li> ')
+        . '<li>' . $this->recordLink()->getBreadcrumb($this->driver) . '</li> '
+        . '<li class="active">' . $this->transEsc('request_place_text') . '</li>';
+    */
+
+/** @var \Zend\Form\Form $form */
+if (isset($form)) {
+    $form->setAttribute('action', '');
+    $form->setAttribute('method', 'post');
+    $form->setAttribute('class', 'form-horizontal');
+    $form->prepare();
+    $submit = $form->get('submit');
+}
+
+?>
+<p class="lead"><?=$this->transEsc('request_place_text')?></p>
+<? if ($this->helpText): ?>
+<p class="helptext"><?=$this->helpText?></p>
+<? endif; ?>
+
+<?=$this->flashmessages()?>
+<div class="copy-form">
+
+    <? if (isset($form)): ?>
+        <?= $this->form()->openTag($form) ?>
+
+        <?= $this->render('form/form-group.phtml', ['field' => $form->get('pickup-locations')]) ?>
+        <?= $this->render('form/form-group.phtml', ['field' => $form->get('sub-author')]) ?>
+        <?= $this->render('form/form-group.phtml', ['field' => $form->get('sub-title')]) ?>
+        <?= $this->render('form/form-group.phtml', ['field' => $form->get('pages')]) ?>
+        <?= $this->render('form/form-group.phtml', ['field' => $form->get('note1')]) ?>
+        <?= $this->render('form/form-group.phtml', ['field' => $form->get('note2')]) ?>
+
+        <?= $this->formRow($form->get('security')) ?>
+        <input type="hidden" name="form-name" value="order-copy">
+
+        <div class="form-group">
+            <div class="col-sm-9 col-sm-offset-3">
+                <input class="btn btn-primary" name="<?= $submit->getName() ?>" type="submit" value="<?= $this->transEsc($submit->getValue()) ?>">
+            </div>
+        </div>
+
+        <?= $this->form()->closeTag() ?>
+    <? else: ?>
+        <?= $this->transEsc('address_aleph') ?> <br>
+        <a href="<?= $loginlink ?>" target="_blank"><?= $this->transEsc('Login') ?></a>
+    <? endif; ?>
+
+</div>

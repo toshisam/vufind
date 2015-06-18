@@ -317,6 +317,8 @@ class RecordController extends VuFindRecordController
 
 */
 
+        $form = $this->serviceLocator->get('Swissbib\Record\Form\CopyForm');
+
         $recordId = $this->request->getQuery('recordId');
         $itemId = $this->request->getQuery('itemId');
 
@@ -325,7 +327,9 @@ class RecordController extends VuFindRecordController
         $pickup = $catalog->getPickUpLocations($patron, ['id' => $recordId, 'item_id' => $itemId]);
 
 
-        return new ViewModel();
+        return $this->createViewModel([
+            'form' => $form
+        ]);
     }
 
     /**
