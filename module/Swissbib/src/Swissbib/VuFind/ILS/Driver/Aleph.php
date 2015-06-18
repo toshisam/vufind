@@ -874,18 +874,18 @@ EOT;
 post_xml=<?xml version = "1.0" encoding = "UTF-8"?>
 <get-pat-adrs>
   <address-information>
-    <z304-address-1>{$newAddress['z304-address-1']}</z304-address-1>
-    <z304-address-2>{$newAddress['z304-address-2']}</z304-address-2>
-    <z304-address-3>{$newAddress['z304-address-3']}</z304-address-3>
-    <z304-address-4>{$newAddress['z304-address-4']}</z304-address-4>
-    <z304-address-5>{$newAddress['z304-address-5']}</z304-address-5>
-    <z304-email-address>{$newAddress['z304-email-address']}</z304-email-address>
-    <z304-telephone-1>{$newAddress['z304-telephone-1']}</z304-telephone-1>
-    <z304-telephone-2>{$newAddress['z304-telephone-2']}</z304-telephone-2>
-    <z304-telephone-3>{$newAddress['z304-telephone-3']}</z304-telephone-3>
-    <z304-telephone-4>{$newAddress['z304-telephone-4']}</z304-telephone-4>
-    <z304-date-from>{$newAddress['z304-date-from']}</z304-date-from>
-    <z304-date-to>{$newAddress['z304-date-to']}</z304-date-to>
+    <z304-address-1><![CDATA[{$newAddress['z304-address-1']}]]></z304-address-1>
+    <z304-address-2><![CDATA[{$newAddress['z304-address-2']}]]></z304-address-2>
+    <z304-address-3><![CDATA[{$newAddress['z304-address-3']}]]></z304-address-3>
+    <z304-address-4><![CDATA[{$newAddress['z304-address-4']}]]></z304-address-4>
+    <z304-address-5><![CDATA[{$newAddress['z304-address-5']}]]></z304-address-5>
+    <z304-email-address><![CDATA[{$newAddress['z304-email-address']}]]></z304-email-address>
+    <z304-telephone-1><![CDATA[{$newAddress['z304-telephone-1']}]]></z304-telephone-1>
+    <z304-telephone-2><![CDATA[{$newAddress['z304-telephone-2']}]]></z304-telephone-2>
+    <z304-telephone-3><![CDATA[{$newAddress['z304-telephone-3']}]]></z304-telephone-3>
+    <z304-telephone-4><![CDATA[{$newAddress['z304-telephone-4']}]]></z304-telephone-4>
+    <z304-date-from><![CDATA[{$newAddress['z304-date-from']}]]></z304-date-from>
+    <z304-date-to><![CDATA[{$newAddress['z304-date-to']}]]></z304-date-to>
   </address-information>
 </get-pat-adrs>
 EOT;
