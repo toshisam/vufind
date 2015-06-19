@@ -25,8 +25,7 @@ class CopyForm
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":50}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),-]*$/u"}})
-     * @Annotation\ErrorMessage("input_too_long_or_disallowed")
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),-]*$/u", "messages":{"regexNotMatch":"input_contains_disallowed_characters"}}})
      */
     public $sub_author;
 
@@ -38,8 +37,7 @@ class CopyForm
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":50}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),-]*$/u"}})
-     * @Annotation\ErrorMessage("input_too_long_or_disallowed")
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),-]*$/u", "messages":{"regexNotMatch":"input_contains_disallowed_characters"}}})
      */
     public $sub_title;
 
@@ -50,8 +48,7 @@ class CopyForm
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":50}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),-]*$/u"}})
-     * @Annotation\ErrorMessage("input_too_long_or_disallowed")
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),-]*$/u", "messages":{"regexNotMatch":"input_contains_disallowed_characters"}}})
      */
     public $pages;
 
@@ -63,8 +60,7 @@ class CopyForm
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":50}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),-]*$/u"}})
-     * @Annotation\ErrorMessage("input_too_long_or_disallowed")
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),-]*$/u", "messages":{"regexNotMatch":"input_contains_disallowed_characters"}}})
      */
     public $note1;
 
@@ -76,8 +72,7 @@ class CopyForm
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":50}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),-]*$/u"}})
-     * @Annotation\ErrorMessage("input_too_long_or_disallowed")
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),-]*$/u", "messages":{"regexNotMatch":"input_contains_disallowed_characters"}}})
      */
     public $note2;
 }

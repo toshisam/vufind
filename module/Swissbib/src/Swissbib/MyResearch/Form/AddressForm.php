@@ -23,8 +23,7 @@ class AddressForm
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":50}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),&-]*$/u"}})
-     * @Annotation\ErrorMessage("input_too_long_or_disallowed")
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),&-]*$/u", "messages":{"regexNotMatch":"input_contains_disallowed_characters"}}})
      */
     public $z304_address_2;
 
@@ -35,8 +34,7 @@ class AddressForm
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":50}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),&-]*$/u"}})
-     * @Annotation\ErrorMessage("input_too_long_or_disallowed")
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),&-]*$/u", "messages":{"regexNotMatch":"input_contains_disallowed_characters"}}})
      */
     public $z304_address_3;
 
@@ -47,8 +45,7 @@ class AddressForm
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":50}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),&-]*$/u"}})
-     * @Annotation\ErrorMessage("input_too_long_or_disallowed")
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),&-]*$/u", "messages":{"regexNotMatch":"input_contains_disallowed_characters"}}})
      */
     public $z304_address_4;
 
@@ -59,8 +56,7 @@ class AddressForm
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":50}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),&-]*$/u"}})
-     * @Annotation\ErrorMessage("input_too_long_or_disallowed")
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d.\/(),&-]*$/u", "messages":{"regexNotMatch":"input_contains_disallowed_characters"}}})
      */
     public $z304_address_5;
 
@@ -81,8 +77,7 @@ class AddressForm
      * @Annotation\Attributes({"type":"tel"})
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":30}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d(),\/+.-]*$/u"}})
-     * @Annotation\ErrorMessage("input_too_long_or_disallowed")
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d(),\/+.-]*$/u", "messages":{"regexNotMatch":"input_contains_disallowed_characters"}}})
      */
     public $z304_telephone_1;
 
@@ -93,8 +88,7 @@ class AddressForm
      * @Annotation\AllowEmpty(true)
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":30}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d(),\/+.-]*$/u"}})
-     * @Annotation\ErrorMessage("input_too_long_or_disallowed")
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d(),\/+.-]*$/u", "messages":{"regexNotMatch":"input_contains_disallowed_characters"}}})
      */
     public $z304_telephone_2;
 
@@ -105,8 +99,7 @@ class AddressForm
      * @Annotation\AllowEmpty(true)
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":30}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d(),\/+.-]*$/u"}})
-     * @Annotation\ErrorMessage("input_too_long_or_disallowed")
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d(),\/+.-]*$/u", "messages":{"regexNotMatch":"input_contains_disallowed_characters"}}})
      */
     public $z304_telephone_3;
 
@@ -117,8 +110,7 @@ class AddressForm
      * @Annotation\AllowEmpty(true)
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":30}})
-     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d(),\/+.-]*$/u"}})
-     * @Annotation\ErrorMessage("input_too_long_or_disallowed")
+     * @Annotation\Validator({"name":"Regex", "options":{"pattern":"/^[\w\s\d(),\/+.-]*$/u", "messages":{"regexNotMatch":"input_contains_disallowed_characters"}}})
      */
     public $z304_telephone_4;
 }
