@@ -302,8 +302,6 @@ class RecordController extends VuFindRecordController
                     $this->flashMessenger()->setNamespace('error')->addMessage('copy_place_error');
                 }
             }
-        } catch (AlephRestfulException $e) {
-            $this->flashMessenger()->setNamespace('error')->addMessage('copy_error');
         } catch (ILS $e) {
             $this->flashMessenger()->setNamespace('error')->addMessage('copy_error');
 
