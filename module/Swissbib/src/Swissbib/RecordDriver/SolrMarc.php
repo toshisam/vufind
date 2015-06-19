@@ -90,7 +90,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         'Series', 'AltTitle', 'NewerTitles', 'PreviousTitles',
         'GeneralNotes', 'DissertationNotes', 'BibliographyNotes', 'AccessRestrictions',
         'ProductionCredits', 'OriginalTitle', 'PerformerNote', 'Awards', 'CitationNotes',
-        'OriginalVersionNotes', 'CopyNotes', 'SystemDetails'
+        'OriginalVersionNotes', 'CopyNotes', 'SystemDetails', 'RelationshipNotes'
     );
 
 
@@ -668,6 +668,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             return array();
         }
         foreach ($fields as $field) {
+            if (!isset($field['union'])) continue;
+
             if ($field['union'] === 'RERO' && $field['tag'] === '856') {
                 if (preg_match('/^.*v_bcu\/media\/images/', $field['sf_u'])) {
                     return 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath='
@@ -864,11 +866,17 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getMostSpecificFormat()
     {
-        $formatsRaw = $this->fields["format_str_mv"];
-        natsort($formatsRaw);
-        $formatsRaw = array_values(array_reverse($formatsRaw));
+        if (isset($this->fields["format_str_mv"])) {
+            $formatsRaw = $this->fields["format_str_mv"];
+            natsort($formatsRaw);
+            $formatsRaw = array_values(array_reverse($formatsRaw));
 
-        return array($formatsRaw[0]);
+            return array($formatsRaw[0]);
+
+        } else {
+            return [];
+        }
+
     }
 
 
@@ -1992,7 +2000,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get table of content
-     * This method is also used to check whether data for tab is available and the tab should be displayed
+     * This method is used to check whether data for tab is available and the tab should be displayed
+     * Differs functionally from parent as we display more information in toc.phtml
      *
      * @return    String[]
      */
@@ -2098,7 +2107,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get content summary
-     * From fields 520.a
+     * From fields 520
      *
      * @return    String[]
      */

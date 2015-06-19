@@ -1,0 +1,51 @@
+<?
+/** @var array $headers */
+/** @var mixed $info */
+/** @var Boolean $even */
+?>
+<table class="table table-flipped hidden-md hidden-lg <?= 'table-' . ($even ? 'even' : 'odd') ?>">
+  <tbody>
+    <tr>
+      <th><?=$headers['history_time']?></th>
+      <td><?=$this->escapeHtml($this->dateTime()->convertToDisplayDateAndTime("U", $info->getStartTime()))?></td>
+    </tr><tr>
+      <th><?=$headers['history_search']?></th>
+      <td>
+          <a href="<?=$this->url($info->getOptions()->getSearchAction()) . $info->getUrlQuery()->getParams()?>">
+            <?
+          $desc = $info->getParams()->getDisplayQuery();
+          echo empty($desc) ? $this->transEsc("history_empty_search") : $this->escapeHtml($desc);
+        ?></a>
+        <? if (method_exists($info,'getTarget')): ?>
+           <br /><span class="meta"><?=$this->transEsc('tab.' . $info->getTarget())?></span>
+        <? endif; ?>
+      </td>
+    </tr><tr>
+      <th><?=$headers['history_limits']?></th>
+      <td>
+        <?
+        $info->getParams()->activateAllFacets();
+        foreach ($info->getParams()->getFilterList() as $field => $filters):
+          foreach ($filters as $i => $filter):
+            if ($filter['operator'] == 'NOT') echo $this->transEsc('NOT') . ' ';
+            if ($filter['operator'] == 'OR' && $i > 0) echo $this->transEsc('OR') . ' ';
+            ?>
+            <strong><?=$this->transEsc($field)?></strong>: <?=$this->escapeHtml($filter['displayText'])?><br/>
+          <? endforeach;
+        endforeach; ?>
+      </td>
+    </tr><tr>
+      <th><?=$headers['history_results']?></th>
+      <td><?=$this->localizedNumber($info->getResultTotal())?></td>
+    </tr><tr>
+      <th><?=$headers['action']?></th>
+      <td>
+        <? if ($this->showSaved): ?>
+          <a href="<?=$this->url('myresearch-savesearch')?>?delete=<?=urlencode($info->getSearchId())?>&amp;mode=history"><i class="fa fa-trash"></i> <?=$this->transEsc("history_delete_link")?></a>
+        <? else: ?>
+          <a href="<?=$this->url('myresearch-savesearch')?>?save=<?=urlencode($info->getSearchId())?>&amp;mode=history"><i class="fa fa-save"></i> <?=$this->transEsc("history_save_link")?></a>
+        <? endif; ?>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -444,11 +444,11 @@ class Holdings
      * Check whether network is supported
      *
      * @param    String $networkCode
-     * @return    Boolean
+     * @return   Boolean
      */
     protected function isRestfulNetwork($networkCode)
     {
-        return isset($this->configHoldings->Restful->{$networkCode});
+        return isset($this->configHoldings->Restful->{$networkCode}) && $this->configHoldings->Restful->{$networkCode} == true ?: false;
     }
 
 
@@ -681,9 +681,9 @@ class Holdings
         $label = '';
 
         // Has informations with translation?
-        if (isset($item['location_code']) && isset($item['institution_chb']) && isset($item['network'])) {
+        if (isset($item['location_code']) && isset($item['institution']) && isset($item['network'])) {
             // @todo keep strtolower or fix in tab40.sync
-            $labelKey = strtolower($item['institution_chb'] . '_' . $item['location_code']);
+            $labelKey = strtolower($item['institution'] . '_' . $item['location_code']);
             $textDomain = 'location-' . strtolower($item['network']);
             $translated = $this->translator->translate($labelKey, $textDomain);
 
@@ -915,19 +915,42 @@ class Holdings
      *
      * set link to NEBIS Primo View
      *
-     * @todo get user language and add it to backlink
      * @param    String $networkCode
      * @param    String $institutionCode
      * @param    Array $item
      * @param    Array $data
      * @return    String
-     */
+     *
+     * Links to Primo work, but login after permalink leads to crashes in Primo. Therefore, use Aleph until Primo allows safe login after permalink
+
     protected function getBackLinkNEBIS($networkCode, $institutionCode, $item, array $data) {
         $values = [
             'bib-system-number' => $item['bibsysnumber'],
             ];
         return $this->compileString($data['pattern'], $values);
     }
+     */
+
+    /**
+     * Get backlink for IDSLU
+     *
+     * set link to iluplus Primo View
+     *
+     * @param    String $networkCode
+     * @param    String $institutionCode
+     * @param    Array $item
+     * @param    Array $data
+     * @return    String
+     *
+     * Links to Primo work, but login after permalink leads to crashes in Primo. Therefore, use Aleph until Primo allows safe login after permalink
+     *
+    protected function getBackLinkIDSLU($networkCode, $institutionCode, $item, array $data) {
+        $values = [
+            'bib-system-number' => $item['bibsysnumber'],
+        ];
+        return $this->compileString($data['pattern'], $values);
+    }
+     * /
 
     /**
      * Get back link for IDSSG (self-developed-non-aleph-request)

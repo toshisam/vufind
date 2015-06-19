@@ -140,6 +140,7 @@ swissbib.Holdings = {
     // Clear content
     popup.html('');
 
+    Lightbox.changeContent('Loading...');
     Lightbox.getByUrl(contentUrl);
   },
 
@@ -171,6 +172,7 @@ swissbib.Holdings = {
       event.preventDefault();
       that.updateHoldingsPopup(event.target.href, dialog);
     });
+
     popup.find('select').change(function (event) {
       popup.mask("Loading...");
       $.ajax({

@@ -1,8 +1,10 @@
 <div class="home-content-box">
-    <h2 class="lead">Redesign 2015</h2>
+    <h2 class="lead">Nouvelles</h2>
     <p>
-        Dalla primavera 2015, swissbib si presenta con una nuova faccia. Il suo design si adatta dinamicamente agli schermi dei differenti
-        dispositivi, la qual cosa consente di utilizzarlo comodamente sia con lo smartphone come con il tablet o con il computer.
+        Catalogue national, swissbib recense les collections d'environ 20 réseaux de bibliothèques, archives institutionelles
+        et bibliothèques numériques. À partir du 10 juin 2015,
+        <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://boris.unibe.ch/') ?>" target="_blank" title="BORIS">BORIS</a>
+        (Bern Open Repository and Information System) en fera partie avec près de 5000 documents en libre accès.
     </p>
-    <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://www.swissbib.blogspot.ch/') ?>" target="_blank" class="btn btn-link" title="Blog">Più info</a>
+    <a href="<?= $this->basePath('Search/Results?filter[]=union:&quot;BORIS&quot;') ?>" class="btn btn-link">Documents BORIS</a>
 </div>

@@ -1,6 +1,7 @@
 <script id="adv-search-field" type="text/x-handlebars-template">
   <div class="row" id="search_field_row_{{groupIndex}}_{{fieldIndex}}">
     <div class="col-sm-7">
+      {{{label}}}
       {{{term}}}
     </div>
     <div class="col-sm-4">
@@ -23,6 +24,7 @@
 </script>
 
 <script id="adv-search-field-field-selector" type="text/x-handlebars-template">
+    <label for="search_typ{{groupIndex}}_{{fieldIndex}}" class="sr-only">{{label}}</label>
     <select class="select form-control" name="type{{groupIndex}}[]" id="search_typ{{groupIndex}}_{{fieldIndex}}">
       {{#each options}}
       <option value="{{name}}"

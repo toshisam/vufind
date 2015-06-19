@@ -43,8 +43,6 @@ use Zend\Http\PhpEnvironment\Request;
  */
 class Shibboleth extends ServerParam
 {
-    use \VuFind\Log\LoggerAwareTrait;
-
     /**
      * Request object
      *
@@ -76,7 +74,7 @@ class Shibboleth extends ServerParam
      */
     public function getPermissions($options)
     {
-        if ($this->request->getServer()->get('Shib-Identity-Provider') === false) {
+        if ($this->request->getServer()->get('Shib-Identity-Provider') === null) {
             $this->logWarning('getPermissions: Shibboleth server params missing');
 
             return [];

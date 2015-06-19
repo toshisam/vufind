@@ -28,7 +28,7 @@ $formats = $viewRecord->getFormatList();
   <div class="hidden-xs col-sm-3 col-md-2 no-gutter hidden-print">
     <a href="<?=$this->recordLink()->getUrl($this->driver)?>" class="img-responsive">
       <? if ( !($thumbnail === false) ):  ?>
-        <img class="recordcover" src="<?= $thumbnail ?>"/>
+        <img alt="<?= $this->escapeHtml($shortTitle) ?>" class="recordcover" src="<?= $thumbnail ?>"/>
       <? else: ?>
 		  <div class="thumbico <?= $viewRecord->getThumbnailPlaceholder() ?>"></div>
       <? endif; ?>
@@ -111,7 +111,12 @@ $formats = $viewRecord->getFormatList();
         <? endif; ?>
 
       <? if (!empty($showFRBR) && $showFRBR && !empty($groupID) && !strcmp($results->getParams()->getSearchHandler(), 'FRBR') == 0) : ?>
-        <a class="btn btn-primary btn-frbr hidden-print" href="<?= $this->url('search-results') . '?lookfor=' . $groupID . "&type=FRBR&limit=" . $results->getParams()->getLimit() . "&sort=publishDateSort+desc" ?>"
+        <a class="btn btn-primary btn-frbr hidden-print" href="<?= $this->url('search-results') .
+            '?lookfor=' . $groupID .
+            '&type=FRBR' .
+            '&originalSort=' . $results->getParams()->getSort() .
+            '&limit=' . $results->getParams()->getLimit() .
+            '&sort=publishDateSort+desc' ?>"
            title="<?= $this->transEsc('Other Editions') ?>">
           <span><i class="fa fa-eye"></i></span>
           <span class="hidden-xs hidden-sm"><?= $this->transEsc('Other Editions') ?></span>

@@ -24,10 +24,17 @@
   );
 
   // Set up breadcrumbs:
+  $type = (isset($_GET['type']) ? $_GET['type'] : '');
+  $originalSort = (isset($_GET['originalSort']) ? $_GET['originalSort'] : '');
   if (isset($this->overrideTitle)) {
     $this->layout()->breadcrumbs .= '<li class="active">' . $this->escapeHtml($this->overrideTitle) . '</li>';
   } else {
-    $this->layout()->breadcrumbs .= '<li class="active">' . $this->transEsc('Search') . ': ' . $this->escapeHtml($this->lookfor) . '</li>';
+    $getFieldName = ('FRBR' === $type ? 'name' : 'lookfor');
+    $this->layout()->breadcrumbs .= '<li class="active">' .
+          $this->getLastSearchLink($this->transEsc('Search'), '', '</li> ');
+  }
+  if ('FRBR' === $type) {
+    $this->layout()->breadcrumbs .= '<li class="active">' . sprintf($this->transEsc('search_breadcrumb_frbr'), $this->escapeHtml($this->lookfor)) . '</li>';
   }
 
   // Disable cart if appropriate:
