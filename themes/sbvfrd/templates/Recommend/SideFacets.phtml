@@ -34,6 +34,9 @@
             //$removeLink = $this->currentPath().$results->getUrlQuery()->removeFacet($filter['field'], $this->translateFacets($filter['field'],$filter['value']), true, $filter['operator']);}
           if ($filter['displayText'] == '[* TO *]') {
             $filter['displayText'] = $this->translate('filter_wildcard');
+          } else {
+              // Try to translate for custom text domain, then use normal translation on top
+              $filter['displayText'] = $this->translate($this->zendTranslate($filter['displayText'], $filter['field']));
           }
         ?>
         <a class="list-group-item active" href="<?=$removeLink?>">
@@ -41,7 +44,7 @@
           <? if ($filter['operator'] == 'NOT') echo $this->transEsc('NOT') . ' ';
              if ($filter['operator'] == 'OR' && $i > 0) echo $this->transEsc('OR') . ' '; ?>
              <?=$this->transEsc($field)?>:
-             <?=$this->escapeHtml($this->translateFacets(array('facetName' => $filter['field'], 'facetValue' => $filter['value'])))?>
+             <?=$this->escapeHtml($filter['displayText'])?>
         </a>
       <? endforeach; ?>
     <? endforeach; ?>
