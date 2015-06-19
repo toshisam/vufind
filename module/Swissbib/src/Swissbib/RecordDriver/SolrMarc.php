@@ -90,7 +90,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         'Series', 'AltTitle', 'NewerTitles', 'PreviousTitles',
         'GeneralNotes', 'DissertationNotes', 'BibliographyNotes', 'AccessRestrictions',
         'ProductionCredits', 'OriginalTitle', 'PerformerNote', 'Awards', 'CitationNotes',
-        'OriginalVersionNotes', 'CopyNotes', 'SystemDetails'
+        'OriginalVersionNotes', 'CopyNotes', 'SystemDetails', 'RelationshipNotes'
     );
 
 
