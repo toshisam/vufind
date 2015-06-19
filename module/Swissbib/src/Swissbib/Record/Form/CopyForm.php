@@ -42,7 +42,7 @@ class CopyForm
     /**
      * @Annotation\Name("pages")
      * @Annotation\Attributes({"type":"text"})
-     * @Annotation\Options({"label":"Pages"})
+     * @Annotation\Options({"label":"pages"})
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":0, "max":30}})
@@ -63,7 +63,7 @@ class CopyForm
     /**
      * @Annotation\Name("note2")
      * @Annotation\Attributes({"type":"textarea"})
-     * @Annotation\Options({"label":"Comment"})
+     * @Annotation\Options({"label":"kommentar"})
      * @Annotation\AllowEmpty(true)
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Filter({"name":"StripTags"})

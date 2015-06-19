@@ -31,7 +31,7 @@ $readonly = isset($readonly) && $readonly;
                 <? endif; ?>
                 <? foreach ($field->getOptions()['value_options'] as $key => $value): ?>
                     <option value="<?=$this->escapeHtmlAttr($key)?>" <?= $key === $fieldValue ? ' selected' : '' ?>>
-                        <?=$this->escapeHtml($value)?>
+                        <?=$this->transEsc($value)?>
                     </option>
                 <? endforeach; ?>
             </select>
