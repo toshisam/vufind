@@ -182,6 +182,9 @@ return array(
             'cart'                 => 'Swissbib\Controller\CartController',
             'shibtest'             => 'Swissbib\Controller\ShibtestController',
             'ajax'                 => 'Swissbib\Controller\AjaxController',
+            'upgrade'              => 'Swissbib\Controller\NoProductiveSupportController',
+            'install'              => 'Swissbib\Controller\NoProductiveSupportController',
+
         ),
         'factories' => array(
             'record' => 'Swissbib\Controller\Factory::getRecordController',

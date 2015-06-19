@@ -457,6 +457,8 @@ class Importer implements ServiceLocatorAwareInterface
         }
 
         $client = new HttpClient($url);
+        $client->setOptions(array('sslverifypeer' => false));
+
         if (!empty($this->config->user) && !empty($this->config->password)) {
             $client->setAuth($this->config->user, $this->config->password);
         }
