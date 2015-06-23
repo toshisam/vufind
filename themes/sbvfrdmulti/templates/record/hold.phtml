@@ -70,11 +70,9 @@ $this->layout()->breadcrumbs = '<li>' . $this->getLastSearchLink($this->transEsc
 
         <? if (in_array("comments", $this->extraHoldFields)): ?>
             <div class="form-group">
-                <label class="col-sm-3 control-label"><?=$this->transEsc("Comments")?>:</label>
+                <label class="col-sm-3 control-label"><?=$this->transEsc("hold_text2")?>:</label>
                 <div class="col-sm-9">
                     <textarea rows="1" cols="20" name="gatheredDetails[comment]" class="form-control"><?=isset($this->gatheredDetails['comment']) ? $this->escapeHtml($this->gatheredDetails['comment']) : ''?></textarea>
-                    <br/>
-                    <p><?=$this->transEsc('hold_text2') ?></p>
                 </div>
             </div>
         <? endif; ?>
