@@ -84,9 +84,9 @@ AllFields:
       - [and, ~]
   #FilterQuery: "union:SNL OR institution:B424 OR (union:NEBIS NOT origcountry_isn_mv:sz AND (subtop_gnd:Tunnelbau OR subgeo_gnd:(Gotthard-Basistunnel OR Gotthardgruppe) OR sublocal:Tunnelbau)) OR (union:RERO NOT origcountry_isn_mv:sz AND subgeo_rero:Saint-Gothard) OR (union:SBT NOT origcountry_isn_mv:sz AND subgeo_sbt:\"San Gottardo\")"
   #FilterQuery: "union:SNL OR institution:B424"
-  #FilterQuery: "union:SNL OR institution:B424 OR (NOT origcountry_isn_mv:sz AND (union:NEBIS OR union:RERO OR union:SBT) AND (topic:Tunnelbau OR topic:Gotthard OR topic:Saint-Gothard OR topic:\"San Gottardo\"))"
+  FilterQuery: "union:SNL OR institution:B424 OR (NOT origcountry_isn_mv:sz AND (union:NEBIS OR union:RERO OR union:SBT) AND (topic:Tunnelbau OR topic:Gotthard OR topic:Saint-Gothard OR topic:\"San Gottardo\"))"
   #FilterQuery: "union:SNL OR institution:B424 OR (NOT origcountry_isn_mv:sz AND (union:NEBIS OR union:RERO OR union:SBT) AND topic:Tunnelbau)"
-  FilterQuery: "topic:Tunnelbau OR topic:Gotthard OR topic:\"Saint-Gothard\" OR topic:\"San Gottardo\" NOT (union:SNL OR institution:B424)"
+  #FilterQuery: "topic:Tunnelbau OR topic:Gotthard OR topic:\"Saint-Gothard\" OR topic:\"San Gottardo\" NOT (union:SNL OR institution:B424)"
 
 Author:
   DismaxHandler: edismax
@@ -107,7 +107,7 @@ Author:
       - [onephrase, 50]
       - [and, 50]
       - [or, 20]
-    FilterQuery: "topic:Tunnelbau OR topic:Gotthard OR topic:\"Saint-Gothard\" OR topic:\"San Gottardo\" NOT (union:SNL OR institution:B424)"
+    FilterQuery: "union:SNL OR institution:B424 OR (NOT origcountry_isn_mv:sz AND (union:NEBIS OR union:RERO OR union:SBT) AND (topic:Tunnelbau OR topic:Gotthard OR topic:Saint-Gothard OR topic:\"San Gottardo\"))"
 
 ISN:
   DismaxFields:
@@ -136,7 +136,7 @@ ISN:
     urn_isn_mv:
       - [and, 100]
       - [or, ~]
-  FilterQuery: "topic:Tunnelbau OR topic:Gotthard OR topic:\"Saint-Gothard\" OR topic:\"San Gottardo\" NOT (union:SNL OR institution:B424)"
+  FilterQuery: "union:SNL OR institution:B424 OR (NOT origcountry_isn_mv:sz AND (union:NEBIS OR union:RERO OR union:SBT) AND (topic:Tunnelbau OR topic:Gotthard OR topic:Saint-Gothard OR topic:\"San Gottardo\"))"
 
 Subject:
   DismaxHandler: edismax
@@ -166,7 +166,7 @@ JournalTitle:
       - [onephrase, 200]
     title_new:
       - [onephrase, 200]
-  FilterQuery: "format_str_mv:(CR0305* OR CR0306* OR CR0307*) AND topic:Tunnelbau OR topic:Gotthard OR topic:\"Saint-Gothard\" OR topic:\"San Gottardo\" NOT (union:SNL OR institution:B424)"
+  FilterQuery: "union:SNL OR institution:B424 OR (NOT origcountry_isn_mv:sz AND (union:NEBIS OR union:RERO OR union:SBT) AND (topic:Tunnelbau OR topic:Gotthard OR topic:Saint-Gothard OR topic:\"San Gottardo\"))"
   DismaxParams:
     - [pf, 'title_short^100000']
     - [ps, '2']
@@ -183,7 +183,7 @@ WLC:
   QueryFields:
     localcode_isn_mv:
       - [onephrase, ~]
-  FilterQuery: "topic:Tunnelbau OR topic:Gotthard OR topic:\"Saint-Gothard\" OR topic:\"San Gottardo\" NOT (union:SNL OR institution:B424)"
+  FilterQuery: "union:SNL OR institution:B424 OR (NOT origcountry_isn_mv:sz AND (union:NEBIS OR union:RERO OR union:SBT) AND (topic:Tunnelbau OR topic:Gotthard OR topic:Saint-Gothard OR topic:\"San Gottardo\"))"
 
 WNEL:
   DismaxFields:
@@ -258,7 +258,7 @@ Title:
       - [and, 50]
     DismaxParams:
     - [bf, 'recip(abs(ms(NOW/DAY,freshness)),3.16e-10,100,100)']
-  FilterQuery: "topic:Tunnelbau OR topic:Gotthard OR topic:\"Saint-Gothard\" OR topic:\"San Gottardo\" NOT (union:SNL OR institution:B424)"
+  FilterQuery: "union:SNL OR institution:B424 OR (NOT origcountry_isn_mv:sz AND (union:NEBIS OR union:RERO OR union:SBT) AND (topic:Tunnelbau OR topic:Gotthard OR topic:Saint-Gothard OR topic:\"San Gottardo\"))"
 
 Series:
   DismaxHandler: edismax
@@ -271,7 +271,7 @@ Series:
       - [or, 100]
     DismaxParams:
     - [bf, 'recip(abs(ms(NOW/DAY,freshness)),3.16e-10,100,100)']
-  FilterQuery: "topic:Tunnelbau OR topic:Gotthard OR topic:\"Saint-Gothard\" OR topic:\"San Gottardo\" NOT (union:SNL OR institution:B424)"
+  FilterQuery: "union:SNL OR institution:B424 OR (NOT origcountry_isn_mv:sz AND (union:NEBIS OR union:RERO OR union:SBT) AND (topic:Tunnelbau OR topic:Gotthard OR topic:Saint-Gothard OR topic:\"San Gottardo\"))"
 
 # These are advanced searches that never use Dismax:
 id:
@@ -314,7 +314,7 @@ CallNumber:
     callnumber:
       - [callnumber_exact, 1000]
       - [callnumber_fuzzy, ~]
-  FilterQuery: "topic:Tunnelbau OR topic:Gotthard OR topic:\"Saint-Gothard\" OR topic:\"San Gottardo\" NOT (union:SNL OR institution:B424)"
+  FilterQuery: "union:SNL OR institution:B424 OR (NOT origcountry_isn_mv:sz AND (union:NEBIS OR union:RERO OR union:SBT) AND (topic:Tunnelbau OR topic:Gotthard OR topic:Saint-Gothard OR topic:\"San Gottardo\"))"
 
 year:
   DismaxFields:
@@ -323,13 +323,13 @@ year:
     publishDate:
       - [and, 100]
       - [or, ~]
-  FilterQuery: "topic:Tunnelbau OR topic:Gotthard OR topic:\"Saint-Gothard\" OR topic:\"San Gottardo\" NOT (union:SNL OR institution:B424)"
+  FilterQuery: "union:SNL OR institution:B424 OR (NOT origcountry_isn_mv:sz AND (union:NEBIS OR union:RERO OR union:SBT) AND (topic:Tunnelbau OR topic:Gotthard OR topic:Saint-Gothard OR topic:\"San Gottardo\"))"
 
 language:
   QueryFields:
     language:
       - [and, ~]
-  FilterQuery: "topic:Tunnelbau OR topic:Gotthard OR topic:\"Saint-Gothard\" OR topic:\"San Gottardo\" NOT (union:SNL OR institution:B424)"
+  FilterQuery: "union:SNL OR institution:B424 OR (NOT origcountry_isn_mv:sz AND (union:NEBIS OR union:RERO OR union:SBT) AND (topic:Tunnelbau OR topic:Gotthard OR topic:Saint-Gothard OR topic:\"San Gottardo\"))"
 
 oclc_num:
   CustomMunge:
@@ -340,7 +340,7 @@ oclc_num:
   QueryFields:
     oclc_num:
       - [oclc_num, ~]
-  FilterQuery: "topic:Tunnelbau OR topic:Gotthard OR topic:\"Saint-Gothard\" OR topic:\"San Gottardo\" NOT (union:SNL OR institution:B424)"
+  FilterQuery: "union:SNL OR institution:B424 OR (NOT origcountry_isn_mv:sz AND (union:NEBIS OR union:RERO OR union:SBT) AND (topic:Tunnelbau OR topic:Gotthard OR topic:Saint-Gothard OR topic:\"San Gottardo\"))"
 
 ctrlnum:
   CustomMunge:
@@ -349,7 +349,7 @@ ctrlnum:
   QueryFields:
     ctrlnum:
       - [ctrlnum, ~]
-  FilterQuery: "topic:Tunnelbau OR topic:Gotthard OR topic:\"Saint-Gothard\" OR topic:\"San Gottardo\" NOT (union:SNL OR institution:B424)"
+  FilterQuery: "union:SNL OR institution:B424 OR (NOT origcountry_isn_mv:sz AND (union:NEBIS OR union:RERO OR union:SBT) AND (topic:Tunnelbau OR topic:Gotthard OR topic:Saint-Gothard OR topic:\"San Gottardo\"))"
 
 Autosuggest:
   DismaxHandler: dismax
