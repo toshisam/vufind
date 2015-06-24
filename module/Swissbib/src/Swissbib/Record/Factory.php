@@ -26,7 +26,7 @@ class Factory
             'name' => 'submit',
             'type'  => 'Submit',
             'attributes' => [
-                'value' => 'Order',
+                'value' => 'request_copy_text',
             ],
         ]);
 

@@ -2,6 +2,7 @@
 /** @var \Zend\Form\Element $field */
 
 $readonly = isset($readonly) && $readonly;
+$noSelectedOptionLabel = isset($noSelectedOptionLabel) ? $noSelectedOptionLabel : '-';
 ?>
 <div class="form-group">
     <label class="col-sm-3 control-label">
@@ -26,7 +27,7 @@ $readonly = isset($readonly) && $readonly;
                 <? $fieldValue = $field->getValue(); ?>
                 <? if (empty($fieldValue)): ?>
                     <option value="">
-                        -
+                        <?= $this->transEsc($noSelectedOptionLabel) ?>
                     </option>
                 <? endif; ?>
                 <? foreach ($field->getOptions()['value_options'] as $key => $value): ?>
