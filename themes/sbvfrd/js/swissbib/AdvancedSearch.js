@@ -27,17 +27,46 @@ swissbib.AdvancedSearch = {
    */
   initJsTree: function () {
     jQuery(".classification-tree").jstree().bind("select_node.jstree", this.onJsTreeSelectNode);
+    jQuery(".classification-tree").bind("close_node.jstree", this.onJsTreeCloseNode);
   },
 
+  /**
+   * @param {Event} event
+   * @param {Object} data
+   *
+   * @return void
+   */
+  onJsTreeCloseNode: function(event, data) {
+    data.instance.deselect_node(data.node);
+  },
+
+  /**
+   * @param {Event} event
+   * @param {Object} data
+   *
+   * @return void
+   */
   onJsTreeSelectNode: function (event, data) {
     var el = jQuery('#' + data.selected[0]);
 
-    el.toggleClass("selected");
-    el.hasClass("selected") ? el.find("input").attr("name", "filter[]") : el.find("input").removeAttr("name");
+    if (el.data('openchildren') === 'yes') {
+      if (data.instance.is_open(data.node)) {
+        data.instance.close_node(data.node);
+      } else {
+        data.instance.open_node(data.node);
+      }
+    } else {
+      el.find("input").first().attr("name", "filter[]");
 
-    if (swissbib.AdvancedSearch.catTreeAutoSend)  swissbib.AdvancedSearch.sendForm(el);
+      if (swissbib.AdvancedSearch.catTreeAutoSend)  swissbib.AdvancedSearch.sendForm(el);
+    }
   },
 
+  /**
+   * @param {Element} el
+   *
+   * @return void
+   */
   sendForm: function (el) {
     jQuery(el).parents('form:first').submit();
   },

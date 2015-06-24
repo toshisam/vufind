@@ -76,17 +76,6 @@ class SearchController extends VuFindSearchController
         $params->initLimitAdvancedSearch($requestParams);
         $viewModel->setVariable('params', $params);
 
-        $mainConfig = $this->getServiceLocator()->get('Vufind\Config')->get('config');
-        $viewModel->adv_search_activeTabId = $mainConfig->Site->adv_search_activeTabId;
-        $viewModel->adv_search_useTabs     = $mainConfig->Site->adv_search_useTabs;
-        $isCatTreeElementConfigured = $mainConfig->Site->displayCatTreeElement;
-        $isCatTreeElementConfigured = !empty($isCatTreeElementConfigured) && ($isCatTreeElementConfigured == "true" || $isCatTreeElementConfigured == "1") ? "1" : 0;
-
-        if ($isCatTreeElementConfigured) {
-            $treeGenerator                   = $this->serviceLocator->get('Swissbib\Hierarchy\SimpleTreeGenerator');
-            $viewModel->classificationTree   = $treeGenerator->getTree($viewModel->facetList['navDrsys_Gen']['list'], 'navDrsys_Gen');
-        }
-
         return $viewModel;
     }
 
