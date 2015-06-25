@@ -1017,7 +1017,10 @@ class Holdings
      */
     protected function getBackLinkSNL($networkCode, $institutionCode, $item, array $data)
     {
-        return $this->getBackLinkVirtua($networkCode, $institutionCode, $item, $data);
+        $values = [
+            'bib-system-number' => $this->getNumericString($item['bibsysnumber']),
+        ];
+        return $this->compileString($data['pattern'], $values);
     }
 
     /**
@@ -1033,7 +1036,10 @@ class Holdings
 
     protected function getBackLinkCCSA($networkCode, $institutionCode, $item, array $data)
     {
-        return $this->getBackLinkVirtua($networkCode, $institutionCode, $item, $data);
+        $values = [
+            'bib-system-number' => $this->getNumericString($item['bibsysnumber']),
+        ];
+        return $this->compileString($data['pattern'], $values);
     }
 
     /**
@@ -1047,13 +1053,13 @@ class Holdings
      */
     protected function getBackLinkRERO($networkCode, $institutionCode, $item, array $data)
     {
-        $values = array(
+        $values = [
             'server' => $data['domain'],
             'language-code' => 'de', // @todo fetch from user,
             'RERO-network-code' => (int)substr($institutionCode, 2, 2), // third and fourth character
             'bib-system-number' => $item['bibsysnumber'], // replaces the incorrect version: 'bib-system-number' => $this->getNumericString($item['bibsysnumber']), // remove characters from number string
             'sub-library-code' => $this->getNumericString($institutionCode) //removes the RE-characters from the number string
-        );
+        ];
 
         return $this->compileString($data['pattern'], $values);
     }
