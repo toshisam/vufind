@@ -300,4 +300,12 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     {
         return $this->getField('LinkModel');
     }
+
+    /**
+     * @return array
+     */
+    public function getRelatedPersons()
+    {
+        return [];
+    }
 }
