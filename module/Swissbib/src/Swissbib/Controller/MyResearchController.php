@@ -500,8 +500,8 @@ class MyResearchController extends VuFindMyResearchController
                     $address = $this->getILS()->getMyAddress($patron);
                     $newAddress = $addressForm->getData();
                     $newAddress['z304-address-1'] = $address['z304-address-1']; //make sure nobody changes his name
-                    $newAddress['z304-date-from'] = $address['z304-date-from'];
-                    $newAddress['z304-date-to'] = $address['z304-date-to'];
+                    $newAddress['z304-date-from'] = $address['z304-date-from'] === '00000000' ? date('Ymd') : $address['z304-date-from'];
+                    $newAddress['z304-date-to'] = $address['z304-date-to'] === '00000000' ? date('Ymd', strtotime('+10 years')) : $address['z304-date-to'];
 
                     $this->getILS()->changeMyAddress($patron, $newAddress);
                     $this->flashMessenger()->setNamespace('info')->addMessage('save_address_success');

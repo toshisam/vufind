@@ -913,6 +913,8 @@ EOT;
         $z304_telephone_2 = $this->maskXmlString($newAddress['z304-telephone-2']);
         $z304_telephone_3 = $this->maskXmlString($newAddress['z304-telephone-3']);
         $z304_telephone_4 = $this->maskXmlString($newAddress['z304-telephone-4']);
+        $z304_date_from = $this->maskXmlString($newAddress['z304-date-from']);
+        $z304_date_to = $this->maskXmlString($newAddress['z304-date-to']);
 
         $xml =  <<<EOT
 post_xml=<?xml version = "1.0" encoding = "UTF-8"?>
@@ -928,8 +930,8 @@ post_xml=<?xml version = "1.0" encoding = "UTF-8"?>
     <z304-telephone-2>{$z304_telephone_2}</z304-telephone-2>
     <z304-telephone-3>{$z304_telephone_3}</z304-telephone-3>
     <z304-telephone-4>{$z304_telephone_4}</z304-telephone-4>
-    <z304-date-from>{$newAddress['z304-date-from']}</z304-date-from>
-    <z304-date-to>{$newAddress['z304-date-to']}</z304-date-to>
+    <z304-date-from>{$z304_date_from}</z304-date-from>
+    <z304-date-to>{$z304_date_to}</z304-date-to>
   </address-information>
 </get-pat-adrs>
 EOT;
