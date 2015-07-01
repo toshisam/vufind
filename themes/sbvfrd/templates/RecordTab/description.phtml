@@ -175,6 +175,7 @@ $prevTitles  = $record->getPreviousTitles();
   $orignotes  = $record->getOriginalVersionNotes();
   $copynotes  = $record->getCopyNotes();
   $system     = $record->getSystemDetails();
+  $relatedPersons = $record->getRelatedPersons();
   ?>
 
   <? if (!empty($notes) or !empty($freq) or !empty($contDates) or !empty($diss) or
@@ -399,6 +400,17 @@ $prevTitles  = $record->getPreviousTitles();
             </td>
         </tr>
     <? endforeach; ?>
+    <? endif; ?>
+
+    <? if (!empty($relatedPersons)): ?>
+        <tr>
+            <th><?= $this->transEsc('Related Persons') ?></th>
+            <td>
+                <? foreach ($relatedPersons as $relatedPerson): ?>
+                    <?= $this->escapeHTML($relatedPerson['firstName'] . ' ' . $relatedPerson['lastName'] . ' (' . $this->translate($relatedPerson['relation']) . ')')?> <br>
+                <? endforeach; ?>
+            </td>
+        </tr>
     <? endif; ?>
 
     <? if (!isset($contentDisplayed) || !$contentDisplayed): // Avoid errors if there were no rows above ?>
