@@ -40,12 +40,20 @@ class HoldingActions extends AbstractTranslatorHelper
                     'href'   => $loginURL,
                 );
             }
-            if (isset($item['userActions']['hold']) && $item['userActions']['hold'] && is_array($item['availability'])) {
-                $actions['hold'] = array(
-                    $itemkey = key($item['availability']),
-                    'label' => array_search('lendable_borrowed', $item['availability'][$itemkey]) ? $this->translate('Recall This') : $this->translate('hold_place'),
-                    'href'  => $recordLink->getHoldUrl($item['holdLink'])
-                );
+            if (isset($item['userActions']['hold']) && $item['userActions']['hold']) {
+                if (is_array($item['availability'])) {
+                    $actions['hold'] = array(
+                        $itemkey = key($item['availability']),
+                        'label' => array_search('lendable_borrowed', $item['availability'][$itemkey]) ? $this->translate('Recall This') : $this->translate('hold_place'),
+                        'href' => $recordLink->getHoldUrl($item['holdLink'])
+                    );
+                }
+                elseif ($item['availability'] === false) {
+                    $actions['hold'] = array(
+                        'label' => $this->translate('hold_place'),
+                        'href' => $recordLink->getHoldUrl($item['holdLink'])
+                    );
+                }
             }
             if (isset($item['userActions']['shortLoan']) && $item['userActions']['shortLoan']) {
                 $actions['shortloan'] = array(

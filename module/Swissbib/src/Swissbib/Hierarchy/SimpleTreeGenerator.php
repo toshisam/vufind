@@ -28,7 +28,7 @@ class SimpleTreeGenerator {
      *
      * @return string
      */
-    private function generatePageTree(array &$datas, $currentNode = ""){
+    private function generatePageTree(array &$datas, $currentNode = "", $nestingLevel = 0){
         $tree = array();
 
         $currentNodeHead = explode(".", $currentNode);
@@ -44,10 +44,11 @@ class SimpleTreeGenerator {
             $parent = implode(".", $datasParent);
 
             if ($parent === $currentNode) {
+                $data['nestingLevel'] = $nestingLevel;
                 unset($datas[$key]);
                 $tree[] = array(
                     "entry" => $data,
-                    "children" => $this->generatePageTree($datas, $data['value'])
+                    "children" => $this->generatePageTree($datas, $data['value'], $nestingLevel + 1)
                 );
             }
         }
@@ -100,8 +101,7 @@ class SimpleTreeGenerator {
         if (is_array($cachedTree))  return $cachedTree;
         if ($treeKey === '')        return $this->generatePageTree($this->orderAndFilter($facets));
 
-        $orderedAndFilteredFacets = $this->orderAndFilter($facets);
-        $tree = $this->generatePageTree($orderedAndFilteredFacets);
+        $tree = $this->generatePageTree($this->orderAndFilter($facets));
         $this->objectCache->setItem($cacheTreeId, $tree);
 
         return $tree;

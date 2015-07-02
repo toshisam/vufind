@@ -68,13 +68,15 @@ $favoriteLanguages = array('ger', 'eng', 'fre', 'ita');
       <? endif; ?>
         <div class="col-sm-6">
         <? if (isset($this->illustratedLimit)): ?>
-          <div class="row"><fieldset>
-            <legend><?=$this->transEsc("Illustrated")?>:</legend>
-            <? foreach ($this->illustratedLimit as $current): ?>
-              <input class="form-control" id="illustrated_<?=$this->escapeHtmlAttr($current['value'])?>" type="radio" name="illustration" value="<?=$this->escapeHtmlAttr($current['value'])?>"<?=$current['selected']?' checked="checked"':''?>/>
-              <label for="illustrated_<?=$this->escapeHtmlAttr($current['value'])?>"><?=$this->transEsc($current['text'])?></label><br/>
-            <? endforeach; ?>
-          </fieldset></div>
+          <div class="row">
+              <fieldset>
+                <legend><?=$this->transEsc("Illustrated")?>:</legend>
+                  <? foreach ($this->illustratedLimit as $current): ?>
+                      <input class="form-control" id="illustrated_<?=$this->escapeHtmlAttr($current['value'])?>" type="radio" name="illustration" value="<?=$this->escapeHtmlAttr($current['value'])?>"<?=$current['selected']?' checked="checked"':''?>/>
+                      <label for="illustrated_<?=$this->escapeHtmlAttr($current['value'])?>"><?=$this->transEsc($current['text'])?></label><br/>
+                  <? endforeach; ?>
+              </fieldset>
+          </div>
         <? endif; ?>
         <?=$this->render('search/advanced/ranges.phtml')?>
         <?=$this->render('search/advanced/limit.phtml')?>
