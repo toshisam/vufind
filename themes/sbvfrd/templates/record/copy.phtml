@@ -21,6 +21,8 @@ if (isset($form)) {
 
 ?>
 <p class="lead"><?=$this->transEsc('request_copy_text')?></p>
+<p><?= $this->transEsc('copy_of') ?>: <?= $this->recordLink()->getBreadcrumb($this->driver) ?><p>
+<p><?=$this->transEsc('copy_info') ?></p>
 <p><?=$this->transEsc('hold_text4') ?> <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>" target="_blank"><?=$this->transEsc('hold_text5')?></a>.</p><br/>
 
 <?=$this->flashmessages()?>
