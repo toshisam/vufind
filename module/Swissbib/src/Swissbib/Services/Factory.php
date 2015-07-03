@@ -207,4 +207,17 @@ class Factory
             $sm->get('VuFind\Config')->get('export')
         );
     }
+
+    /**
+     * @param   ServiceManager      $sm
+     * @return  \Swissbib\Export
+     */
+    public static function getSearchRunner(ServiceManager $sm)
+    {
+        return new \VuFind\Search\SearchRunner(
+            $sm->get('Swissbib\SearchResultsPluginManager')
+        );
+
+    }
+
 }

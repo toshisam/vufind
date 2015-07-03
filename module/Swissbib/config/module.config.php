@@ -215,7 +215,9 @@ return array(
             'sbSpellingResults'                            =>  'Swissbib\VuFind\Search\Solr\Factory::getSpellingResults',
 
             'Swissbib\Hierarchy\SimpleTreeGenerator'        =>  'Swissbib\Hierarchy\Factory::getSimpleTreeGenerator',
-            'Swissbib\Hierarchy\MultiTreeGenerator'         =>  'Swissbib\Hierarchy\Factory::getMultiTreeGenerator'
+            'Swissbib\Hierarchy\MultiTreeGenerator'         =>  'Swissbib\Hierarchy\Factory::getMultiTreeGenerator',
+            'VuFind\SearchRunner'                           => 'Swissbib\Services\Factory::getSearchRunner',
+
         )
     ),
     'view_helpers'    => array(
