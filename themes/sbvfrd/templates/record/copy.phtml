@@ -1,6 +1,10 @@
 <?
-// Set page title.
+/** @var \Swissbib\RecordDriver\SolrMarc $record */
+$record = $this->driver;
+/** @var Swissbib\View\Helper\Record $viewRecord */
+$viewRecord = $this->record($record);
 
+// Set page title.
 $this->headTitle($this->translate('request_copy_text') . ': ' . $this->driver->getBreadcrumb());
 
 // Set up breadcrumbs:
