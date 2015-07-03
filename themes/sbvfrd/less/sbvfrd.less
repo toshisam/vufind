@@ -1487,6 +1487,11 @@ footer {
   a {
     white-space:normal !important; height: auto;
   }
+  .jstree-icon, .jstree-icon:empty {
+    &:hover {
+      color: @link-color;
+    }
+  }
   li > ins {
     vertical-align:top;
   }
@@ -1508,22 +1513,49 @@ footer {
     height: auto !important;
   }
   .jstree-icon, .jstree-icon:empty {
-    width: 40px;
+    width: 39px;
     height: 30px;
-    line-height: 24px;
+    line-height: 26px;
   }
   .jstree-node {
     min-height: 30px;
     line-height: 30px;
   }
   .jstree-leaf > .jstree-ocl {
-    background-position: -40px -128px;
+    background-position: -40px -168px;
+  }
+  ul.jstree-children > li:last-child {
+    background-image: none;
+  }
+  .jstree-node {
+    margin-left: 35px;
+    padding-right: 20px;
   }
 }
 
 .hierarchy-tree .jstree-ocl:before {
-  margin-left: -5px;
-  font-size: 30px;
+  margin-left: 26px;
+  font-size: 25px;
+}
+
+.hierarchy-tree .jstree-container-ul, .hierarchy-tree .jstree-children {
+  padding-left: 0;
+}
+
+.hierarchy-tree .jstree-anchor {
+  margin-left: 6px;
+}
+
+#hierarchyTreeHolder {
+  border: none;
+}
+
+#hierarchyTree {
+  margin-left: -20px;
+}
+
+#treeSearch {
+  margin: 10px 0 20px 0;
 }
 
 .nav.nav-tabs.jus {
