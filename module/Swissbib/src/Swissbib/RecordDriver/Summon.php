@@ -304,7 +304,7 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     /**
      * @return array
      */
-    public function getRelatedPersons()
+    public function getRelatedEntries()
     {
         return [];
     }

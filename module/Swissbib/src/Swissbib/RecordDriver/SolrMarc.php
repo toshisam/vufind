@@ -2277,31 +2277,21 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     /**
      * @return array
      */
-    public function getRelatedPersons()
+    public function getRelatedEntries()
     {
-        $formerOwners = explode(',', $this->mainConfig->RelatedPersons->formerOwners);
-        $fields = array_merge($this->marcRecord->getFields('700'), $this->marcRecord->getFields('710'));
+        $related = explode(',', $this->mainConfig->RelatedEntries->related);
+        $allowedFields = ['700', '710'];
+        $fields = $this->getMarcSubFieldMaps('950', [
+            'a' => 'name',
+            'D' => 'secondName',
+            '4' => 'relation',
+            'P' => 'originField',
+        ]);
 
-        $fields = array_filter($fields, function($field) use ($formerOwners) {
-            /** @var \File_MARC_Data_Field $field */
-            $subfield = $field->getSubfield('4');
-            return $subfield && in_array($subfield->getData(), $formerOwners);
+        return array_filter($fields, function($field) use ($related, $allowedFields) {
+            return isset($field['relation']) && isset($field['originField']) &&
+                in_array($field['originField'], $allowedFields) &&
+                in_array($field['relation'], $related);
         });
-
-        $relatedPersons = [];
-
-        /** @var \File_MARC_Data_Field $field */
-        foreach($fields as $field) {
-            $subfieldFirstName = $field->getSubfield('a');
-            $subfieldLastName = $field->getSubfield('D');
-
-            $relatedPersons[] = [
-                'firstName' => $subfieldFirstName ? $subfieldFirstName->getData() : '',
-                'lastName' => $subfieldLastName ? $subfieldLastName->getData() : '',
-                'relation' => $field->getSubfield('4')->getData()
-            ];
-        }
-
-        return $relatedPersons;
     }
 }
