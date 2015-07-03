@@ -366,11 +366,12 @@ class Holdings
 
     /**
      * Initialize networks from config
+     * (active only for Aleph)
      *
      */
     protected function initNetworks()
     {
-        $networkNames = array('Aleph', 'Virtua');
+        $networkNames = ['Aleph'];
 
         foreach ($networkNames as $networkName) {
             $configName = ucfirst($networkName) . 'Networks';
@@ -378,14 +379,14 @@ class Holdings
             /** @var Config $networkConfigs */
             $networkConfigs = $this->configHoldings->get($configName);
 
-            foreach ($networkConfigs as $networkCode => $networkConfig) {
+            foreach ($networkConfigs as $networkCode => $networkConfig)
+            {
                 list($domain, $library) = explode(',', $networkConfig, 2);
-
-                $this->networks[$networkCode] = array(
+                $this->networks[$networkCode] = [
                     'domain' => $domain,
                     'library' => $library,
-                    'type' => $networkName
-                );
+                    'type' => $networkName,
+                ];
             }
         }
     }
@@ -980,7 +981,6 @@ class Holdings
     protected function getBackLinkRERO($networkCode, $institutionCode, $item, array $data)
     {
         $values = [
-            'server' => $data['domain'],
             'language-code' => 'de', // @todo fetch from user,
             'RERO-network-code' => (int)substr($institutionCode, 2, 2), // third and fourth character
             'bib-system-number' => $item['bibsysnumber'],
