@@ -1348,6 +1348,64 @@ footer {
     color: @white;
     box-shadow: none;
   }
+  a {
+    white-space:normal !important; height: auto;
+  }
+  li > ins {
+    vertical-align:top;
+  }
+  .jstree-anchor {
+    height: auto !important;
+    & > i {
+      display: none;
+    }
+  }
+  .jstree-leaf {
+    height: auto;
+  }
+  .jstree-leaf a{
+    height: auto !important;
+  }
+  .jstree-leaf > .jstree-ocl {
+    background-position: -40px -120px;
+  }
+}
+
+.jstree-default-responsive .jstree-node, .jstree-default-responsive .jstree-icon, 
+.jstree-default-responsive .jstree-node > .jstree-ocl, .jstree-default-responsive .jstree-themeicon, 
+.jstree-default-responsive .jstree-checkbox,
+
+.jstree-default .jstree-node, .jstree-default .jstree-icon,
+.jstree-default .jstree-node > .jstree-ocl, .jstree-default .jstree-themeicon,
+.jstree-default .jstree-checkbox{
+  background-image: url("@{theme-base-path}css/jsTree/themes/default/40px.png");
+  background-size: 120px 200px;
+}
+.jstree-default .jstree-node {
+  background-position: -80px 0;
+  background-repeat: repeat-y;
+}
+
+.jstree-default .jstree-node {
+  min-height: 40px;
+  line-height: 40px;
+  margin-left: 40px;
+  min-width: 40px;
+  white-space: nowrap;
+}
+
+.jstree-default .jstree-icon, .jstree-default .jstree-icon:empty {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+}
+
+.jstree-default .jstree-node, .jstree-default .jstree-leaf > .jstree-ocl {
+  background: transparent;
+}
+
+.jstree-default .jstree-leaf > .jstree-ocl {
+  background: transparent;
 }
 
 .nav.nav-tabs.jus {
