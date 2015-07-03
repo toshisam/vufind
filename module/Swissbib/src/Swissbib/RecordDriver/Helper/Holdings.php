@@ -816,8 +816,8 @@ class Holdings
 
 
     /**
-     * Get a back link
-     * Check first if a custom type is defined for this network
+     * Get a backlink
+     * Check first if a custom type is defined for this network (only Aleph is implemented as a custom type)
      * Fallback to network default
      *
      * @param    String $networkCode
@@ -846,7 +846,7 @@ class Holdings
                 $networkType = strtoupper($this->networks[$networkCode]['type']);
                 $method = 'getBackLink' . ucfirst($networkType);
 
-                // Has the network type  general link by its system (aleph, virtua, etc)
+                // Has the network type  general link by its system (only Aleph is implemented)
                 if (isset($this->configHoldings->Backlink->$networkType)) {
                     $data = array(
                         'pattern' => $this->configHoldings->Backlink->$networkType
@@ -870,7 +870,8 @@ class Holdings
 
 
     /**
-     * Get back link for aleph
+     * Get backlink for aleph
+     * (custom method)
      *
      * @param    String $networkCode
      * @param    String $institutionCode
@@ -968,82 +969,7 @@ class Holdings
     }
 
     /**
-     * Get back link for virtua
-     *
-     * @todo    Get user language
-     * @param    String $networkCode
-     * @param    String $institutionCode
-     * @param    Array $item
-     * @param    Array $data
-     * @return    String
-     */
-    protected function getBackLinkVirtua($networkCode, $institutionCode, $item, array $data)
-    {
-        $values = array(
-            'server' => $data['domain'],
-            'language-code' => 'de', // @todo fetch from user
-            'bib-system-number' => $this->getNumericString($item['bibsysnumber']) // remove characters from number string
-        );
-
-        return $this->compileString($data['pattern'], $values);
-    }
-
-
-    /**
-     * Get back link for alexandria
-     * Currently only a wrapper for virtua
-     *
-     * @param    String $networkCode
-     * @param    String $institutionCode
-     * @param    Array $item
-     * @param    Array $data
-     * @return    String
-     */
-    protected function getBackLinkAlex($networkCode, $institutionCode, array $item, array $data)
-    {
-        return $this->getBackLinkVirtua($networkCode, $institutionCode, $item, $data);
-    }
-
-
-    /**
-     * Get back link for SNL
-     * Currently only a wrapper for virtua
-     *
-     * @param    String $networkCode
-     * @param    String $institutionCode
-     * @param    Array $item
-     * @param    Array $data
-     * @return    String
-     */
-    protected function getBackLinkSNL($networkCode, $institutionCode, $item, array $data)
-    {
-        $values = [
-            'bib-system-number' => $this->getNumericString($item['bibsysnumber']),
-        ];
-        return $this->compileString($data['pattern'], $values);
-    }
-
-    /**
-     * Get back link for CCSA (poster collection)
-     * Currently only a wrapper for virtua
-     *
-     * @param    String $networkCode
-     * @param    String $institutionCode
-     * @param    Array $item
-     * @param    Array $data
-     * @return    String
-     */
-
-    protected function getBackLinkCCSA($networkCode, $institutionCode, $item, array $data)
-    {
-        $values = [
-            'bib-system-number' => $this->getNumericString($item['bibsysnumber']),
-        ];
-        return $this->compileString($data['pattern'], $values);
-    }
-
-    /**
-     * Build rero backlink
+     * Get backlink for RERO
      *
      * @param       $networkCode
      * @param       $institutionCode
@@ -1057,16 +983,70 @@ class Holdings
             'server' => $data['domain'],
             'language-code' => 'de', // @todo fetch from user,
             'RERO-network-code' => (int)substr($institutionCode, 2, 2), // third and fourth character
-            'bib-system-number' => $item['bibsysnumber'], // replaces the incorrect version: 'bib-system-number' => $this->getNumericString($item['bibsysnumber']), // remove characters from number string
-            'sub-library-code' => $this->getNumericString($institutionCode) //removes the RE-characters from the number string
+            'bib-system-number' => $item['bibsysnumber'],
+            'sub-library-code' => preg_replace('[\D]', '', $institutionCode) //removes the RE-characters from the number string
         ];
+        return $this->compileString($data['pattern'], $values);
+    }
 
+
+    /**
+     * Get backlink for Alexandria network
+     *
+     * @param    String $networkCode
+     * @param    String $institutionCode
+     * @param    Array $item
+     * @param    Array $data
+     * @return    String
+     */
+    protected function getBackLinkAlex($networkCode, $institutionCode, array $item, array $data)
+    {
+        $values = [
+            'bib-system-number' => preg_replace('[\D]', '', $item['bibsysnumber']) // remove characters from number string
+        ];
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
-     * Get back link for helvetic archives
-     * Currently only a wrapper for virtua
+     * Get backlink for SNL (helveticat)
+     *
+     * @param    String $networkCode
+     * @param    String $institutionCode
+     * @param    Array $item
+     * @param    Array $data
+     * @return    String
+     */
+    protected function getBackLinkSNL($networkCode, $institutionCode, $item, array $data)
+    {
+        $bibsysnumber = preg_replace('/^vtls0*/', '', $item['bibsysnumber']);
+        $values = [
+            'bib-system-number' => $bibsysnumber,
+        ];
+        return $this->compileString($data['pattern'], $values);
+    }
+
+    /**
+     * Get backlink for CCSA (poster collection)
+     *
+     * @param    String $networkCode
+     * @param    String $institutionCode
+     * @param    Array $item
+     * @param    Array $data
+     * @return    String
+     */
+
+    protected function getBackLinkCCSA($networkCode, $institutionCode, $item, array $data)
+    {
+        $bibsysnumber = preg_replace('/^vtls0*/', '', $item['bibsysnumber']);
+        $values = [
+            'bib-system-number' => $bibsysnumber,
+        ];
+        return $this->compileString($data['pattern'], $values);
+    }
+
+
+    /**
+     * Get backlink for Helveticarchives (SNL)
      *
      * @param    String $networkCode
      * @param    String $institutionCode
@@ -1076,11 +1056,16 @@ class Holdings
      */
     protected function getBackLinkCHARCH($networkCode, $institutionCode, array $item, array $data)
     {
-        return $this->getBackLinkVirtua($networkCode, $institutionCode, $item, $data);
+        $values = [
+            'bib-system-number' => $item['bibsysnumber'],
+        ];
+        return $this->compileString($data['pattern'], $values);
     }
 
     /**
-     * Compile string. Replace {varName} pattern with names and data from array
+     * Compile string
+     * Replace {varName} pattern with names and data from array
+     * creates an URL string for backlinks according to data delivered by methods above
      *
      * @param    String $string
      * @param    Array $keyValues
@@ -1088,7 +1073,7 @@ class Holdings
      */
     protected function compileString($string, array $keyValues)
     {
-        $newKeyValues = array();
+        $newKeyValues = [];
 
         foreach ($keyValues as $key => $value) {
             $newKeyValues['{' . $key . '}'] = $value;
@@ -1096,19 +1081,6 @@ class Holdings
 
         return str_replace(array_keys($newKeyValues), array_values($newKeyValues), $string);
     }
-
-
-    /**
-     * Remove all not-numeric parts from string
-     *
-     * @param    String $string
-     * @return    String
-     */
-    protected function getNumericString($string)
-    {
-        return preg_replace('[\D]', '', $string);
-    }
-
 
     /**
      * Get URL for library website (bibinfo)
