@@ -54,21 +54,23 @@ class Factory
      */
     public static function getSolrTreeDataSource(ServiceManager $sm)
     {
-        $cacheDir = $sm->getServiceLocator()->get('VuFind\CacheManager')->getCacheDir(false);
 
+        $cacheDir = $sm->getServiceLocator()->get('VuFind\CacheManager')
+            ->getCacheDir(false);
         $hierarchyFilters = $sm->getServiceLocator()->get('VuFind\Config')
             ->get('HierarchyDefault');
-
         $filters = isset($hierarchyFilters->HierarchyTree->filterQueries)
             ? $hierarchyFilters->HierarchyTree->filterQueries->toArray()
-            : array();
-
-
+            : [];
+        $solr = $sm->getServiceLocator()->get('VuFind\Search\BackendManager')
+            ->get('Solr')->getConnector();
+        $formatterManager = $sm->getServiceLocator()
+            ->get('VuFind\HierarchyTreeDataFormatterPluginManager');
         return new TreeDataSourceSolr(
-            $sm->getServiceLocator()->get('VuFind\Search'),
-            rtrim($cacheDir, '/') . '/hierarchy',
+            $solr, $formatterManager, rtrim($cacheDir, '/') . '/hierarchy',
             $filters
         );
+
     }
 
     public static function getHierarchyDriverSeries(ServiceManager $sm)
