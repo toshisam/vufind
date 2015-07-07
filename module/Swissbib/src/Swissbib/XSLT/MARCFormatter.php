@@ -14,42 +14,41 @@ class MARCFormatter implements ServiceManagerAwareInterface
 
     private static $sM;
 
-    protected static $institutionURLs = array(
-        "NEBIS" => "http://opac.nebis.ch/F/?local_base=EBI01&con_lng=GER&func=find-b&find_code=SYS&request=%s",
+    protected static $institutionURLs = [
+        "ABN" => "http://aleph.ag.ch/F/?local_base=ABN01&con_lng=GER&func=find-b&find_code=SYS&request=%s",
+      //"ALEX" => "http://www.alexandria.ch/primo_library/libweb/action/dlSearch.do?institution=BIG&vid=ALEX&scope=default_scope&query=lsr07,contains,vtls%s-41big_inst",
+        "BGR" => "http://aleph.gr.ch/F/?local_base=BGR01&con_lng=GER&func=find-b&find_code=SYS&request=%s",
+        "BORIS" => "http://boris.unibe.ch/cgi/oai2?verb=GetRecord&identifier=%s&metadataPrefix=oai_dc",
+        "CCSA" => "http://permalink.snl.ch/bib/chccsa%s",
+        "CHARCH" => "http://www.helveticarchives.ch/detail.aspx?ID=%s",
+        "DDB" => "http://d-nb.info/%s",
+        "ECOD" => "http://www.e-codices.unifr.ch/oai/oai.php?verb=GetRecord&metadataPrefix=oai_dc&identifier=oai:e-codices.unifr.ch:http://www.e-codices.unifr.ch/en/list/one/%s",
         "IDSBB" => "http://aleph.unibas.ch/F/?local_base=DSV01&con_lng=GER&func=find-b&find_code=SYS&request=%s",
         "IDSSG2" => "http://aleph.unisg.ch/F?local_base=HSB02&con_lng=GER&func=direct&doc_number=%s",
         "IDSSG" => "http://aleph.unisg.ch/F?local_base=HSB01&con_lng=GER&func=direct&doc_number=%s",
-        "SBT" => "http://aleph.sbt.ti.ch/F?local_base=SBT01&con_lng=ITA&func=find-b&find_code=SYS&request=%s",
-        "SNL" => "http://opac.admin.ch/cgi-bin/gw/chameleon?lng=de&inst=consortium&search=KEYWORD&function=CARDSCR&t1=%s&u1=12101",
-        "RERO" => "http://opac.rero.ch/gateway?beginsrch=1&lng=de&inst=consortium&search=KEYWORD&function=CARDSCR&t1=%s&u1=12",
         "IDSLU" => "http://ilu.zhbluzern.ch/F/?local_base=ILU01&con_lng=GER&func=find-b&find_code=SYS&request=%s",
-        "OCoLC" => "http://www.worldcat.org/search?q=no%3A%s",
-        "CCSA" => "http://opac.admin.ch/cgi-bin/gw/chameleon?skin=affiches&lng=de&inst=consortium&search=KEYWORD&function=INITREQ&t1=%s&u1=12101",
-        "CHARCH" => "http://www.helveticarchives.ch/detail.aspx?ID=%s",
-        "BGR" => "http://aleph.gr.ch/F/?local_base=BGR01&con_lng=GER&func=find-b&find_code=SYS&request=%s",
-        "ABN" => "http://aleph.ag.ch/F/?local_base=ABN01&con_lng=GER&func=find-b&find_code=SYS&request=%s",
-        "SGBN" => "http://aleph.sg.ch/F/?local_base=SGB01&con_lng=GER&func=find-b&find_code=SYS&request=%s",
         "LIBIB" => "http://aleph.lbfl.li/F/?local_base=LLB01&con_lng=GER&func=find-b&find_code=SYS&request=%s",
-        //"ALEX" => "http://opac.admin.ch/cgi-bin/gwalex/chameleon?lng=de&inst=consortium&skin=portal&search=KEYWORD&function=CARDSCR&t1=%s&u1=12101",
-        "DDB" => "http://d-nb.info/%s",
+        "NEBIS" => "http://opac.nebis.ch/F/?local_base=EBI01&con_lng=GER&func=find-b&find_code=SYS&request=%s",
+        "OCoLC" => "http://www.worldcat.org/oclc/%s",
+        "RERO" => "http://opac.rero.ch/gateway?beginsrch=1&lng=de&inst=consortium&search=KEYWORD&function=CARDSCR&t1=%s&u1=12",
         "RETROS" => "http://retro.seals.ch/oai/dataprovider?verb=GetRecord&metadataPrefix=oai_dc&identifier=%s",
+        "SBT" => "http://aleph.sbt.ti.ch/F?local_base=SBT01&con_lng=ITA&func=find-b&find_code=SYS&request=%s",
+        "SERVAL" => "http://serval.unil.ch/oaiprovider?verb=GetRecord&metadataPrefix=mods&identifier=oai:serval.unil.ch:%s",
+        "SGBN" => "http://aleph.sg.ch/F/?local_base=SGB01&con_lng=GER&func=find-b&find_code=SYS&request=%s",
+        "SNL" => "http://permalink.snl.ch/bib/sz%s",
         "ZORA" => "http://www.zora.uzh.ch/cgi/oai2?verb=GetRecord&metadataPrefix=oai_dc&identifier=%s",
-        //"ALEX" => "http://www.alexandria.ch/primo_library/libweb/action/dlSearch.do?institution=BIG&vid=ALEX&scope=default_scope&query=lsr07,contains,vtls%s-41big_inst",
-    );
-
-
+    ];
 
     /**
      * @var array
      */
-    protected static $trimPrefixes = array(
+    protected static $trimPrefixes = [
         "vtls",
         "on",
         "ocn",
         "ocm",
         "cha"
-    );
-
+        ];
 
     /**
      * @param array $domArray
@@ -76,8 +75,6 @@ class MARCFormatter implements ServiceManagerAwareInterface
             return '<a href="' . $pW->getWrappedURL( $url) . '" target="_blank">' . htmlentities('(' . $institution . ')' . $request) . '</a>';
         }
     }
-
-
 
     /**
      * @param String $nodeText
@@ -112,6 +109,4 @@ class MARCFormatter implements ServiceManagerAwareInterface
     {
         static::$sM = $serviceManager;
     }
-
-
 }

@@ -29,7 +29,7 @@ if (isset($item['locationMap']) && $item['locationMap']) {
 $holdingActionsContent = $this->holdingActions($item, 'holdingActionsItem');
 if (preg_match('/[\s\S]*<ul[\s\S]*<\/ul>[\s\S]*/', $holdingActionsContent)): ?>
   <tr>
-    <th><?= $headers['action'] ?></th>
+    <th><?= isset($headers['action']) ? $headers['action'] : '' ?></th>
     <td><?= $holdingActionsContent; ?> </td>
   </tr>
 <? endif; ?>
