@@ -1553,7 +1553,10 @@ footer {
     background-position: -40px -168px;
   }
   ul.jstree-children > li:last-child {
-    background-image: none;
+    background: url("@{theme-base-path}css/jsTree/themes/default/40px.png");
+    background-size: 120px 200px;
+    background-position: -80px -188px;
+    background-repeat: no-repeat;
   }
   .jstree-node {
     margin-left: 35px;
@@ -1561,16 +1564,21 @@ footer {
   }
 }
 
-.hierarchy-tree .jstree-ocl:before {
+.hierarchy-tree .jstree-ocl:before,
+.jstree-default  .jstree-ocl:before {
   margin-left: 26px;
   font-size: 25px;
 }
 
-.hierarchy-tree .jstree-container-ul, .hierarchy-tree .jstree-children {
+.hierarchy-tree .jstree-container-ul,
+.hierarchy-tree .jstree-children,
+.jstree-default .jstree-container-ul,
+.jstree-default .jstree-children {
   padding-left: 0;
 }
 
-.hierarchy-tree .jstree-anchor {
+.hierarchy-tree .jstree-anchor,
+.jstree-default .jstree-anchor {
   margin-left: 6px;
 }
 
@@ -1588,6 +1596,80 @@ footer {
 
 #hierarchyTree {
   margin-left: -20px;
+}
+
+.sidebar {
+  .jstree-default {
+    .jstree-container-ul > .jstree-node {
+      background-color: @white;
+      border-bottom: none;
+      background-image: none;
+      margin-left: 0;
+      padding: 0;
+
+      & > .jstree-ocl:before {
+        margin-left: 0;
+      }
+      & > .jstree-icon,
+      & > .jstree-icon:empty {
+        width: 14px;
+        padding: 0 20px 0 12px;
+        height: 34px;
+        line-height: 34px;
+        display: block;
+        float: left;
+      }
+      & > .jstree-children > .jstree-node {
+        margin-left: 0;
+      }
+      & > .jstree-anchor {
+        margin-left: 0;
+        display: block;
+        background-image: none;
+        .main {
+          line-height: 34px;
+        }
+        .badge {
+          line-height: 28px;
+        }
+      }
+    }
+    .jstree-ocl:before {
+      font-size: 20px;
+    }
+    .jstree-node {
+      color: @font-color;
+      margin-left: 0;
+      padding-right: 0;
+
+      .jstree-anchor {
+        display: block;
+        margin-left: 0;
+      }
+
+      .jstree-icon,
+      .jstree-icon:empty {
+        float: left;
+      }
+    }
+
+    .jstree-anchor,
+    a.jstree-hovered,
+    a.jstree-clicked {
+      background-image: url("@{theme-base-path}css/jsTree/themes/default/40px.png");
+      background-size: 120px 200px;
+      background-position: -80px -15px;
+      background-repeat: repeat-y;
+    }
+
+    a.jstree-hovered {
+      background-color: @sidebar-title-color;
+      color: @font-color;
+      .jstree-node {
+        background-color: @white;
+      }
+    }
+  }
 }
 
 #treeSearch {
