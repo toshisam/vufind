@@ -1532,9 +1532,11 @@ footer {
       display: none;
     }
   }
-  .jstree-closed > .jstree-ocl,
-  .jstree-open > .jstree-ocl {
-    background-image: none;
+  .jstree-open > .jstree-ocl,
+  .jstree-closed > .jstree-ocl {
+    background-position: -43px -130px !important; //overwrite jstree responsive !important
+    background: url("@{theme-base-path}images/custom-jstree-40px.png");
+    background-size: 120px 200px;
   }
   .jstree-leaf {
     height: auto;
@@ -1615,6 +1617,9 @@ footer {
       margin-left: 0;
       padding: 0;
 
+      & > .jstree-ocl {
+        background-image: none;
+      }
       & > .jstree-ocl:before {
         margin-left: 0;
       }
@@ -1672,6 +1677,10 @@ footer {
       .jstree-node {
         background-color: @white;
       }
+      & > .badge {
+        background-color: transparent;
+        color: @font-color;
+      }
     }
     li.jstree-facet ul {
       padding-left: 0;
@@ -1681,6 +1690,22 @@ footer {
     }
     ul.jstree-children > li:last-child {
       background-position: -83px -189px;
+    }
+    a.jstree-clicked {
+      background: rgba(197,102,20,0.9);
+    }
+    a.jstree-clicked > .badge, a.jstree-clicked i {
+      background: transparent;
+    }
+    a.jstree-hovered.jstree-clicked,
+    a.jstree-hovered.jstree-clicked > .badge,
+    a.jstree-hovered.jstree-clicked i  {
+      background: @link-color;
+      color: @white;
+      box-shadow: none;
+    }
+    .badge {
+      line-height: 14px;
     }
   }
 }
