@@ -73,7 +73,8 @@ return array(
       'searchOptions'             => 'Swissbib\View\Helper\Swissbib\Factory::getSearchOptions',
       'searchBox'                 => 'Swissbib\View\Helper\Swissbib\Factory::getSearchBox',
       'includeTemplate'           => 'Swissbib\View\Helper\Swissbib\Factory::getIncludeTemplate',
-      'translateFacets'           => 'Swissbib\View\Helper\Swissbib\Factory::getFacetTranslator'
+      'translateFacets'           => 'Swissbib\View\Helper\Swissbib\Factory::getFacetTranslator',
+      'formatRelatedEntry'        => 'Swissbib\View\Helper\Swissbib\Factory::getFormatRelatedEntry',
     ),
     'invokables' => array(
       'translate' => 'Swissbib\VuFind\View\Helper\Root\Translate',
