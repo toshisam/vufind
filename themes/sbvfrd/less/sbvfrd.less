@@ -1550,7 +1550,7 @@ footer {
     line-height: 25px;
   }
   .jstree-leaf > .jstree-ocl {
-    background-position: -40px -168px;
+    background-position: -40px -128px;
   }
   ul.jstree-children > li:last-child {
     background: url("@{theme-base-path}css/jsTree/themes/default/40px.png");
@@ -1561,6 +1561,12 @@ footer {
   .jstree-node {
     margin-left: 35px;
     padding-right: 20px;
+  }
+  .jstree-last {
+    background: url("@{theme-base-path}css/jsTree/themes/default/40px.png");
+    background-size: 120px 200px;
+    background-position: -80px -188px;
+    background-repeat: no-repeat;
   }
 }
 
@@ -1639,17 +1645,23 @@ footer {
     }
     .jstree-node {
       color: @font-color;
-      margin-left: 0;
+      margin-left: 14px;
       padding-right: 0;
+      background-position: -83px 0px;
+      min-height: 20px;
+      line-height: 20px;
 
       .jstree-anchor {
         display: block;
-        margin-left: 0;
+        margin-left: -14px;
       }
 
       .jstree-icon,
       .jstree-icon:empty {
         float: left;
+        height: 20px;
+        line-height: 20px;
+        margin-right: 5px;
       }
     }
 
@@ -1669,6 +1681,7 @@ footer {
         background-color: @white;
       }
     }
+    li.jstree-facet ul {padding-left: 0;}
   }
 }
 
