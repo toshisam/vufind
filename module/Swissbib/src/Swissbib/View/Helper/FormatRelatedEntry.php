@@ -37,7 +37,7 @@ class FormatRelatedEntry extends AbstractHelper {
     {
         $formattedEntry = isset($relatedEntry['name']) ? $relatedEntry['name'] : '';
         $formattedEntry .= isset($relatedEntry['secondName']) ? ', ' . $relatedEntry['secondName'] : '';
-        $formattedEntry .= ' (' . $this->translator->translate($relatedEntry['relation']) . ')';
+        $formattedEntry .= ' (' . $this->translator->translate('relator_' . $relatedEntry['relation']) . ')';
 
         return $formattedEntry;
     }
