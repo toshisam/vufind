@@ -378,6 +378,17 @@ $prevTitles  = $record->getPreviousTitles();
         </td>
     <? endif; ?>
 
+    <? if (!empty($relatedEntries)): ?>
+        <tr>
+            <th><?= $this->transEsc('Related Entries') . ':' ?></th>
+            <td>
+                <? foreach ($relatedEntries as $relatedEntry): ?>
+                    <?= $this->escapeHtml($this->formatRelatedEntry($relatedEntry))?> <br>
+                <? endforeach; ?>
+            </td>
+        </tr>
+    <? endif; ?>
+
     <? /** == Schlagworte */ ?>
     <? if($subjectVocabularies): ?>
     <? $contentDisplayed = true; ?>
@@ -402,16 +413,6 @@ $prevTitles  = $record->getPreviousTitles();
     <? endforeach; ?>
     <? endif; ?>
 
-    <? if (!empty($relatedEntries)): ?>
-        <tr>
-            <th><?= $this->transEsc('Related Entries') . ':' ?></th>
-            <td>
-                <? foreach ($relatedEntries as $relatedEntry): ?>
-                    <?= $this->escapeHTML($this->formatRelatedEntry($relatedEntry))?> <br>
-                <? endforeach; ?>
-            </td>
-        </tr>
-    <? endif; ?>
 
     <? if (!isset($contentDisplayed) || !$contentDisplayed): // Avoid errors if there were no rows above ?>
     <tr>
