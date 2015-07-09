@@ -132,7 +132,7 @@ if (is_array($urls)) {
 }
 
 
-echo "crossref = {" . $this->serverUrl($this->recordLink()->getUrl($this->driver)) . "},\n";
+//echo "crossref = {" . $this->serverUrl($this->recordLink()->getUrl($this->driver)) . "},\n";
 
 $isbns = $this->driver->tryMethod('getISBNs');
 if (is_array($isbns)) {
