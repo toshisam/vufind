@@ -1534,7 +1534,7 @@ footer {
   }
   .jstree-open > .jstree-ocl,
   .jstree-closed > .jstree-ocl {
-    background-position: -43px -130px !important; //overwrite jstree responsive !important
+    background-position: -40px -129px !important; //overwrite jstree responsive !important
     background: url("@{theme-base-path}images/custom-jstree-40px.png");
     background-size: 120px 200px;
   }
@@ -1576,7 +1576,7 @@ footer {
 
 .hierarchy-tree .jstree-ocl:before,
 .jstree-default  .jstree-ocl:before {
-  margin-left: 26px;
+  margin-left: 30px;
   font-size: 25px;
 }
 
@@ -1639,7 +1639,8 @@ footer {
         margin-left: 0;
         display: block;
         background-image: none;
-        .main {
+        .main,
+        .main > i {
           line-height: 34px;
         }
         .badge {
@@ -1649,6 +1650,7 @@ footer {
     }
     .jstree-ocl:before {
       font-size: 20px;
+      margin-left: 25px;
     }
     .jstree-node {
       color: @font-color;
@@ -1668,7 +1670,7 @@ footer {
         float: left;
         height: 20px;
         line-height: 20px;
-        margin-right: 5px;
+        margin-right: 2px;
       }
     }
     a.jstree-hovered {
@@ -1689,7 +1691,7 @@ footer {
       background-position: -43px -130px;
     }
     ul.jstree-children > li:last-child {
-      background-position: -83px -189px;
+      background-position: -83px -190px;
     }
     a.jstree-clicked {
       background: rgba(197,102,20,0.9);
@@ -1700,13 +1702,38 @@ footer {
     a.jstree-hovered.jstree-clicked,
     a.jstree-hovered.jstree-clicked > .badge,
     a.jstree-hovered.jstree-clicked i  {
-      background: @link-color;
+      background-color: @link-color;
       color: @white;
       box-shadow: none;
     }
     .badge {
       line-height: 14px;
     }
+    .jstree-open > .jstree-ocl,
+    .jstree-closed > .jstree-ocl {
+      background-position: -43px -130px !important; //overwrite jstree responsive !important
+    }
+  }
+  .jstree-facet .jstree-container-ul  li.active {
+    background-color: @white;
+    color: @font-color;
+  }
+  .jstree-facet .jstree-container-ul li.active a.jstree-anchor {
+    background-color: transparent;
+    color: @font-color;
+  }
+  .jstree-facet .jstree-container-ul li.active > i {
+    background-color: transparent;
+    color: @white;
+  }
+  .jstree-facet .jstree-container-ul li.active > a.jstree-anchor {
+    background-color: rgba(197,102,20,0.9);
+    color: @white;
+  }
+  .jstree-facet .list-group-item.active,
+  .jstree-facet .list-group-item.active:hover,
+  .jstree-facet .list-group-item.active:focus {
+    border: 1px solid @content-box-border-color;
   }
 }
 
