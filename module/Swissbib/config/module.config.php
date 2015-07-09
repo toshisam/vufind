@@ -113,6 +113,26 @@ return array(
                 )
               )
             ),
+            'myresearch-changeaddress' => array(
+                'type'    => 'literal',
+                'options' => array(
+                    'route'    => '/MyResearch/Address',
+                    'defaults' => array(
+                        'controller' => 'my-research',
+                        'action'     => 'changeAddress'
+                    )
+                )
+            ),
+            'record-copy' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/Record/:id/Copy',
+                    'defaults' => array(
+                        'controller' => 'record',
+                        'action'     => 'copy'
+                    )
+                )
+            ),
         )
     ),
     'console' => array(
@@ -215,7 +235,10 @@ return array(
             'sbSpellingResults'                            =>  'Swissbib\VuFind\Search\Solr\Factory::getSpellingResults',
 
             'Swissbib\Hierarchy\SimpleTreeGenerator'        =>  'Swissbib\Hierarchy\Factory::getSimpleTreeGenerator',
-            'Swissbib\Hierarchy\MultiTreeGenerator'         =>  'Swissbib\Hierarchy\Factory::getMultiTreeGenerator'
+            'Swissbib\Hierarchy\MultiTreeGenerator'         =>  'Swissbib\Hierarchy\Factory::getMultiTreeGenerator',
+
+            'Swissbib\Record\Form\CopyForm'                 =>  'Swissbib\Record\Factory::getCopyForm',
+            'Swissbib\MyResearch\Form\AddressForm'          =>  'Swissbib\MyResearch\Factory::getAddressForm',
         )
     ),
     'view_helpers'    => array(

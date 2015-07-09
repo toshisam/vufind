@@ -20,7 +20,7 @@ if (isset($item['locationMap']) && $item['locationMap']) {
 
 ?>
 <tr>
-  <td><?= $this->holdingActions($item, 'holdingActionsItem') ?> </td>
+  <td><?= $this->holdingActions($item, 'holdingActionsItem', $record) ?> </td>
   <td><?= $this->availabilityInfo($item['availability']) ?></td>
   <td>
     <?= $this->escapeHtml($item['locationLabel']) ?>

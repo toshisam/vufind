@@ -13,11 +13,13 @@ class HoldingActions extends AbstractTranslatorHelper
     /**
      * Render action link list
      *
-     * @param    Array    $item
-     * @param    String    $listClass        Custom class for list element
-     * @return    String
+     * @param array $item
+     * @param string $listClass     Custom class for list element
+     * @param string $recordId
+     *
+     * @return string
      */
-    public function __invoke(array $item, $listClass = '')
+    public function __invoke(array $item, $listClass = '', $recordId = '')
     {
         /** @var RecordLink $recordLink */
         $recordLink = $this->getView()->plugin('recordLink');
@@ -64,8 +66,7 @@ class HoldingActions extends AbstractTranslatorHelper
             if (isset($item['userActions']['photorequest']) && $item['userActions']['photorequest']) {
                 $actions['photocopy'] = array(
                     'label' => $this->translate('hold_copy'),
-                    'href'  => $item['userActions']['photoRequestLink'],
-                    'target' => '_blank',
+                    'href'  => $recordLink->getCopyUrl($item, $recordId),
                 );
             }
             if (isset($item['userActions']['bookingrequest']) && $item['userActions']['bookingrequest']) {

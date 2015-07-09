@@ -1,6 +1,9 @@
 <?php
 namespace Swissbib\Controller;
 
+use VuFind\Exception\ILS;
+use VuFind\ILS\Driver\AlephRestfulException;
+use Zend\Form\Form;
 use Zend\View\Model\ViewModel,
     VuFind\Controller\RecordController as VuFindRecordController,
     VuFind\Exception\RecordMissing as RecordMissingException,
@@ -263,6 +266,52 @@ class RecordController extends VuFindRecordController
                     ? $checkHolds['helpText'] : null
             )
         );
+    }
+
+    /**
+     * @return ViewModel
+     */
+    public function copyAction()
+    {
+        if (!is_array($patron = $this->catalogLogin())) {
+            return $patron;
+        }
+
+        $catalog = $this->getILS();
+        /** @var Form $copyForm */
+        $copyForm = $this->serviceLocator->get('Swissbib\Record\Form\CopyForm');
+        $recordId = $this->request->getQuery('recordId');
+        $itemId = $this->request->getQuery('itemId');
+
+        try {
+            $pickupLocations = $catalog->getCopyPickUpLocations($patron, $recordId, $itemId);
+            $pickupLocationsField = $copyForm->get('pickup-location');
+            $pickupLocationsField->setOptions(['value_options' => $pickupLocations]);
+
+            if ($this->request->isPost() && $this->request->getPost('form-name') === 'order-copy') {
+                $copyForm->setData($this->request->getPost());
+
+                if ($copyForm->isValid()) {
+
+                    $this->getILS()->putCopy($patron, $recordId, $itemId, $copyForm->getData());
+
+                    $this->flashMessenger()->setNamespace('info')->addMessage('copy_place_success');
+
+                    return $this->redirectToRecord();
+                } else {
+                    $this->flashMessenger()->setNamespace('error')->addMessage('copy_place_error');
+                }
+            }
+        } catch (ILS $e) {
+            $this->flashMessenger()->setNamespace('error')->addMessage('copy_error');
+
+            return $this->createViewModel();
+        }
+
+        return $this->createViewModel([
+            'form' => $copyForm,
+            'driver' => $this->loadRecord(),
+        ]);
     }
 
     /**
