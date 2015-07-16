@@ -32,8 +32,6 @@ namespace Swissbib\View\Helper\Swissbib;
 use Zend\ServiceManager\ServiceManager;
 
 use VuFind\View\Helper\Root\SearchParams;
-use VuFind\View\Helper\Root\SearchOptions;
-use VuFind\View\Helper\Root\SearchBox;
 
 use Swissbib\VuFind\View\Helper\Root\Auth;
 use Swissbib\VuFind\View\Helper\Root\SearchTabs;
@@ -147,32 +145,6 @@ class Factory
     {
         return new SearchParams(
             $sm->getServiceLocator()->get('Swissbib\SearchParamsPluginManager')
-        );
-    }
-
-    /**
-     * @param ServiceManager $sm Service manager.
-     *
-     * @return SearchOptions
-     */
-    public static function getSearchOptions(ServiceManager $sm)
-    {
-        return new SearchOptions(
-            $sm->getServiceLocator()->get('Swissbib\SearchOptionsPluginManager')
-        );
-    }
-
-    /**
-     * @param ServiceManager $sm Service manager.
-     *
-     * @return SearchBox
-     */
-    public static function getSearchBox(ServiceManager $sm)
-    {
-        $config = $sm->getServiceLocator()->get('VuFind\Config');
-        return new SearchBox(
-            $sm->getServiceLocator()->get('Swissbib\SearchOptionsPluginManager'),
-            $config->get('searchbox')->toArray()
         );
     }
 

@@ -70,8 +70,6 @@ return array(
       'layoutClass'               => 'Swissbib\View\Helper\Swissbib\Factory::getLayoutClass',
       'searchtabs'                => 'Swissbib\View\Helper\Swissbib\Factory::getSearchTabs',
       'searchParams'              => 'Swissbib\View\Helper\Swissbib\Factory::getSearchParams',
-      'searchOptions'             => 'Swissbib\View\Helper\Swissbib\Factory::getSearchOptions',
-      'searchBox'                 => 'Swissbib\View\Helper\Swissbib\Factory::getSearchBox',
       'includeTemplate'           => 'Swissbib\View\Helper\Swissbib\Factory::getIncludeTemplate',
       'translateFacets'           => 'Swissbib\View\Helper\Swissbib\Factory::getFacetTranslator'
     ),

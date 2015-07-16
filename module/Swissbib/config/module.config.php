@@ -231,7 +231,7 @@ return array(
             //an einigen Stellen im Code wird noch der alte Namespace verwendet z.B.
             //module/Swissbib/src/Swissbib/View/Helper/Swissbib/Factory.php
 
-            'Swissbib\SearchOptionsPluginManager' => 'Swissbib\Services\Factory::getSearchOptionsPluginManager',
+            //'Swissbib\SearchOptionsPluginManager' => 'Swissbib\Services\Factory::getSearchOptionsPluginManager',
             'Swissbib\SearchParamsPluginManager' => 'Swissbib\Services\Factory::getSearchParamsPluginManager',
             'Swissbib\SearchResultsPluginManager' => 'Swissbib\Services\Factory::getSearchResultsPluginManager',
 
