@@ -1,3 +1,5 @@
+'use strict';
+
 swissbib.Settings = {
 
   init: function () {
@@ -9,8 +11,6 @@ swissbib.Settings = {
   },
 
   onFormChange: function (event) {
-
-    //console.log('changed');
     $(this).parents('form').submit();
   }
 };

@@ -1,3 +1,5 @@
+'use strict';
+
 swissbib.FavoriteInstitutions = {
 
   baseUrl: '/MyResearch/Favorites',
