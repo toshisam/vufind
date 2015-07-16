@@ -139,18 +139,6 @@ class Factory
     /**
      * @param ServiceManager $sm Service manager.
      *
-     * @return SearchParams
-     */
-    public static function getSearchParams(ServiceManager $sm)
-    {
-        return new SearchParams(
-            $sm->getServiceLocator()->get('Swissbib\SearchParamsPluginManager')
-        );
-    }
-
-    /**
-     * @param ServiceManager $sm Service manager.
-     *
      * @return IncludeTemplate
      */
     public static function getIncludeTemplate(ServiceManager $sm)

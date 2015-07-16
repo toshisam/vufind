@@ -69,7 +69,6 @@ return array(
       'auth'                      => 'Swissbib\View\Helper\Swissbib\Factory::getAuth',
       'layoutClass'               => 'Swissbib\View\Helper\Swissbib\Factory::getLayoutClass',
       'searchtabs'                => 'Swissbib\View\Helper\Swissbib\Factory::getSearchTabs',
-      'searchParams'              => 'Swissbib\View\Helper\Swissbib\Factory::getSearchParams',
       'includeTemplate'           => 'Swissbib\View\Helper\Swissbib\Factory::getIncludeTemplate',
       'translateFacets'           => 'Swissbib\View\Helper\Swissbib\Factory::getFacetTranslator'
     ),

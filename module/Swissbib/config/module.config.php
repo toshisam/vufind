@@ -232,7 +232,7 @@ return array(
             //module/Swissbib/src/Swissbib/View/Helper/Swissbib/Factory.php
 
             //'Swissbib\SearchOptionsPluginManager' => 'Swissbib\Services\Factory::getSearchOptionsPluginManager',
-            'Swissbib\SearchParamsPluginManager' => 'Swissbib\Services\Factory::getSearchParamsPluginManager',
+            //'Swissbib\SearchParamsPluginManager' => 'Swissbib\Services\Factory::getSearchParamsPluginManager',
             'Swissbib\SearchResultsPluginManager' => 'Swissbib\Services\Factory::getSearchResultsPluginManager',
 
             //'VuFind\SearchRunner'                           => 'Swissbib\Services\Factory::getSearchRunner',
