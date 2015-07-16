@@ -1692,7 +1692,7 @@ footer {
       background-position: -83px -187px;
     }
     a.jstree-clicked {
-      background: rgba(197,102,20,0.9);
+      background: @link-color-transparent;
     }
     a.jstree-clicked > .badge, a.jstree-clicked i {
       background: transparent;
@@ -1706,6 +1706,9 @@ footer {
     }
     .badge {
       line-height: 18px;
+    }
+    span.main.applied i {
+      padding-top: 5px;
     }
     .jstree-open > .jstree-ocl,
     .jstree-closed > .jstree-ocl {
@@ -1725,7 +1728,7 @@ footer {
     color: @white;
   }
   .jstree-facet .jstree-container-ul li.active > a.jstree-anchor {
-    background-color: rgba(197,102,20,0.9);
+    background-color: @link-color-transparent;
     color: @white;
   }
   .jstree-facet .list-group-item.active,
