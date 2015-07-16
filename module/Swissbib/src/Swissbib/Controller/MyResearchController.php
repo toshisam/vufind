@@ -197,7 +197,7 @@ class MyResearchController extends VuFindMyResearchController
       //the controller has to be extended only because of this customized PluginManager
       //request to VuFind to make this more configurable necessary!
       $results = $this->getServiceLocator()
-          ->get('Swissbib\SearchResultsPluginManager')->get('Favorites');
+          ->get('VuFind\SearchResultsPluginManager')->get('Favorites');
       $params = $results->getParams();
       $params->setAuthManager($this->getAuthManager());
 
@@ -346,7 +346,7 @@ class MyResearchController extends VuFindMyResearchController
             // or limit parameter customized by the user. This is not desired especially at access points in the public space
             //But we have to be careful: we should append additional default parameters only for Solr or Summon
             // search Routes
-            $solrResultsManager = $this->getServiceLocator()->get('Swissbib\SearchResultsPluginManager')->get('Solr');
+            $solrResultsManager = $this->getServiceLocator()->get('VuFind\SearchResultsPluginManager')->get('Solr');
             $options = $solrResultsManager->getParams()->getOptions();
             $defaultSort = $options->getDefaultSortByHandler();
             $defaultLimit = $options->getDefaultLimit();

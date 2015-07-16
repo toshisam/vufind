@@ -31,8 +31,6 @@ namespace Swissbib\View\Helper\Swissbib;
 
 use Zend\ServiceManager\ServiceManager;
 
-use VuFind\View\Helper\Root\SearchParams;
-
 use Swissbib\VuFind\View\Helper\Root\Auth;
 use Swissbib\VuFind\View\Helper\Root\SearchTabs;
 use Swissbib\View\Helper\LayoutClass;
@@ -130,7 +128,7 @@ class Factory
     public static function getSearchTabs(ServiceManager $sm)
     {
         return new SearchTabs(
-            $sm->getServiceLocator()->get('Swissbib\SearchResultsPluginManager'),
+            $sm->getServiceLocator()->get('VuFind\SearchResultsPluginManager'),
             $sm->getServiceLocator()->get('VuFind\Config')->get('config')->toArray(),
             $sm->get('url')
         );

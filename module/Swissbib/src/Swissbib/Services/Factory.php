@@ -45,9 +45,6 @@ use Zend\I18n\Translator\LoaderPluginManager;
  */
 class Factory
 {
-
-
-
     /**
      * Generic plugin manager factory (support method).
      *
@@ -68,9 +65,6 @@ class Factory
             )
         );
     }
-
-
-
 
     /**
      * Constructs a type for redirecting resources using the appropriate protocol
@@ -99,7 +93,6 @@ class Factory
         //and simplify the mechanism with invokables
         return new Theme();
     }
-
 
     /**
      * creates a service to configure the requests against SOLR to receive highlighting snippets in fulltext
@@ -131,7 +124,6 @@ class Factory
         );
         return $logger;
     }
-
 
     /**
      * Construct the translator.
@@ -221,7 +213,6 @@ class Factory
         );
     }
 
-
     /**
      * @param   ServiceManager      $sm
      * @return  \Swissbib\Export
@@ -269,23 +260,4 @@ class Factory
     {
         return static::getGenericPluginManager($sm, 'VuFind\Search\Results');
     }
-
-
-
-
-    /**
-     * @param   ServiceManager      $sm
-     * @return  \Swissbib\Export
-     */
-    /*
-    //todo: mit der Anpassung der swissbib spezifischen Plugin Manager obsolet. Richtig??
-    public static function getSearchRunner(ServiceManager $sm)
-    {
-        return new \VuFind\Search\SearchRunner(
-            $sm->get('Swissbib\SearchResultsPluginManager')
-        );
-
-    }
-    */
-
 }
