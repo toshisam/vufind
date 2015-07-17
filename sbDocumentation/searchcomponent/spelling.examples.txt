@@ -9,3 +9,52 @@ gleiche Abfrage wie oben nur weniger query parameter (die wir für das spelling 
 http://sb-s7.swissbib.unibas.ch:8080/solr/sb-biblio/select?spellcheck.q=new+yyrk&spellcheck.dictionary=default&ps=2&q.op=AND&qf=title_short^1000+title_alt^200+title_sub^200+title_old^200+title_new^200+author^750+author_additional^100+author_additional_dsv11_txt_mv^100+title_additional_dsv11_txt_mv^100+series^200+topic^500+addfields_txt_mv^50+publplace_txt_mv^25+publplace_dsv11_txt_mv^25+fulltext+callnumber^1000+ctrlnum^1000+publishDate+isbn+variant_isbn_isn_mv+issn+localcode_isn_mv+id&wt=xml&qt=edismax&start=0&sort=score+desc&rows=20&q=new+yyrk&spellcheck=true&pf=title_short^1000
 
 
+************
+
+weitere Versuche: bitte localhost:8080 mit search.swissbib.ch ersetzen
+
+http://localhost:8080/solr/sb-biblio/select?spellcheck=on&q=new%20yerk&start=0&facet.field=navSub_orange&facet.field=navAuthor_orange&facet.field=format&facet.field=language&facet.field=navSubform&facet.field=institution&qt=edismax&ps=2&hl=true&json.nl=arrarr&bf=recip%28abs%28ms%28NOW/DAY,freshness%29%29,3.16e-10,100,100%29&fl=*,score&hl.fragsize=250&q.op=AND&sort=score+desc&rows=20&hl.simple.pre={{{{START_HILITE}}}}&facet.limit=100&hl.simple.post={{{{END_HILITE}}}}&spellcheck=false&qf=title_short^1000+title_alt^200+title_sub^200+title_old^200+title_new^200+author^750+author_additional^100+author_additional_dsv11_txt_mv^100+title_additional_dsv11_txt_mv^100+series^200+journals^200+topic^500+addfields_txt_mv^50+publplace_txt_mv^25+publplace_dsv11_txt_mv^25+fulltext+callnumber^1000+ctrlnum^1000+publishDate+isbn+issn+id&pf=title_short^1000&facet.mincount=1&hl.fl=fulltext&facet=true&wt=xml&facet.sort=count
+
+
+
+
+	http://localhost:8080/solr/sb-biblio/select?spellcheck=on&q=new%20yerk&start=0&qt=edismax&ps=2&hl=true&json.nl=arrarr&bf=recip%28abs%28ms%28NOW/DAY,freshness%29%29,3.16e-10,100,100%29&fl=*,score&hl.fragsize=250&q.op=AND&sort=score+desc&rows=20&qf=title_short^1000+title_alt^200+title_sub^200+title_old^200+title_new^200+author^750+author_additional^100+author_additional_dsv11_txt_mv^100+title_additional_dsv11_txt_mv^100+series^200+journals^200+topic^500+addfields_txt_mv^50+publplace_txt_mv^25+publplace_dsv11_txt_mv^25+fulltext+callnumber^1000+ctrlnum^1000+publishDate+isbn+issn+id&pf=title_short^1000&facet.mincount=1&hl.fl=fulltext&facet=false&wt=xml
+
+
+
+http://localhost:8080/solr/sb-biblio/select?spellcheck=on&q=himel%20h%C3%B6lle&start=0&qt=edismax&ps=2&hl=true&fl=*,score&q.op=AND&sort=score+desc&rows=0&qf=title_short^1000+title_alt^200+title_sub^200+title_old^200+title_new^200+author^750+author_additional^100+author_additional_dsv11_txt_mv^100+title_additional_dsv11_txt_mv^100+series^200+journals^200+topic^500+addfields_txt_mv^50+publplace_txt_mv^25+publplace_dsv11_txt_mv^25+fulltext+callnumber^1000+ctrlnum^1000+publishDate+isbn+issn+id&pf=title_short^1000&facet=false&wt=xml
+
+
+http://localhost:8080/solr/sb-biblio/select?spellcheck=on&q=himel%20h%C3%B6lle&start=0&qt=edismax&ps=2&hl=true&fl=*,score&q.op=AND&sort=score+desc&rows=0&qf=title_short^1000+title_alt^200+title_sub^200+title_old^200+title_new^200+author^750+author_additional^100+author_additional_dsv11_txt_mv^100+title_additional_dsv11_txt_mv^100+series^200+journals^200+topic^500+addfields_txt_mv^50+publplace_txt_mv^25+publplace_dsv11_txt_mv^25+fulltext+callnumber^1000+ctrlnum^1000+publishDate+isbn+issn+id&pf=title_short^1000&facet=false&wt=xml&bf=recip%28abs%28ms%28NOW/DAY,freshness%29%29,3.16e-10,100,100%29&facet.field=navSub_orange&facet.field=navAuthor_orange&facet.field=format&facet.field=language&facet.field=navSubform&facet.field=institution&facet=true&
+
+
+
+http://localhost:8080/solr/sb-biblio/select?spellcheck=on&q=himmel%20hallel&start=0&qt=edismax&ps=2&hl=true&fl=*,score&q.op=AND&sort=score+desc&rows=0&qf=title_short^1000+title_alt^200+title_sub^200+title_old^200+title_new^200+author^750+author_additional^100+author_additional_dsv11_txt_mv^100+title_additional_dsv11_txt_mv^100+series^200+journals^200+topic^500+addfields_txt_mv^50+publplace_txt_mv^25+publplace_dsv11_txt_mv^25+fulltext+callnumber^1000+ctrlnum^1000+publishDate+isbn+issn+id&pf=title_short^1000&wt=xml&bf=recip%28abs%28ms%28NOW/DAY,freshness%29%29,3.16e-10,100,100%29&facet.field=navSub_orange&facet.field=navAuthor_orange&facet.field=format&facet.field=language&facet.field=navSubform&facet.field=institution&facet=true&facet.limit=100&facet.mincount=1&facet.sort=count
+
+
+
+http://localhost:8080/solr/sb-biblio/select?spellcheck=on&q=der%20guung%20nach%20canossa&start=0&qt=edismax&ps=2&hl=true&fl=*,score&q.op=AND&sort=score+desc&rows=0&qf=title_short^1000+title_alt^200+title_sub^200+title_old^200+title_new^200+author^750+author_additional^100+author_additional_dsv11_txt_mv^100+title_additional_dsv11_txt_mv^100+series^200+journals^200+topic^500+addfields_txt_mv^50+publplace_txt_mv^25+publplace_dsv11_txt_mv^25+fulltext+callnumber^1000+ctrlnum^1000+publishDate+isbn+issn+id&pf=title_short^1000&wt=xml&bf=recip%28abs%28ms%28NOW/DAY,freshness%29%29,3.16e-10,100,100%29&facet.field=navSub_orange&facet.field=navAuthor_orange&facet.field=format&facet.field=language&facet.field=navSubform&facet.field=institution&facet=false&facet.limit=100&facet.mincount=1&facet.sort=count
+
+
+
+nicht schlecht
+http://localhost:8080/solr/sb-biblio/select?spellcheck=on&q=%22dir%20hammel%20%C3%BCber%20berlin%22&start=0&qt=edismax&ps=2&hl=true&fl=*,score&q.op=AND&sort=score+desc&rows=0&qf=title_short^1000+title_alt^200+title_sub^200+title_old^200+title_new^200+author^750+author_additional^100+author_additional_dsv11_txt_mv^100+title_additional_dsv11_txt_mv^100+series^200+journals^200+topic^500+addfields_txt_mv^50+publplace_txt_mv^25+publplace_dsv11_txt_mv^25+fulltext+callnumber^1000+ctrlnum^1000+publishDate+isbn+issn+id&pf=title_short^1000&wt=xml&bf=recip%28abs%28ms%28NOW/DAY,freshness%29%29,3.16e-10,100,100%29&facet.field=navSub_orange&facet.field=navAuthor_orange&facet.field=format&facet.field=language&facet.field=navSubform&facet.field=institution&facet=false&facet.limit=100&facet.mincount=1&facet.sort=count
+
+
+http://localhost:8080/solr/sb-biblio/select?spellcheck=on&q=%22der%20hammel%20%C3%BCber%20berlin%22&start=0&qt=edismax&ps=2&hl=true&fl=*,score&q.op=AND&sort=score+desc&rows=0&qf=title_short^1000+title_alt^200+title_sub^200+title_old^200+title_new^200+author^750+author_additional^100+author_additional_dsv11_txt_mv^100+title_additional_dsv11_txt_mv^100+series^200+journals^200+topic^500+addfields_txt_mv^50+publplace_txt_mv^25+publplace_dsv11_txt_mv^25+fulltext+callnumber^1000+ctrlnum^1000+publishDate+isbn+issn+id&pf=title_short^1000&wt=xml&bf=recip%28abs%28ms%28NOW/DAY,freshness%29%29,3.16e-10,100,100%29&facet.field=navSub_orange&facet.field=navAuthor_orange&facet.field=format&facet.field=language&facet.field=navSubform&facet.field=institution&facet=false&facet.limit=100&facet.mincount=1&facet.sort=count
+
+
+
+"der hammel über berlin" (als Phrase)
+gibt im wissensportal als einzigen Vorschlag
+der hammel aber berlin (ohne Phrase)
+
+Suche ohne Phrase gibt Treffer ohne Vorschläge (auch bei uns)
+
+
+
+
+der Hammel über Berlin (ohne Phrase) gibt im Wissensportal mehr Treffer (vermutlich sind bei ihnen der/über Stopwords)
+
+
+
