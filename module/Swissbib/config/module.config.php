@@ -217,26 +217,9 @@ return array(
             'Swissbib\Hierarchy\SimpleTreeGenerator'        =>  'Swissbib\Hierarchy\Factory::getSimpleTreeGenerator',
             'Swissbib\Hierarchy\MultiTreeGenerator'         =>  'Swissbib\Hierarchy\Factory::getMultiTreeGenerator',
 
-
-            //todo: aktuell offene Fragen
-            //a) ist die Loesung, unsere Factory unter zwei namespaces zu registrieren ok? Bessere Lösung (evtl ZF2 alias)
-            //b) wir haben jetzt nicht mehr die Möglichkeit, nur dann eigene Results/Params/Options Objekte zu erstellen,
-            //wenn dies erforderlich ist (durch Konfiguration vgl. getResultsManager in SearchController)
-            //neu wird von VuFind immer nur der VuFind - namespace über den Servicemanager aufgerufen ohne die Methode zur Indirektion
-            //getResultsManager -> evtl. Pull Request an VuFind?
             'VuFind\SearchOptionsPluginManager' => 'Swissbib\Services\Factory::getSearchOptionsPluginManager',
             'VuFind\SearchParamsPluginManager' => 'Swissbib\Services\Factory::getSearchParamsPluginManager',
             'VuFind\SearchResultsPluginManager' => 'Swissbib\Services\Factory::getSearchResultsPluginManager',
-
-            //an einigen Stellen im Code wird noch der alte Namespace verwendet z.B.
-            //module/Swissbib/src/Swissbib/View/Helper/Swissbib/Factory.php
-
-            //'Swissbib\SearchOptionsPluginManager' => 'Swissbib\Services\Factory::getSearchOptionsPluginManager',
-            //'Swissbib\SearchParamsPluginManager' => 'Swissbib\Services\Factory::getSearchParamsPluginManager',
-            //'Swissbib\SearchResultsPluginManager' => 'Swissbib\Services\Factory::getSearchResultsPluginManager',
-
-            //'VuFind\SearchRunner'                           => 'Swissbib\Services\Factory::getSearchRunner',
-
         )
     ),
     'view_helpers'    => array(
