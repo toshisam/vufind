@@ -355,6 +355,9 @@ return array(
             ),
             'vufind_search_results' => array(
                 'abstract_factories' => array('Swissbib\VuFind\Search\Results\PluginFactory'),
+                'factories' => [
+                    'favorites' => 'Swissbib\VuFind\Search\Results\Factory::getFavorites',
+                ],
             )
         ),
     )

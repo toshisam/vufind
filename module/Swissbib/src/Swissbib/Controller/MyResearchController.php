@@ -1,6 +1,7 @@
 <?php
 namespace Swissbib\Controller;
 
+use VuFind\Search\RecommendListener;
 use VuFindSearch\Service;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Model\ViewModel,
@@ -167,6 +168,11 @@ class MyResearchController extends VuFindMyResearchController
    */
   public function mylistAction()
   {
+    // Fail if lists are disabled:
+    if (!$this->listsEnabled()) {
+      throw new \Exception('Lists disabled');
+    }
+
     // Check for "delete item" request; parameter may be in GET or POST depending
     // on calling context.
     $deleteId = $this->params()->fromPost(
@@ -193,32 +199,33 @@ class MyResearchController extends VuFindMyResearchController
 
     // If we got this far, we just need to display the favorites:
     try {
-      //GH
-      //the controller has to be extended only because of this customized PluginManager
-      //request to VuFind to make this more configurable necessary!
-      $results = $this->getServiceLocator()
-          ->get('VuFind\SearchResultsPluginManager')->get('Favorites');
-      $params = $results->getParams();
-      $params->setAuthManager($this->getAuthManager());
+      $runner = $this->getServiceLocator()->get('VuFind\SearchRunner');
 
       // We want to merge together GET, POST and route parameters to
       // initialize our search object:
-      $params->initFromRequest(
-          new Parameters(
-              $this->getRequest()->getQuery()->toArray()
-              + $this->getRequest()->getPost()->toArray()
-              + array('id' => $this->params()->fromRoute('id'))
-          )
-      );
+      $request = $this->getRequest()->getQuery()->toArray()
+        + $this->getRequest()->getPost()->toArray()
+        + ['id' => $this->params()->fromRoute('id')];
 
-      $results->performAndProcessSearch();
+      // Set up listener for recommendations:
+      $rManager = $this->getServiceLocator()
+        ->get('VuFind\RecommendPluginManager');
+      $setupCallback = function ($runner, $params, $searchId) use ($rManager) {
+        $listener = new RecommendListener($rManager, $searchId);
+        $listener->setConfig(
+          $params->getOptions()->getRecommendationSettings()
+        );
+        $listener->attach($runner->getEventManager()->getSharedManager());
+      };
+
+      $results = $runner->run($request, 'Favorites', $setupCallback);
 
       //GH: ermoegliche die Navigation zwischen Merkliste und Fullview
       $currentURL = $this->getRequest()->getRequestUri();
       $this->getSearchMemory()->rememberSearch($currentURL);
 
       return $this->createViewModel(
-          array('params' => $params, 'results' => $results)
+          array('params' => $results->getParams(), 'results' => $results)
       );
     } catch (ListPermissionException $e) {
       if (!$this->getUser()) {

@@ -14,6 +14,7 @@ use Swissbib\VuFind\Search\Helper\ExtendedSolrFactoryHelper;
  */
 class PluginFactory extends VuFindResultsPluginFactory
 {
+
     /**
      * @inheritDoc
      */
@@ -24,5 +25,26 @@ class PluginFactory extends VuFindResultsPluginFactory
         $this->defaultNamespace    = $extendedTargetHelper->getNamespace($name, $requestedName);
 
         return parent::canCreateServiceWithName($serviceLocator, $name, $requestedName);
+    }
+
+
+
+    /**
+     * Create a service for the specified name.
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service locator
+     * @param string                  $name           Name of service
+     * @param string                  $requestedName  Unfiltered name of service
+     *
+     * @return object
+     */
+
+    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    {
+        /** @var ExtendedSolrFactoryHelper $extendedTargetHelper */
+        $extendedTargetHelper    = $serviceLocator->getServiceLocator()->get('Swissbib\ExtendedSolrFactoryHelper');
+        $this->defaultNamespace    = $extendedTargetHelper->getNamespace($name, $requestedName);
+
+        return parent::createServiceWithName($serviceLocator, $name, $requestedName);
     }
 }
