@@ -19,6 +19,7 @@ swissbib.AdvancedSearch = {
   init: function () {
     if (this.isInAdvancedSearch()) {
       this.initJsTree();
+      this.initChosenMultiSelect();
 
       $("#addGroupLink").removeClass("offscreen");
     }
@@ -26,6 +27,10 @@ swissbib.AdvancedSearch = {
     if (this.isInAdvancedClassificationSearch()) {
       this.initAdvancedClassificationTabs();
     }
+  },
+
+  initChosenMultiSelect: function() {
+    $('.chosen-select').chosen({no_results_text: 'Oops, nothing found!'});
   },
 
   /**
