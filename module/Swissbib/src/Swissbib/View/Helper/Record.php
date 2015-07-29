@@ -64,7 +64,8 @@ class Record extends VuFindRecord
             ],
             'exclude' => [
                 '956' => [
-                    'x|^VIEW && y|^Porträt'
+                    'x|^VIEW && y|^Porträt',
+                    'B|^ECOD',
                 ]
             ],
             'mergeLinksByDescription' => [
@@ -121,7 +122,8 @@ class Record extends VuFindRecord
             ],
             'exclude' => [
                 '956' => [
-                    'x|^VIEW && y|^Porträt'
+                    'x|^VIEW && y|^Porträt',
+                    'B|^ECOD',
                 ]
             ],
             'mergeLinksByDescription' => [
