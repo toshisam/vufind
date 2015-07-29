@@ -1,78 +1,25 @@
-<h1>Salvare i risultati della ricerca</h1>
-
-<table class="table table-striped">
-	<tbody>
-	<tr>
-        <td><img src="<?= $this->basePath('themes/swissbibmulti/css/img/icon_notepad_add.gif') ?>"
-                 alt="<?= $this->transEsc('memorizelistadd')?>"
-                 title="<?= $this->transEsc('memorizelistadd')?>">
-        </td>
-		<td>Aggiungi i risultati a una delle tue <strong>liste</strong></td>
-	</tr>
-	<tr>
-        <td>
-            <img src="<?= $this->basePath('themes/swissbibmulti/css/img/icon_pagefunctions_rss.gif') ?>"
-                 alt="<?= $this->transEsc('Get RSS Feed')?>"
-                 title="<?= $this->transEsc('Get RSS Feed')?>">
-        </td>
-		<td>Richiedi di essere notificato via <strong>Feed</strong> quando nuovi documenti corrispondono alla tua ricerca</td>
-	</tr>
-    <tr>
-        <td>
-            <img src="<?= $this->basePath('themes/swissbibmulti/css/img/icon_pagefunctions_perma.gif') ?>"
-                 alt="<?= $this->transEsc('Cite this')?>"
-                 title="<?= $this->transEsc('Cite this')?>">
-        </td>
-        <td><strong>Citare</strong> i risultati</td>
-    </tr>
-
-    <tr>
-        <td>
-            <img src="<?= $this->basePath('themes/swissbibmulti/css/img/icon_pagefunctions_print.gif') ?>"
-                 alt="<?= $this->transEsc('Print')?>"
-                 title="<?= $this->transEsc('Print')?>"">
-        </td>
-		<td><strong>Stampa</strong> i risultati</td>
-	</tr>
-	<tr>
-        <td>
-            <img src="<?= $this->basePath('themes/swissbibmulti/css/img/icon_pagefunctions_send.gif') ?>"
-                 alt="<?= $this->transEsc('Email this')?>"
-                 title="<?= $this->transEsc('Email this')?>">
-        </td>
-		<td>Invia i risultati per <strong>email</strong></td>
-		</tr>
-	<tr>
-        <td>
-            <img src="<?= $this->basePath('themes/swissbibmulti/css/img/icon_pagefunctions_save.gif') ?>"
-                 alt="<?= $this->transEsc('Export Items')?>"
-                 title="<?= $this->transEsc('Export Items')?>">
-        </td>
-		<td><strong>Salva</strong> i risultati in vari formati</td>
-	</tr>
-	</tbody>
-</table>
-
-<h2>Ordinare</h2>
-
-<div class="row">
-  <div class="col-sm-6">
-    <a href="<?= $this->basePath('themes/swissbibmulti/images/HelpPage/it/order.png') ?>" class="help">
-      <img class="img-responsive" src="<?= $this->basePath('themes/swissbibmulti/images/HelpPage/it/order_small.png') ?>" alt="Zoom">
-    </a>
-  </div>
-  <div class="col-sm-6">
-    <ul class="list">
-      <li>Clicca sul titolo.</li>
-      <li>Scegli una biblioteca.</li>
-      <li>Clicca su <i>Login</i> sotto il nome della biblioteca.</li>
-      <li>Clicca su <i>Ordinare</i> o <i>Ordinare una fotocopia</i>.</li>
-      <li>Se queste opzioni non sono visibili, significa che il documento non può essere ordinato online. Cliccando sull'icona <img src="<?= $this->basePath('themes/swissbibmulti/css/img/icon_link-external.gif') ?>" alt="Info biblioteca"> sotto Localizzazione puoi verificare gli orari d'apertura e l'indirizzo della biblioteca.</li>
-    </ul>
-  </div>
-</div>
-
-
-
-
-
+<h1>Ordinare / Acesso online</h1>
+<h2>Ordinare dei media</h2>
+<iframe width="230" height="160" src="https://tube.switch.ch/embed/5cf66034"  frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+<ul>
+    <li>In Libri & più, clicca sul titolo del documento che desideri ordinare.</li>
+    <li>Sotto Esemplari scegli la biblioteca dalla quale vuoi fare il prestito.</li>
+    <li>Effettua il login (se non l'hai già fatto).</li>
+    <li>Scegli tra Ordinare e Ordinare una fotocopia.</li>
+    <li>A seconda della biblioteca, ti vengono presentati come opzione diversi punti di ritiro/invio. Vedi i dettagli sotto <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>"><?= $this->transEsc('helppage.delivery') ?></a></li>
+    <li>Se queste opzioni non sono visibili significa che il documento non può essere ordinato online. Cliccando sull'icona <i class="fa fa-info-circle"></i> sotto Localizzazione puoi verificare l'indirizzo e gli orari d'apertura della biblioteca.</li>
+</ul>
+<h2>Accesso alle risorse elettroniche</h2>
+<p>In Libri & più puoi selezionare tra i risultati della tua ricerca i titoli accessibili online tramite il filtro nella colonna a destra. Clicca sul titolo che ti interessa e, sotto Accesso online, troverai il link alla versione elettronica del documento.</p>
+<p>In Articoli & più devi procedere come segue per accedere al testo integrale in versione elettronica:</p>
+<p><i class="fa fa-external-link"></i> get it: di regola ti permette l'accesso diretto dall'elenco dei risultati al testo integrale.</p>
+<p><i class="fa fa-external-link"></i> SFX Services: attraverso il menù SFX puoi accedere direttamente al testo integrale oppure alle opzioni di ordine.</p>
+<p>Se non sei membro dell'università e ti trovi al di fuori della rete universitaria hai un accesso limitato ai testi integrali in formato elettronico. Tramite <i class="fa fa-external-link"></i> SFX Services puoi ordinare una fotocopia del testo desiderato presso la tua biblioteca (a pagamento, vedi <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>"><?= $this->transEsc('helppage.delivery') ?></a>).</p>
+<p>Come studente/membro dell'università di Basilea o Berna puoi invece sempre accedere alla tua rete di ateneo mediante VPN (<a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://mobile.unibas.ch') ?>" target="_blank">Basilea</a>, <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://www.vpn.unibe.ch') ?>" target="_blank">Berna</a>), da qualunque luogo ti trovi.</p>
+<h2>Salvare, esportare o rielaborare titoli e liste</h2>
+<p><i class="fa fa-list-ul"></i> Aggiungi questo titolo a una lista</p>
+<p><i class="fa fa-plus-square"></i> Salva questa ricerca</p>
+<p><i class="fa fa-rss"></i> Iscriviti al Feed RSS per essere sempre aggiornato sui nuovi titoli che corrispondano alla tua ricerca</p>
+<p><i class="fa fa-envelope"></i> Invia per e-mail questo titolo o questo elenco di risultati</p>
+<p><i class="fa fa-share"></i> Esporta questo titolo o questo elenco di risultati in un programma di gestione bibliografica</p>
+<p><i class="fa fa-pencil"></i> Mostra forme di citazione per questo titolo</p>

@@ -6,11 +6,11 @@
         </p>
     </div>
 <? endif; ?>
-<? $summonDatabases = $this->recommend->getResults(); if (!empty($summonDatabases)): ?>
+<?/* $summonDatabases = $this->recommend->getResults(); if (!empty($summonDatabases)): */?><!--
     <div class="authorbox">
-        <p><?=$this->transEsc('summon_database_recommendations')?></p>
-        <? foreach ($summonDatabases as $current): ?>
-            <p><a href="<?=$this->escapeHtmlAttr($current['link'])?>"><?=$this->escapeHtml($current['title'])?></a><br/><?=$this->escapeHtml($current['description'])?></p>
-        <? endforeach; ?>
+        <p><?/*=$this->transEsc('summon_database_recommendations')*/?></p>
+        <?/* foreach ($summonDatabases as $current): */?>
+            <p><a href="<?/*=$this->escapeHtmlAttr($current['link'])*/?>"><?/*=$this->escapeHtml($current['title'])*/?></a><br/><?/*=$this->escapeHtml($current['description'])*/?></p>
+        <?/* endforeach; */?>
     </div>
-<? endif; ?>
+--><?/* endif; */?>

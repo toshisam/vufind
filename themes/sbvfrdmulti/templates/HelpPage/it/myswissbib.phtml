@@ -1,61 +1,18 @@
-<h1>Login</h1>
-<p>Identificarti con il numero e la password della tua tessera utente IDS Basel Bern.</p>
-<!--
-<p>Se possiedi una tessera utente valida per qualsiasi biblioteca cooperante, puoi identificarti come d'abitudine:</p>
-<ul class="list">
-    <li>IDS Basel Bern</li>
-    <li>IDS Luzern</li>
-    <li>IDS St. Gallen</li>
-    <li>NEBIS</li>
-    <li>St. Galler Bibliotheksnetz</li>
-</ul>
--->
-<h2>Non hai un conto?</h2>
-<p><a href="http://aleph.unibas.ch/F/?func=bor-new-0&CON_LNG=ENG"
-      target="_blank"><?= $this->transEsc('Create New Account') ?></a></p>
-
-<h2>Perché il login?</h2>
-<p>Per effettuare dei prestiti, per salvare le tue biblioteche preferite, per recuperare liste o ricerche che hai
-    salvato, per modificare le impostazioni.</p>
-
+<h1>Conto utente / Il mio swissbib</h1>
+<p>Il tuo conto IDS Basel Bern (<a href="<?= $this->url('myresearch-userlogin') ?>">Il mio swissbib</a>) ti fornisce informazioni riguardo ai tuoi prestiti, alle tue prenotazioni, ai tuoi richiami e alle tue spese. Dal tuo conto puoi prolungare i prestiti o modificare i tuoi <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://aleph.unibas.ch/F/?func=file&file_name=login-session&con_lng') ?>"> dati personali</a> e le tue <a href="<?= $this->url('myresearch-settings'); ?>"><?= $this->transEsc('My_Search_Settings') ?></a>.</p>
+<h2>Non hai ancora un conto utente?</h2>
+<p><a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://aleph.unibas.ch/F/?func=bor-new-0') ?>" target="_blank"><?= $this->transEsc('Create New Account') ?></a> (o direttamente sul posto presso una delle biblioteche IDS a <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://www.ub.unibas.ch/bibliotheksnetz/verbund-basel/bibliotheken-im-verbund/liste-der-bibliotheken') ?>" target="_blank">Basilea</a> o a <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://www.ub.unibe.ch/content/ueber_uns/bibliotheken_der_ub/berner_ids_bibliotheken') ?>" target="_blank">Berna</a>)</p>
+<p>Le tessere utente di altre <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://www.informationsverbund.ch/21.0.html') ?>" target="_blank" title="IDS-Bibliothek">biblioteche IDS</a> sono <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://www.informationsverbund.ch/6.0.html') ?>" target="_blank">valide</a> anche per swissbib Basel Bern. Il login è inoltre possibile mediante la carta dello studente o la tessera personale dei dipendenti delle università di Basilea e Berna.</p>
 <h2>Hai dimenticato la password?</h2>
-<p>Contatta la <a href="http://www.ub.unibas.ch/ids-basel-bern/ausleihbibliotheken/" target="_blank">tua biblioteca</a>.
-</p>
-
-<h2>Profilo</h2>
-<p><a href="http://aleph.unibas.ch/F/?func=LOGIN-PAGE" target="_blank">Cambia password, indirizzo, ecc.</a></p>
-
-<h2>Perché il logout?</h2>
-<p>Se stai usando un computer pubblico, effettua il logout per evitare che qualcun altro utilizzi il tuo conto.</p>
-</br>
-<h1>Il mio swissbib</h1>
+<p>Contatta la tua <a href="<?= $this->basePath('Libraries') ?>" title="Liste der Institutionen">biblioteca</a>.</p>
+<h2>Hai smarrito la tua tessera utente?</h2>
+<p>Presentati in una biblioteca IDS: <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://www.ub.unibas.ch/bibliotheksnetz/verbund-basel/bibliotheken-im-verbund/liste-der-bibliotheken') ?>" target="_blank">regione di Basilea</a>, <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://www.ub.unibe.ch/content/ueber_uns/bibliotheken_der_ub/berner_ids_bibliotheken') ?>" target="_blank">regione di Berna</a>. Una tessera sostitutiva viene rilasciata su pagamento di una tassa e presentazione di un documento d'identità.</p>
+<h1>Impostazioni personali</h1>
 <h2>Ricerche salvate</h2>
-<p>Se non hai effettuato il login, le tue ricerche saranno salvate fino a quando non chiudi il browser. Puoi ripetere
-    una ricerca oppure, dopo il login, salvarla a tempo indeterminato.</p>
-
-<h2>Preferite</h2>
-<p>Se vuoi aggiungere una biblioteca alle <i>Preferite</i> puoi farlo attraverso <i>Il mio swissbib - Preferite</i>
-    oppure cliccando sull'icona del <img
-        src="<?= $this->basePath('themes/swissbib/images/icon_favorit_library.gif') ?>"
-        alt="<?= $this->transEsc('mylibraries.add')?>"
-        title="<?= $this->transEsc('mylibraries.add')?>"> nel catalogo. Nella tua lista di risultati queste biblioteche sono marcate con un <img
-        src="<?= $this->basePath('/themes/swissbib/images/icon_favorit_library.gif') ?>"
-        alt="Favorit"> e possono essere usate come filtro.</p>
-
-<h2>Liste</h2>
-<ul class="list">
-    <li>Dopo il login puoi salvare dei titoli nelle tue liste: <br />
-        <img src="<?= $this->basePath('themes/swissbibmulti/css/img/icon_notepad_add.gif') ?>"
-             alt="<?= $this->transEsc('memorizelistadd')?>"
-             title="<?= $this->transEsc('memorizelistadd')?>">
-    </li>
-    <li>Se crei una nuova lista mentre stai salvando un titolo dovrai cliccare due volte su <i>Salva</i>.</li>
-    <li>Pubblico = Lista visibile per tutti che conoscono l'URL</li>
-    <li>Personale = Lista visibile solo a te</li>
-</ul>
-
+<p>Se non hai effettuato il login, le tue ricerche rimarranno salvate fino a quando non chiudi il browser. Dopo il login, invece, potrai salvare le tue ricerche a lungo termine per poterle ripetere quando necessario.</p>
 <h2>Impostazioni</h2>
-<p>Lingua dell'interfaccia del catalogo, numero di titoli per pagina</p>
-
-<h2>Conto IDS Basel Bern</h2>
-<p>Funzioni di prestito</p>
+<p>Puoi impostare secondo le tue preferenze la lingua dell'interfaccia, l'importo massimo di risultati per pagina, il criterio di ordinamento dei titoli trovati. Le tue impostazioni vengono attivate solo dopo aver effettuato il login.</p>
+<h2>Preferite</h2>
+<p>Per aggiungere una biblioteca alle preferite puoi utilizzare la maschera di ricerca <a href="<?=$this->url('myresearch-favorite-institutions')?>"><?=$this->transEsc('mylibraries')?></a> oppure, in una notizia bibliografica, cliccare su <i class="fa fa-heart-o"></i> sotto la biblioteca che desideri. Nell'elenco dei risultati le tue biblioteche preferite sono messe in evidenza dall'icona <i class="fa fa-heart"></i>. Se hai effettuato il login, puoi inoltre filtrare i titoli secondo la loro presenza o meno nelle tue biblioteche preferite.</p>
+<h2>Liste</h2>
+<p>Dopo il login, hai la possibilità di salvare dei titoli in una lista cliccando su <i class="fa fa-list-ul"></i>. Le liste ti aiutano a ricostruire i risultati di specifiche ricerche.</p>

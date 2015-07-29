@@ -1,6 +1,7 @@
 <?php
 namespace Swissbib\Controller;
 
+use VuFind\Search\RecommendListener;
 use VuFindSearch\Service;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Model\ViewModel,
@@ -103,7 +104,7 @@ class MyResearchController extends VuFindMyResearchController
     /** @var User $user */
     $user = $this->getUser();
 
-    if ($this->getRequest()->isPost()) {
+    if ($this->getRequest()->isPost() && $this->params()->fromPost('myResearchSettingsForm')) {
       $language = $this->params()->fromPost('language');
       $maxHits = $this->params()->fromPost('max_hits');
       $defaultSort = $this->params()->fromPost('default_sort');
@@ -116,7 +117,7 @@ class MyResearchController extends VuFindMyResearchController
 
       $this->flashMessenger()->setNamespace('info')->addMessage('save_settings_success');
 
-      setcookie('language', $language, time() * 3600 * 24 * 100, '/');
+      setcookie('language', $language, time() + 3600 * 24 * 100, '/');
 
       return $this->redirect()->toRoute('myresearch-settings');
     }
@@ -167,6 +168,11 @@ class MyResearchController extends VuFindMyResearchController
    */
   public function mylistAction()
   {
+    // Fail if lists are disabled:
+    if (!$this->listsEnabled()) {
+      throw new \Exception('Lists disabled');
+    }
+
     // Check for "delete item" request; parameter may be in GET or POST depending
     // on calling context.
     $deleteId = $this->params()->fromPost(
@@ -193,32 +199,33 @@ class MyResearchController extends VuFindMyResearchController
 
     // If we got this far, we just need to display the favorites:
     try {
-      //GH
-      //the controller has to be extended only because of this customized PluginManager
-      //request to VuFind to make this more configurable necessary!
-      $results = $this->getServiceLocator()
-          ->get('Swissbib\SearchResultsPluginManager')->get('Favorites');
-      $params = $results->getParams();
-      $params->setAuthManager($this->getAuthManager());
+      $runner = $this->getServiceLocator()->get('VuFind\SearchRunner');
 
       // We want to merge together GET, POST and route parameters to
       // initialize our search object:
-      $params->initFromRequest(
-          new Parameters(
-              $this->getRequest()->getQuery()->toArray()
-              + $this->getRequest()->getPost()->toArray()
-              + array('id' => $this->params()->fromRoute('id'))
-          )
-      );
+      $request = $this->getRequest()->getQuery()->toArray()
+        + $this->getRequest()->getPost()->toArray()
+        + ['id' => $this->params()->fromRoute('id')];
 
-      $results->performAndProcessSearch();
+      // Set up listener for recommendations:
+      $rManager = $this->getServiceLocator()
+        ->get('VuFind\RecommendPluginManager');
+      $setupCallback = function ($runner, $params, $searchId) use ($rManager) {
+        $listener = new RecommendListener($rManager, $searchId);
+        $listener->setConfig(
+          $params->getOptions()->getRecommendationSettings()
+        );
+        $listener->attach($runner->getEventManager()->getSharedManager());
+      };
+
+      $results = $runner->run($request, 'Favorites', $setupCallback);
 
       //GH: ermoegliche die Navigation zwischen Merkliste und Fullview
       $currentURL = $this->getRequest()->getRequestUri();
       $this->getSearchMemory()->rememberSearch($currentURL);
 
       return $this->createViewModel(
-          array('params' => $params, 'results' => $results)
+          array('params' => $results->getParams(), 'results' => $results)
       );
     } catch (ListPermissionException $e) {
       if (!$this->getUser()) {
@@ -317,6 +324,48 @@ class MyResearchController extends VuFindMyResearchController
     return $view;
   }
 
+    public function logoutAction()
+    {
+        $config = $this->getConfig();
+        if (isset($config->Site->logOutRoute)) {
+            $logoutTarget = $this->getServerUrl($config->Site->logOutRoute);
+        } else {
+            $logoutTarget = $this->getRequest()->getServer()->get('HTTP_REFERER');
+            if (empty($logoutTarget)) {
+                $logoutTarget = $this->getServerUrl('home');
+            }
+
+            // If there is an auth_method parameter in the query, we should strip
+            // it out. Otherwise, the user may get stuck in an infinite loop of
+            // logging out and getting logged back in when using environment-based
+            // authentication methods like Shibboleth.
+            $logoutTarget = preg_replace(
+                '/([?&])auth_method=[^&]*&?/', '$1', $logoutTarget
+            );
+            $logoutTarget = rtrim($logoutTarget, '?');
+        }
+
+
+        if (count(preg_grep('/Search\/Results|Summon\/Search/',[$logoutTarget])) > 0 )
+        {
+            //GH: It might happen (depends on context) that limit and sort query parameter are still
+            //part of the former URL when user called the logout function (logoutTarget) and contains sort
+            // or limit parameter customized by the user. This is not desired especially at access points in the public space
+            //But we have to be careful: we should append additional default parameters only for Solr or Summon
+            // search Routes
+            $solrResultsManager = $this->getServiceLocator()->get('VuFind\SearchResultsPluginManager')->get('Solr');
+            $options = $solrResultsManager->getParams()->getOptions();
+            $defaultSort = $options->getDefaultSortByHandler();
+            $defaultLimit = $options->getDefaultLimit();
+            $logoutTarget .= '&limit=' . $defaultLimit .'&sort=' . $defaultSort;
+
+        }
+
+        return $this->redirect()
+            ->toUrl($this->getAuthManager()->logout($logoutTarget));
+    }
+
+
   /**
    * User login action -- clear any previous follow-up information prior to
    * triggering a login process. This is used for explicit login links within
@@ -407,7 +456,7 @@ class MyResearchController extends VuFindMyResearchController
   {
     $sortOptions = array();
     $searchTabs = $this->getConfig()->get('SearchTabs');
-    $searchOptionsPluginManager = $serviceManager->get('Swissbib\SearchOptionsPluginManager');
+    $searchOptionsPluginManager = $serviceManager->get('VuFind\SearchOptionsPluginManager');
 
     if( !$searchTabs->count() ) {
       $config = $this->getConfig()->get('Index');

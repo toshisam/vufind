@@ -310,13 +310,15 @@ class Aleph extends VuFindDriver
      *
      * @return array An array with key-value pairs.
      */
-    public function getConfig($func)
+    public function getConfig($function, $params = null)
     {
-        if ($func == "Holds") {
-            return $this->config['Holds'];
+        if (isset($this->config[$function])) {
+            $functionConfig = $this->config[$function];
         } else {
-            return array();
+            $functionConfig = false;
         }
+
+        return $functionConfig;
     }
 
 
@@ -369,8 +371,13 @@ class Aleph extends VuFindDriver
         $data = array();
 
         foreach ($map as $resultField => $path) {
-            list($group, $field) = explode('-', $path, 2);
-            $data[$resultField] =  isset($xmlResponse->$path) ? (string)$xmlResponse->$path :  (string)$xmlResponse->$group->$path;
+            if (isset($xmlResponse->$path)) {
+                $data[$resultField] = (string)$xmlResponse->$path;
+            } elseif (strpos($path, '-')) {
+                list($group, $field) = explode('-', $path, 2);
+
+                $data[$resultField] = (string)$xmlResponse->$group->$path;
+            }
         }
 
         return $data;
@@ -433,6 +440,10 @@ class Aleph extends VuFindDriver
         $recordList=array();
         if (!isset($user['college'])) {
             $user['college'] = $this->useradm;
+        }
+        if (!isset($user['cat_password'])) {
+            //because getMyProfile gets also called without a password in VuFind
+            $user['cat_password'] = '';
         }
         $xml = $this->doXRequest(
             "bor-auth",
@@ -774,5 +785,45 @@ class Aleph extends VuFindDriver
 
             // Return list without sort keys
         return array_values($fines);
+    }
+
+    /**
+     * Change Password
+     *
+     * Attempts to change patron password (PIN code)
+     *
+     * @param array $details An array of patron id and old and new password:
+     *
+     * 'patron'      The patron array from patronLogin
+     * 'oldPassword' Old password
+     * 'newPassword' New password
+     *
+     * @return array An array of data on the request including
+     * whether or not it was successful and a system message (if available)
+     */
+    public function changePassword($details)
+    {
+        $patron = $details['patron'];
+        $oldPIN = rawurlencode(htmlspecialchars(mb_strtoupper($details['oldPassword'], 'UTF-8'), ENT_COMPAT, 'UTF-8'));
+        $newPIN = rawurlencode(htmlspecialchars(mb_strtoupper($details['newPassword'], 'UTF-8'), ENT_COMPAT, 'UTF-8'));
+
+        $xml =  <<<EOT
+post_xml=<?xml version = "1.0" encoding = "UTF-8"?>
+<get-pat-pswd>
+    <password_parameters>
+        <old-password>$oldPIN</old-password>
+        <new-password>$newPIN</new-password>
+    </password_parameters>
+</get-pat-pswd>
+EOT;
+
+        $this->doRestDLFRequest(
+            [
+                'patron', $patron['id'], 'patronInformation', 'password'
+            ],
+            null, 'POST', $xml
+        );
+
+        return ['success' => true, 'status' => 'change_password_ok'];
     }
 }

@@ -172,6 +172,9 @@ return array(
             'cart'                 => 'Swissbib\Controller\CartController',
             'shibtest'             => 'Swissbib\Controller\ShibtestController',
             'ajax'                 => 'Swissbib\Controller\AjaxController',
+            'upgrade'              => 'Swissbib\Controller\NoProductiveSupportController',
+            'install'              => 'Swissbib\Controller\NoProductiveSupportController',
+
         ),
         'factories' => array(
             'record' => 'Swissbib\Controller\Factory::getRecordController',
@@ -212,7 +215,11 @@ return array(
             'sbSpellingResults'                            =>  'Swissbib\VuFind\Search\Solr\Factory::getSpellingResults',
 
             'Swissbib\Hierarchy\SimpleTreeGenerator'        =>  'Swissbib\Hierarchy\Factory::getSimpleTreeGenerator',
-            'Swissbib\Hierarchy\MultiTreeGenerator'         =>  'Swissbib\Hierarchy\Factory::getMultiTreeGenerator'
+            'Swissbib\Hierarchy\MultiTreeGenerator'         =>  'Swissbib\Hierarchy\Factory::getMultiTreeGenerator',
+
+            'VuFind\SearchOptionsPluginManager' => 'Swissbib\Services\Factory::getSearchOptionsPluginManager',
+            'VuFind\SearchParamsPluginManager' => 'Swissbib\Services\Factory::getSearchParamsPluginManager',
+            'VuFind\SearchResultsPluginManager' => 'Swissbib\Services\Factory::getSearchResultsPluginManager',
         )
     ),
     'view_helpers'    => array(
@@ -348,6 +355,9 @@ return array(
             ),
             'vufind_search_results' => array(
                 'abstract_factories' => array('Swissbib\VuFind\Search\Results\PluginFactory'),
+                'factories' => [
+                    'favorites' => 'Swissbib\VuFind\Search\Results\Factory::getFavorites',
+                ],
             )
         ),
     )

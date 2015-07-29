@@ -1,0 +1,45 @@
+<?
+/** @var array $headers */
+/** @var mixed $booking */
+/** @var Boolean $even */
+?>
+
+<table class="table table-flipped hidden-md hidden-lg <?= 'table-' . ($even ? 'even' : 'odd') ?>">
+    <tbody>
+    <tr>
+        <th><?=$headers['title']?></th>
+        <td>
+            <?= $this->escapeHtml($booking['title']) ?>
+        </td>
+    </tr>
+    <tr>
+        <th><?=$headers['library_callno']?></th>
+        <td>
+            <? if (!empty($booking['library'])): ?>
+               <?=$this->escapeHtml($booking['library'])?>,
+            <? endif; ?>
+            <? if (!empty($booking['callNumber'])): ?>
+               <?=$this->escapeHtml($booking['callNumber'])?>
+            <? endif; ?>
+        </td>
+    </tr>
+    <tr>
+        <th><?=$headers['pick_up_location']?></th>
+        <td>
+            <?=$this->transEsc($booking['pickupLocation']) ?>
+        </td>
+    </tr>
+    <tr>
+        <th><?=$headers['date_from']?></th>
+        <td>
+            <?=date('d/m/y H:i', $booking['dateStart']) ?>
+        </td>
+    </tr>
+    <tr>
+        <th><?=$headers['date_to']?></th>
+        <td>
+            <?=date('d/m/y H:i', $booking['dateEnd']) ?>
+        </td>
+    </tr>
+    </tbody>
+</table>

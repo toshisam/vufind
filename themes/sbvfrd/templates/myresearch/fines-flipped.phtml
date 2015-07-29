@@ -1,0 +1,46 @@
+<?
+/** @var array $headers */
+/** @var mixed $record */
+/** @var Boolean $even */
+?>
+
+<table class="table table-flipped hidden-md hidden-lg <?= 'table-' . ($even ? 'even' : 'odd') ?>">
+    <tbody>
+      <tr>
+          <th><?=$headers['title']?></th>
+          <td>
+            <? if (empty($record['title'])): ?>
+                <?=$this->transEsc('not_applicable')?>
+            <? elseif (!isset($record['id'])): ?>
+                <?=$this->escapeHtml(trim($record['title'], '/:'))?>
+            <? else: ?>
+                <a href="<?=$this->url('record', array('id' => $record['id']))?>"><?=$this->escapeHtml(trim($record['title'], '/:'))?></a>
+            <? endif; ?>
+          </td>
+      </tr>
+      <tr>
+          <th><?=$headers['library_callno']?></th>
+          <td>
+              <? if (!empty($record['institution'])): ?>
+                  <?=$this->escapeHtml($this->zendTranslate($record['institution'], 'institution'))?>,
+              <? endif; ?>
+
+              <? if (!empty($record['signature'])): ?>
+                  <?=$this->escapeHtml($record['signature'])?>
+              <? endif; ?>
+          </td>
+      </tr>
+      <tr>
+          <th><?=$headers['date']?></th>
+          <td>
+              <?=$this->escapeHtml($record['checkout']) ?>
+          </td>
+      </tr>
+      <tr>
+          <th><?=$headers['fee']?></th>
+          <td>
+              CHF <?=isset($record['amount']) ? number_format($record['amount'], 2, '.', '\'') : ''?> (<?=isset($record['description']) ? $this->escapeHtml($record['description']) : ''?>)
+          </td>
+      </tr>
+        </tbody>
+    </table>

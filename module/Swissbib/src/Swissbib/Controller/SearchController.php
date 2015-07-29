@@ -10,6 +10,7 @@ use VuFind\Controller\SearchController as VuFindSearchController;
 use VuFind\Search\Results\PluginManager as VuFindSearchResultsPluginManager;
 
 use Swissbib\VuFind\Search\Results\PluginManager as SwissbibSearchResultsPluginManager;
+use Zend\Stdlib\Parameters;
 
 /**
  * @package       Swissbib
@@ -63,21 +64,17 @@ class SearchController extends VuFindSearchController
     public function advancedAction()
     {
         $viewModel              = parent::advancedAction();
-        $viewModel->options     = $this->getServiceLocator()->get('Swissbib\SearchOptionsPluginManager')->get($this->searchClassId);
+        $viewModel->options     = $this->getServiceLocator()->get('VuFind\SearchOptionsPluginManager')->get($this->searchClassId);
         $results                = $this->getResultsManager()->get($this->searchClassId);
 
-        $viewModel->setVariable('params', $results->getParams());
-
-        $mainConfig = $this->getServiceLocator()->get('Vufind\Config')->get('config');
-        $viewModel->adv_search_activeTabId = $mainConfig->Site->adv_search_activeTabId;
-        $viewModel->adv_search_useTabs     = $mainConfig->Site->adv_search_useTabs;
-        $isCatTreeElementConfigured = $mainConfig->Site->displayCatTreeElement;
-        $isCatTreeElementConfigured = !empty($isCatTreeElementConfigured) && ($isCatTreeElementConfigured == "true" || $isCatTreeElementConfigured == "1") ? "1" : 0;
-
-        if ($isCatTreeElementConfigured) {
-            $treeGenerator                   = $this->serviceLocator->get('Swissbib\Hierarchy\SimpleTreeGenerator');
-            $viewModel->classificationTree   = $treeGenerator->getTree($viewModel->facetList['navDrsys_Gen']['list'], 'navDrsys_Gen');
-        }
+        $params = $results->getParams();
+        $requestParams = new Parameters(
+            $this->getRequest()->getQuery()->toArray()
+            + $this->getRequest()->getPost()->toArray()
+        );
+        //GH: We need this initialization only to handle personal limit an sort settings for logged in users
+        $params->initLimitAdvancedSearch($requestParams);
+        $viewModel->setVariable('params', $params);
 
         return $viewModel;
     }
@@ -92,29 +89,5 @@ class SearchController extends VuFindSearchController
     protected function getFacetConfig()
     {
         return $this->getServiceLocator()->get('VuFind\Config')->get('facets')->get('Results_Settings');
-    }
-
-
-
-    /**
-     * Get results manager
-     * If target is extended, get a customized manager
-     *
-     * @return    VuFindSearchResultsPluginManager|SwissbibSearchResultsPluginManager
-     */
-    protected function getResultsManager()
-    {
-        if (!isset($this->extendedTargets)) {
-            $mainConfig = $this->getServiceLocator()->get('Vufind\Config')->get('config');
-            $extendedTargetsSearchClassList = $mainConfig->SwissbibSearchExtensions->extendedTargets;
-
-            $this->extendedTargets = array_map('trim', explode(',', $extendedTargetsSearchClassList));
-        }
-
-        if (in_array($this->searchClassId, $this->extendedTargets)) {
-            return $this->getServiceLocator()->get('Swissbib\SearchResultsPluginManager');
-        }
-
-        return parent::getResultsManager();
     }
 }

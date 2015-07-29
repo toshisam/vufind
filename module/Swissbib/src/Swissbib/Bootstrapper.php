@@ -13,7 +13,6 @@ use VuFind\Config\Reader as ConfigReader;
 use VuFind\Auth\Manager;
 
 use Swissbib\Filter\TemplateFilenameFilter;
-use Swissbib\VuFind\Search\Solr\Options;
 
 class Bootstrapper
 {
@@ -156,6 +155,38 @@ class Bootstrapper
     }
 
 
+    /**
+     * set headers no-cache in case it is configured
+     * we need this functionality especially after the deployment of new versions
+     * with significant CSS changes
+     * then we want to suppress the browser caching for a limited period of time
+     */
+    protected function initNoCache()
+    {
+        // call to get headers not supported in cli mode:
+        if (Console::isConsole()) {
+            return;
+        }
+        $config =& $this->config;
+
+        if (isset($config->Site->header_no_cache) &&  $config->Site->header_no_cache) {
+            $callback = function ($event) {
+                $response = $event->getApplication()->getResponse();
+                //for expires use date in the past
+                $response->getHeaders()->addHeaders(array(
+                    'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                    'Pragma' => 'no-cache',
+                    'Expires' => 'Thu, 1 Jan 2015 00:00:00 GMT'
+                ));
+
+
+            };
+
+            $this->events->attach('dispatch', $callback, -500);
+        }
+    }
+
+
 
     /*
      * Set fallback locale to english
@@ -177,7 +208,7 @@ class Bootstrapper
             $translator->setFallbackLocale($fallback);
                 // Add file for fallback locale if not already en
             if ($locale !== $fallback) {
-                $translator->addTranslationFile('ExtendedIni', $baseDir . '/' . $fallback. '.ini', 'default', $fallback);
+                $translator->addTranslationFile('ExtendedIni', null, 'default', $fallback);
             }
         };
 
@@ -272,8 +303,11 @@ class Bootstrapper
                     // Add all found files
                 foreach ($languageFiles as $languageFile) {
                     list($network, $locale) = explode('-', basename($languageFile, '.ini'));
-
-                    $translator->addTranslationFile('ExtendedIni', $languageFile, 'location-' . $network, $locale);
+                    //GH (26.3.2015): in the past we initialized the translator by using the absolute path of the language file
+                    //by now we have to use only the filename. At the moment I don't zhe background of this and I don't have enough
+                    // time to take a look on it. Second thing: At the moment I don't have any idea why the other structured language file
+                    //of swissbib (not flat as used in VuFind) seems to work...
+                    $translator->addTranslationFile('ExtendedIni', basename($languageFile), 'location-' . $network, $locale);
                 }
             }
         };
@@ -298,7 +332,7 @@ class Bootstrapper
         $serviceLocator    = $this->event->getApplication()->getServiceManager();
         /** @var \Swissbib\Log\Logger $logger */
         $logger    = $serviceLocator->get('Swissbib\Logger');
-        /** @var Translator $translator */
+        /** @var TranslatorImpl $translator */
         $translator = $serviceLocator->get('VuFind\Translator');
 
         /**
@@ -315,97 +349,4 @@ class Bootstrapper
     }
 
 
-
-    /**
-     * Set up plugin managers.
-     */
-    protected function initPluginManagers()
-    {
-        $app            = $this->event->getApplication();
-        $serviceManager = $app->getServiceManager();
-        $config         = $app->getConfig();
-
-        // Use naming conventions to set up a bunch of services based on namespace:
-        $namespaces = array(
-            'VuFind\Search\Results','VuFind\Search\Options', 'VuFind\Search\Params'
-        );
-
-        foreach ($namespaces as $namespace) {
-            $plainNamespace    = str_replace('\\', '', $namespace);
-            $shortNamespace    = str_replace('VuFind', '', $plainNamespace);
-            $configKey        = strtolower(str_replace('\\', '_', $namespace));
-            $serviceName    = 'Swissbib\\' . $shortNamespace . 'PluginManager';
-            $serviceConfig    = $config['swissbib']['plugin_managers'][$configKey];
-            $className        = 'Swissbib\\' . $namespace . '\PluginManager';
-
-            $pluginManagerFactoryService = function ($sm) use ($className, $serviceConfig) {
-                return new $className(
-                    new \Zend\ServiceManager\Config($serviceConfig)
-                );
-            };
-
-            $serviceManager->setFactory($serviceName, $pluginManagerFactoryService);
-        }
-    }
-
-
-
-    /**
-     * Add user defined default limit for search
-     */
-    protected function initDefaultSearchLimit()
-    {
-        /** @var ServiceManager $serviceLocator */
-        $serviceLocator    = $this->event->getApplication()->getServiceManager();
-        /** @var Manager $authManager */
-        $authManager    = $serviceLocator->get('VuFind\AuthManager');
-
-        if ($authManager->isLoggedIn()) {
-            $userLimit = $authManager->isLoggedIn()->max_hits;
-
-            if ($userLimit) {
-                /** @var Options $searchOptions */
-                $searchOptions =  $serviceLocator->get('Swissbib\SearchResultsPluginManager')->get($this->getActiveTab())->getOptions();
-
-                $searchOptions->setDefaultLimit($userLimit);
-            }
-        }
-    }
-
-
-
-  /**
-   *  Add user defined default sort for search
-   */
-  protected function initDefaultSort() {
-      /** @var ServiceManager $serviceLocator */
-      $serviceLocator    = $this->event->getApplication()->getServiceManager();
-      /** @var Manager $authManager */
-      $authManager    = $serviceLocator->get('VuFind\AuthManager');
-
-      if ($authManager->isLoggedIn()) {
-        $userDefaultSort = unserialize($authManager->isLoggedIn()->default_sort);
-        $userDefaultSort = $userDefaultSort[$this->getActiveTab()];
-
-        if ($userDefaultSort !== "") {
-            /** @var Options $searchOptions */
-            $searchOptions =  $serviceLocator->get('Swissbib\SearchResultsPluginManager')->get($this->getActiveTab())->getOptions();
-
-            $searchOptions->setDefaultSort($userDefaultSort);
-        }
-      }
-    }
-
-
-
-  /**
-   * @return String
-   */
-  protected function getActiveTab() {
-        if (strpos($this->application->getRequest()->getRequestUri(), '/Summon/') !== false) {
-            return 'Summon';
-        } else {
-            return 'Solr';
-        }
-    }
 }

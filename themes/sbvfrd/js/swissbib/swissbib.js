@@ -13,6 +13,8 @@ var swissbib = {
   /** @var    {Boolean}    ie6 */
   ie6: false,
 
+  currentTimeout: null,
+
 
   /**
    * Initialize on ready.
@@ -28,6 +30,8 @@ var swissbib = {
     var contextMain = $("#main");
     var contextContent = $("#content");
     var contextAll = $("#header, #search, #main");
+
+    this.initBackgrounds();
 
     // Init UI elements
     this.initNavigation(contextHeader);
@@ -484,7 +488,64 @@ var swissbib = {
         UserVoice.push(['autoprompt', {}]);
     },
 
-  updatePageForLoginParent: function() {}
+  updatePageForLoginParent: function() {},
+
+  /**
+   *
+   */
+  initBackgrounds: function () {
+    var sidebarHeight = 0,
+        elementHeight = 0,
+        parentElement = $('.dirty-hack-column > .row').first(),
+        sidebarFound = false,
+        hasChildren = false;
+
+    parentElement.children().each(function(index, element) {
+        if($(element).hasClass('sidebar')) {
+          sidebarHeight = $(element).outerHeight(true);
+          sidebarFound = true;
+          hasChildren = $(element).children().length > 0;
+        } else {
+          var tempHeight = $(element).outerHeight(true);
+
+          if (tempHeight > elementHeight) {
+            elementHeight = tempHeight;
+          }
+        }
+    });
+
+    if (elementHeight > sidebarHeight && sidebarFound && hasChildren) {
+      parentElement.removeClass('bg-white').addClass('bg-grey');
+      parentElement.children('div:first-of-type').removeClass('bg-grey').addClass('bg-white');
+    } else {
+      parentElement.removeClass('bg-grey').addClass('bg-white');
+
+      if (sidebarFound && !hasChildren) {
+        parentElement.children('div.sidebar').addClass('invisible');
+      }
+    }
+  },
+
+  /**
+   * init backgrounds during transition to prevent flickering
+   */
+  initBackgroundsRecursive: function(count) {
+    swissbib.initBackgrounds();
+    swissbib.currentTimeout = setTimeout(
+        function() {
+          swissbib.initBackgroundsRecursive();
+        },
+        1
+    );
+  },
+
+  /**
+   * clear the init background initiation
+   */
+  destructBackgroundsRecursive: function() {
+    swissbib.initBackgrounds();
+    clearTimeout(swissbib.currentTimeout);
+  }
 };
 
 
@@ -495,6 +556,12 @@ $(document).ready(function () {
   swissbib.initOnReady();
     swissbib.UserVoiceFeedback();
 });
+
+$(document).ajaxComplete(swissbib.initBackgrounds);
+$(document).on('show.bs.collapse', swissbib.initBackgroundsRecursive);
+$(document).on('hide.bs.collapse', swissbib.initBackgroundsRecursive);
+$(document).on('shown.bs.collapse', swissbib.destructBackgroundsRecursive);
+$(document).on('hidden.bs.collapse', swissbib.destructBackgroundsRecursive);
 
 
 /**

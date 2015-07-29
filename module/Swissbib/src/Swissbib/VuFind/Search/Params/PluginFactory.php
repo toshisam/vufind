@@ -35,7 +35,7 @@ class PluginFactory extends VuFindParamsPluginFactory
      */
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        $options   = $serviceLocator->getServiceLocator()->get('Swissbib\SearchOptionsPluginManager')->get($requestedName);
+        $options   = $serviceLocator->getServiceLocator()->get('VuFind\SearchOptionsPluginManager')->get($requestedName);
         $className = $this->getClassName($name, $requestedName);
         return new $className(
             $options,

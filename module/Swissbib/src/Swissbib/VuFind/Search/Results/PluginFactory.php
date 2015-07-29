@@ -38,11 +38,13 @@ class PluginFactory extends VuFindResultsPluginFactory
      *
      * @return object
      */
+
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        $params     = $serviceLocator->getServiceLocator()->get('Swissbib\SearchParamsPluginManager')->get($requestedName);
-        $className  = $this->getClassName($name, $requestedName);
+        /** @var ExtendedSolrFactoryHelper $extendedTargetHelper */
+        $extendedTargetHelper    = $serviceLocator->getServiceLocator()->get('Swissbib\ExtendedSolrFactoryHelper');
+        $this->defaultNamespace    = $extendedTargetHelper->getNamespace($name, $requestedName);
 
-        return new $className($params);
+        return parent::createServiceWithName($serviceLocator, $name, $requestedName);
     }
 }

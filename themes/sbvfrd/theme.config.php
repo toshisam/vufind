@@ -48,16 +48,18 @@ return array(
     '../themes/bootstrap3/js/vendor/jsTree/jstree.min.js',
 
     'swissbib/swissbib.js',
+    'swissbib/common.js',
 
     'swissbib/AdvancedSearch.js',
     'swissbib/Holdings.js',
     'swissbib/HoldingFavorites.js',
     'swissbib/FavoriteInstitutions.js',
+    'swissbib/Accordion.js',
     'swissbib/Account.js',
     'swissbib/Settings.js',
     'swissbib/OffCanvas.js',
   ),
-
+  'favicon' => 'favicon.ico',
   'helpers' => array(
     'factories'  => array(
       'record'                    => 'Swissbib\View\Helper\Swissbib\Factory::getRecordHelper',
@@ -67,9 +69,6 @@ return array(
       'auth'                      => 'Swissbib\View\Helper\Swissbib\Factory::getAuth',
       'layoutClass'               => 'Swissbib\View\Helper\Swissbib\Factory::getLayoutClass',
       'searchtabs'                => 'Swissbib\View\Helper\Swissbib\Factory::getSearchTabs',
-      'searchParams'              => 'Swissbib\View\Helper\Swissbib\Factory::getSearchParams',
-      'searchOptions'             => 'Swissbib\View\Helper\Swissbib\Factory::getSearchOptions',
-      'searchBox'                 => 'Swissbib\View\Helper\Swissbib\Factory::getSearchBox',
       'includeTemplate'           => 'Swissbib\View\Helper\Swissbib\Factory::getIncludeTemplate',
       'translateFacets'           => 'Swissbib\View\Helper\Swissbib\Factory::getFacetTranslator'
     ),

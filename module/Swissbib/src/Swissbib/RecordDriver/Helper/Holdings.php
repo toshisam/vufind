@@ -1,4 +1,33 @@
 <?php
+/**
+ * swissbib / VuFind: Helper class for swissbib holdings
+ *
+ * PHP version 5
+ *
+ * Copyright (C) project swissbib, University Library Basel, Switzerland
+ * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @category swissbib_VuFind2
+ * @package  RecordDriver
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @author   Oliver Schihin <oliver.schihin@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org
+ */
+
 namespace Swissbib\RecordDriver\Helper;
 
 use Zend\Config\Config;
@@ -337,11 +366,12 @@ class Holdings
 
     /**
      * Initialize networks from config
+     * (active only for Aleph)
      *
      */
     protected function initNetworks()
     {
-        $networkNames = array('Aleph', 'Virtua');
+        $networkNames = ['Aleph'];
 
         foreach ($networkNames as $networkName) {
             $configName = ucfirst($networkName) . 'Networks';
@@ -349,14 +379,14 @@ class Holdings
             /** @var Config $networkConfigs */
             $networkConfigs = $this->configHoldings->get($configName);
 
-            foreach ($networkConfigs as $networkCode => $networkConfig) {
+            foreach ($networkConfigs as $networkCode => $networkConfig)
+            {
                 list($domain, $library) = explode(',', $networkConfig, 2);
-
-                $this->networks[$networkCode] = array(
+                $this->networks[$networkCode] = [
                     'domain' => $domain,
                     'library' => $library,
-                    'type' => $networkName
-                );
+                    'type' => $networkName,
+                ];
             }
         }
     }
@@ -415,11 +445,11 @@ class Holdings
      * Check whether network is supported
      *
      * @param    String $networkCode
-     * @return    Boolean
+     * @return   Boolean
      */
     protected function isRestfulNetwork($networkCode)
     {
-        return isset($this->configHoldings->Restful->{$networkCode});
+        return isset($this->configHoldings->Restful->{$networkCode}) && $this->configHoldings->Restful->{$networkCode} == true ?: false;
     }
 
 
@@ -626,20 +656,6 @@ class Holdings
         return $this->ebooksOnDemand ? $this->ebooksOnDemand->getEbooksOnDemandLink($item, $recordDriver, $this) : false;
     }
 
-    /**
-     * Get back link for IDSSG (self-developed-non-aleph-request)
-     * Currently only a wrapper for Aleph
-     *
-     * @param    String $networkCode
-     * @param    String $institutionCode
-     * @param    Array $item
-     * @param    Array $data
-     * @return    String
-     */
-    protected function getBackLinkIDSSG($networkCode, $institutionCode, array $item, array $data)
-    {
-        return $this->getBackLinkAleph($networkCode, $institutionCode, $item, $data);
-    }
 
     /**
      * Build location map link
@@ -666,9 +682,9 @@ class Holdings
         $label = '';
 
         // Has informations with translation?
-        if (isset($item['location_code']) && isset($item['institution_chb']) && isset($item['network'])) {
+        if (isset($item['location_code']) && isset($item['institution']) && isset($item['network'])) {
             // @todo keep strtolower or fix in tab40.sync
-            $labelKey = strtolower($item['institution_chb'] . '_' . $item['location_code']);
+            $labelKey = strtolower($item['institution'] . '_' . $item['location_code']);
             $textDomain = 'location-' . strtolower($item['network']);
             $translated = $this->translator->translate($labelKey, $textDomain);
 
@@ -801,8 +817,8 @@ class Holdings
 
 
     /**
-     * Get a back link
-     * Check first if a custom type is defined for this network
+     * Get a backlink
+     * Check first if a custom type is defined for this network (only Aleph is implemented as a custom type)
      * Fallback to network default
      *
      * @param    String $networkCode
@@ -812,23 +828,26 @@ class Holdings
      */
     protected function getBackLink($networkCode, $institutionCode, array $item)
     {
-        //item has url (subfield u)
+        //return it, if the item has an url included in subfield u
         if (!empty($item['holding_url'])) return $item['holding_url'];
 
         $method = false;
         $data = array();
 
-        if (isset($this->configHoldings->Backlink->{$networkCode})) { // Has the network its own backlink type
+        // Check if the network has its own backlink type
+        if (isset($this->configHoldings->Backlink->{$networkCode})) {
             $method = 'getBackLink' . ucfirst($networkCode);
             $data = array(
                 'pattern' => $this->configHoldings->Backlink->{$networkCode}
             );
-        } else { // no custom type
-            if (isset($this->networks[$networkCode])) { // is network even configured?
+        // no custom type for network
+        } else {
+            // check if network is even configured
+            if (isset($this->networks[$networkCode])) {
                 $networkType = strtoupper($this->networks[$networkCode]['type']);
                 $method = 'getBackLink' . ucfirst($networkType);
 
-                // Has the network type (aleph, virtua, etc) a general link?
+                // Has the network type  general link by its system (only Aleph is implemented)
                 if (isset($this->configHoldings->Backlink->$networkType)) {
                     $data = array(
                         'pattern' => $this->configHoldings->Backlink->$networkType
@@ -852,7 +871,8 @@ class Holdings
 
 
     /**
-     * Get back link for aleph
+     * Get backlink for aleph
+     * (custom method)
      *
      * @param    String $networkCode
      * @param    String $institutionCode
@@ -872,32 +892,106 @@ class Holdings
         return $this->compileString($data['pattern'], $values);
     }
 
-
     /**
-     * Get back link for virtua
+     * Get backlink for IDSBB
      *
-     * @todo    Get user language
+     * set link to orange view of swissbib
+     *
      * @param    String $networkCode
      * @param    String $institutionCode
      * @param    Array $item
      * @param    Array $data
      * @return    String
      */
-    protected function getBackLinkVirtua($networkCode, $institutionCode, $item, array $data)
-    {
-        $values = array(
-            'server' => $data['domain'],
-            'language-code' => 'de', // @todo fetch from user
-            'bib-system-number' => $this->getNumericString($item['bibsysnumber']) // remove characters from number string
-        );
+    protected function getBackLinkIDSBB($networkCode, $institutionCode, $item, array $data) {
+        $values = [
+            'id' => $this->idItem,
+            'sub-library-code' => $institutionCode,
+            'network' => $networkCode,
+        ];
+        return $this->compileString($data['pattern'], $values);
+    }
 
+    /**
+     * Get backlink for NEBIS
+     *
+     * set link to NEBIS Primo View
+     *
+     * @param    String $networkCode
+     * @param    String $institutionCode
+     * @param    Array $item
+     * @param    Array $data
+     * @return    String
+     *
+     * Links to Primo work, but login after permalink leads to crashes in Primo. Therefore, use Aleph until Primo allows safe login after permalink
+
+    protected function getBackLinkNEBIS($networkCode, $institutionCode, $item, array $data) {
+        $values = [
+            'bib-system-number' => $item['bibsysnumber'],
+            ];
+        return $this->compileString($data['pattern'], $values);
+    }
+     */
+
+    /**
+     * Get backlink for IDSLU
+     *
+     * set link to iluplus Primo View
+     *
+     * @param    String $networkCode
+     * @param    String $institutionCode
+     * @param    Array $item
+     * @param    Array $data
+     * @return    String
+     *
+     * Links to Primo work, but login after permalink leads to crashes in Primo. Therefore, use Aleph until Primo allows safe login after permalink
+     *
+    protected function getBackLinkIDSLU($networkCode, $institutionCode, $item, array $data) {
+        $values = [
+            'bib-system-number' => $item['bibsysnumber'],
+        ];
+        return $this->compileString($data['pattern'], $values);
+    }
+     * /
+
+    /**
+     * Get back link for IDSSG (self-developed-non-aleph-request)
+     * Currently only a wrapper for Aleph
+     *
+     * @param    String $networkCode
+     * @param    String $institutionCode
+     * @param    Array $item
+     * @param    Array $data
+     * @return    String
+     */
+    protected function getBackLinkIDSSG($networkCode, $institutionCode, array $item, array $data)
+    {
+        return $this->getBackLinkAleph($networkCode, $institutionCode, $item, $data);
+    }
+
+    /**
+     * Get backlink for RERO
+     *
+     * @param       $networkCode
+     * @param       $institutionCode
+     * @param       $item
+     * @param array $data
+     * @return mixed
+     */
+    protected function getBackLinkRERO($networkCode, $institutionCode, $item, array $data)
+    {
+        $values = [
+            'language-code' => 'de', // @todo fetch from user,
+            'RERO-network-code' => (int)substr($institutionCode, 2, 2), // third and fourth character
+            'bib-system-number' => $item['bibsysnumber'],
+            'sub-library-code' => preg_replace('[\D]', '', $institutionCode) //removes the RE-characters from the number string
+        ];
         return $this->compileString($data['pattern'], $values);
     }
 
 
     /**
-     * Get back link for alexandria
-     * Currently only a wrapper for virtua
+     * Get backlink for Alexandria network
      *
      * @param    String $networkCode
      * @param    String $institutionCode
@@ -907,13 +1001,14 @@ class Holdings
      */
     protected function getBackLinkAlex($networkCode, $institutionCode, array $item, array $data)
     {
-        return $this->getBackLinkVirtua($networkCode, $institutionCode, $item, $data);
+        $values = [
+            'bib-system-number' => preg_replace('[\D]', '', $item['bibsysnumber']) // remove characters from number string
+        ];
+        return $this->compileString($data['pattern'], $values);
     }
 
-
     /**
-     * Get back link for SNL
-     * Currently only a wrapper for virtua
+     * Get backlink for SNL (helveticat)
      *
      * @param    String $networkCode
      * @param    String $institutionCode
@@ -923,12 +1018,15 @@ class Holdings
      */
     protected function getBackLinkSNL($networkCode, $institutionCode, $item, array $data)
     {
-        return $this->getBackLinkVirtua($networkCode, $institutionCode, $item, $data);
+        $bibsysnumber = preg_replace('/^vtls0*/', '', $item['bibsysnumber']);
+        $values = [
+            'bib-system-number' => $bibsysnumber,
+        ];
+        return $this->compileString($data['pattern'], $values);
     }
 
     /**
-     * Get back link for CCSA (poster collection)
-     * Currently only a wrapper for virtua
+     * Get backlink for CCSA (poster collection)
      *
      * @param    String $networkCode
      * @param    String $institutionCode
@@ -939,34 +1037,16 @@ class Holdings
 
     protected function getBackLinkCCSA($networkCode, $institutionCode, $item, array $data)
     {
-        return $this->getBackLinkVirtua($networkCode, $institutionCode, $item, $data);
-    }
-
-    /**
-     * Build rero backlink
-     *
-     * @param       $networkCode
-     * @param       $institutionCode
-     * @param       $item
-     * @param array $data
-     * @return mixed
-     */
-    protected function getBackLinkRERO($networkCode, $institutionCode, $item, array $data)
-    {
-        $values = array(
-            'server' => $data['domain'],
-            'language-code' => 'de', // @todo fetch from user,
-            'RERO-network-code' => (int)substr($institutionCode, 2, 2), // third and fourth character
-            'bib-system-number' => $item['bibsysnumber'], // replaces the incorrect version: 'bib-system-number' => $this->getNumericString($item['bibsysnumber']), // remove characters from number string
-            'sub-library-code' => $this->getNumericString($institutionCode) //removes the RE-characters from the number string
-        );
-
+        $bibsysnumber = preg_replace('/^vtls0*/', '', $item['bibsysnumber']);
+        $values = [
+            'bib-system-number' => $bibsysnumber,
+        ];
         return $this->compileString($data['pattern'], $values);
     }
 
+
     /**
-     * Get back link for helvetic archives
-     * Currently only a wrapper for virtua
+     * Get backlink for Helveticarchives (SNL)
      *
      * @param    String $networkCode
      * @param    String $institutionCode
@@ -976,11 +1056,16 @@ class Holdings
      */
     protected function getBackLinkCHARCH($networkCode, $institutionCode, array $item, array $data)
     {
-        return $this->getBackLinkVirtua($networkCode, $institutionCode, $item, $data);
+        $values = [
+            'bib-system-number' => $item['bibsysnumber'],
+        ];
+        return $this->compileString($data['pattern'], $values);
     }
 
     /**
-     * Compile string. Replace {varName} pattern with names and data from array
+     * Compile string
+     * Replace {varName} pattern with names and data from array
+     * creates an URL string for backlinks according to data delivered by methods above
      *
      * @param    String $string
      * @param    Array $keyValues
@@ -988,7 +1073,7 @@ class Holdings
      */
     protected function compileString($string, array $keyValues)
     {
-        $newKeyValues = array();
+        $newKeyValues = [];
 
         foreach ($keyValues as $key => $value) {
             $newKeyValues['{' . $key . '}'] = $value;
@@ -997,23 +1082,10 @@ class Holdings
         return str_replace(array_keys($newKeyValues), array_values($newKeyValues), $string);
     }
 
-
     /**
-     * Remove all not-numeric parts from string
-     *
-     * @param    String $string
-     * @return    String
-     */
-    protected function getNumericString($string)
-    {
-        return preg_replace('[\D]', '', $string);
-    }
-
-
-    /**
-     * Get bib info link
-     * Get false if not found
-     * Array contains url and host value
+     * Get URL for library website (bibinfo)
+     * false if not found or scheme not ok
+     * Array with only url if scheme is ok
      *
      * @param    String $institutionCode
      * @return    Array|Boolean
@@ -1025,13 +1097,16 @@ class Holdings
         if ($bibInfoLink === $institutionCode) {
             $bibInfoLink = false;
         } else {
-            $url = parse_url($bibInfoLink);
-            $bibInfoLink = array(
-                'url' => $bibInfoLink,
-                'host' => $url['host']
-            );
+            $scheme = parse_url($bibInfoLink, PHP_URL_SCHEME);
+            if (preg_match('/http/', $scheme)) {
+                $bibInfoLink = [
+                    'url' => $bibInfoLink,
+                ];
+            }
+            else {
+                $bibInfoLink = false;
+            }
         }
-
         return $bibInfoLink;
     }
 

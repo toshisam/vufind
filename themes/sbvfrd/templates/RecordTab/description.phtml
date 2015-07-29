@@ -166,6 +166,7 @@ $prevTitles  = $record->getPreviousTitles();
   $diss       = $record->getDissertationNotes();
   $bib        = $record->getBibliographyNotes();
   $access     = $record->getAccessRestrictions();
+  $related    = $record->getRelationshipNotes();
   $credits    = $record->getProductionCredits();
   $origtitle  = $record->getOriginalTitle();
   $perfomer   = $record->getPerformerNote();
@@ -177,7 +178,7 @@ $prevTitles  = $record->getPreviousTitles();
   ?>
 
   <? if (!empty($notes) or !empty($freq) or !empty($contDates) or !empty($diss) or
-      !empty($bib) or !empty($access) or !empty($credits) or !empty($awards) or
+      !empty($bib) or !empty($access) or !empty($related) or !empty($credits) or !empty($awards) or
       !empty($citenotes) or !empty($orignotes) or !empty($copynotes) or
       !empty($origtitle) or !empty($perfomer) or !empty($system)): ?>
     <? $contentDisplayed = true; ?>
@@ -252,6 +253,18 @@ $prevTitles  = $record->getPreviousTitles();
               <? endforeach; ?>
           </td>
         </tr>
+      <? endif; ?>
+
+      <? /* Display linking entry notes (field 580) */ ?>
+      <? if (!empty($related)): ?>
+          <tr>
+              <th><?= $this->transEsc('Related Items') ?>: </th>
+              <td>
+                  <? foreach ($related as $field): ?>
+                      <?= $this->escapeHtml($field) ?><br/>
+                  <? endforeach; ?>
+              </td>
+          </tr>
       <? endif; ?>
 
       <? /* Display production credit notes (field 508) */ ?>

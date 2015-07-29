@@ -7,6 +7,7 @@
 /* colors */
 @black: #000;
 @white: #fff;
+@border-color: #9b9b9b;
 
 @theme-color: #50BF9E;
 @link-color: #0D785B;
@@ -24,6 +25,13 @@
 @state-info-text:                @font-color;
 @state-info-bg:                  @highlight-color;
 @state-info-border:              darken(spin(@state-info-bg, -10), 7%);
+
+//== Tables
+//
+//## Customizes the `.table` component with basic values, each used across all table variations.
+
+@table-bg-accent:               #ededed;
+
 
 //== Form states and alerts
 //
@@ -81,6 +89,18 @@
   border-color: @link-color;
   border-radius: 2px;
   text-decoration: none;
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &.focus,
+    &:active,
+    &.active {
+      background-color: @theme-color;
+    }
+  }
 }
 
 .mixin-btn-primary-active {
@@ -91,5 +111,5 @@
 
 .mixin-table-border {
   border: none;
-  border-right: 1px solid @black;
+  border-right: 1px solid @border-color;
 }

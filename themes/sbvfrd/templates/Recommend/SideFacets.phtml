@@ -38,7 +38,10 @@
         ?>
         <a class="list-group-item active" href="<?=$removeLink?>">
           <span class="pull-right"><i class="fa fa-times"></i></span>
-          <? if ($filter['operator'] == 'NOT') echo $this->transEsc('NOT') . ' '; if ($filter['operator'] == 'OR' && $i > 0) echo $this->transEsc('OR') . ' '; ?><?=$this->transEsc($field)?>: <?=$this->escapeHtml($this->translateFacets($filter['field'],$filter['value']))?></a>
+          <? if ($filter['operator'] == 'NOT') echo $this->transEsc('NOT') . ' ';
+             if ($filter['operator'] == 'OR' && $i > 0) echo $this->transEsc('OR') . ' '; ?>
+             <?=$this->transEsc($field)?>:
+             <?=$this->escapeHtml($this->translateFacets(array('facetName' => $filter['field'], 'facetValue' => $filter['value'])))?>
         </a>
       <? endforeach; ?>
     <? endforeach; ?>
@@ -65,39 +68,15 @@
       </li>
       <div id="side-collapse-<?=$this->escapeHtmlAttr($title) ?>" class="collapse<? if(!in_array($title, $collapsedFacets)): ?> in<? endif ?>">
         <? if (isset($rangeFacets[$title])): ?>
-          <li class="list-group-item">
-            <form action="" name="<?=$this->escapeHtmlAttr($title)?>Filter" id="<?=$this->escapeHtmlAttr($title)?>Filter">
-              <?=$results->getUrlQuery()->asHiddenFields(array('page' => "/./", 'filter' => "/^{$title}:.*/"))?>
-              <input type="hidden" name="<?=$this->escapeHtmlAttr($rangeFacets[$title]['type'])?>range[]" value="<?=$this->escapeHtmlAttr($title)?>"/>
-              <div class="row">
-                <div class="col-sm-6">
-                  <label for="<?=$this->escapeHtmlAttr($title)?>from">
-                    <?=$this->transEsc('date_from')?>:
-                  </label>
-                  <input type="text" maxlength="4" class="form-control" name="<?=$this->escapeHtmlAttr($title)?>from" id="<?=$this->escapeHtmlAttr($title)?>from" value="<?=isset($rangeFacets[$title]['values'][0])?$this->escapeHtmlAttr($rangeFacets[$title]['values'][0]):''?>" />
-                </div>
-                <div class="col-sm-6">
-                  <label for="<?=$this->escapeHtmlAttr($title)?>to">
-                    <?=$this->transEsc('date_to')?>:
-                  </label>
-                  <input type="text" maxlength="4" class="form-control" name="<?=$this->escapeHtmlAttr($title)?>to" id="<?=$this->escapeHtmlAttr($title)?>to" value="<?=isset($rangeFacets[$title]['values'][1])?$this->escapeHtmlAttr($rangeFacets[$title]['values'][1]):''?>" />
-                </div>
-              </div>
-              <? if ($rangeFacets[$title]['type'] == 'date'): ?>
-                <div class="slider-container"><input type="text" class="hidden" id="<?=$this->escapeHtmlAttr($title)?><?=$this->escapeHtml($rangeFacets[$title]['type'])?>Slider"/></div>
-              <? endif; ?>
-              <input class="btn btn-default" type="submit" value="<?=$this->transEsc('Set')?>"/>
-            </form>
-          </li>
           <? if ($rangeFacets[$title]['type'] == 'date'): ?>
             <? $this->headScript()->appendFile('vendor/bootstrap-slider.js'); ?>
             <?
-              $min = !empty($rangeFacets[$title][0]) ? min($rangeFacets[$title][0], 1400) : 1400;
-              $future = date('Y', time()+31536000);
-              $max = !empty($rangeFacets[$title][1]) ? max($future, $rangeFacets[$title][1]) : $future;
-              $low  = !empty($rangeFacets[$title][0]) ? $rangeFacets[$title][0] : $min;
-              $high = !empty($rangeFacets[$title][1]) ? $rangeFacets[$title][1] : $max;
-              $script = <<<JS
+            $min = !empty($rangeFacets[$title]['values'][0]) ? min($rangeFacets[$title]['values'][0], 1450) : 1450;
+            $future = date('Y', time()+31536000);
+            $max = !empty($rangeFacets[$title]['values'][1]) ? max($future, $rangeFacets[$title]['values'][1]) : $future;
+            $low  = !empty($rangeFacets[$title]['values'][0]) ? $rangeFacets[$title]['values'][0] : $min;
+            $high = !empty($rangeFacets[$title]['values'][1]) ? $rangeFacets[$title]['values'][1] : $max;
+            $script = <<<JS
 $(document).ready(function() {
   var fillTexts = function() {
   var v = {$this->escapeHtmlAttr($title)}dateSlider.getValue();
@@ -117,8 +96,32 @@ $(document).ready(function() {
 });
 JS;
             ?>
-            <?= '';/** $this->inlineScript(\Zend\View\Helper\HeadScript::SCRIPT, $script, 'SET'); */ ?>
+            <?= $this->inlineScript(\Zend\View\Helper\HeadScript::SCRIPT, $script, 'SET'); ?>
           <? endif; ?>
+          <li class="list-group-item">
+            <form action="" name="<?=$this->escapeHtmlAttr($title)?>Filter" id="<?=$this->escapeHtmlAttr($title)?>Filter">
+              <?=$results->getUrlQuery()->asHiddenFields(array('page' => "/./", 'filter' => "/^{$title}:.*/"))?>
+              <input type="hidden" name="<?=$this->escapeHtmlAttr($rangeFacets[$title]['type'])?>range[]" value="<?=$this->escapeHtmlAttr($title)?>"/>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label for="<?=$this->escapeHtmlAttr($title)?>from">
+                    <?=$this->transEsc('date_from')?>:
+                  </label>
+                  <input type="text" maxlength="4" class="form-control" name="<?=$this->escapeHtmlAttr($title)?>from" id="<?=$this->escapeHtmlAttr($title)?>from" value="<?=isset($rangeFacets[$title]['values'][0])?$this->escapeHtmlAttr($rangeFacets[$title]['values'][0]):''?>" placeholder="<?= $rangeFacets[$title]['type'] == 'date' ? $min : '' ?>" />
+                </div>
+                <div class="col-sm-6">
+                  <label for="<?=$this->escapeHtmlAttr($title)?>to">
+                    <?=$this->transEsc('date_to')?>:
+                  </label>
+                  <input type="text" maxlength="4" class="form-control" name="<?=$this->escapeHtmlAttr($title)?>to" id="<?=$this->escapeHtmlAttr($title)?>to" value="<?=isset($rangeFacets[$title]['values'][1])?$this->escapeHtmlAttr($rangeFacets[$title]['values'][1]):''?>" placeholder="<?= $rangeFacets[$title]['type'] == 'date' ? $max : '' ?>" />
+                </div>
+              </div>
+              <? if ($rangeFacets[$title]['type'] == 'date'): ?>
+                <div class="slider-container"><input type="text" class="hidden" id="<?=$this->escapeHtmlAttr($title)?><?=$this->escapeHtml($rangeFacets[$title]['type'])?>Slider"/></div>
+              <? endif; ?>
+              <input class="btn btn-default" type="submit" value="<?=$this->transEsc('Set')?>"/>
+            </form>
+          </li>
         <? else: ?>
           <? foreach ($cluster['list'] as $i=>$thisFacet): ?>
             <?
@@ -131,8 +134,8 @@ JS;
             <a id="more-narrowGroupHidden-<?=$this->escapeHtmlAttr($title)?>" class="list-group-item" href="javascript:moreFacets('narrowGroupHidden-<?=$title ?>')"><?=$this->transEsc('more')?> ...</a>
           <? endif; ?>
           <? if ($thisFacet['isApplied']): ?>
-            <a class="list-group-item active<? if ($i>$cluster['displayLimit']): ?><?=$moreClass ?><?endif ?><? if ($thisFacet['operator'] == 'OR'): ?> facetOR applied<? endif ?>" href="<?=$this->currentPath().$results->getUrlQuery()->removeFacet($title, $thisFacet['value'], true, $thisFacet['operator']) ?>">
-                <? if($thisFacet['operator'] == 'OR'): ?>
+            <a class="list-group-item active<? if ($i>$cluster['displayLimit']): ?><?=$moreClass ?><?endif ?><? if (isset($thisFacet['operator']) && $thisFacet['operator'] == 'OR'): ?> facetOR applied<? endif ?>" href="<?=$this->currentPath().$results->getUrlQuery()->removeFacet($title, $thisFacet['value'], true, isset($thisFacet['operator']) ? $thisFacet['operator'] : null) ?>">
+                <? if(isset($thisFacet['operator']) && $thisFacet['operator'] == 'OR'): ?>
                 <i class="fa fa-check-square-o"></i>
               <? else: ?>
                 <span class="pull-right"><i class="fa fa-check"></i></span>
@@ -140,11 +143,19 @@ JS;
               <?=$this->escapeHtml($thisFacet['displayText'])?>
             </a>
           <? else: ?>
-            <? $addURL = $this->currentPath().$results->getUrlQuery()->addFacet($title, $thisFacet['value'], $thisFacet['operator']); ?>
+
+            <?
+               //$thisFacet is often not set and causes a lot of logging
+               $tOperator = isset($thisFacet['operator']) ? $thisFacet['operator'] : null;
+               $addURL = $this->currentPath().$results->getUrlQuery()->addFacet($title, $thisFacet['value'], !empty($tOperator) ? $tOperator : null);
+
+            ?>
+
             <? if ($allowExclude): ?>
               <li class="list-group-item facet<?=$thisFacet['operator'] ?><? if ($i>$cluster['displayLimit']): ?> <?=$moreClass ?><?endif ?>">
             <? else: ?>
-              <a href="<?=$addURL ?>" class="list-group-item facet<?=$thisFacet['operator'] ?><? if ($i>$cluster['displayLimit']): ?> <?=$moreClass ?><?endif ?>">
+              <? $tOperatorClass = isset($thisFacet['operator']) ? 'facet' . $thisFacet['operator'] : 'facet'; ?>
+              <a href="<?=$addURL ?>" class="list-group-item <?=$tOperatorClass ?><? if ($i>$cluster['displayLimit']): ?> <?=$moreClass ?><?endif ?>">
             <? endif; ?>
             <span class="badge">
               <?=$this->localizedNumber($thisFacet['count'])?>
@@ -155,7 +166,7 @@ JS;
             <? if ($allowExclude): ?>
               <a href="<?=$addURL ?>">
             <? endif; ?>
-            <? if($thisFacet['operator'] == 'OR'): ?>
+            <? if(isset($thisFacet['operator']) && $thisFacet['operator'] == 'OR'): ?>
               <i class="fa fa-square-o"></i>
             <? endif; ?>
             <?=$this->escapeHtml($thisFacet['displayText'])?>

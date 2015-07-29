@@ -1,112 +1,93 @@
 <h1>Search</h1>
-</br>
-<h2>Combine</h2>
-</br>
+<p>swissbib Basel Bern contains two separate databases: <strong>Books & more</strong> and <strong>Articles & more</strong> (see <a href="<?= $this->url('help-page', array('topic' => 'about')); ?>"><?= $this->transEsc('helppage.about') ?></a>). Choose your preferred database by clicking on the corresponding tab above the search box.</p>
+
+<iframe width="230" height="160" src="https://tube.switch.ch/embed/8e47b4c8" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+<h2>Combine search terms</h2>
+<p>With the help of Boolean operators (AND, OR, NOT) search terms can be combined. Boolean operators need to be in capitals.</p>
 <table class="table table-striped">
     <tbody>
     <tr>
         <td><i>joyce ulysses</i></td>
-        <td>Both terms are present</td>
+        <td>Result contains both terms</td>
     </tr>
     <tr>
         <td><i>joyce AND ulysses</i></td>
-        <td>Both terms are present in the same field</td>
+        <td>Result contains both terms in the same search field</td>
     </tr>
     <tr>
         <td><i>joyce OR ulysses</i></td>
-        <td>One of the terms is present</td>
+        <td>Result contains one or the other term</td>
     </tr>
     <tr>
         <td><i>joyce NOT ulysses</i></td>
-        <td><i>joyce</i> is present, but not <i>ulysses</i></td>
+        <td>Result contains <i>joyce</i> excludes <i>ulysses</i></td>
     </tr>
     <tr>
-        <td>More complex searches</td>
-        <td>See <a href="<?= $this->url('help-page', array('topic' => 'Advanced')) ?>">Help - Advanced search</a>.</td>
+        <td>More advanced combinations</td>
+        <td>See <a class="help-link" href="<?=$this->url('help-home')?>?topic=search" title="<?=$this->transEsc('Help with Search Operators')?>"><?=$this->transEsc("Help with Search Operators")?></a>.
+        </td>
     </tr>
     </tbody>
 </table>
-</br>
-<h2>Phrase search, using quotation marks</h2>
-
+<br />
+<h2>Using quotes</h2>
 <table class="table table-striped">
     <tbody>
     <tr>
         <td><i>"street art"</i></td>
-        <td>The words must be adjacent.</td>
+        <td>Result contains terms immediately succeeding one another.</td>
     </tr>
     <tr>
         <td><i>"street art"~5</i></td>
-        <td>Both terms must be present within 5 words.</td>
+        <td>Result contains terms within 5 words of one another.</td>
     </tr>
-      <tr>
+    <tr>
         <td><i>"PZB E 62 2:6"</i></td>
-        <td>Call numbers</td>
+        <td>Full shelfmark</td>
     </tr>
     </tbody>
 </table>
-</br>
-<h2>Truncation</h2>
-
+<br />
+<h2>Placeholders</h2>
 <table class="table table-striped">
     <tbody>
     <tr>
         <td rowspan="2">*</td>
-        <td rowspan="2">replaces any number of letters</td>
+        <td rowspan="2">replaces any character</td>
         <td><i>cultur*</i></td>
-        <td>culture, cultura, cultural, culturally etc.</td>
+        <td>Result can contain culture, cultura, cultural, culturally etc.</td>
     </tr>
     <tr>
         <td><i>Fr*ib*urg</i></td>
         <td>Fribourg, Freiburg etc.</td>
     </tr>
-      <tr>
+    <tr>
         <td rowspan="2">?</td>
-        <td rowspan="2">replaces exactly one letter</td>
+        <td rowspan="2">replaces one particular character</td>
         <td><i>wom?n</i></td>
         <td>woman, women etc.</td>
     </tr>
     <tr>
         <td><i>Lind??ist</i></td>
-        <td>Lindquist, Lindkvist, Lindqvist ecc.</td>
+        <td>Lindquist, Lindkvist, Lindqvist ect.</td>
     </tr>
     <tr>
         <td>~</td>
-        <td>fuzzy search</td>
+        <td>Correct spelling is unknown<br/></td>
         <td><i>Tschaikowski~</i></td>
         <td>Tschaikowski, Tchaïkovski, Čajkovskij etc.</td>
     </tr>
     </tbody>
 </table>
-
-</br>
-<h1>Results</h1>
-<h2>Refine search</h2>
-<p>Use the filters in the left hand column of your result list or <i>Advanced search</i>.</p>
-
-<h2>Repeat or save search</h2>
-<ul class="list">
-    <li>Clicking on <i>Articles & more</i> will repeat your search in <a
-            href="http://www.serialssolutions.com/en/services/summon/content" target="_blank">Summon</a>.
-    </li>
-    <li><a href="<?= $this->url('search-history') ?>">My swissbib - Saved searches</a></li>
-</ul>
-
-<!--
-<h3>Feed notification about new titles that match your search</h3>
-<p><img src="<?= $this->basePath('themes/swissbib/css/themes/orange/img/icon_pagefunctions_rss.gif') ?>"
-        alt="get feed of new items matching this search"> Subscribe to feed</p>
--->
-</br>
-<h1>Full text</h1>
-<p>Access to full text is often only possible from the university having licenced the content. Log in via VPN if you're not on campus.</p></p>
-
-<h2>Articles &amp; more</h2>
-<ul class="list">
-    <li><i>get it</i> = link to full text</li>
-    <li><img src="<?= $this->basePath('themes/swissbib/images/sfx.gif') ?>" alt="SFX Services"> = link to full text
-        and/or other sfx services
-    </li>
-</ul>         
-         
-      
+<h2>Search filters</h2>
+<p>On the right hand side of your search results you can find search filters to further refine your result, like language, library, online-access, topic etc.</p>
+<p>In Articles & more you can expand your search in the right column by adding articles without access to full text or newspaper articles. Your results can be filtered to contain only peer reviewed articles.</p>
+<h2>Advanced Search</h2>
+<p>Advanced search lets you combine search terms accross fields like title field and author name.</p>
+<p>Combine search terms by using Boolean operaters AND, OR, NOT.</p>
+<p>Refine Search lets you filter your results directly by language, format, library, year of publication.</p>
+<p><strong>Example:</strong> Search books by author Begon, title must contain Oekologie or Ecology, books should be in German or English, published between 2005 and 2015, available at University library UB Basel.</p>
+<a href="<?= $this->basePath('themes/sbvfrdmulti/images/HelpPage/en/advancedsearch.jpg') ?>" class="help">
+    <img class="img-responsive" src="<?= $this->basePath('themes/sbvfrdmulti/images/HelpPage/en/advancedsearch.jpg') ?>" alt="Zoom" width="600">
+</a>

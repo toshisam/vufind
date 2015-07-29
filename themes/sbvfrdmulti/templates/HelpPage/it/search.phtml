@@ -1,105 +1,93 @@
 <h1>Ricerca</h1>
-</br>
+<p>swissbib Basel Bern è suddiviso in due banche dati separate: <strong>Libri & più</strong> e <strong>Articoli & più</strong> (vedi anche <a href="<?= $this->url('help-page', array('topic' => 'about')); ?>"><?= $this->transEsc('helppage.about') ?></a>). Scegli la banca dati nella quale vuoi eseguire la tua ricerca mediante un clic sulla relativa etichetta soprastante il campo di ricerca.</p>
+
+<iframe width="230" height="160" src="https://tube.switch.ch/embed/8e47b4c8" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
 <h2>Combinare più termini</h2>
-</br>
+<p>Gli operatori booleani (AND, OR e NOT) permettono di combinare in maniera logica diversi termini di ricerca. Gli operatori devono essere scritti in caratteri maiuscoli.</p>
 <table class="table table-striped">
     <tbody>
     <tr>
         <td><i>joyce ulysses</i></td>
-        <td>Entrambi i termini sono presenti</td>
+        <td>Entrambi i termini sono presenti nella notizia bibliografica</td>
     </tr>
-      <tr>
+    <tr>
         <td><i>joyce AND ulysses</i></td>
-        <td>Entrambi i termini sono presenti nello stesso campo</td>
-    </tr>  
+        <td>Entrambi i termini sono presenti nel medesimo campo descrittivo</td>
+    </tr>
     <tr>
         <td><i>joyce OR ulysses</i></td>
-        <td>Uno dei termini é presente</td>
-    </tr>  
-    <tr>
-        <td><i>joyce NOT ulysses</i></td>
-        <td><i>joyce</i> é presente, ma no <i>ulysses</i></td>
+        <td>Uno dei due termini è presente nella notizia bibliografica</td>
     </tr>
     <tr>
-        <td>Per le ricerche più complessi</td>
-        <td>Vedi <a href="<?=$this->url('help-page', array('topic' => 'Advanced'))?>">Guida - Ricerca avanzata</a>.</td>
+        <td><i>joyce NOT ulysses</i></td>
+        <td>Nella notizia bibliografica è presente <i>joyce</i>, ma non <i>ulysses</i></td>
+    </tr>
+    <tr>
+        <td>Ricerche più complesse</td>
+        <td>Vedi <a class="help-link" href="<?=$this->url('help-home')?>?topic=search" title="<?=$this->transEsc('Help with Search Operators')?>"><?=$this->transEsc("Help with Search Operators")?></a>.
+        </td>
     </tr>
     </tbody>
 </table>
-</br>
+<br />
 <h2>Ricerca per frase o locuzione tramite virgolette</h2>
-
 <table class="table table-striped">
     <tbody>
     <tr>
         <td><i>"street art"</i></td>
         <td>I termini devono apparire nello stesso identico ordine.</td>
-        </tr>
+    </tr>
     <tr>
         <td><i>"street art"~5</i></td>
-        <td>Entrambi i termini devono essere presenti entro un intervallo di 5 parole.</td>
-           </tr>
-      <tr>
+        <td>I due termini devono essere presenti entro un intervallo massimo di 5 parole.</td>
+    </tr>
+    <tr>
         <td><i>"PZB E 62 2:6"</i></td>
-        <td>Segnature</td>
+        <td>Segnatura</td>
     </tr>
     </tbody>
 </table>
-</br>
+<br />
 <h2>Segni di troncamento</h2>
-
 <table class="table table-striped">
     <tbody>
     <tr>
         <td rowspan="2">*</td>
-        <td rowspan="2">sostituisce un numero qualsiasi<br/>di caratteri</td>
+        <td rowspan="2">sostituisce un numero qualsiasi di caratteri</td>
         <td><i>cultur*</i></td>
-        <td>culture, cultura, cultural, culturally ecc.</td>
+        <td>culture, cultura, cultural, culturally, ecc.</td>
     </tr>
-     <tr>
+    <tr>
         <td><i>Fr*ib*urg</i></td>
-        <td>Fribourg, Freiburg etc.</td>
+        <td>Fribourg, Freiburg, ecc.</td>
     </tr>
     <tr>
         <td rowspan="2">?</td>
         <td rowspan="2">sostituisce un singolo carattere</td>
         <td><i>wom?n</i></td>
-        <td>woman, women ecc.</td>
+        <td>woman, women, ecc.</td>
     </tr>
     <tr>
         <td><i>Lind??ist</i></td>
-        <td>Lindquist, Lindkvist, Lindqvist ecc.</td>
+        <td>Lindquist, Lindkvist, Lindqvist, ecc.</td>
     </tr>
     <tr>
         <td>~</td>
-        <td>ricerca approssimativa</td>
+        <td>ricerca approssimativa <br/>(ortografia esatta non nota)</td>
         <td><i>Tschaikowski~</i></td>
-        <td>Tschaikowski, Tchaïkovski, Čajkovskij ecc.</td>
-         </tr>
-       </tbody>
+        <td>Tschaikowski, Tchaïkovski, Čajkovskij, ecc.</td>
+    </tr>
+    </tbody>
 </table>
-
-</br>
-<h1>Elenco dei risultati</h1>
 <h2>Affinare la ricerca</h2>
-<p>Usa i filtri nella colonna a sinistra dall'elenco dei risultati oppure la <i>Ricerca avanzata</i>.</p>
-
-<h2>Ripeti o salva la ricerca</h2>
-             <ul class="list">
-          <li><a href="<?=$this->url('search-history')?>">My swissbib - Ricerche salvate</a></li>
-         <li>Cliccando su <i>Articoli & più</i> puoi ripetere la tua ricerca in <a href="http://www.serialssolutions.com/en/services/summon/content" target="_blank">Summon</a>.</li>
-  	</ul>
-
-<!--
-  	<h3>Essere notificato quando nuovi documenti corrispondono alla tua ricerca</h3>
-<p><img src="<?= $this->basePath('themes/swissbib/css/themes/orange/img/icon_pagefunctions_rss.gif') ?>" alt="Feed RSS"> Abonnarsi</p> 
--->
-</br>
-<h1>Testo integrale</h1>
-<p>L'accesso diretto al testo integrale spesso funziona solo all'interno della rete di un'università che possieda una sottoscrizione per i contenuti. Effettua il login tramite VPN se non ti trovi in una sede universitaria.</p>
-
-<h2>Articoli &amp; più</h2>
-<ul class="list">
-      	<li><i>get it</i> = link per visionare il testo integrale</li>
-	<li><img src="<?= $this->basePath('themes/swissbib/images/sfx.gif') ?>" alt="SFX Services"> = link per visionare il testo integrale e/o accedere ad altri servizi sfx (ordinare un articolo, verificare la localizzazione del documento in Svizzera).</li>
-</ul>
+<p>Usa i filtri nella colonna a destra dell'elenco dei risultati per precisare la tua ricerca secondo vari criteri, ad es. lingua di pubblicazione, biblioteca prestante, disponibilità online, soggetto, ecc.</p>
+<p>In Articoli & più è possibile aumentare il numero dei risultati spuntando, nella colonna a destra, le caselle "anche articoli senza testo integrale", risp. "anche giornali". È altresì possibile concentrare la ricerca sui testi cosiddetti "peer reviewed", cioé sottoposti ad una valutazione esperta eseguita da specialisti del campo.</p>
+<h2>Ricerca avanzata</h2>
+<p>Nella ricerca avanzata si possono combinare termini di campi diversi, per es. una parola del titolo con il nome dell'autore.</p>
+<p>Sono anche qui a disposizione gli operatori booleani AND, OR e NOT per combinare i termini di ricerca.</p>
+<p>Sotto Affinare la tua ricerca vi è la possibilità di selezionare direttamente dei filtri (lingua, formato, biblioteca prestante, anno di pubblicazione).</p>
+<p><strong>Esempio:</strong> Cerca libri dell'autore Begon, il cui titolo contenga le parole "Oekologie" o "ecology", pubblicati o in tedesco o in francese tra gli anni 2005 e 2015, e disponibili alla UB Basel-Hauptbibliothek.</p>
+<a href="<?= $this->basePath('themes/sbvfrdmulti/images/HelpPage/it/advancedsearch.jpg') ?>" class="help">
+    <img class="img-responsive" src="<?= $this->basePath('themes/sbvfrdmulti/images/HelpPage/it/advancedsearch.jpg') ?>" alt="Zoom" width="600">
+</a>

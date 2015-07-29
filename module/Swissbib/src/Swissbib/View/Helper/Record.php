@@ -1,7 +1,39 @@
 <?php
+
+/**
+ * swissbib / VuFind swissbib enhancements
+ *
+ * PHP version 5
+ *
+ * Copyright (C) project swissbib, University Library Basel, Switzerland
+ * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
+ *
+ * Date: 23.04.2015
+
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @category swissbib_VuFind2
+ * @package  View Helper
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @author   Oliver Schihin <oliver.schihin@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org/wiki/vufind2:record_drivers Wiki
+ * @link     http://www.swissbib.org Project Wiki
+ */
 namespace Swissbib\View\Helper;
 
-use VuFind\RecordDriver\Summon;
+use VuFind\RecordDriver\SolrMarc;
 use VuFind\View\Helper\Root\Record as VuFindRecord;
 
 /**
@@ -11,152 +43,274 @@ use VuFind\View\Helper\Root\Record as VuFindRecord;
  */
 class Record extends VuFindRecord
 {
+    /**
+     * @var array
+     */
+    protected $urlFilter = [
+        'sbvfrdsingle' => [
+            'select' => [
+                '950' => [
+                    'url' => ['u'],
+                    'desc' => ['z', '3'],
+                    'conditions' => [
+                        'P|^856$'
+                    ]
+                ],
+                '956' => [
+                    'url' => ['u'],
+                    'desc' => ['y'],
+                    'conditions' => []
+                ]
+            ],
+            'exclude' => [
+                '956' => [
+                    'x|^VIEW && y|^Porträt'
+                ]
+            ],
+            'mergeLinksByDescription' => [
+                '^Titelblatt und Inhaltsverzeichnis$',
+                '^Inhaltsverzeichnis',
+                '^Inhaltstext',
+                '^download \(pdf\)',
+                'opac.admin.ch'
+            ]
+        ],
+        'sbvfrdmulti' => [
+            'select' => [
+                '950' => [
+                    'url' => ['u'],
+                    'desc' => ['z', '3'],
+                    'conditions' => [
+                        'B|^IDSBB$ && P|^856$',
+                        'B|^SNL$ && P|^856$',
+                        'B|^RETROS$ && P|^856$',
+                        'B|^BORIS && P|^856$'
+                    ]
+                ],
+                '956' => [
+                    'url' => ['u'],
+                    'desc' => ['y'],
+                    'conditions' => [
+                        'B|^IDSBB$',
+                        'B|^SNL$'
+                    ]
+                ]
+            ],
+            'exclude' => [
+                '956' => [
+                    'x|^VIEW && y|^Porträt',
+                    'x|^VIEW && y|^Vorschau zum Bild'
+                ]
+            ]
+        ],
+        'sbvfrdjus' => [
+            'select' => [
+                '950' => [
+                    'url' => ['u'],
+                    'desc' => ['z', '3'],
+                    'conditions' => [
+                        'P|^856$'
+                    ]
+                ],
+                '956' => [
+                    'url' => ['u'],
+                    'desc' => ['y'],
+                    'conditions' => []
+                ]
+            ],
+            'exclude' => [
+                '956' => [
+                    'x|^VIEW && y|^Porträt'
+                ]
+            ],
+            'mergeLinksByDescription' => [
+                '^Titelblatt und Inhaltsverzeichnis$',
+                '^Inhaltsverzeichnis',
+                '^Inhaltstext',
+                '^download \(pdf\)',
+                'opac.admin.ch'
+            ]
+        ],
+    ];
 
-    public function getLocalValues( $params = array()) {
+    /**
+     * getExtendedLinkDetails
+     * get links for display according to view based configuration in $urlFilter
+     *
+     * @return array|null
+     */
+    public function getExtendedLinkDetails()
+    {
+        if (!isset($this->urlFilter[$this->config->Site->theme]) ||
+            !($this->driver instanceof \VuFind\RecordDriver\SolrMarc)) return null;
 
+        $select = $this->urlFilter[$this->config->Site->theme]['select'];
+        $exclude = $this->urlFilter[$this->config->Site->theme]['exclude'];
+        $filteredLinks = [];
 
-        $allParams = array('localunions' => array(), 'localtags'  => array(), 'indicators' => array(), 'subfields' => array());
-        $diffarray =  array_merge(array_diff_key($allParams, $params),$params);
-        $diffArrayInCorrectOrder = array('localunions' => $diffarray['localunions'],'localtags' => $diffarray['localtags'], 'indicators' => $diffarray['indicators'], 'subfields' => $diffarray['subfields']);
+        foreach ($select as $field => $selectFieldConfig) {
+            $driverFields = $this->driver->getMarcRecord()->getFields($field);
 
-        return  $this->driver->tryMethod('getLocalValues',$diffArrayInCorrectOrder);
+            if (!empty($driverFields)) {
+                /** @var \File_MARC_Data_Field $marcDataField */
+                foreach ($driverFields as $marcDataField) {
+                    $url = $this->getFirstSubfieldMatch($selectFieldConfig['url'], $marcDataField);
 
+                    if ($url === null) continue;
 
+                    if (!$this->matchesConditions($selectFieldConfig['conditions'], $marcDataField) ||
+                        isset($exclude[$field]) && $this->matchesConditions($exclude[$field], $marcDataField)) continue;
+
+                    $desc = $this->getFirstSubfieldMatch($selectFieldConfig['desc'], $marcDataField);
+
+                    if ($desc === null) {
+                        $desc = $url;
+                    };
+
+                    $filteredLinks[] = ['url' => $url, 'desc' => $desc];
+                }
+            }
+        }
+
+        return $this->mergeLinksByDescription($this->createUniqueLinks($filteredLinks));
     }
 
     /**
+     * createUniqueLinks
+     * Default: when $urlArray contains multiple links with identical URL strings
+     * only the first will be kept.
+     * Overwrite configuration in local config.ini if you want to display all URLs
+     *
      * @param $urlArray
      * @return array
      *
-     * Default: when $urlArray contains multiple links with the same URL,
-     * only the first will be kept.
-     *
-     * If you prefer to display all links, define this value in config.ini:
-     * [Record]
-     * create_multiple_856_links = true
-     *
      */
-    private function createUniqueLinks($urlArray) {
+    private function createUniqueLinks($urlArray)
+    {
+        $urlArray = $this->getCorrectedURLS($urlArray);
 
-        $config = $this->driver->getServiceLocator()->get('VuFind\Config')->get('config');
-        if ( $config ) {
-            $config = $config->get('Record');
-            if ( $config ) {
-                $config = $config->get('create_multiple_856_links');
-                if ( $config ) {
-                    return $urlArray;
+        $config = $this->config->get('Record')->get('display_identical_urls');
+        if ($config) {
+            return $urlArray;
+        }
+        else {
+            $uniqueURLs = [];
+            $collectedArrays = [];
+            foreach ($urlArray as $url) {
+                if (!array_key_exists($url['url'],$uniqueURLs)) {
+                    $uniqueURLs[$url['url']] = "";
+                    $collectedArrays[] = $url;
                 }
             }
+            return $collectedArrays;
         }
-
-        $uniqueURLs = array();
-        $collectedArrays = array();
-
-        foreach ($urlArray as $url) {
-            if (!array_key_exists($url['url'],$uniqueURLs)) {
-                $uniqueURLs[$url['url']] = "";
-                $collectedArrays[] = $url;
-            }
-        }
-
-        return $collectedArrays;
     }
 
     /**
-     * Get all the links associated with this record.  Returns an array of
-     * associative arrays each containing 'desc' and 'url' keys.
+     * get corrected URLs
+     * changes content in URL, at the moment, just one case from helveticarchives
+     *
+     * @param $urlArray
      *
      * @return array
      */
-    public function getExtendedLinkDetails($localRestrictions = array(), $globalRestrictions = array())
+    private function getCorrectedURLS($urlArray)
     {
-        // See if there are any links available:
+        $newUrlArray = [];
 
-        if (empty($localRestrictions)) {
-            $localtags = array('856','956');
-
-            //$indicators = array('7','-');
-            //$params = compact('unions' => array(),'700',array('1','-'),array('a','x'));
-            //$params = compact('localtags','indicators');
-            $params = compact('localtags');
-            $linksInLocalFields = $this->getLocalValues($params);
-
-        } else {
-            $linksInLocalFields = $this->getLocalValues($localRestrictions);
+        foreach ($urlArray as $url) {
+            $url['url'] = preg_replace('/www\.helveticarchives\.ch\/getimage/', 'www.helveticarchives.ch/bild', $url['url']);
+            $newUrlArray[] = $url;
         }
-
-
-        $collectedLinks = array();
-
-        foreach ($linksInLocalFields as $linkData) {
-
-            $linkID = $linkData['subfields']['u'];
-            $linkDescription = $linkData['subfields']['z'];
-            if ($linkID) {
-                if (! $linkDescription) {
-                    $linkDescription = $linkID;
-                }
-                $collectedLinks[] = array('url' => $linkID, 'desc' => $linkDescription);
-            }
-
-        }
-
-        if (empty($globalRestrictions)) {
-            //fetch 'all' the links you can find in 856 / 956
-            $urls = $this->driver->tryMethod('getURLs');
-            $collectedLinks = array_merge($collectedLinks,$urls);
-        } else {
-
-            $allParamsGlobalTags = array('globalunions' => array(), 'tags'  => array());
-            $diffarray =  array_merge(array_diff_key($allParamsGlobalTags, $globalRestrictions),$globalRestrictions);
-            $diffArrayInCorrectOrder = array('globalunions' => $diffarray['globalunions'],'tags' => $diffarray['tags']);
-
-            $urls =  $this->driver->tryMethod('getExtendedURLs',$diffArrayInCorrectOrder);
-            $collectedLinks = array_merge($collectedLinks,$urls);
-
-        }
-
-
-        // If we found links, we may need to convert from the "route" format
-        // to the "full URL" format.
-        $urlHelper = $this->getView()->plugin('url');
-        $serverUrlHelper = $this->getView()->plugin('serverurl');
-        $formatLink = function ($link) use ($urlHelper, $serverUrlHelper) {
-            // Error if route AND URL are missing at this point!
-            if (!isset($link['route']) && !isset($link['url'])) {
-                throw new \Exception('Invalid URL array.');
-            }
-
-            // Build URL from route/query details if missing:
-            if (!isset($link['url'])) {
-                $routeParams = isset($link['routeParams'])
-                    ? $link['routeParams'] : array();
-
-                $link['url'] = $serverUrlHelper(
-                    $urlHelper($link['route'], $routeParams)
-                );
-                if (isset($link['queryString'])) {
-                    $link['url'] .= $link['queryString'];
-                }
-            }
-
-            // Apply prefix if found
-            if (isset($link['prefix'])) {
-                $link['url'] = $link['prefix'] . $link['url'];
-            }
-            // Use URL as description if missing:
-            if (!isset($link['desc'])) {
-                $link['desc'] = $link['url'];
-            }
-
-            return $link;
-        };
-
-        return $this->createUniqueLinks(array_map($formatLink, $collectedLinks));
-
-
+        return $newUrlArray;
     }
 
+
+    /**
+     * @param array $links
+     * @return array
+     */
+    private function mergeLinksByDescription(array $links) {
+        if (empty($this->urlFilter[$this->config->Site->theme]['mergeLinksByDescription'])) return $links;
+
+        $mergeLinksByDescription = $this->urlFilter[$this->config->Site->theme]['mergeLinksByDescription'];
+        $filteredLinks = [];
+        $preferredLinks = [];
+
+        foreach($links as $link) {
+            $isPreferredLink = false;
+
+            foreach($mergeLinksByDescription as $index => $description) {
+                if (preg_match('/' . $description . '/', $link['desc'])) {
+                    $preferredLinks[$index] = $link;
+                    $isPreferredLink = true;
+                }
+            }
+
+            if (!$isPreferredLink) $filteredLinks[] = $link;
+        }
+
+        if (!empty($preferredLinks)) {
+            ksort($preferredLinks);
+            $filteredLinks[] = reset($preferredLinks);
+        }
+
+        return $filteredLinks;
+    }
+
+    /**
+     * @param array $fields
+     * @param \File_MARC_Data_Field $marcDataField
+     *
+     * @return null|string
+     */
+    private function getFirstSubfieldMatch(array $fields, \File_MARC_Data_Field $marcDataField)
+    {
+        foreach ($fields as $field) {
+            if ($marcDataField->getSubfield($field)) {
+                return $marcDataField->getSubfield($field)->getData();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array $conditions
+     * @param \File_MARC_Data_Field $marcRecord
+     *
+     * @return bool
+     */
+    private function matchesConditions(array $conditions, \File_MARC_Data_Field $marcRecord)
+    {
+        if (empty($conditions)) return true;
+
+        $matchesOr = false;
+        $orConditionsCount = count($conditions);
+        $i=0;
+
+        while (!$matchesOr && $i < $orConditionsCount) {
+            $j=0;
+            $matchesAnd = true;
+            $andConditions = explode('&&', $conditions[$i]);
+            $andConditionsCount = count($andConditions);
+
+            while ($matchesAnd && $j < $andConditionsCount) {
+                list($subfieldKey, $subfieldValue) = explode('|', $andConditions[$j]);
+                $subfield = $marcRecord->getSubfield(trim($subfieldKey));
+
+                $matchesAnd = $subfield && preg_match('/' . trim($subfieldValue) . '/', $subfield->getData());
+
+                $j++;
+            }
+
+            $matchesOr = $matchesOr || $matchesAnd;
+
+            $i++;
+        }
+
+        return $matchesOr;
+    }
 
 
     /**
@@ -164,7 +318,6 @@ class Record extends VuFindRecord
      *
      * @return string
      */
-
     public function getFormatClass($format)
     {
         if (!($this->driver instanceof \Swissbib\RecordDriver\SolrMarc) || !$this->driver->getUseMostSpecificFormat()) return parent::getFormatClass($format);
@@ -180,7 +333,6 @@ class Record extends VuFindRecord
      *
      * @return string
      */
-
     public function getSubtitle($titleStatement)
     {
         $parts = $parts_amount = $parts_name = $title_remainder = null;
@@ -243,10 +395,9 @@ class Record extends VuFindRecord
      *
      * @return string
      */
-    
     public function getResponsible($titleStatement, $record)
     {
-        if ($record instanceof Summon)
+        if ($record instanceof \VuFind\RecordDriver\Summon)
         {
             if ($record->getAuthor()) {
                 return $record->getAuthor();
@@ -342,11 +493,44 @@ class Record extends VuFindRecord
      * @param string $tab
      * @return string
      */
-    public function getTabVisibility($tab) {
+    public function getTabVisibility($tab)
+    {
         if (isset($this->config->RecordTabVisiblity->$tab)) {
             return $this->config->RecordTabVisiblity->$tab;
         };
 
         return '';
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOpenUrl()
+    {
+        return $this->driver instanceof \VuFind\RecordDriver\Summon ? $this->driver->getOpenURL() : null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLink360()
+    {
+        return $this->driver instanceof \Swissbib\RecordDriver\Summon ? $this->driver->getLink() : null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLinkSFX()
+    {
+        if ( !($this->driver instanceof \VuFind\RecordDriver\Summon) ) return null;
+
+        $linkSFX = $this->view->openUrl($this->driver->getOpenURL());
+        $linkSFX_param = 'title = "' . $this->view->transEsc('articles.linkSFX') . '" target="_blank"';
+        $linkSFX = str_replace("<a ", "<a $linkSFX_param ", $linkSFX);
+        $linkSFX = str_replace($this->view->transEsc('Get full text'), "SFX Services", $linkSFX);
+        $linkSFX = str_replace('class="openUrl"', 'class="openUrl hidden"', $linkSFX);
+
+        return $linkSFX;
     }
 }

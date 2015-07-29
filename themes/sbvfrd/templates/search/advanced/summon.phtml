@@ -7,7 +7,7 @@
     <? endif; ?>
     <div class="row">
       <? foreach ($this->facetList as $field => $list): ?>
-        <div class="col-sm-<?=floor(12/count($this->facetList)) ?>">
+        <div class="col-sm-6">
           <label for="limit_<?=$this->escapeHtmlAttr(str_replace(' ', '', $field))?>"><?=$this->transEsc($list['label'])?></label>
           <select class="form-control" id="limit_<?=$this->escapeHtmlAttr(str_replace(' ', '', $field))?>" name="filter[]" multiple="multiple" size="10">
             <?
@@ -27,13 +27,11 @@
           </select>
         </div>
       <? endforeach; ?>
+      <? endif; ?>
+        <div class="col-sm-6">
+            <?=$this->render('search/advanced/ranges.phtml')?>
+            <?=$this->render('search/advanced/limit.phtml')?>
+        </div>
     </div>
   </fieldset>
-</div>
-<hr />
-<? endif; ?>
-
-<div class="row">
-  <?=$this->render('search/advanced/limit.phtml')?>
-  <?=$this->render('search/advanced/ranges.phtml')?>
 </div>

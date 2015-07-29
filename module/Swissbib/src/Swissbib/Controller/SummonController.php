@@ -7,6 +7,7 @@ use Zend\Http\PhpEnvironment\Response;
 
 use VuFind\Solr\Utils as SolrUtils;
 use VuFind\Controller\SummonController as VuFindSummonController;
+use Zend\Stdlib\Parameters;
 
 class SummonController extends VuFindSummonController
 {
@@ -51,29 +52,6 @@ class SummonController extends VuFindSummonController
         $results->restoreServiceLocator($this->getServiceLocator());
 
         return $results;
-    }
-
-
-    /**
-     * Get results manager
-     * If target is extended, get a customized manager
-     * @todo  Same method as in Swissbib/Controller/SearchController. Extract!
-     * @return    VuFindSearchResultsPluginManager|SwissbibSearchResultsPluginManager
-     */
-    protected function getResultsManager()
-    {
-        if (!isset($this->extendedTargets)) {
-            $mainConfig = $this->getServiceLocator()->get('Vufind\Config')->get('config');
-            $extendedTargetsSearchClassList = $mainConfig->SwissbibSearchExtensions->extendedTargets;
-
-            $this->extendedTargets = array_map('trim', explode(',', $extendedTargetsSearchClassList));
-        }
-
-        if (in_array($this->searchClassId, $this->extendedTargets)) {
-            return $this->getServiceLocator()->get('Swissbib\SearchResultsPluginManager');
-        }
-
-        return parent::getResultsManager();
     }
 
 
@@ -147,6 +125,34 @@ class SummonController extends VuFindSummonController
     $external = $targetsProxy->detectTarget() === false ? true : false;
     return $external;
     }
+
+
+
+    /**
+     * Render advanced search
+     *
+     * @return    ViewModel
+     */
+    public function advancedAction()
+    {
+        $viewModel              = parent::advancedAction();
+
+        //GH: We need this initialization only to handle personal limit an sort settings for logged in users
+        $viewModel->options     = $this->getServiceLocator()->get('VuFind\SearchOptionsPluginManager')->get($this->searchClassId);
+        $results                = $this->getResultsManager()->get($this->searchClassId);
+        $params = $results->getParams();
+        $requestParams = new Parameters(
+            $this->getRequest()->getQuery()->toArray()
+            + $this->getRequest()->getPost()->toArray()
+        );
+
+        $params->initLimitAdvancedSearch($requestParams);
+        $viewModel->setVariable('params', $params);
+
+
+        return $viewModel;
+    }
+
 
 
     /**

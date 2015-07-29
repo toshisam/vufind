@@ -90,7 +90,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         'Series', 'AltTitle', 'NewerTitles', 'PreviousTitles',
         'GeneralNotes', 'DissertationNotes', 'BibliographyNotes', 'AccessRestrictions',
         'ProductionCredits', 'OriginalTitle', 'PerformerNote', 'Awards', 'CitationNotes',
-        'OriginalVersionNotes', 'CopyNotes', 'SystemDetails'
+        'OriginalVersionNotes', 'CopyNotes', 'SystemDetails', 'RelationshipNotes'
     );
 
 
@@ -337,7 +337,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
         // Which fields/subfields should we check for URLs?
         $fieldsToCheck = array(
-            '856' => array('u', 'z'), // Standard URL
+            '856' => array('u', '3', 'z'), // Standard URL
             '956' => array('u', 'y'), // Standard URL
             //'555' => array('a')         // Cumulative index/finding aids
         );
@@ -354,6 +354,11 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                         $tSubField = end($subfields);
 
                         $descSubField = $url->getSubfield($tSubField);
+
+                        // if no content in subfield z/y, try subfield 3
+                        if (!$descSubField) {
+                            $descSubField = $url->getSubfield('3');
+                        }
 
                         $desc = $address;
                         if ($descSubField) {
@@ -612,22 +617,22 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                     . $field['URL']
                         . '&scale=1&reqServicename=ImageTransformer';
                 }
-        } elseif ($field['union'] === 'SGBN' && $field['type'] === 'jpg') {
+        } elseif ($field['union'] === 'SGBN' && mb_strtoupper($field['type']) === 'JPG') {
                 $dirpath = preg_replace('/^.*sgb50/', '', $field['directory']);
             $dirpath = empty($dirpath) ? $dirpath : substr($dirpath, 1) . '/';
             $thumbnailURL = 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath=http://aleph.sg.ch/adam/'
                 . $dirpath
                 . $field['filename']
                 . '&scale=1';
-            } elseif ($field['union'] === 'BGR' && $field['type'] === 'jpg') {
+            } elseif ($field['union'] === 'BGR' && mb_strtoupper($field['type']) === 'JPG') {
                 $dirpath = substr($field['directory'], 29);
             $thumbnailURL = 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath=http://aleph.gr.ch/adam/'
                 . $dirpath . '/'
                 . $field['filename']
                 . '&scale=1';
             }
-            elseif ($field['ADM'] === 'ZAD50') {
-                if (preg_match('/^.*thumbnail/', $field['directory'])) {
+            elseif (isset($field['ADM']) &&  $field['ADM'] === 'ZAD50') {
+                if (array_key_exists('directory',$field) && preg_match('/^.*thumbnail/', $field['directory'])) {
                     $dirpath = preg_replace('/^.*thumbnail/', '', $field['directory']);
                     $dirpath = empty($dirpath) ? $dirpath : substr($dirpath, 1) . '/';
                     $thumbnailURL = 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath=http://opac.nebis.ch/thumb_zb/'
@@ -636,12 +641,12 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                         . '&scale=1';
                 }
             }
-            elseif ($field['institution'] === 'E45' && $field['usage'] === 'VIEW') {
+            elseif (isset($field['institution']) &&  $field['institution'] === 'E45' && $field['usage'] === 'VIEW') {
                 $thumbnailURL = 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath='
                 . $field['URL']
                     . '&scale=1&reqServicename=ImageTransformer';
             }
-            elseif ($field['institution'] === 'ECOD' && $field['usage'] === 'THUMBNAIL') {
+            elseif (isset($field['institution']) && $field['institution'] === 'ECOD' && $field['usage'] === 'THUMBNAIL') {
                 $thumbnailURL = 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath='
                     . $field['URL']
                     . '&scale=1&reqServicename=ImageTransformer';
@@ -663,6 +668,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             return array();
         }
         foreach ($fields as $field) {
+            if (!isset($field['union'])) continue;
+
             if ($field['union'] === 'RERO' && $field['tag'] === '856') {
                 if (preg_match('/^.*v_bcu\/media\/images/', $field['sf_u'])) {
                     return 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath='
@@ -859,11 +866,17 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getMostSpecificFormat()
     {
-        $formatsRaw = $this->fields["format_str_mv"];
-        natsort($formatsRaw);
-        $formatsRaw = array_values(array_reverse($formatsRaw));
+        if (isset($this->fields["format_str_mv"])) {
+            $formatsRaw = $this->fields["format_str_mv"];
+            natsort($formatsRaw);
+            $formatsRaw = array_values(array_reverse($formatsRaw));
 
-        return array($formatsRaw[0]);
+            return array($formatsRaw[0]);
+
+        } else {
+            return [];
+        }
+
     }
 
 
@@ -1579,7 +1592,9 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         if ($asStrings) {
             $strings = array();
             foreach ($descriptions as $description) {
-                $strings[] = $description['extent'][0];
+                if (isset($description['extent']) && isset($description['extent'][0])) {
+                    $strings[] = $description['extent'][0];
+                }
             }
             $descriptions = $strings;
         }
@@ -1985,7 +2000,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get table of content
-     * This method is also used to check whether data for tab is available and the tab should be displayed
+     * This method is used to check whether data for tab is available and the tab should be displayed
+     * Differs functionally from parent as we display more information in toc.phtml
      *
      * @return    String[]
      */
@@ -2091,7 +2107,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get content summary
-     * From fields 520.a
+     * From fields 520
      *
      * @return    String[]
      */
@@ -2135,7 +2151,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      * @param    \File_MARC_Data_Field $field
      * @param    String $fieldIndex
      */
-    protected function getFieldData($field, $fieldIndex)
+    protected function getFieldData($field)
     {
         // Make sure that there is a t field to be displayed:
         if ($title = $field->getSubfield('t')) {
@@ -2174,7 +2190,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         }
 
         // Fallback to base method if no custom field found
-        return parent::getFieldData($field, $fieldIndex);
+        return parent::getFieldData($field);
     }
 
 

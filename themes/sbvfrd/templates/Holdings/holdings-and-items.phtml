@@ -5,20 +5,30 @@
 /** @var String $recordTitle */
 
 $idTable = 'holdings-holding-' . $record . '-' . $institution;
+$flippedContent = '';
+
+$headers = [
+  'actions' => '&nbsp;',
+  'availability' => $this->transEsc('Availability'),
+  'location' => $this->transEsc('Location'),
+  'callnr' => $this->transEsc('Call Number'),
+  'description' => $this->transEsc('Description')
+];
+
 ?>
-<table class="table table-striped holdings-holding holdingTable" id="<?= $this->escapeHtml($idTable) ?>">
+<table class="table table-striped holdings-holding holdingTable hidden-xs hidden-sm" id="<?= $this->escapeHtml($idTable) ?>">
     <thead>
     <tr>
         <th class="actions">&nbsp;</th>
         <th class="availability"><?= $this->transEsc('Availability') ?></th>
         <th class="location"><?= $this->transEsc('Location') ?></th>
         <th class="callnr"><?= $this->transEsc('Call Number') ?></th>
-        <th class="qr visible-lg"><?= $this->transEsc('hold_qr') ?></th>
         <th class="description"><?= $this->transEsc('Description') ?></th>
     </tr>
     </thead>
     <tbody>
     <?php
+    $index = 0;
     if (!empty($holdings)) {
         foreach ($holdings as $holding) {
             echo $this->render(
@@ -27,6 +37,16 @@ $idTable = 'holdings-holding-' . $record . '-' . $institution;
                     'holding'     => $holding,
                     'record'      => $record,
                     'recordTitle' => $recordTitle
+                )
+            );
+            $flippedContent .= $this->render(
+                'Holdings/holding-holding-flipped.phtml',
+                array(
+                    'holding'     => $holding,
+                    'record'      => $record,
+                    'recordTitle' => $recordTitle,
+                    'headers'     => $headers,
+                    'even'        => (0 === $index++ % 2)
                 )
             );
         }
@@ -41,8 +61,20 @@ $idTable = 'holdings-holding-' . $record . '-' . $institution;
                     'recordTitle' => $recordTitle
                 )
             );
+
+            $flippedContent .= $this->render(
+                'Holdings/holding-item-flipped.phtml',
+                array(
+                    'item'        => $item,
+                    'record'      => $record,
+                    'recordTitle' => $recordTitle,
+                    'headers'     => $headers,
+                    'even'        => (0 === $index++ % 2)
+                )
+            );
         }
     }
     ?>
     </tbody>
 </table>
+<?= $flippedContent; ?>

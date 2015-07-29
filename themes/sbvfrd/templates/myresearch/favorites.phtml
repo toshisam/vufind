@@ -10,11 +10,11 @@ $this->layout()->breadcrumbs = '<li><a href="' . $this->url('myresearch-home') .
 $isLoggedIn = !!$this->auth()->isLoggedIn();
 ?>
 
-<div class="<?= $this->layoutClass('mainbody') ?>">
-  <h2><?= $this->transEsc('mylibraries') ?></h2>
+<div class="<?= $this->layoutClass('mainbody') ?> favorites">
+  <h3><?= $this->transEsc('mylibraries') ?></h3>
   <?= $this->flashmessages(); ?>
 
-  <h3><?= $this->transEsc('mylibraries.add') ?></h3>
+  <h4><?= $this->transEsc('mylibraries.add') ?></h4>
   <div class="panel panel-default">
 
     <form class="form-horizontal panel-body">
