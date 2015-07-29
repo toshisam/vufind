@@ -187,12 +187,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                         $params['rft.au'][] = $author;
                     }
                 }
-                $addcorporations = $this->getCorporationNames(true);
-                if (!empty($addcorporations)) {
-                    foreach ($addcorporations as $addcorporation) {
-                        $corporations[] = $addcorporation;
-                    }
-                }
+                $corporations = $this->getCorporationNames(true);
                 if (!empty($corporations)) {
                     foreach ($corporations as $corporation) {
                         $params['rft.aucorp '][] = $corporation;
