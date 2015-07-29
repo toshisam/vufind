@@ -131,9 +131,6 @@ if (is_array($urls)) {
     echo 'url = ' . '{' . $urlvalue . '}' . ",\n";
 }
 
-
-//echo "crossref = {" . $this->serverUrl($this->recordLink()->getUrl($this->driver)) . "},\n";
-
 $isbns = $this->driver->tryMethod('getISBNs');
 if (is_array($isbns)) {
     foreach ($isbns as $isbn) {
