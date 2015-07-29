@@ -204,7 +204,7 @@ class RecordController extends VuFindRecordController
 
                 // Success: Go to Display Holds
                 if (isset($results['success']) && $results['success'] == true) {
-                    $this->flashMessenger()->setNamespace('info')
+                    $this->flashMessenger()->setNamespace('success')
                         ->addMessage('hold_place_success');
                     if ($this->inLightbox()) {
                         return false;
@@ -295,7 +295,7 @@ class RecordController extends VuFindRecordController
 
                     $this->getILS()->putCopy($patron, $recordId, $itemId, $copyForm->getData());
 
-                    $this->flashMessenger()->setNamespace('info')->addMessage('copy_place_success');
+                    $this->flashMessenger()->setNamespace('success')->addMessage('copy_place_success');
 
                     return $this->redirectToRecord();
                 } else {
