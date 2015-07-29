@@ -6,27 +6,27 @@
       <?=$this->render('search/advanced/checkbox-filters.phtml')?>
     <? endif; ?>
     <div class="row">
-      <? foreach ($this->facetList as $field => $list): ?>
-        <div class="col-sm-6">
-          <label for="limit_<?=$this->escapeHtmlAttr(str_replace(' ', '', $field))?>"><?=$this->transEsc($list['label'])?></label>
-          <select class="form-control" id="limit_<?=$this->escapeHtmlAttr(str_replace(' ', '', $field))?>" name="filter[]" multiple="multiple" size="10">
-            <?
-              // Sort the current facet list alphabetically; we'll use this data
-              // along with the foreach below to display facet options in the
-              // correct order.
-              $sorted = array();
-              foreach ($list['list'] as $i => $value) {
-                $sorted[$i] = $value['displayText'];
-              }
-              natcasesort($sorted);
-            ?>
-            <? foreach ($sorted as $i => $display): ?>
-              <? $value = $list['list'][$i]; ?>
-              <option value="<?=$this->escapeHtmlAttr(($value['operator'] == 'OR' ? '~' : '') . $field . ':"' . $value['value'] . '"')?>"<?=(isset($value['selected']) && $value['selected'])?' selected="selected"':''?>><?=$this->escapeHtml($display)?></option>
-            <? endforeach; ?>
-          </select>
-        </div>
-      <? endforeach; ?>
+      <div class="col-sm-6">
+        <? foreach ($this->facetList as $field => $list): ?>
+            <label for="limit_<?=$this->escapeHtmlAttr(str_replace(' ', '', $field))?>"><?=$this->transEsc($list['label'])?></label>
+            <select class="form-control chosen-select" data-placeholder="<?=$this->transEsc('Select' . $list['label'] . 'Placeholder')?>" id="limit_<?=$this->escapeHtmlAttr(str_replace(' ', '', $field))?>" name="filter[]" multiple="multiple" size="10">
+              <?
+                // Sort the current facet list alphabetically; we'll use this data
+                // along with the foreach below to display facet options in the
+                // correct order.
+                $sorted = array();
+                foreach ($list['list'] as $i => $value) {
+                  $sorted[$i] = $value['displayText'];
+                }
+                natcasesort($sorted);
+              ?>
+              <? foreach ($sorted as $i => $display): ?>
+                <? $value = $list['list'][$i]; ?>
+                <option value="<?=$this->escapeHtmlAttr(($value['operator'] == 'OR' ? '~' : '') . $field . ':"' . $value['value'] . '"')?>"<?=(isset($value['selected']) && $value['selected'])?' selected="selected"':''?>><?=$this->escapeHtml($display)?></option>
+              <? endforeach; ?>
+            </select>
+        <? endforeach; ?>
+      </div>
       <? endif; ?>
         <div class="col-sm-6">
             <?=$this->render('search/advanced/ranges.phtml')?>
