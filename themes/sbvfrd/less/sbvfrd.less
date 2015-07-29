@@ -720,6 +720,10 @@ ul[aria-labelledby=dropdownLibraries] {
   .tt-hint {
     display: none;
   }
+  .tt-suggestion.tt-cursor {
+    color: @white;
+    background-color: @link-color;
+  }
 }
 
 /* detail toolbar */
@@ -829,11 +833,6 @@ ul[aria-labelledby=dropdownLibraries] {
 
 .tab-content {
   min-height: 100px;
-}
-
-
-.holdingsAjaxSpinner {
-  display: none;
 }
 
 div.memorize {
@@ -949,6 +948,7 @@ div.memorize {
   min-height: 320px;
   max-width: 95%;
   margin-top: 30px;
+  margin-left: -15px;
   border-radius: 2px;
   padding: 20px 20px 0 20px;
 
@@ -1321,22 +1321,35 @@ footer {
 }
 
 /* jusbib classification tree tabs */
-#tabbed-tree.tabs > .nav.nav-tabs {
-  border: none;
-  margin: 20px 0;
+#tabbed-tree.tabs {
+  &  > .nav.nav-tabs {
+    border: none;
+    margin: 20px 0;
 
-  & > li {
-    & > a {
-      border-bottom-left-radius: 2px;
-      border-bottom-right-radius: 2px;
+    & > li {
+      & > a {
+        border-bottom-left-radius: 2px;
+        border-bottom-right-radius: 2px;
+        border: none;
+      }
+    }
+    & > li:active, & > li.active,
+    & > li:focus,
+    & > li:hover {
+      & > a {
+        color: @white;
+        border: none;
+        background-color: @theme-color;
+        font-weight: inherit;
+      }
     }
   }
-  & > li:active, & > li.ui-state-active,
-  & > li:focus, & > li.ui-state-focus,
-  & > li:hover, & > li.ui-state-hover {
-    & > a {
-      background-color: @theme-color;
-      font-weight: inherit;
+
+  & > .tab-content > div {
+    display: none;
+
+    &.active {
+      display: block;
     }
   }
 }
