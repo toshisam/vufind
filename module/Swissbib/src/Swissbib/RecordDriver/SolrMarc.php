@@ -74,8 +74,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         'q' => 'fullername',
         'D' => 'forname',
         't' => 'title_of_work',
+        '4' => 'relator_code',
         '_8' => 'extras',
-        '9' => 'unknownNumber'
+        '9' => 'unknownNumber',
+        'P' => 'originField', // swissbib specific subfield, indicates original tag of park field. Only in use for field 950
     ];
 
     /*
@@ -105,7 +107,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         '3' => 'materials_specified',
         '4' => 'relator_code',
         '5' => 'institution',
-        '_8' => 'label'
+        '_8' => 'label',
+        'P' => 'originField', // swissbib specific subfield, indicates original tag of park field. Only in use for field 950
     ];
 
     protected $protocolWrapper = null;
@@ -1021,9 +1024,27 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         return $this->getMarcSubFieldMaps(710, $this->corporationFieldMap);
     }
 
+    /**
+     * Get entries for related personal and corporate entries
+     *
+     * @return array
+     */
+    public function getRelatedEntries()
+    {
+        $related = explode(',', $this->mainConfig->RelatedEntries->related);
+        $related_persons = $this->getMarcSubFieldMaps('700', $this->personFieldMap);
+        $related_corporations = $this->getMarcSubFieldMaps('710', $this->corporationFieldMap);
+
+        //return array_filter($fields, function($field) use ($related) {
+        //    $test = isset($field['relator_code']) && in_array($field['relator_code'], $related);
+        //    return isset($field['relation']) && in_array($field['relation'], $related);
+        //});
+        return null;
+    }
+
 
     /**
-     * Get sub title
+     * Get subtitle
      *
      * @param    Boolean $full Get full field data. Else only field c is fetched
      * @return    String|String[]
@@ -1746,7 +1767,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     protected function getMarcSubFieldMaps($index, array $fieldMap, $includeIndicators = true)
     {
-        $subFieldsValues = array();
+        $subFieldsValues = [];
         $fields = $this->marcRecord->getFields($index);
 
         foreach ($fields as $field) {
@@ -2259,24 +2280,5 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         return false;
     }
 
-    /**
-     * @return array
-     */
-    public function getRelatedEntries()
-    {
-        $related = explode(',', $this->mainConfig->RelatedEntries->related);
-        $allowedFields = ['700', '710'];
-        $fields = $this->getMarcSubFieldMaps('950', [
-            'a' => 'name',
-            'D' => 'secondName',
-            '4' => 'relation',
-            'P' => 'originField',
-        ]);
 
-        return array_filter($fields, function($field) use ($related, $allowedFields) {
-            return isset($field['relation']) && isset($field['originField']) &&
-                in_array($field['originField'], $allowedFields) &&
-                in_array($field['relation'], $related);
-        });
-    }
 }
