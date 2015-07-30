@@ -62,15 +62,16 @@ if (is_array($series)) {
     }
 }
 
-$author = $this->driver->tryMethod('getPrimaryAuthor');
-if (!empty($author)) {
-    echo "author = {{$author}},\n";
-}
-
-$secondaryAuthors = $this->driver->tryMethod('getSecondaryAuthors');
-if (is_array($secondaryAuthors)) {
-    foreach ($secondaryAuthors as $current) {
-        echo "editor = {{$current}},\n";
+$authors = $this->driver->tryMethod('getDeduplicatedAuthors');
+if (is_array($authors)) {
+    if (!empty($authors['main']))
+        echo "author = {{$authors['main']}},\n";
+    if (!empty($authors['corporate']))
+        echo "author = {{$authors['corporate']}},\n";
+    if (is_array($authors['secondary']) && !empty($authors['secondary'])) {
+        foreach ($authors['secondary'] as $current) {
+            echo "editor = {{$current}},\n";
+        }
     }
 }
 
