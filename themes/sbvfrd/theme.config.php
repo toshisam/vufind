@@ -17,7 +17,7 @@ return array(
     'vendor/respond/respond.js:lt IE 9',
     'vendor/html5shiv/html5shiv.js:lt IE 9',
 
-    '/themes/bootstrap3/js/vendor/jsTree/jstree.min.js',
+    'vendor/jsTree/jstree.min.js',
 
     'swissbib/swissbib.js',
     'swissbib/common.js',
