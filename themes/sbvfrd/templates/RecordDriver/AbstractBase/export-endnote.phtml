@@ -78,6 +78,19 @@ $title = rtrim($this->driver->getTitle(), " /");
 echo "%T $title\n";
 
 $journalTitle = $this->driver->tryMethod('getContainerTitle');
+
+if (empty($journalTitle)) {
+    $hostItems = $this->driver->tryMethod('getHostItemEntry');
+    if (!empty($hostItems)) {
+        foreach ($hostItems as $hostItem) {
+            echo "%J {$hostItem['title']},\n";
+            if (!empty($hostItem['related'])) {
+                echo "%V = {$hostItem['related']},\n";
+            }
+        }
+    }
+}
+
 if (!empty($journalTitle)) {
     echo "%J $journalTitle\n";
     $volume = $this->driver->tryMethod('getContainerVolume');

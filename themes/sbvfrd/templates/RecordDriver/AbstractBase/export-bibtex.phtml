@@ -32,6 +32,18 @@ echo $this->driver->getResourceSource() . '-' .  $this->driver->getUniqueId() . 
 $title = rtrim($this->driver->getTitle(), " /");
 echo "title = {{$title}},\n";
 
+if (empty($journalTitle)) {
+    $hostItems = $this->driver->tryMethod('getHostItemEntry');
+    if (!empty($hostItems)) {
+        foreach ($hostItems as $hostItem) {
+            echo "journal = {{$hostItem['title']}},\n";
+            if (!empty($hostItem['related'])) {
+                echo "volume = {{$hostItem['related']}},\n";
+            }
+        }
+    }
+}
+
 if (!empty($journalTitle)) {
     echo "journal = {{$journalTitle}},\n";
     $volume = $this->driver->tryMethod('getContainerVolume');
