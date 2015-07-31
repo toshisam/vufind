@@ -32,6 +32,18 @@ echo $this->driver->getResourceSource() . '-' .  $this->driver->getUniqueId() . 
 $title = rtrim($this->driver->getTitle(), " /");
 echo "title = {{$title}},\n";
 
+if (empty($journalTitle)) {
+    $hostItems = $this->driver->tryMethod('getHostItemEntry');
+    if (!empty($hostItems)) {
+        foreach ($hostItems as $hostItem) {
+            echo "journal = {{$hostItem['title']}},\n";
+            if (!empty($hostItem['related'])) {
+                echo "volume = {{$hostItem['related']}},\n";
+            }
+        }
+    }
+}
+
 if (!empty($journalTitle)) {
     echo "journal = {{$journalTitle}},\n";
     $volume = $this->driver->tryMethod('getContainerVolume');
@@ -62,15 +74,16 @@ if (is_array($series)) {
     }
 }
 
-$author = $this->driver->tryMethod('getPrimaryAuthor');
-if (!empty($author)) {
-    echo "author = {{$author}},\n";
-}
-
-$secondaryAuthors = $this->driver->tryMethod('getSecondaryAuthors');
-if (is_array($secondaryAuthors)) {
-    foreach ($secondaryAuthors as $current) {
-        echo "editor = {{$current}},\n";
+$authors = $this->driver->tryMethod('getDeduplicatedAuthors');
+if (is_array($authors)) {
+    if (!empty($authors['main']))
+        echo "author = {{$authors['main']}},\n";
+    if (!empty($authors['corporate']))
+        echo "author = {{$authors['corporate']}},\n";
+    if (is_array($authors['secondary']) && !empty($authors['secondary'])) {
+        foreach ($authors['secondary'] as $current) {
+            echo "editor = {{$current}},\n";
+        }
     }
 }
 

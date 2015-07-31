@@ -83,6 +83,29 @@ p {
   background: @link-color;
 }
 
+.alert {
+  padding: 15px;
+  margin: 20px 0;
+  border: none;
+  border-radius: 0;
+}
+
+.alert.alert-success {
+  border-left: 5px solid @state-success-border;
+}
+
+.alert.alert-info {
+  border-left: 5px solid @state-info-border;
+}
+
+.alert.alert-warning {
+  border-left: 5px solid @state-warning-border;
+}
+
+.alert.alert-danger {
+  border-left: 5px solid @state-danger-border;
+}
+
 /* btn styles */
 .btn-primary,
 .pager li & > a,

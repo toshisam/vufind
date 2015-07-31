@@ -10,13 +10,14 @@ return array(
   'js'      => array(
     'vendor/jquery/plugin/jquery.cookie.js',
     'vendor/jquery/plugin/loadmask/jquery.loadmask.js',
+    'vendor/chosen/chosen.jquery.min.js',
 
     'vendor/jstorage/jstorage.min.js', //used for favorites - there is still some amount of JS code inline of the page -> Todo: Refactoring in upcoming Sprints
     'vendor/handlebars/handlebars.js', //wird in swissbib/AdvancedSearch.js verwendet
     'vendor/respond/respond.js:lt IE 9',
     'vendor/html5shiv/html5shiv.js:lt IE 9',
 
-    '/themes/bootstrap3/js/vendor/jsTree/jstree.min.js',
+    'vendor/jsTree/jstree.min.js',
 
     'swissbib/swissbib.js',
     'swissbib/common.js',

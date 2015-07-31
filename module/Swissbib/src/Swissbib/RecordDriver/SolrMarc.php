@@ -80,6 +80,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         'P' => 'originField', // swissbib specific subfield, indicates original tag of park field. Only in use for field 950
     ];
 
+
     /*
      * @var Array used for field 110/710
      *  _ is repeatable
@@ -426,17 +427,17 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         // Which fields/subfields should we check for URLs?
         $fieldsToCheck = array(
             '856' => array('u', '3'), // Standard URL
-            '956' => array('u', 'y', 'B'), // Standard URL
+            '956' => array('u', 'y','B'), // Standard URL
             //'555' => array('a')         // Cumulative index/finding aids
         );
 
         $tFieldsToCheck = array();
         if (!empty($tags)) {
-            foreach ($tags as $tag) {
+            foreach($tags as $tag) {
                 if (strcmp($tag, '856') == 0) {
-                    $tFieldsToCheck['856'] = array('u', '3');
+                    $tFieldsToCheck['856'] = array('u','3');
                 } elseif (strcmp($tag, '956') == 0) {
-                    $tFieldsToCheck['956'] = array('u', 'y', 'B');
+                    $tFieldsToCheck['956'] = array('u','y','B');
                 }
             }
         }
@@ -622,17 +623,17 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         $thumbnailURL = null;
 
         $fields = $this->getMarcSubFieldMaps(956, array(
-            'B' => 'union',
-            'C' => 'ADM',
-            'D' => 'library',
-            'a' => 'institution',
-            'u' => 'URL',
-            'd' => 'directory',
-            'f' => 'filename',
-            'q' => 'type',
-            'x' => 'usage',
-            'y' => 'description',
-        ));
+                'B' => 'union',
+                'C' => 'ADM',
+                'D' => 'library',
+                'a' => 'institution',
+                'u' => 'URL',
+                'd' => 'directory',
+                'f' => 'filename',
+                'q' => 'type',
+                'x' => 'usage',
+                'y' => 'description',
+            ));
         if (!$fields) {
             return array();
         }
@@ -641,36 +642,39 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             if ($field['union'] === 'IDSBB' || $field['union'] === 'IDSLU') {
                 if (preg_match('/Vorschau zum Bild|Porträt|Bild$/', $field['description'])) {
                     $thumbnailURL = 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath='
-                        . $field['URL']
+                    . $field['URL']
                         . '&scale=1&reqServicename=ImageTransformer';
                 }
-            } elseif ($field['union'] === 'SGBN' && mb_strtoupper($field['type']) === 'JPG') {
+        } elseif ($field['union'] === 'SGBN' && mb_strtoupper($field['type']) === 'JPG') {
                 $dirpath = preg_replace('/^.*sgb50/', '', $field['directory']);
-                $dirpath = empty($dirpath) ? $dirpath : substr($dirpath, 1) . '/';
-                $thumbnailURL = 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath=http://aleph.sg.ch/adam/'
-                    . $dirpath
-                    . $field['filename']
-                    . '&scale=1';
+            $dirpath = empty($dirpath) ? $dirpath : substr($dirpath, 1) . '/';
+            $thumbnailURL = 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath=http://aleph.sg.ch/adam/'
+                . $dirpath
+                . $field['filename']
+                . '&scale=1';
             } elseif ($field['union'] === 'BGR' && mb_strtoupper($field['type']) === 'JPG') {
                 $dirpath = substr($field['directory'], 29);
-                $thumbnailURL = 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath=http://aleph.gr.ch/adam/'
-                    . $dirpath . '/'
-                    . $field['filename']
-                    . '&scale=1';
-            } elseif (isset($field['ADM']) && $field['ADM'] === 'ZAD50') {
-                if (array_key_exists('directory', $field) && preg_match('/^.*thumbnail/', $field['directory'])) {
+            $thumbnailURL = 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath=http://aleph.gr.ch/adam/'
+                . $dirpath . '/'
+                . $field['filename']
+                . '&scale=1';
+            }
+            elseif (isset($field['ADM']) &&  $field['ADM'] === 'ZAD50') {
+                if (array_key_exists('directory',$field) && preg_match('/^.*thumbnail/', $field['directory'])) {
                     $dirpath = preg_replace('/^.*thumbnail/', '', $field['directory']);
                     $dirpath = empty($dirpath) ? $dirpath : substr($dirpath, 1) . '/';
                     $thumbnailURL = 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath=http://opac.nebis.ch/thumb_zb/'
-                        . $dirpath
-                        . $field['filename']
+                    . $dirpath
+                    . $field['filename']
                         . '&scale=1';
                 }
-            } elseif (isset($field['institution']) && $field['institution'] === 'E45' && $field['usage'] === 'VIEW') {
+            }
+            elseif (isset($field['institution']) &&  $field['institution'] === 'E45' && $field['usage'] === 'VIEW') {
                 $thumbnailURL = 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath='
-                    . $field['URL']
+                . $field['URL']
                     . '&scale=1&reqServicename=ImageTransformer';
-            } elseif (isset($field['institution']) && $field['institution'] === 'ECOD' && $field['usage'] === 'THUMBNAIL') {
+            }
+            elseif (isset($field['institution']) && $field['institution'] === 'ECOD' && $field['usage'] === 'THUMBNAIL') {
                 $thumbnailURL = 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath='
                     . $field['URL']
                     . '&scale=1&reqServicename=ImageTransformer';
@@ -992,11 +996,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                         $units = '. ' . $unit;
                     }
                     $stringCorporations[] = trim($name . $units);
-                }
-                else $stringCorporations[] = $name;
+                } else $stringCorporations[] = $name;
             }
-                return $stringCorporations;
-            }
+            return $stringCorporations;
+        }
         return false;
     }
 
@@ -1078,16 +1081,18 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getEdition()
     {
         $data = $this->getMarcSubFieldMaps(250, array(
-            'a' => 'statement',
-            'b' => 'remainder',
-        ));
+                'a' => 'statement',
+                'b' => 'remainder',
+            ));
 
         if (!empty($data)) {
             foreach ($data as $field) {
-                if (isset($field['statement'])) {
+                if (isset($field['statement']))
+                {
                     $string = $field['statement'];
                 }
-                if (isset($field['remainder'])) {
+                if (isset($field['remainder']))
+                {
                     $string .= ' / ' . $field['remainder'];
                 }
             }
@@ -1115,24 +1120,27 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getCartMathData()
     {
         $data = $this->getMarcSubFieldMaps(255, array(
-            'a' => 'scale',
-            'b' => 'projection',
-            'c' => 'coordinates',
-            'd' => 'zone',
-            'e' => 'equinox',
-        ));
+                'a' => 'scale',
+                'b' => 'projection',
+                'c' => 'coordinates',
+                'd' => 'zone',
+                'e' => 'equinox',
+            ));
 
         if (!empty($data)) {
             foreach ($data as $field) {
                 $string = '';
 
-                if (isset($field['scale'])) {
+                if (isset($field['scale']))
+                {
                     $string = $field['scale'];
                 }
-                if (isset($field['projection'])) {
+                if (isset($field['projection']))
+                {
                     $string .= '; ' . $field['projection'];
                 }
-                if (isset($field['coordinates'])) {
+                if (isset($field['coordinates']))
+                {
                     $string .= ' - ' . $field['coordinates'];
                 }
             }
@@ -1269,15 +1277,15 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getGroup()
     {
-        return isset($this->fields['groupid_isn_mv']) ? $this->multiValuedFRBRField ? $this->fields['groupid_isn_mv'][0] : $this->fields['groupid_isn_mv'] : '';
+        return isset($this->fields['groupid_isn_mv']) ?  $this->multiValuedFRBRField ? $this->fields['groupid_isn_mv'][0] : $this->fields['groupid_isn_mv'] : '';
     }
 
 
     /**
-     * Get institution codes
-     *
-     * @return array
-     */
+    * Get institution codes
+    *
+    * @return array
+    */
     public function getInstitutions($extended = false)
     {
         $institutions = array();
@@ -1286,7 +1294,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             $institutions = $this->fields['institution'];
 
             if ($extended) {
-                foreach ($institutions as $key => $institution) {
+                foreach($institutions as $key => $institution) {
                     $institutions[$key] = array(
                         'institution' => $institution,
                         'group' => $this->getHoldingsHelper()->getGroup($institution)
@@ -1507,10 +1515,11 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         $retVal = array();
 
         $dateType = $codeddata[0];
-        $year1 = $codeddata[1];
-        $year2 = $codeddata[2];
+        $year1    = $codeddata[1];
+        $year2    = $codeddata[2];
 
-        switch ($dateType) {
+        switch ($dateType)
+        {
             case 's':
             case 't':
             case 'n':
@@ -1535,7 +1544,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             case 'q':
                 if ($year2 === '9999') {
                     $retVal[0] = $year1;
-                } elseif ($year2 != '9999') {
+                }
+                elseif ($year2 != '9999') {
                     $retVal[0] = $year1 . ' / ' . $year2;
                 }
                 break;
@@ -1543,7 +1553,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             case 'm':
                 if ($year2 === '9999') {
                     $retVal[0] = $year1 . '-';
-                } elseif ($year2 != '9999') {
+                }
+                elseif ($year2 != '9999') {
                     $retVal[0] = $year1 . '-' . $year2;
                 }
                 break;
@@ -1554,7 +1565,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 }
                 if ($year2 === '9999') {
                     $retVal[0] = $year1 . '-';
-                } else {
+                }
+                else {
                     $retVal[0] = $year1 . '-' . $year2;
                 }
                 break;
@@ -1624,7 +1636,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getOnlineStatus()
     {
         $filter = array_key_exists('filter_str_mv', $this->fields) ? $this->fields['filter_str_mv'] : array();
-        return in_array('ONL', $filter) ? true : false;
+        return in_array('ONL', $filter)  ? true : false;
     }
 
 
@@ -1660,8 +1672,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * @return string
      */
-    public function getIs_hierarchy_title()
-    {
+    public function getIs_hierarchy_title() {
         return isset($this->fields['is_hierarchy_title']) ? $this->fields['is_hierarchy_title'] : $this->getTitle();
     }
 
@@ -2115,9 +2126,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
         // Copy into simple list
         foreach ($summary as $item) {
-            if (isset($item['expansion'])) {
+            if(isset($item['expansion'])) {
                 $lines[] = $item['summary'] . '. ' . $item['expansion'];
-            } else {
+            }
+            else {
                 $lines[] = $item['summary'];
             }
 
@@ -2205,12 +2217,11 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         return parent::getHierarchyPositionsInParents();
     }
 
-
+    
     /**
      * @return bool
      */
-    public function getUseMostSpecificFormat()
-    {
+    public function getUseMostSpecificFormat() {
         return $this->useMostSpecificFormat;
     }
 
@@ -2218,17 +2229,15 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     /**
      * @param boolean
      */
-    public function setUseMostSpecificFormat($useMostSpecificFormat)
-    {
-        $this->useMostSpecificFormat = (boolean)$useMostSpecificFormat;
+    public function setUseMostSpecificFormat($useMostSpecificFormat) {
+        $this->useMostSpecificFormat = (boolean) $useMostSpecificFormat;
     }
 
 
     /**
      * @return bool
      */
-    public function hasDescription()
-    {
+    public function hasDescription() {
         foreach ($this->partsOfDescription as $descriptionElement) {
             $method = 'get' . $descriptionElement;
             if (method_exists($this, $method)) {
@@ -2279,6 +2288,4 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         return false;
     }
-
-
 }

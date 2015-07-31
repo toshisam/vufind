@@ -121,7 +121,7 @@ class MyResearchController extends VuFindMyResearchController
 
       $user->save();
 
-      $this->flashMessenger()->setNamespace('info')->addMessage('save_settings_success');
+      $this->flashMessenger()->setNamespace('success')->addMessage('save_settings_success');
 
       setcookie('language', $language, time() + 3600 * 24 * 100, '/');
 
@@ -504,7 +504,7 @@ class MyResearchController extends VuFindMyResearchController
                     $newAddress['z304-date-to'] = $address['z304-date-to'] === '00000000' ? date('Ymd', strtotime('+10 years')) : $address['z304-date-to'];
 
                     $this->getILS()->changeMyAddress($patron, $newAddress);
-                    $this->flashMessenger()->setNamespace('info')->addMessage('save_address_success');
+                    $this->flashMessenger()->setNamespace('success')->addMessage('save_address_success');
                 } else {
                     $this->flashMessenger()->setNamespace('error')->addMessage('save_address_error');
                 }
