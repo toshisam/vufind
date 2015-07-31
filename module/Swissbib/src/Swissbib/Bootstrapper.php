@@ -403,5 +403,16 @@ class Bootstrapper
         }
     }
 
+    /**
+     * Enables class loading for local composer dependencies
+     */
+    protected function initLocalComposerDependencies()
+    {
+        $autoloadFilePath = APPLICATION_PATH . '/local/vendor/autoload.php';
+
+        if (file_exists($autoloadFilePath)) {
+            include $autoloadFilePath;
+        }
+    }
 
 }

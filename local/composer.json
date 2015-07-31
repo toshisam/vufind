@@ -1,0 +1,8 @@
+{
+  "config": {
+    "prepend-autoloader": false
+  },
+  "require": {
+    "doctrine/common": ">=2.1"
+  }
+}
