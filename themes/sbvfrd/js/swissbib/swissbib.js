@@ -13,6 +13,7 @@ var swissbib = {
     this.initUserVoiceFeedback();
     this.initBulkExport();
     this.AdvancedSearch.init();
+    this.initHierarchyTree();
   },
 
   /**
@@ -26,6 +27,23 @@ var swissbib = {
     }
   },
 
+  /**
+   * Enables scroll to selected node, mostly copied from VuFind bootstrap3 hierarchyTree.js
+   */
+  initHierarchyTree: function() {
+    var htmlID = swissbib.getParameterByName('htmlID');
+
+    if (htmlID !== '') {
+      var $hierarchyTree = $("#hierarchyTree");
+
+      $hierarchyTree.bind("ready.jstree", function (event, data) {
+        var jstree = $hierarchyTree.jstree(true);
+
+        jstree.select_node(htmlID);
+        jstree._open_to(htmlID);
+      });
+    }
+  },
 
   /**
    * Handle click on bulk export
@@ -156,6 +174,13 @@ var swissbib = {
   destructBackgroundsRecursive: function() {
     swissbib.initBackgrounds();
     clearTimeout(swissbib.currentTimeout);
+  },
+
+  getParameterByName: function(name) {
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
 };
 
