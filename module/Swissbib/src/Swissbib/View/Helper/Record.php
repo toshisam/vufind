@@ -64,7 +64,8 @@ class Record extends VuFindRecord
             ],
             'exclude' => [
                 '956' => [
-                    'x|^VIEW && y|^Porträt'
+                    'x|^VIEW && y|^Porträt',
+                    'B|^ECOD',
                 ]
             ],
             'mergeLinksByDescription' => [
@@ -84,7 +85,8 @@ class Record extends VuFindRecord
                         'B|^IDSBB$ && P|^856$',
                         'B|^SNL$ && P|^856$',
                         'B|^RETROS$ && P|^856$',
-                        'B|^BORIS && P|^856$'
+                        'B|^BORIS && P|^856$',
+                        'B|^FREE && P|^856$'
                     ]
                 ],
                 '956' => [
@@ -120,7 +122,8 @@ class Record extends VuFindRecord
             ],
             'exclude' => [
                 '956' => [
-                    'x|^VIEW && y|^Porträt'
+                    'x|^VIEW && y|^Porträt',
+                    'B|^ECOD',
                 ]
             ],
             'mergeLinksByDescription' => [

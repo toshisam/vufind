@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  *
  * @type {{sidebar: null, button: null, body: null, init: init, initOffCanvas: initOffCanvas, toggleOffCanvas: toggleOffCanvas, enableTransition: enableTransition}}

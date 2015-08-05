@@ -18,7 +18,7 @@
   $responsible = $viewRecord->getResponsible($titleStatement, $record);
   $edition = $record->getEdition();
   $summDate= $record->getHumanReadablePublicationDates();
-  $hostitems = $record->getHostItemEntry();
+  $hostItems = $record->getHostItemEntry();
   $groupID = $record->getGroup(true);
   $uniqueID = $record->getUniqueID();
   $showFRBR = $this->configAccess()->Site->displayFrbr;
@@ -70,10 +70,10 @@
 
     <!-- Zeitschriftentitel, Erscheinungsjahr -->
     <div class="meta">
-        <? if (!empty($hostitems)): ?>
-            <? foreach ($hostitems as $hostitem): ?>
+        <? if (!empty($hostItems)): ?>
+            <? foreach ($hostItems as $hostItem): ?>
                 <span class="hidden-xs label"><strong><?= $this->transEsc('note_773') ?>:</strong></span>
-                <? $text = array_key_exists('related', $hostitem) ? $hostitem['title'] . ', ' . $hostitem['related'] : $hostitem['title'] ?>
+                <? $text = array_key_exists('related', $hostItem) ? $hostItem['title'] . ', ' . $hostItem['related'] : $hostItem['title'] ?>
                 <span><?= $this->escapeHtml($text) ?></span><br />
             <? endforeach; ?>
         <? endif; ?>

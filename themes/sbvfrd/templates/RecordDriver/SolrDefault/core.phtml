@@ -14,7 +14,7 @@ $physicalDescriptions = $record->getPhysicalDescriptions(false);
 $edition              = $record->getEdition();
 $cartMathData         = $record->getCartMathData();
 $formats              = $viewRecord->getFormatList();
-$hostitems            = $record->getHostItemEntry();
+$hostItems            = $record->getHostItemEntry();
 $journalTitle         = $record->getContainerTitle();
 $ref                  = $record->getContainerReference();
 $highlightedFulltext  = $record->getHighlightedFulltext();
@@ -106,11 +106,11 @@ $linkSFX = $viewRecord->getLinkSFX();
       </span><br />
       <? endif; ?>
 
-      <? if ($hostitems): ?>
+      <? if ($hostItems): ?>
       <span class="label"><?= $this->transEsc('note_773') ?>: </span>
       <span>
-          <? foreach ($hostitems as $hostitem): ?>
-              <? $text = array_key_exists('related', $hostitem) ? $hostitem['title'] . ', ' . $hostitem['related'] : $hostitem['title'] ?>
+          <? foreach ($hostItems as $hostItem): ?>
+              <? $text = array_key_exists('related', $hostItem) ? $hostItem['title'] . ', ' . $hostItem['related'] : $hostItem['title'] ?>
               <?= $this->escapeHtml($text) ?><br />
           <? endforeach; ?>
       </span><br />

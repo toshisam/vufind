@@ -10,15 +10,16 @@ if (is_array($formats) && !empty($formats)) {
     echo "%0 Book\n";
 }
 
-$author = $this->driver->tryMethod('getPrimaryAuthor');
-if (!empty($author)) {
-    echo "%A $author\n";
-}
-
-$secondaryAuthors = $this->driver->tryMethod('getSecondaryAuthors');
-if (is_array($secondaryAuthors)) {
-    foreach ($secondaryAuthors as $current) {
-        echo "%E $current\n";
+$authors = $this->driver->tryMethod('getDeduplicatedAuthors');
+if (is_array($authors)) {
+    if (!empty($authors['main']))
+        echo "%A {$authors['main']}\n";
+    if (!empty($authors['corporate']))
+        echo "%A {$authors['corporate']}\n";
+    if (is_array($authors['secondary']) && !empty($authors['secondary'])) {
+        foreach ($authors['secondary'] as $current) {
+            echo "%E $current\n";
+        }
     }
 }
 
@@ -77,6 +78,19 @@ $title = rtrim($this->driver->getTitle(), " /");
 echo "%T $title\n";
 
 $journalTitle = $this->driver->tryMethod('getContainerTitle');
+
+if (empty($journalTitle)) {
+    $hostItems = $this->driver->tryMethod('getHostItemEntry');
+    if (!empty($hostItems)) {
+        foreach ($hostItems as $hostItem) {
+            echo "%J {$hostItem['title']},\n";
+            if (!empty($hostItem['related'])) {
+                echo "%V = {$hostItem['related']},\n";
+            }
+        }
+    }
+}
+
 if (!empty($journalTitle)) {
     echo "%J $journalTitle\n";
     $volume = $this->driver->tryMethod('getContainerVolume');

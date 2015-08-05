@@ -113,6 +113,26 @@ return array(
                 )
               )
             ),
+            'myresearch-changeaddress' => array(
+                'type'    => 'literal',
+                'options' => array(
+                    'route'    => '/MyResearch/Address',
+                    'defaults' => array(
+                        'controller' => 'my-research',
+                        'action'     => 'changeAddress'
+                    )
+                )
+            ),
+            'record-copy' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/Record/:id/Copy',
+                    'defaults' => array(
+                        'controller' => 'record',
+                        'action'     => 'copy'
+                    )
+                )
+            ),
         )
     ),
     'console' => array(
@@ -220,6 +240,9 @@ return array(
             'VuFind\SearchOptionsPluginManager' => 'Swissbib\Services\Factory::getSearchOptionsPluginManager',
             'VuFind\SearchParamsPluginManager' => 'Swissbib\Services\Factory::getSearchParamsPluginManager',
             'VuFind\SearchResultsPluginManager' => 'Swissbib\Services\Factory::getSearchResultsPluginManager',
+
+            'Swissbib\Record\Form\CopyForm'                 =>  'Swissbib\Record\Factory::getCopyForm',
+            'Swissbib\MyResearch\Form\AddressForm'          =>  'Swissbib\MyResearch\Factory::getAddressForm',
         )
     ),
     'view_helpers'    => array(

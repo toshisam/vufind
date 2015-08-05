@@ -61,7 +61,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     /**
      * @var    Array    Used also for field 100        _ means repeatable
      */
-    protected $personFieldMap = array(
+    protected $personFieldMap = [
         'a' => 'name',
         'b' => 'numeration',
         '_c' => 'titles', // R
@@ -76,7 +76,37 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         't' => 'title_of_work',
         '_8' => 'extras',
         '9' => 'unknownNumber'
-    );
+    ];
+
+    /*
+     * @var Array used for field 110/710
+     *  _ is repeatable
+     */
+    protected $corporationFieldMap = [
+        'a' => 'name',
+        '_b' => 'unit',
+        'c' => 'meeting_location',
+        '_d' => 'meeting_date',
+        '_e' => 'relator',
+        'f' => 'date',
+        'g' => 'misc',
+        'h' => 'medium',
+        'i' => 'relationship',
+        '_k' => 'form_subheading',
+        'l' => 'language',
+        '_m' => 'music_performance_medium',
+        '_n' => 'parts_number',
+        '_p' => 'parts_name',
+        'r' => 'music_key',
+        's' => 'version',
+        't' => 'title',
+        'u' => 'affiliation',
+        'x' => 'issn',
+        '3' => 'materials_specified',
+        '4' => 'relator_code',
+        '5' => 'institution',
+        '_8' => 'label'
+    ];
 
     protected $protocolWrapper = null;
 
@@ -157,12 +187,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                         $params['rft.au'][] = $author;
                     }
                 }
-                $addcorporations = $this->getCorporationNames(true);
-                if (!empty($addcorporations)) {
-                    foreach ($addcorporations as $addcorporation) {
-                        $corporations[] = $addcorporation;
-                    }
-                }
+                $corporations = $this->getCorporationNames(true);
                 if (!empty($corporations)) {
                     foreach ($corporations as $corporation) {
                         $params['rft.aucorp '][] = $corporation;
@@ -959,7 +984,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         //$corporations[] = $this->getMainCorporateName();
 
         if ($asString) {
-            $stringCorporations = array();
+            $stringCorporations = [];
 
             foreach ($corporations as $corporation) {
                 $name = isset($corporation['name']) ? rtrim($corporation['name'], '.') : '';
@@ -969,9 +994,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                     }
                     $stringCorporations[] = trim($name . $units);
                 }
+                else $stringCorporations[] = $name;
             }
-            return $stringCorporations;
-        }
+                return $stringCorporations;
+            }
         return false;
     }
 
@@ -985,24 +1011,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getMainCorporateName()
     {
-        return $this->getMarcSubFieldMap(110, array(
-            'a' => 'name',
-            '_b' => 'unit',
-            'c' => 'meeting_location',
-            '_d' => 'meeting_date',
-            '_e' => 'relator',
-            'f' => 'date',
-            'g' => 'misc',
-            'h' => 'medium',
-            '_k' => 'form_subheading',
-            'l' => 'language',
-            '_n' => 'parts_number',
-            '_p' => 'parts_name',
-            's' => 'version',
-            't' => 'title',
-            'u' => 'affiliation',
-            '4' => 'relator_code'
-        ));
+        return $this->getMarcSubFieldMap(110, $this->corporationFieldMap);
     }
 
 
@@ -1013,31 +1022,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getAddedCorporateNames()
     {
-        return $this->getMarcSubFieldMaps(710, array(
-            'a' => 'name',
-            '_b' => 'unit',
-            'c' => 'meeting_location',
-            '_d' => 'meeting_date',
-            '_e' => 'relator',
-            'f' => 'date',
-            'g' => 'misc',
-            'h' => 'medium',
-            'i' => 'relationship',
-            '_k' => 'form_subheading',
-            'l' => 'language',
-            '_m' => 'music_performance_medium',
-            '_n' => 'parts_number',
-            '_p' => 'parts_name',
-            'r' => 'music_key',
-            's' => 'version',
-            't' => 'title',
-            'u' => 'affiliation',
-            'x' => 'issn',
-            '3' => 'materials_specified',
-            '4' => 'relator_code',
-            '5' => 'institution',
-            '_8' => 'label'
-        ));
+        return $this->getMarcSubFieldMaps(710, $this->corporationFieldMap);
     }
 
 

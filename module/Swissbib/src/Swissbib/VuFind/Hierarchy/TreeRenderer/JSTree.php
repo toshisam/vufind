@@ -148,4 +148,76 @@ class JSTree extends VfJsTree implements ServiceLocatorAwareInterface
 
         return 'No title found';
     }
+
+    /**
+     * Recursive function to convert the json to the right format
+     *
+     * @param object $node        JSON object of a node/top node
+     * @param string $context     Record or Collection
+     * @param string $hierarchyID Collection ID
+     * @param integer $level      Indicating the depth of recursion
+     *
+     * @return array
+     */
+    protected function buildNodeArray($node, $context, $hierarchyID, $level = 0)
+    {
+        $escaper = new \Zend\Escaper\Escaper('utf-8');
+        $htmlID = $level . '_' . preg_replace('/\W/', '-', $node->id);
+        $ret = [
+            //prefix with level to allow multiple nodes with the same recordId on different levels
+            'id' => $htmlID,
+            'text' => $escaper->escapeHtml($node->title),
+            'li_attr' => [
+                'recordid' => $node->id
+            ],
+            'a_attr' => [
+                'href' => $this->getContextualUrl($node, $context, $hierarchyID, $htmlID),
+                'title' => $node->title
+            ],
+            'type' => $node->type
+        ];
+        if (isset($node->children)) {
+            $ret['children'] = [];
+            $level++;
+            for ($i = 0;$i < count($node->children);$i++) {
+                $ret['children'][$i] = $this
+                    ->buildNodeArray($node->children[$i], $context, $hierarchyID, $level);
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * Use the router to build the appropriate URL based on context
+     *
+     * @param object $node         JSON object of a node/top node
+     * @param string $context      Record or Collection
+     * @param string $collectionID Collection ID
+     * @param string $htmlID       ID used on html tag, must be unique
+     *
+     * @return string
+     */
+    protected function getContextualUrl($node, $context, $collectionID, $htmlID = '')
+    {
+        $params = [
+            'id' => $node->id,
+            'tab' => 'HierarchyTree'
+        ];
+        $options = [
+            'query' => [
+                'recordID' => $node->id,
+                'htmlID' => $htmlID
+            ]
+        ];
+        if ($context == 'Collection') {
+            return $this->router->fromRoute('collection', $params, $options)
+            . '#tabnav';
+        } else {
+            $options['query']['hierarchy'] = $collectionID;
+            $url = $this->router->fromRoute($node->type, $params, $options);
+            return $node->type == 'collection'
+                ? $url . '#tabnav'
+                : $url . '#tree-' . preg_replace('/\W/', '-', $node->id);
+        }
+    }
 }
