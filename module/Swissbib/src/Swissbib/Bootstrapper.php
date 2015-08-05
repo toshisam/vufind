@@ -349,6 +349,27 @@ class Bootstrapper
     }
 
 
+    /**
+     * Add translation for Form Validation
+     */
+    protected function initZendValidatorTranslations()
+    {
+        $callback = function ($event) {
+            /** @var TranslatorImpl $translator */
+            $translator = $event->getApplication()->getServiceManager()->get('VuFind\Translator');
+
+            $translator->addTranslationFile(
+                'phparray',
+                'vendor/zendframework/zendframework/resources/languages/' . $translator->getLocale() . '/Zend_Validate.php',
+                'default',
+                $translator->getLocale()
+            );
+        };
+
+        $this->events->attach('dispatch', $callback, 8996);
+    }
+
+
 
     /**
      * Set up plugin managers.
@@ -382,5 +403,16 @@ class Bootstrapper
         }
     }
 
+    /**
+     * Enables class loading for local composer dependencies
+     */
+    protected function initLocalComposerDependencies()
+    {
+        $autoloadFilePath = APPLICATION_PATH . '/local/vendor/autoload.php';
+
+        if (file_exists($autoloadFilePath)) {
+            include $autoloadFilePath;
+        }
+    }
 
 }

@@ -71,6 +71,9 @@ class AvailabilityInfo extends AbstractHelper
                     elseif ($borrowinginformation['due_date'] === 'lost') {
                         $info .= $escapedTranslation('Lost');
                     }
+                    elseif ($borrowinginformation['due_date'] === 'on hold'){
+                        $info .= $escapedTranslation('on_hold');
+                    }
                     else {
                         foreach ($borrowinginformation as $key => $value) {
                             if (strcmp(trim($value), "") != 0) {
@@ -91,11 +94,17 @@ class AvailabilityInfo extends AbstractHelper
 
                         if ($borrowinginformation['due_date'] === 'on reserve') {
                             $info .= $escapedTranslation('On Reserve') . " (" . $borrowinginformation['no_requests'] . ")";
-                        } elseif ($borrowinginformation['due_date'] === 'claimed returned') {
+                        }
+                        elseif ($borrowinginformation['due_date'] === 'claimed returned') {
                             $info .= $escapedTranslation('Claimed Returned');
-                        } elseif ($borrowinginformation['due_date'] === 'lost') {
+                        }
+                        elseif ($borrowinginformation['due_date'] === 'lost') {
                             $info .= $escapedTranslation('Lost');
-                        } else {
+                        }
+                        elseif ($borrowinginformation['due_date'] === 'on hold'){
+                            $info .= $escapedTranslation('on_hold');
+                        }
+                        else {
                             foreach ($borrowinginformation as $key => $value) {
                                 if (strcmp(trim($value), "") != 0) {
                                     $info .= "<div>" . $escapedTranslation($key) . "&nbsp;" . $value . "</div>";
@@ -116,8 +125,39 @@ class AvailabilityInfo extends AbstractHelper
 
                 case self::USE_ON_SITE:
 
-                    $infotext = $escapedTranslation($statusfield);
-                    $info = "<div class='availability fa-check'><div>" . "$infotext" . "</div></div>";
+                    if (!empty($borrowinginformation['due_date'])) {
+                        unset($borrowinginformation['due_hour']);
+                        $infotext = $escapedTranslation($statusfield);
+                        $info = "<div class='availability fa-ban'><div>" . "$infotext" . "</div>";
+
+                        if ($borrowinginformation['due_date'] === 'on reserve') {
+                            $info .= $escapedTranslation('On Reserve') . " (" . $borrowinginformation['no_requests'] . ")";
+                        }
+                        elseif ($borrowinginformation['due_date'] === 'claimed returned') {
+                            $info .= $escapedTranslation('Claimed Returned');
+                        }
+                        elseif ($borrowinginformation['due_date'] === 'lost') {
+                            $info .= $escapedTranslation('Lost');
+                        }
+                        elseif ($borrowinginformation['due_date'] === 'on hold'){
+                            $info .= $escapedTranslation('on_hold');
+                        }
+                        else {
+                            foreach ($borrowinginformation as $key => $value) {
+                                if (strcmp(trim($value), "") != 0) {
+                                    $info .= "<div>" . $escapedTranslation($key) . "&nbsp;" . $value . "</div>";
+                                }
+                            }
+                        }
+                        $info .= "</div>";
+                    }
+
+
+                    elseif (empty($borrowinginformation['due_date'])) {
+                        $infotext = $escapedTranslation($statusfield);
+                        $info = "<div class='availability fa-check'><div>" . "$infotext" . "</div></div>";
+                    }
+
                     break;
 
                 case self::LIBRARYINFO:
@@ -128,11 +168,17 @@ class AvailabilityInfo extends AbstractHelper
 
                         if ($borrowinginformation['due_date'] === 'on reserve') {
                             $info .= $escapedTranslation('On Reserve') . " (" . $borrowinginformation['no_requests'] . ")";
-                        } elseif ($borrowinginformation['due_date'] === 'claimed returned') {
+                        }
+                        elseif ($borrowinginformation['due_date'] === 'claimed returned') {
                             $info .= $escapedTranslation('Claimed Returned');
-                        } elseif ($borrowinginformation['due_date'] === 'lost') {
+                        }
+                        elseif ($borrowinginformation['due_date'] === 'lost') {
                             $info .= $escapedTranslation('Lost');
-                        } else {
+                        }
+                        elseif ($borrowinginformation['due_date'] === 'on hold'){
+                            $info .= $escapedTranslation('on_hold');
+                        }
+                        else {
                             foreach ($borrowinginformation as $key => $value) {
                                 if (strcmp(trim($value), "") != 0) {
                                     $info .= "<div>" . $escapedTranslation($key) . "&nbsp;" . $value . "</div>";

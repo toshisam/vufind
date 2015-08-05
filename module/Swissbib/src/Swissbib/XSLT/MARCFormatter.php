@@ -19,7 +19,7 @@ class MARCFormatter implements ServiceManagerAwareInterface
       //"ALEX" => "http://www.alexandria.ch/primo_library/libweb/action/dlSearch.do?institution=BIG&vid=ALEX&scope=default_scope&query=lsr07,contains,vtls%s-41big_inst",
         "BGR" => "http://aleph.gr.ch/F/?local_base=BGR01&con_lng=GER&func=find-b&find_code=SYS&request=%s",
         "BORIS" => "http://boris.unibe.ch/cgi/oai2?verb=GetRecord&identifier=%s&metadataPrefix=oai_dc",
-        "CCSA" => "http://opac.admin.ch/cgi-bin/gw/chameleon?skin=affiches&lng=de&inst=consortium&search=KEYWORD&function=INITREQ&t1=%s&u1=12101",
+        "CCSA" => "http://permalink.snl.ch/bib/chccsa%s",
         "CHARCH" => "http://www.helveticarchives.ch/detail.aspx?ID=%s",
         "DDB" => "http://d-nb.info/%s",
         "ECOD" => "http://www.e-codices.unifr.ch/oai/oai.php?verb=GetRecord&metadataPrefix=oai_dc&identifier=oai:e-codices.unifr.ch:http://www.e-codices.unifr.ch/en/list/one/%s",
@@ -35,11 +35,9 @@ class MARCFormatter implements ServiceManagerAwareInterface
         "SBT" => "http://aleph.sbt.ti.ch/F?local_base=SBT01&con_lng=ITA&func=find-b&find_code=SYS&request=%s",
         "SERVAL" => "http://serval.unil.ch/oaiprovider?verb=GetRecord&metadataPrefix=mods&identifier=oai:serval.unil.ch:%s",
         "SGBN" => "http://aleph.sg.ch/F/?local_base=SGB01&con_lng=GER&func=find-b&find_code=SYS&request=%s",
-        "SNL" => "http://opac.admin.ch/cgi-bin/gw/chameleon?lng=de&inst=consortium&search=KEYWORD&function=CARDSCR&t1=%s&u1=12101",
+        "SNL" => "http://permalink.snl.ch/bib/sz%s",
         "ZORA" => "http://www.zora.uzh.ch/cgi/oai2?verb=GetRecord&metadataPrefix=oai_dc&identifier=%s",
     ];
-
-
 
     /**
      * @var array
@@ -78,8 +76,6 @@ class MARCFormatter implements ServiceManagerAwareInterface
         }
     }
 
-
-
     /**
      * @param String $nodeText
      *
@@ -113,6 +109,4 @@ class MARCFormatter implements ServiceManagerAwareInterface
     {
         static::$sM = $serviceManager;
     }
-
-
 }

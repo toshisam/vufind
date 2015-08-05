@@ -181,4 +181,75 @@ class MultiBackend extends VFMultiBackend {
         return parent::getDriverConfig($source);
     }
 
+    /**
+     * @param array
+     *
+     * @return mixed
+     */
+    public function getMyAddress(array $patron)
+    {
+        $source = $this->getSource($patron['cat_username'], 'login');
+        $driver = $this->getDriver($source);
+
+        if ($driver && $this->methodSupported($driver, 'getMyAddress')) {
+            return $driver->getMyAddress($this->stripIdPrefixes($patron, $source));
+        }
+
+        return [];
+    }
+
+    /**
+     * @param array
+     *
+     * @return mixed
+     */
+    public function changeMyAddress(array $patron, array $newAddress)
+    {
+        $source = $this->getSource($patron['cat_username'], 'login');
+        $driver = $this->getDriver($source);
+
+        if ($driver && $this->methodSupported($driver, 'changeMyAddress')) {
+            return $driver->changeMyAddress($this->stripIdPrefixes($patron, $source), $newAddress);
+        }
+
+        return [];
+    }
+
+    /**
+     * @param array $patron
+     * @param string $id
+     * @param string $group
+     *
+     * @return array
+     */
+    public function getCopyPickUpLocations(array $patron, $id, $group)
+    {
+        $source = $this->getSource($patron['cat_username'], 'login');
+        $driver = $this->getDriver($source);
+
+        if ($driver && $this->methodSupported($driver, 'getCopyPickUpLocations')) {
+            return $driver->getCopyPickUpLocations($this->stripIdPrefixes($patron, $source), $id, $group);
+        }
+
+        return [];
+    }
+
+    /**
+     * @param array $patron
+     * @param string $id
+     * @param string $group
+     * @param array $copyRequest
+     *
+     * @return array
+     */
+    public function putCopy(array $patron, $id, $group, array $copyRequest) {
+        $source = $this->getSource($patron['cat_username'], 'login');
+        $driver = $this->getDriver($source);
+
+        if ($driver && $this->methodSupported($driver, 'changeMyAddress')) {
+            return $driver->putCopy($this->stripIdPrefixes($patron, $source), $id, $group, $copyRequest);
+        }
+
+        return [];
+    }
 }

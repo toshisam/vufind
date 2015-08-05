@@ -3,6 +3,7 @@ namespace Swissbib\VuFind\ILS\Driver;
 
 use VuFind\ILS\Driver\Aleph as VuFindDriver;
 use \SimpleXMLElement;
+use VuFind\ILS\Driver\AlephRestfulException;
 use VuFind\Exception\ILS as ILSException;
 use DateTime;
 
@@ -788,6 +789,37 @@ class Aleph extends VuFindDriver
     }
 
     /**
+     * Get Pick Up Locations
+     *
+     * @throws ILSException
+     * @return array        An array of associative arrays with locationID and
+     * locationDisplay keys
+     */
+    public function getCopyPickUpLocations(array $patron, $id, $group)
+    {
+        list($bib, $sys_no) = $this->parseId($id);
+        $resource = $bib . $sys_no;
+        $xml = $this->doRestDLFRequest(
+            ['patron', $patron['id'], 'record', $resource, 'items', $group, 'photo']
+        );
+
+        $locations = [];
+        $part = $xml->xpath('//pickup-locations');
+        if ($part) {
+            foreach ($part[0]->children() as $node) {
+                $arr = $node->attributes();
+                $code = (string) $arr['code'];
+                $loc_name = (string) $node;
+                $locations[$code] = $loc_name;
+            }
+        } else {
+            throw new ILSException('No pickup locations');
+        }
+
+        return $locations;
+    }
+
+    /**
      * Change Password
      *
      * Attempts to change patron password (PIN code)
@@ -825,5 +857,140 @@ EOT;
         );
 
         return ['success' => true, 'status' => 'change_password_ok'];
+    }
+
+    /**
+     * @param array $patron
+     *
+     * @return array
+     *
+     * @throws AlephRestfulException
+     */
+    public function getMyAddress(array $patron)
+    {
+        $result = $this->doRestDLFRequest(
+            [
+                'patron', $patron['id'], 'patronInformation', 'address'
+            ],
+            null, 'GET'
+        );
+
+        $addressInformation = $result->{'address-information'};
+
+        return [
+            'z304-address-1' => (string) $addressInformation->{'z304-address-1'},
+            'z304-address-2' => (string) $addressInformation->{'z304-address-2'},
+            'z304-address-3' => (string) $addressInformation->{'z304-address-3'},
+            'z304-address-4' => (string) $addressInformation->{'z304-address-4'},
+            'z304-address-5' => (string) $addressInformation->{'z304-address-5'},
+            'z304-email-address' => (string) $addressInformation->{'z304-email-address'},
+            'z304-telephone-1' => (string) $addressInformation->{'z304-telephone-1'},
+            'z304-telephone-2' => (string) $addressInformation->{'z304-telephone-2'},
+            'z304-telephone-3' => (string) $addressInformation->{'z304-telephone-3'},
+            'z304-telephone-4' => (string) $addressInformation->{'z304-telephone-4'},
+            'z304-date-from' => (string) $addressInformation->{'z304-date-from'},
+            'z304-date-to' => (string) $addressInformation->{'z304-date-to'},
+        ];
+    }
+
+    /**
+     * @param array $patron
+     * @param array $newAddress
+     *
+     * @return SimpleXMLElement
+     *
+     * @throws AlephRestfulException
+     */
+    public function changeMyAddress(array $patron, array $newAddress)
+    {
+        $z304_address_1 = $this->maskXmlString($newAddress['z304-address-1']);
+        $z304_address_2 = $this->maskXmlString($newAddress['z304-address-2']);
+        $z304_address_3 = $this->maskXmlString($newAddress['z304-address-3']);
+        $z304_address_4 = $this->maskXmlString($newAddress['z304-address-4']);
+        $z304_address_5 = $this->maskXmlString($newAddress['z304-address-5']);
+        $z304_email_address = $this->maskXmlString($newAddress['z304-email-address']);
+        $z304_telephone_1 = $this->maskXmlString($newAddress['z304-telephone-1']);
+        $z304_telephone_2 = $this->maskXmlString($newAddress['z304-telephone-2']);
+        $z304_telephone_3 = $this->maskXmlString($newAddress['z304-telephone-3']);
+        $z304_telephone_4 = $this->maskXmlString($newAddress['z304-telephone-4']);
+        $z304_date_from = $this->maskXmlString($newAddress['z304-date-from']);
+        $z304_date_to = $this->maskXmlString($newAddress['z304-date-to']);
+
+        $xml =  <<<EOT
+post_xml=<?xml version = "1.0" encoding = "UTF-8"?>
+<get-pat-adrs>
+  <address-information>
+    <z304-address-1>{$z304_address_1}</z304-address-1>
+    <z304-address-2>{$z304_address_2}</z304-address-2>
+    <z304-address-3>{$z304_address_3}</z304-address-3>
+    <z304-address-4>{$z304_address_4}</z304-address-4>
+    <z304-address-5>{$z304_address_5}</z304-address-5>
+    <z304-email-address>{$z304_email_address}</z304-email-address>
+    <z304-telephone-1>{$z304_telephone_1}</z304-telephone-1>
+    <z304-telephone-2>{$z304_telephone_2}</z304-telephone-2>
+    <z304-telephone-3>{$z304_telephone_3}</z304-telephone-3>
+    <z304-telephone-4>{$z304_telephone_4}</z304-telephone-4>
+    <z304-date-from>{$z304_date_from}</z304-date-from>
+    <z304-date-to>{$z304_date_to}</z304-date-to>
+  </address-information>
+</get-pat-adrs>
+EOT;
+
+        return $this->doRestDLFRequest(
+            [
+                'patron', $patron['id'], 'patronInformation', 'address'
+            ],
+            null, 'POST', $xml
+        );
+    }
+
+    /**
+     * @param array $patron
+     * @param string $id
+     * @param string $group
+     * @param array $copyRequest
+     *
+     * @return \VuFind\ILS\Driver\SimpleXMLElement
+     *
+     * @throws AlephRestfulException
+     */
+    public function putCopy(array $patron, $id, $group, array $copyRequest)
+    {
+        list($bib, $sys_no) = $this->parseId($id);
+        $resource = $bib . $sys_no;
+
+        $pickup_location = $this->maskXmlString($copyRequest['pickup-location']);
+        $sub_author = $this->maskXmlString($copyRequest['sub-author']);
+        $sub_title = $this->maskXmlString($copyRequest['sub-title']);
+        $pages = $this->maskXmlString($copyRequest['pages']);
+        $note1 = $this->maskXmlString($copyRequest['note1']);
+        $note2 = $this->maskXmlString($copyRequest['note2']);
+
+        $xml =  <<<EOT
+post_xml=<?xml version="1.0"?>
+<photo-request-parameters>
+    <pickup-location>{$pickup_location}</pickup-location>
+    <sub-author>{$sub_author}</sub-author>
+    <sub-title>{$sub_title}</sub-title>
+    <pages>{$pages}</pages>
+    <note1>{$note1}</note1>
+    <note2>{$note2}</note2>
+</photo-request-parameters>
+EOT;
+
+        return $this->doRestDLFRequest(
+            ['patron', $patron['id'], 'record', $resource, 'items', $group, 'photo'],
+            null, 'PUT', $xml
+        );
+    }
+
+    /**
+     * @param string $content
+     *
+     * @return string
+     */
+    protected function maskXmlString($content)
+    {
+        return rawurlencode(htmlspecialchars($content, ENT_COMPAT, 'UTF-8'));
     }
 }

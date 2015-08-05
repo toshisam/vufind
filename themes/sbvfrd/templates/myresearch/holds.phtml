@@ -137,6 +137,10 @@
                 {
                     $status = $this->transEsc('Waiting in queue') . ': ' . $ilsDetails['position'];
                 }
+                elseif (preg_match('/On hold until:/', $ilsDetails['status']))
+                {
+                    $status = $this->transEsc('On hold until') . ': ' . preg_replace('/On hold until: /', '',  $ilsDetails['status']);
+                }
                 else
                 {
                     $status = $this->transEsc($ilsDetails['status']);

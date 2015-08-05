@@ -31,7 +31,7 @@
   } else {
     $getFieldName = ('FRBR' === $type ? 'name' : 'lookfor');
     $this->layout()->breadcrumbs .= '<li class="active">' .
-          $this->getLastSearchLink($this->transEsc('Search'), '', '</li> ');
+          $this->getLastSearchLink($this->transEsc('Search') . ': ' . $this->escapeHtml($this->lookfor), '', '</li> ');
   }
   if ('FRBR' === $type) {
     $this->layout()->breadcrumbs .= '<li class="active">' . sprintf($this->transEsc('search_breadcrumb_frbr'), $this->escapeHtml($this->lookfor)) . '</li>';
