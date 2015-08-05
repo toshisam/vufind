@@ -42,6 +42,10 @@
       array('searchDetails' => $searchDetails)
     )
   );
+
+  $this->jsTranslations()->addStrings([
+      'MultiSelectNothingFound' => 'MultiSelectNothingFound',
+  ]);
 ?>
 
 <?= $this->render('search/advanced/templates-handlebars') ?>
