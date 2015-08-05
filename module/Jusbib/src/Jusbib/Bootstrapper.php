@@ -67,12 +67,12 @@ class Bootstrapper
         );
 
         foreach ($namespaces as $namespace) {
-            $plainNamespace	= str_replace('\\', '', $namespace);
-            $shortNamespace	= str_replace('VuFind', '', $plainNamespace);
-            $configKey		= strtolower(str_replace('\\', '_', $namespace));
-            $serviceName	= 'Jusbib\\' . $shortNamespace . 'PluginManager';
-            $serviceConfig	= $config['jusbib']['plugin_managers'][$configKey];
-            $className		= 'Jusbib\\' . $namespace . '\PluginManager';
+            $plainNamespace    = str_replace('\\', '', $namespace);
+            $shortNamespace    = str_replace('VuFind', '', $plainNamespace);
+            $configKey        = strtolower(str_replace('\\', '_', $namespace));
+            $serviceName    = 'Jusbib\\' . $shortNamespace . 'PluginManager';
+            $serviceConfig    = $config['jusbib']['plugin_managers'][$configKey];
+            $className        = 'Jusbib\\' . $namespace . '\PluginManager';
 
             $pluginManagerFactoryService = function ($sm) use ($className, $serviceConfig) {
                 return new $className(

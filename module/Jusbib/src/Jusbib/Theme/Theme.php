@@ -8,7 +8,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 /**
  * Class Theme
  *
- * @package    Swissbib\Theme
+ * @package Swissbib\Theme
  */
 class Theme implements ServiceLocatorAwareInterface
 {
@@ -23,7 +23,7 @@ class Theme implements ServiceLocatorAwareInterface
     /**
      * Set serviceManager instance
      *
-     * @param  ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator
      *
      * @return void
      */
@@ -49,7 +49,7 @@ class Theme implements ServiceLocatorAwareInterface
     /**
      * Get all configuration for theme tabs
      *
-     * @return    Array[]
+     * @return Array[]
      */
     public function getThemeTabsConfig()
     {

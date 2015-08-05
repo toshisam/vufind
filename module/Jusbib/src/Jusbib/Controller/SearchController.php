@@ -15,7 +15,7 @@ class SearchController extends SwissbibSearchController
     /**
      * Render advanced search classification trees
      *
-     * @return    ViewModel
+     * @return ViewModel
      */
     public function advancedClassificationAction()
     {

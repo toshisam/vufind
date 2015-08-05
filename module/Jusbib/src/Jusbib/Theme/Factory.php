@@ -39,7 +39,8 @@ use Zend\ServiceManager\ServiceManager;
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-class Factory {
+class Factory
+{
 
     public static function getJusbibTheme(ServiceManager $sm)
     {
