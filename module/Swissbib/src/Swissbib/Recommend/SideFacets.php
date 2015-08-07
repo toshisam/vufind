@@ -25,6 +25,7 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:recommendation_modules Wiki
  */
+
 namespace Swissbib\Recommend;
 
 use VuFind\Recommend\SideFacets as VFSideFacets;
@@ -42,11 +43,13 @@ use VuFind\Recommend\SideFacets as VFSideFacets;
  */
 class SideFacets extends VFSideFacets
 {
-
-
+    /**
+     * Returns libraries
+     *
+     * @return mixed
+     */
     public function getMyLibraries()
     {
         return $this->results->getMyLibrariesFacets();
     }
-
 }
