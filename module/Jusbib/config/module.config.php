@@ -1,9 +1,6 @@
 <?php
 namespace Jusbib\Module\Config;
 
-use Jusbib\Theme\Theme;
-use Jusbib\VuFind\Search\Helper\ExtendedSolrFactoryHelper;
-
 return array(
     'router' => array(
         'routes' => array(
