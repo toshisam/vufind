@@ -422,6 +422,45 @@ class Record extends AbstractHelper
     }
 
     /**
+     * Render a cover for the current record.
+     *
+     * @param string $context Context of code being genarated
+     * @param string $default The default size of the cover
+     * @param string $link    The link for the anchor
+     *
+     * @return string
+     */
+    public function getCover($context, $default, $link = false)
+    {
+        if (isset($this->config->Content->coversize)
+            && !$this->config->Content->coversize
+        ) {
+            // covers disabled entirely
+            $preferredSize = false;
+        } else {
+            // check for context-specific overrides
+            $preferredSize = isset($this->config->Content->coversize[$context])
+                ? $this->config->Content->coversize[$context] : $default;
+        }
+        if (empty($preferredSize)) {
+            return '';
+        }
+
+        // Find best option if more than one size is defined (e.g. small:medium)
+        $cover = false;  // assume invalid until good size found below
+        foreach (explode(':', $preferredSize) as $size) {
+            if ($cover = $this->getThumbnail($size)) {
+                break;
+            }
+        }
+
+        $driver = $this->driver;    // for convenient use in compact()
+        return $this->contextHelper->renderInContext(
+            'record/cover.phtml', compact('cover', 'link', 'context', 'driver')
+        );
+    }
+
+    /**
      * Generate a qrcode URL (return false if unsupported).
      *
      * @param string $context Context of code being generated (core or results)
@@ -560,5 +599,22 @@ class Record extends AbstractHelper
         };
 
         return array_map($formatLink, $urls);
+    }
+
+    /**
+     * Get all the links associated with this record depending on the OpenURL setting
+     * replace_other_urls.  Returns an array of associative arrays each containing
+     * 'desc' and 'url' keys.
+     *
+     * @return array
+     */
+    public function getLinkDetailsForOpenUrl()
+    {
+        if (isset($this->config->OpenURL->replace_other_urls)
+            && $this->config->OpenURL->replace_other_urls
+        ) {
+            return [];
+        }
+        return $this->getLinkDetails();
     }
 }
