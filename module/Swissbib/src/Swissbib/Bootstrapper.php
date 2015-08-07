@@ -191,6 +191,7 @@ class Bootstrapper
     /*
      * Set fallback locale to english
      */
+    /* GH: brauchen wir das noch?
     protected function initTranslationFallback()
     {
         // Language not supported in CLI mode:
@@ -201,7 +202,7 @@ class Bootstrapper
         $baseDir = LOCAL_OVERRIDE_DIR . '/languages';
 
         $callback = function ($event) use ($baseDir) {
-            /** @var TranslatorImpl $translator */
+
             $translator = $event->getApplication()->getServiceManager()->get('VuFind\Translator');
             $locale     = $translator->getLocale();
             $fallback    = 'en';
@@ -214,107 +215,7 @@ class Bootstrapper
 
         $this->events->attach('dispatch', $callback, 8999);
     }
-
-
-
-    /**
-     * Initialize translator for custom label files
-     */
-    protected function initSpecialTranslations()
-    {
-        // Language not supported in CLI mode:
-        if (Console::isConsole()) {
-            return;
-        }
-
-        $config =& $this->config;
-        $callback = function ($event) use ($config) {
-
-            /** @var TranslatorImpl $translator */
-            $translator = $event->getApplication()->getServiceManager()->get('VuFind\Translator');
-            if (isset($config->TextDomains)
-                && isset($config->TextDomains->textDomains)
-            ) {
-                $this->addTextDomainTranslation(
-                    $translator,
-                    $config->TextDomains->textDomains
-                );
-            }
-        };
-
-        // Attach right AFTER base translator, so it is initialized
-        $this->events->attach('dispatch', $callback, 8998);
-    }
-
-
-
-
-
-
-    /**
-     * Adds text-domain language files
-     *
-     * @param TranslatorImpl $translator  Translator Object
-     * @param Config     $textDomains Text-domain configuration
-     *
-     * @return void
-     */
-    protected function addTextDomainTranslation($translator, $textDomains)
-    {
-        // nothing to do if no text-domain is configured
-        if (!($textDomains instanceof Config)) {
-            return;
-        }
-
-        $language =  $translator->getLocale();
-
-        foreach ($textDomains as $textDomain) {
-            $langFile = $textDomain . '/' . $language . '.ini';
-            $translator->addTranslationFile(
-                'ExtendedIni',
-                $langFile,
-                $textDomain,
-                $language
-            );
-        }
-    }
-
-
-
-
-
-    /**
-     * Add files for location translation based on tab40 data to the translator
-     */
-    protected function initTab40LocationTranslation()
-    {
-        $callback = function ($event) {
-            /** @var ServiceManager $serviceLocator */
-            $serviceLocator    = $event->getApplication()->getServiceManager();
-            /** @var Translator $translator */
-            $translator = $serviceLocator->get('VuFind\Translator');
-            /** @var Config $tab40Config */
-            $tab40Config    = $serviceLocator->get('VuFind\Config')->get('config')->tab40import;
-
-            if ($tab40Config) {
-                $basePath        = $tab40Config->path;
-                $languageFiles    = glob($basePath . '/*.ini');
-
-                    // Add all found files
-                foreach ($languageFiles as $languageFile) {
-                    list($network, $locale) = explode('-', basename($languageFile, '.ini'));
-                    //GH (26.3.2015): in the past we initialized the translator by using the absolute path of the language file
-                    //by now we have to use only the filename. At the moment I don't zhe background of this and I don't have enough
-                    // time to take a look on it. Second thing: At the moment I don't have any idea why the other structured language file
-                    //of swissbib (not flat as used in VuFind) seems to work...
-                    $translator->addTranslationFile('ExtendedIni', basename($languageFile), 'location-' . $network, $locale);
-                }
-            }
-        };
-
-            // Attach right AFTER base translator, so it is initialized
-        $this->events->attach('dispatch', $callback, 8997);
-    }
+    */
 
 
 

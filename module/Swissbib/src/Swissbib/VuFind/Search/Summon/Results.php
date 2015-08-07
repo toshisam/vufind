@@ -77,6 +77,7 @@ class Results extends VFSummonResults
      *
      * @return array        Facets data arrays
      */
+    /* number of facets has to be solved with another mechanism
     public function getFacetList($filter = null)
     {
 
@@ -98,6 +99,7 @@ class Results extends VFSummonResults
         }
         return $finalResult;
     }
+    */
 
 
 }
