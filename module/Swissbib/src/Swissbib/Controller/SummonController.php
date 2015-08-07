@@ -1,17 +1,53 @@
 <?php
+/**
+ * Swissbib SummonController
+ *
+ * PHP version 5
+ *
+ * Copyright (C) project swissbib, University Library Basel, Switzerland
+ * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
+ *
+ * Date: 1/2/13
+ * Time: 4:09 PM
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @category Swissbib_VuFind2
+ * @package  Controller
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org
+ */
 
 namespace Swissbib\Controller;
 
-use Zend\Session\Container as SessionContainer;
 use Zend\Http\PhpEnvironment\Response;
 
 use VuFind\Solr\Utils as SolrUtils;
 use VuFind\Controller\SummonController as VuFindSummonController;
 use Zend\Stdlib\Parameters;
 
+/**
+ * Swissbib SummonController
+ *
+ * @category Swissbib_VuFind2
+ * @package  Controller
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org
+ */
 class SummonController extends VuFindSummonController
 {
-
     /**
      * Return a Search Results object containing advanced facet information.  This
      * data may come from the cache.
@@ -25,8 +61,8 @@ class SummonController extends VuFindSummonController
             ->getCache('object');
 
         /**
-         * Loads the Summon Results object. This is necessary because otherwise it would fail to load the object
-         * from cache.
+         * Loads the Summon Results object. This is necessary because otherwise
+         * it would fail to load the object from cache.
          */
         $loadResults = $this->getResultsManager()->get('Summon');
         $loadParams  = $loadResults->getParams();
@@ -54,7 +90,6 @@ class SummonController extends VuFindSummonController
         return $results;
     }
 
-
     /**
      * Get results manager
      * If target is extended, get a customized manager
@@ -64,30 +99,35 @@ class SummonController extends VuFindSummonController
     protected function getResultsManager()
     {
         if (!isset($this->extendedTargets)) {
-            $mainConfig = $this->getServiceLocator()->get('Vufind\Config')->get('config');
-            $extendedTargetsSearchClassList = $mainConfig->SwissbibSearchExtensions->extendedTargets;
+            $mainConfig = $this->getServiceLocator()->get('Vufind\Config')
+                ->get('config');
+            $extendedTargetsSearchClassList
+                = $mainConfig->SwissbibSearchExtensions->extendedTargets;
 
-            $this->extendedTargets = array_map('trim', explode(',', $extendedTargetsSearchClassList));
+            $this->extendedTargets = array_map(
+                'trim', explode(',', $extendedTargetsSearchClassList)
+            );
         }
 
         if (in_array($this->searchClassId, $this->extendedTargets)) {
-            return $this->getServiceLocator()->get('Swissbib\SearchResultsPluginManager');
+            return $this->getServiceLocator()
+                ->get('Swissbib\SearchResultsPluginManager');
         }
 
         return parent::getResultsManager();
     }
 
-
-
     /**
+     * HomePageFacets
+     *
      * @return void|\VuFind\Search\Summon\Results
      */
     protected function getHomePageFacets()
     {
-        return $this->getFacetResults('initHomePageFacets', 'summonSearchHomeFacets');
+        return $this->getFacetResults(
+            'initHomePageFacets', 'summonSearchHomeFacets'
+        );
     }
-
-
 
     /**
      * Return a Search Results object containing requested facet information.  This
@@ -105,8 +145,8 @@ class SummonController extends VuFindSummonController
             ->getCache('object');
 
         /**
-         * Loads the Summon Results object. This is necessary because otherwise it would fail to load the object
-         * from cache.
+         * Loads the Summon Results object. This is necessary
+         * because otherwise it would fail to load the object from cache.
          */
         $loadResults = $this->getResultsManager()->get('Summon');
         $loadParams  = $loadResults->getParams();
@@ -133,6 +173,7 @@ class SummonController extends VuFindSummonController
         // Restore the real service locator to the object (it was lost during
         // serialization):
         $results->restoreServiceLocator($this->getServiceLocator());
+
         return $results;
     }
 
@@ -140,12 +181,16 @@ class SummonController extends VuFindSummonController
      * Checks if client IP is inside Basel / Berne universities (configurable)
      * used to bring information to the view
      * functionality from sbvf2 (mid august 2014)
+     *
+     * @return boolean
      */
     protected function isRestrictedTarget()
     {
         // check if client is inside Basel / Berne universities
-        $targetsProxy = $this->serviceLocator->get('Swissbib\TargetsProxy\TargetsProxy');
+        $targetsProxy = $this->serviceLocator
+            ->get('Swissbib\TargetsProxy\TargetsProxy');
         $external = $targetsProxy->detectTarget() === false ? true : false;
+
         return $external;
     }
 
@@ -160,9 +205,11 @@ class SummonController extends VuFindSummonController
     {
         $viewModel              = parent::advancedAction();
 
-        //GH: We need this initialization only to handle personal limit an sort settings for logged in users
-        $viewModel->options     = $this->getServiceLocator()->get('Swissbib\SearchOptionsPluginManager')->get($this->searchClassId);
-        $results                = $this->getResultsManager()->get($this->searchClassId);
+        //GH: We need this initialization only to handle personal limit
+        // an sort settings for logged in users
+        $viewModel->options = $this->getServiceLocator()
+            ->get('Swissbib\SearchOptionsPluginManager')->get($this->searchClassId);
+        $results = $this->getResultsManager()->get($this->searchClassId);
         $params = $results->getParams();
         $requestParams = new Parameters(
             $this->getRequest()->getQuery()->toArray()
@@ -172,14 +219,14 @@ class SummonController extends VuFindSummonController
         $params->initLimitAdvancedSearch($requestParams);
         $viewModel->setVariable('params', $params);
 
-
         return $viewModel;
     }
 
-
-
     /**
-     * @Override
+     * Results action
+     *
+     * @throws \Exception
+     * @throws \VuFindSearch\Backend\Exception\BackendException
      *
      * @return \Zend\View\Model\ViewModel
      */
@@ -196,5 +243,4 @@ class SummonController extends VuFindSummonController
 
         return $viewModel;
     }
-
 }

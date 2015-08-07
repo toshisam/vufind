@@ -20,7 +20,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * @category Swissbib_VuFind2
+ * @category Jusbib_VuFind2
  * @package  Module
  * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
@@ -36,7 +36,7 @@ use Zend\Mvc\MvcEvent;
 /**
  * ZF2 module definition for the VuFind application
  *
- * @category Swissbib_VuFind2
+ * @category Jusbib_VuFind2
  * @package  Module
  * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License

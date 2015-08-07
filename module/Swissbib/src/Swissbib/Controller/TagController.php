@@ -1,11 +1,14 @@
 <?php
 /**
- * Tag Controller
+ * Swissbib TagController
  *
  * PHP version 5
  *
- * Copyright (C) Villanova University 2010.
+ * Copyright (C) project swissbib, University Library Basel, Switzerland
+ * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
  *
+ * Date: 1/2/13
+ * Time: 4:09 PM
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
  * as published by the Free Software Foundation.
@@ -19,37 +22,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * @category VuFind2
+ * @category Swissbib_VuFind2
  * @package  Controller
- * @author   Demian Katz <demian.katz@villanova.edu>
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://vufind.org   Main Site
+ * @link     http://www.swissbib.org
  */
+
 namespace Swissbib\Controller;
 
 /**
- * Tag Controller
+ * Swissbib TagController
  *
- * @category VuFind2
+ * @category Swissbib_VuFind2
  * @package  Controller
- * @author   Demian Katz <demian.katz@villanova.edu>
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://vufind.org   Main Site
+ * @link     http://vufind.org
  */
 class TagController extends \VuFind\Controller\TagController
 {
-
-
-    /**
-     * Convenience method for accessing results
-     *
-     * @return \VuFind\Search\Results\PluginManager
-     */
-    //protected function getResultsManager()
-    //{
-    //    return $this->getServiceLocator()->get('Swissbib\SearchResultsPluginManager');
-    //}
-
 
 }
 

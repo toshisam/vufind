@@ -1,4 +1,34 @@
 <?php
+/**
+ * Swissbib RecordController
+ *
+ * PHP version 5
+ *
+ * Copyright (C) project swissbib, University Library Basel, Switzerland
+ * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
+ *
+ * Date: 1/2/13
+ * Time: 4:09 PM
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @category Swissbib_VuFind2
+ * @package  Controller
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org
+ */
+
 namespace Swissbib\Controller;
 
 use VuFind\Exception\ILS;
@@ -10,11 +40,16 @@ use Zend\View\Model\ViewModel,
     Zend\Session\Container as SessionContainer;
 
 /**
- * [Description]
+ * Swissbib RecordController
+ *
+ * @category Swissbib_VuFind2
+ * @package  Controller
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org
  */
 class RecordController extends VuFindRecordController
 {
-
     /**
      * Record home action
      * Catch record not found exceptions and show error page
@@ -25,17 +60,20 @@ class RecordController extends VuFindRecordController
     {
         try {
             //GH: this is kind of a hack but in this situation not avoidable
-            //MarcFormatter and Processor are hard instantiated (not as a service) so you get no chance to set references for these types
-            //because MarcFormatter is now implementing ServiceManagerAwareInterface it will get a reference to the ServiceManager to fetch the
+            //MarcFormatter and Processor are hard instantiated (not as a service)
+            // so you get no chance to set references for these types
+            //because MarcFormatter is now implementing ServiceManagerAwareInterface
+            // it will get a reference to the ServiceManager to fetch the
             //new service RedirectProtocolWrapper
-            //there is another caveat: MarcFormatter is used by the XSLT Template to hook into a custom PHP function using a static function (which doesn't work for PHP 5.4.24 and higher
-            //another issue - should be solved by snowfake because it was implemented by them)
+            //there is another caveat: MarcFormatter is used by the XSLT Template to
+            // hook into a custom PHP function using a static function
+            // (which doesn't work for PHP 5.4.24 and higher
+            //another issue - should be solved by snowfake because it was
+            // implemented by them)
             //some work for a redesign
             $this->getServiceLocator()->get("MarcFormatter");
 
             return parent::homeAction();
-
-
         } catch (RecordMissingException $e) {
 
             return $this->forwardTo('MissingRecord', 'Home');
@@ -75,7 +113,8 @@ class RecordController extends VuFindRecordController
             $referer = $tURL;
             //clear the temporary session because we don't need it anymore
             //(the user was successfully authenticated)
-            $shibFollowup->getManager()->getStorage()->clear('ShibbolethSaveFollowup');
+            $shibFollowup->getManager()->getStorage()
+                ->clear('ShibbolethSaveFollowup');
 
         } else {
             $referer = $this->getRequest()->getServer()->get('HTTP_REFERER');
@@ -268,6 +307,8 @@ class RecordController extends VuFindRecordController
     }
 
     /**
+     * Order copies action
+     *
      * @return ViewModel
      */
     public function copyAction()
@@ -278,29 +319,39 @@ class RecordController extends VuFindRecordController
 
         $catalog = $this->getILS();
         /**
- * @var Form $copyForm 
-*/
+         * Copy form
+         *
+         * @var Form $copyForm
+         */
         $copyForm = $this->serviceLocator->get('Swissbib\Record\Form\CopyForm');
         $recordId = $this->request->getQuery('recordId');
         $itemId = $this->request->getQuery('itemId');
 
         try {
-            $pickupLocations = $catalog->getCopyPickUpLocations($patron, $recordId, $itemId);
+            $pickupLocations = $catalog->getCopyPickUpLocations(
+                $patron, $recordId, $itemId
+            );
             $pickupLocationsField = $copyForm->get('pickup-location');
             $pickupLocationsField->setOptions(['value_options' => $pickupLocations]);
 
-            if ($this->request->isPost() && $this->request->getPost('form-name') === 'order-copy') {
+            if ($this->request->isPost()
+                && $this->request->getPost('form-name') === 'order-copy'
+            ) {
                 $copyForm->setData($this->request->getPost());
 
                 if ($copyForm->isValid()) {
 
-                    $this->getILS()->putCopy($patron, $recordId, $itemId, $copyForm->getData());
+                    $this->getILS()->putCopy(
+                        $patron, $recordId, $itemId, $copyForm->getData()
+                    );
 
-                    $this->flashMessenger()->setNamespace('success')->addMessage('copy_place_success');
+                    $this->flashMessenger()->setNamespace('success')
+                        ->addMessage('copy_place_success');
 
                     return $this->redirectToRecord();
                 } else {
-                    $this->flashMessenger()->setNamespace('error')->addMessage('copy_place_error');
+                    $this->flashMessenger()->setNamespace('error')
+                        ->addMessage('copy_place_error');
                 }
             }
         } catch (ILS $e) {
@@ -318,12 +369,15 @@ class RecordController extends VuFindRecordController
     }
 
     /**
+     * Ajax tab action
+     *
      * @return mixed
      */
     public function ajaxtabAction()
     {
         //This is the same Hack as in the $this->homeAction,
-        //The MarcFormatter is using a ServiceManager in a static function in an XSLT-Template
+        //The MarcFormatter is using a ServiceManager in a static
+        // function in an XSLT-Template
         //This call injects the ServiceManager indirectly
         $this->getServiceLocator()->get("MarcFormatter");
 

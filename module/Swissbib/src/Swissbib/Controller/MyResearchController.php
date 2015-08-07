@@ -1,15 +1,41 @@
 <?php
+/**
+ * Swissbib MyResearchController
+ *
+ * PHP version 5
+ *
+ * Copyright (C) project swissbib, University Library Basel, Switzerland
+ * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
+ *
+ * Date: 1/2/13
+ * Time: 4:09 PM
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @category Swissbib_VuFind2
+ * @package  Controller
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org
+ */
+
 namespace Swissbib\Controller;
 
 use VuFind\Exception\ILS;
 use VuFind\ILS\Driver\AlephRestfulException;
 use VuFindSearch\Service;
-use Zend\Form\Annotation\AnnotationBuilder;
 use Zend\Form\Element;
-use Zend\Form\Form;
 use Zend\ServiceManager\ServiceManager;
-use Zend\Session\Storage\SessionStorage;
-use Zend\Validator\EmailAddress;
 use Zend\View\Model\ViewModel,
     Zend\Http\Response as HttpResponse,
     VuFind\Controller\MyResearchController as VuFindMyResearchController,
@@ -22,14 +48,22 @@ use VuFind\Exception\ListPermission as ListPermissionException,
 
 use Zend\Uri\UriFactory;
 
+/**
+ * Swissbib MyResearchController
+ *
+ * @category Swissbib_VuFind2
+ * @package  Controller
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org
+ */
 class MyResearchController extends VuFindMyResearchController
 {
-
     /**
-   * Show photo copy requests
-   *
-   * @return ViewModel
-   */
+     * Show photo copy requests
+     *
+     * @return ViewModel
+     */
     public function photocopiesAction()
     {
         // Stop now if the user does not have valid catalog credentials available:
@@ -38,8 +72,10 @@ class MyResearchController extends VuFindMyResearchController
         }
 
         /**
- * @var Aleph $catalog 
-*/
+         * Aleph
+         *
+         * @var Aleph $catalog
+         */
         $catalog = $this->getILS();
 
         // Get photo copies details:
@@ -48,12 +84,11 @@ class MyResearchController extends VuFindMyResearchController
         return $this->createViewModel(array('photoCopies' => $photoCopies));
     }
 
-
     /**
-   * Get bookings
-   *
-   * @return ViewModel
-   */
+     * Get bookings
+     *
+     * @return ViewModel
+     */
     public function bookingsAction()
     {
         // Stop now if the user does not have valid catalog credentials available:
@@ -62,8 +97,10 @@ class MyResearchController extends VuFindMyResearchController
         }
 
         /**
- * @var Aleph $catalog 
-*/
+         * Aleph
+         *
+         * @var Aleph $catalog
+         */
         $catalog = $this->getILS();
 
         // Get photo copies details:
@@ -72,23 +109,23 @@ class MyResearchController extends VuFindMyResearchController
         return $this->createViewModel(array('bookings' => $bookings));
     }
 
-
     /**
-   * Get location parameter from route
-   *
-   * @return String|Boolean
-   */
+     * Get location parameter from route
+     *
+     * @return String|Boolean
+     */
     protected function getLocationFromRoute()
     {
         return $this->params()->fromRoute('location', false);
     }
 
-
     /**
-   * Inject location from route
-   *
-   * @inheritDoc
-   */
+     * Inject location from route
+     *
+     * @param null $params Parameters
+     *
+     * @return ViewModel
+     */
     protected function createViewModel($params = null)
     {
         $viewModel = parent::createViewModel($params);
@@ -97,12 +134,11 @@ class MyResearchController extends VuFindMyResearchController
         return $viewModel;
     }
 
-
     /**
-   * (local) Search User Settings
-   *
-   * @return mixed
-   */
+     * (local) Search User Settings
+     *
+     * @return mixed
+     */
     public function settingsAction()
     {
         $account = $this->getAuthManager();
@@ -112,11 +148,15 @@ class MyResearchController extends VuFindMyResearchController
         }
 
         /**
- * @var User $user 
-*/
+         * User
+         *
+         * @var User $user
+         */
         $user = $this->getUser();
 
-        if ($this->getRequest()->isPost() && $this->params()->fromPost('myResearchSettingsForm')) {
+        if ($this->getRequest()->isPost()
+            && $this->params()->fromPost('myResearchSettingsForm')
+        ) {
             $language = $this->params()->fromPost('language');
             $maxHits = $this->params()->fromPost('max_hits');
             $defaultSort = $this->params()->fromPost('default_sort');
@@ -127,7 +167,8 @@ class MyResearchController extends VuFindMyResearchController
 
             $user->save();
 
-            $this->flashMessenger()->setNamespace('success')->addMessage('save_settings_success');
+            $this->flashMessenger()->setNamespace('success')
+                ->addMessage('save_settings_success');
 
             setcookie('language', $language, time() + 3600 * 24 * 100, '/');
 
@@ -136,50 +177,51 @@ class MyResearchController extends VuFindMyResearchController
 
         $serviceManager = $this->event->getApplication()->getServiceManager();
 
-
         $defaultSort = unserialize($user->default_sort);
         $sortOptions = $this->getSortOptions($serviceManager, $defaultSort);
-
 
         $language = $user->language;
         $maxHits = $user->max_hits;
 
         return new ViewModel(
             array(
-            'max_hits' => $maxHits,
-            'language' => $language,
-            'optsLanguage' => array(
-            'de' => 'Deutsch',
-            'en' => 'English',
-            'fr' => 'Francais',
-            'it' => 'Italiano'
-            ),
-            'optsMaxHits' => array(
-            10, 20, 40, 60, 80, 100
-            ),
-            'defaultSort' => $sortOptions
+                'max_hits' => $maxHits,
+                'language' => $language,
+                'optsLanguage' => array(
+                'de' => 'Deutsch',
+                'en' => 'English',
+                'fr' => 'Francais',
+                'it' => 'Italiano'
+                ),
+                'optsMaxHits' => array(
+                    10, 20, 40, 60, 80, 100
+                ),
+                'defaultSort' => $sortOptions
             )
-      );
+        );
     }
 
 
     /**
-   * creates View snippet to provide users more information about the multi accounts in swissbib
-   *
-   * @return ViewModel
-   */
+     * Creates View snippet to provide users more information
+     * about the multi accounts in swissbib
+     *
+     * @return ViewModel
+     */
     public function backgroundaccountsAction()
     {
         return $this->createViewModel();
     }
 
-
     /**
-   * Catch error for not allowed list view
-   * Redirect list own lists with message
-   *
-   * @return HttpResponse
-   */
+     * Catch error for not allowed list view
+     * Redirect list own lists with message
+     *
+     * @throws ListPermissionException
+     * @throws \Exception
+     *
+     * @return mixed|HttpResponse|ViewModel
+     */
     public function mylistAction()
     {
         // Check for "delete item" request; parameter may be in GET or POST depending
@@ -209,7 +251,8 @@ class MyResearchController extends VuFindMyResearchController
         // If we got this far, we just need to display the favorites:
         try {
             //GH
-            //the controller has to be extended only because of this customized PluginManager
+            //the controller has to be extended only because of this
+            //customized PluginManager
             //request to VuFind to make this more configurable necessary!
             $results = $this->getServiceLocator()
                 ->get('Swissbib\SearchResultsPluginManager')->get('Favorites');
@@ -241,7 +284,8 @@ class MyResearchController extends VuFindMyResearchController
             }
             throw $e;
         } catch (\Exception $e) {
-            $this->flashMessenger()->setNamespace('error')->addMessage($e->getMessage());
+            $this->flashMessenger()->setNamespace('error')
+                ->addMessage($e->getMessage());
 
             $target = $this->url()->fromRoute('userList');
 
@@ -254,13 +298,16 @@ class MyResearchController extends VuFindMyResearchController
    * Convenience method to get a session initiator URL. Returns false if not
    * applicable.
    * what does "not applicable" mean:
-   * for me (GH) it makes no sense to create a session initiator instance in case we are within the normal workflow of the application
-   * (no authentication procedure in conjunction with shibboleth authentication took place)
-   * at the moment I compare the domain strings to decide if we should create a session initiator because an authentication with shibboleth tool place
+   * for me (GH) it makes no sense to create a session initiator instance in
+   * case we are within the normal workflow of the application
+   * (no authentication procedure in conjunction with shibboleth authentication
+   * took place) at the moment I compare the domain strings to decide if we should
+   * create a session initiator because an authentication with shibboleth tool place
    * another possibilty might be to test the Sibboleth.sso/Session response
    * at the moment we have to issues:
    * a) why redirect prefix in apache session variables?
-   * b) access to the shibboleth session variables is only possible immediately after shibboleth authentication process - why?
+   * b) access to the shibboleth session variables is only possible immediately
+   * after shibboleth authentication process - why?
    * question are pending at switch
    *
    * @return string|bool
@@ -271,7 +318,10 @@ class MyResearchController extends VuFindMyResearchController
         $base = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
         $baseEscaped = str_replace("/", "\/", $base);
 
-        if (preg_match("/$baseEscaped/", $this->getRequest()->getServer()->get('HTTP_REFERER')) == 0) {
+        if (preg_match(
+            "/$baseEscaped/",
+            $this->getRequest()->getServer()->get('HTTP_REFERER')
+        ) == 0) {
             $url = $this->getServerUrl('myresearch-home');
             return $this->getAuthManager()->getSessionInitiator($url);
         } else {
@@ -279,21 +329,22 @@ class MyResearchController extends VuFindMyResearchController
         }
     }
 
-
     /**
-   * Login Action
-   * Need to overwrite because of a special handling for Shibboleth workflow
-   *
-   * @return mixed
-   */
+     * Login Action
+     * Need to overwrite because of a special handling for Shibboleth workflow
+     *
+     * @return mixed
+     */
     public function loginAction()
     {
-
-
-        //we need to differantiate between Shibboleh and not Shibboleth authentication mechanisms
-        //in case of Shibboleth we will get a problem with HTTP_Referer after successful authentication at IDP
-        //because then the Referer points to the IDP address instead of a valid VuFind resource (often something like save a record in various contexts)
-        //therefor this mechanisms where we store a temporary session for the latest Referer before the IDP request is executed in the next step by the user
+        //we need to differantiate between Shibboleh and not Shibboleth
+        // authentication mechanisms
+        //in case of Shibboleth we will get a problem with HTTP_Referer after
+        // successful authentication at IDP
+        //because then the Referer points to the IDP address instead of a valid
+        // VuFind resource (often something like save a record in various contexts)
+        //therefor this mechanisms where we store a temporary session for the latest
+        // Referer before the IDP request is executed in the next step by the user
         //at the moment it is used in Swissbib/Controller/RecordController
         $clazz = $this->getAuthManager()->getAuthClassForTemplateRendering();
         if ($clazz == "Swissbib\\VuFind\\Auth\\Shibboleth") {
@@ -332,6 +383,11 @@ class MyResearchController extends VuFindMyResearchController
         return $view;
     }
 
+    /**
+     * Logout
+     *
+     * @return HttpResponse
+     */
     public function logoutAction()
     {
         $config = $this->getConfig();
@@ -354,13 +410,19 @@ class MyResearchController extends VuFindMyResearchController
         }
 
 
-        if (count(preg_grep('/Search\/Results|Summon\/Search/', [$logoutTarget])) > 0 ) {
-            //GH: It might happen (depends on context) that limit and sort query parameter are still
-            //part of the former URL when user called the logout function (logoutTarget) and contains sort
-            // or limit parameter customized by the user. This is not desired especially at access points in the public space
-            //But we have to be careful: we should append additional default parameters only for Solr or Summon
+        if (count(preg_grep('/Search\/Results|Summon\/Search/', [$logoutTarget])) > 0
+        ) {
+            //GH: It might happen (depends on context) that limit and sort query
+            // parameter are still
+            //part of the former URL when user called the logout function
+            // (logoutTarget) and contains sort
+            // or limit parameter customized by the user. This is not desired
+            // especially at access points in the public space
+            //But we have to be careful: we should append additional default
+            // parameters only for Solr or Summon
             // search Routes
-            $solrResultsManager = $this->getServiceLocator()->get('Swissbib\SearchResultsPluginManager')->get('Solr');
+            $solrResultsManager = $this->getServiceLocator()
+                ->get('Swissbib\SearchResultsPluginManager')->get('Solr');
             $options = $solrResultsManager->getParams()->getOptions();
             $defaultSort = $options->getDefaultSortByHandler();
             $defaultLimit = $options->getDefaultLimit();
@@ -374,13 +436,13 @@ class MyResearchController extends VuFindMyResearchController
 
 
     /**
-   * User login action -- clear any previous follow-up information prior to
-   * triggering a login process. This is used for explicit login links within
-   * the UI to differentiate them from contextual login links that are triggered
-   * by attempting to access protected actions.
-   *
-   * @return mixed
-   */
+     * User login action -- clear any previous follow-up information prior to
+     * triggering a login process. This is used for explicit login links within
+     * the UI to differentiate them from contextual login links that are triggered
+     * by attempting to access protected actions.
+     *
+     * @return mixed
+     */
     public function userloginAction()
     {
         $forward = parent::userloginAction();
@@ -392,11 +454,11 @@ class MyResearchController extends VuFindMyResearchController
     }
 
     /**
-   * Store a referer (if appropriate) to keep post-login redirect pointing
-   * to an appropriate location.
-   *
-   * @return void
-   */
+     * Store a referer (if appropriate) to keep post-login redirect pointing
+     * to an appropriate location.
+     *
+     * @return void
+     */
     protected function storeRefererForPostLoginRedirect()
     {
         // Get the referer -- if it's empty, there's nothing to store!
@@ -421,23 +483,29 @@ class MyResearchController extends VuFindMyResearchController
             //$referer = "http://baselbern.swissbib.ch"; // -> stored
 
             //I guess we should use only the scheme (hostname) because the whole URL
-            //something like this: http://localhost/vufind/Record/304410349/HierarchyTree?hierarchy=125488483&recordID=304410349
-            //could contain the searched pattern with no intent (especially webpages from UB Basel)
+            //something like this: http://localhost/vufind/Record/304410349/
+            //HierarchyTree?hierarchy=125488483&recordID=304410349
+            //could contain the searched pattern with no intent
+            // (especially webpages from UB Basel)
             $uri = UriFactory::factory($referer);
             $scheme = $uri->getHost();
 
             //hosts running VuFind are labeled similar to
             //test.swissbib.ch || sb-vf1.swissbib.unibas.ch ..
-            //these links could be defined via configuration once the "Bestellvorgang" - seems to be a monster -  is stable (I guess this won't happen in the future...)
+            //these links could be defined via configuration once the
+            // "Bestellvorgang" - seems to be a monster -  is stable
+            // (I guess this won't happen in the future...)
             $matches = array_filter(
-                array("/swissbib\.?.*?\.ch/", "/localhost/"), function ($pattern) use ($scheme) {
+                array("/swissbib\.?.*?\.ch/", "/localhost/"),
+                function ($pattern) use ($scheme) {
                     $matched = preg_match($pattern, $scheme);
                     return $matched == 1 ? true : false;
                 }
             );
             if (count($matches) == 0) {
                 //referrer doesn't match against a "friendly" domain
-                //so it has to be a link from outside of the VuFind world which we don't store for later use
+                //so it has to be a link from outside of the VuFind world
+                // which we don't store for later use
                 return;
             }
 
@@ -455,22 +523,26 @@ class MyResearchController extends VuFindMyResearchController
         $this->followup()->store(array(), $referer);
     }
 
-
     /**
-   * @param   ServiceManager $serviceManager
-   * @param   Array          $defaultSort
-   * @return  Array
-   */
+     * Sort Options
+     *
+     * @param ServiceManager $serviceManager Service Manager
+     * @param Array          $defaultSort    Default sorting
+     *
+     * @return Array
+     */
     protected function getSortOptions(ServiceManager $serviceManager, $defaultSort)
     {
         $sortOptions = array();
         $searchTabs = $this->getConfig()->get('SearchTabs');
-        $searchOptionsPluginManager = $serviceManager->get('Swissbib\SearchOptionsPluginManager');
+        $searchOptionsPluginManager = $serviceManager
+            ->get('Swissbib\SearchOptionsPluginManager');
 
         if(!$searchTabs->count() ) {
             $config = $this->getConfig()->get('Index');
             $sortOptions[] = array(
-            'options' => $searchOptionsPluginManager->get($config['engine'])->getSortOptions(),
+            'options' => $searchOptionsPluginManager
+                ->get($config['engine'])->getSortOptions(),
             'engine'  => $config['engine'],
             'selected'  => $defaultSort[$config['engine']]
             );
@@ -478,10 +550,11 @@ class MyResearchController extends VuFindMyResearchController
             return $sortOptions;
         }
 
-        foreach($searchTabs as $searchTabEngine => $searchTabLabel) {
+        foreach ($searchTabs as $searchTabEngine => $searchTabLabel) {
             $sortOptions[] = array (
             'engine'  => $searchTabEngine,
-            'options' => $searchOptionsPluginManager->get($searchTabEngine)->getSortOptions(),
+            'options' => $searchOptionsPluginManager->get($searchTabEngine)
+                ->getSortOptions(),
             'label'   => $searchTabLabel,
             'selected'  => $defaultSort[$searchTabEngine]
             );
@@ -491,6 +564,8 @@ class MyResearchController extends VuFindMyResearchController
     }
 
     /**
+     * Action to change address
+     *
      * @return ViewModel
      */
     public function changeAddressAction()
@@ -499,31 +574,44 @@ class MyResearchController extends VuFindMyResearchController
             return $patron;
         }
 
-        $addressForm = $this->serviceLocator->get('Swissbib\MyResearch\Form\AddressForm');
+        $addressForm = $this->serviceLocator
+            ->get('Swissbib\MyResearch\Form\AddressForm');
 
         try {
-            if ($this->request->isPost() && $this->request->getPost('form-name') === 'changeaddress') {
+            if ($this->request->isPost()
+                && $this->request->getPost('form-name') === 'changeaddress'
+            ) {
                 $addressForm->setData($this->request->getPost());
 
                 if ($addressForm->isValid()) {
                     $address = $this->getILS()->getMyAddress($patron);
                     $newAddress = $addressForm->getData();
-                    $newAddress['z304-address-1'] = $address['z304-address-1']; //make sure nobody changes his name
-                    $newAddress['z304-date-from'] = $address['z304-date-from'] === '00000000' ? date('Ymd') : $address['z304-date-from'];
-                    $newAddress['z304-date-to'] = $address['z304-date-to'] === '00000000' ? date('Ymd', strtotime('+10 years')) : $address['z304-date-to'];
+                    //make sure nobody changes his name
+                    $newAddress['z304-address-1'] = $address['z304-address-1'];
+                    $newAddress['z304-date-from']
+                        = $address['z304-date-from'] === '00000000' ?
+                            date('Ymd') : $address['z304-date-from'];
+                    $newAddress['z304-date-to']
+                        = $address['z304-date-to'] === '00000000' ?
+                            date('Ymd', strtotime('+10 years')) :
+                            $address['z304-date-to'];
 
                     $this->getILS()->changeMyAddress($patron, $newAddress);
-                    $this->flashMessenger()->setNamespace('success')->addMessage('save_address_success');
+                    $this->flashMessenger()->setNamespace('success')
+                        ->addMessage('save_address_success');
                 } else {
-                    $this->flashMessenger()->setNamespace('error')->addMessage('save_address_error');
+                    $this->flashMessenger()->setNamespace('error')
+                        ->addMessage('save_address_error');
                 }
             } else {
                 $addressForm->setData($this->getILS()->getMyAddress($patron));
             }
         } catch (AlephRestfulException $e) {
-            $this->flashMessenger()->setNamespace('error')->addMessage('address_error');
+            $this->flashMessenger()->setNamespace('error')
+                ->addMessage('address_error');
         } catch (ILS $e) {
-            $this->flashMessenger()->setNamespace('error')->addMessage('address_error');
+            $this->flashMessenger()->setNamespace('error')
+                ->addMessage('address_error');
 
             return $this->createViewModel();
         }
@@ -534,5 +622,4 @@ class MyResearchController extends VuFindMyResearchController
             ]
         );
     }
-
 }
