@@ -538,7 +538,7 @@ class MyResearchController extends VuFindMyResearchController
         $searchOptionsPluginManager = $serviceManager
             ->get('Swissbib\SearchOptionsPluginManager');
 
-        if(!$searchTabs->count() ) {
+        if (!$searchTabs->count() ) {
             $config = $this->getConfig()->get('Index');
             $sortOptions[] = array(
             'options' => $searchOptionsPluginManager

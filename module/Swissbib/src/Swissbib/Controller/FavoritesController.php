@@ -164,7 +164,7 @@ class FavoritesController extends BaseController
     /**
      * Remove an institution from users favorite list
      *
-     * @param String $institutionCode
+     * @param String $institutionCode Institution code
      *
      * @return void
      */
