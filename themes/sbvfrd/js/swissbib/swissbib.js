@@ -92,7 +92,7 @@ var swissbib = {
    * function for the UserVoice feedback widget in swissbib green
    */
   initUserVoiceFeedback: function() {
-    var UserVoice = window.UserVoice || [];
+    window.UserVoice = window.UserVoice || [];
     (function () {
       var uv = document.createElement('script');
       uv.type = 'text/javascript';
