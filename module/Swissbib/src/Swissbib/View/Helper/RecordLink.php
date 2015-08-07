@@ -6,7 +6,6 @@ use VuFind\View\Helper\Root\RecordLink as VfRecordLink;
 /**
  * Build record links
  * Override related method to support ctrlnum type
- *
  */
 class RecordLink extends VfRecordLink
 {
@@ -26,8 +25,8 @@ class RecordLink extends VfRecordLink
     /**
      * Build link for ctrlnum
      *
-     * @param      $link
-     * @param bool $escape
+     * @param  $link
+     * @param  bool $escape
      * @return string
      */
     protected function buildCtrlNumRelatedLink($link, $escape = true)
@@ -43,14 +42,15 @@ class RecordLink extends VfRecordLink
     }
 
     /**
-     * @param array $item
+     * @param array  $item
      * @param string $recordId
      *
      * @return string
      */
     public function getCopyUrl(array $item, $recordId)
     {
-        if (!isset($item['adm_code']) || !isset($item['localid']) || !isset($item['sequencenumber'])) return $item['userActions']['photoRequestLink'];
+        if (!isset($item['adm_code']) || !isset($item['localid']) || !isset($item['sequencenumber'])) { return $item['userActions']['photoRequestLink']; 
+        }
 
         $urlHelper    = $this->getView()->plugin('url');
         $escapeHelper = $this->getView()->plugin('escapeHtml');

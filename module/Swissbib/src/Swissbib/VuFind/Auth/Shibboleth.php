@@ -11,7 +11,8 @@ use VuFind\Exception\Auth as AuthException;
 
 
 
-class Shibboleth extends  VuFindShib{
+class Shibboleth extends  VuFindShib
+{
 
 
     /**

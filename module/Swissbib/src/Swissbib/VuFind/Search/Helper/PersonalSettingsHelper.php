@@ -27,7 +27,8 @@ use Zend\Stdlib\Parameters;
  * of the base class.
  * We have to get better experiences related to this mechanism
  */
-trait PersonalSettingsHelper {
+trait PersonalSettingsHelper
+{
 
 
     public function handleLimit(Manager $manager, Parameters $request, $defaultLimit, $legalOptions, $view)
@@ -35,14 +36,11 @@ trait PersonalSettingsHelper {
         $user = $manager->isLoggedIn();
 
         $requestParams = $request->toArray();
-        if ($user)
-        {
+        if ($user) {
             //in case user changed the the limit with a UI control on the result list or the advanced search page
             //we want to serialize the new value in database
-            if (array_key_exists('limitControlElement',$requestParams) || array_key_exists('advancedSearchFormRequest',$requestParams))
-            {
-                if (array_key_exists('limit',$requestParams))
-                {
+            if (array_key_exists('limitControlElement', $requestParams) || array_key_exists('advancedSearchFormRequest', $requestParams)) {
+                if (array_key_exists('limit', $requestParams)) {
                     $user->max_hits = (int) $requestParams['limit'];
                     $user->save();
                     $limit =  $requestParams['limit'];
@@ -80,18 +78,15 @@ trait PersonalSettingsHelper {
 
     }
 
-    public function handleSort (Manager $manager, Parameters $request, $defaultSort, $target)
+    public function handleSort(Manager $manager, Parameters $request, $defaultSort, $target)
     {
         $user = $manager->isLoggedIn();
         $requestParams = $request->toArray();
-        if ($user)
-        {
+        if ($user) {
             //in case user changed the the sort settings on the result list with a specialized UI control
             //we want to serialize the new value in database
-            if (array_key_exists('sortControlElement',$requestParams))
-            {
-                if (array_key_exists('sort',$requestParams))
-                {
+            if (array_key_exists('sortControlElement', $requestParams)) {
+                if (array_key_exists('sort', $requestParams)) {
                     $sort =  $requestParams['sort'];
                     $dbSort = unserialize($user->default_sort);
                     $dbSort[$target] = $requestParams['sort'];

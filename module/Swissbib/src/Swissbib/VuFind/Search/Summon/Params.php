@@ -28,7 +28,8 @@ class Params extends VFSummonParams
      * @param \Zend\StdLib\Parameters $request Parameter object representing user
      * request.
      *
-     * @return void */
+     * @return void 
+*/
     protected function initLimit($request)
     {
 
@@ -36,7 +37,7 @@ class Params extends VFSummonParams
         $defLimit = $this->getOptions()->getDefaultLimit();
         $limitOptions = $this->getOptions()->getLimitOptions();
         $view = $this->getView();
-        $this->handleLimit($auth, $request,$defLimit, $limitOptions, $view );
+        $this->handleLimit($auth, $request, $defLimit, $limitOptions, $view);
     }
 
 
@@ -53,7 +54,7 @@ class Params extends VFSummonParams
         $auth = $this->serviceLocator->get('VuFind\AuthManager');
         $defaultSort = $this->getOptions()->getDefaultSortByHandler();
 
-        $this->setSort($this->handleSort($auth,$request,$defaultSort, $this->getSearchClassId()));
+        $this->setSort($this->handleSort($auth, $request, $defaultSort, $this->getSearchClassId()));
     }
 
 
@@ -88,15 +89,15 @@ class Params extends VFSummonParams
     /**
      * Set up filters based on VuFind settings.
      *
-     * @param ParamBag $params     Parameter collection to update
+     * @param ParamBag $params Parameter collection to update
      *
      * @return void
      */
     public function createBackendFilterParameters(ParamBag $params)
     {
         // flag our non-Standard checkbox filters:
-        $foundIncludeNewspapers = false;        # includeNewspapers
-        $foundIncludeWithoutFulltext = false;   # includeWithoutFulltext
+        $foundIncludeNewspapers = false;        // includeNewspapers
+        $foundIncludeWithoutFulltext = false;   // includeWithoutFulltext
         $filterList = $this->getFilterList();
         // Which filters should be applied to our query?
         if (!empty($filterList)) {
@@ -130,12 +131,12 @@ class Params extends VFSummonParams
         }
         // special cases (apply also when filter list is empty)
         // newspaper articles
-        if ( ! $foundIncludeNewspapers ) {
+        if (! $foundIncludeNewspapers ) {
             // this actually means: do *not* show newspaper articles
             $params->add('filters', "ContentType,Newspaper Article,true");
         }
         // combined facet "with holdings/with fulltext"
-        if ( !$foundIncludeWithoutFulltext ) {
+        if (!$foundIncludeWithoutFulltext ) {
             $params->set('holdings', true);
             $params->add('filters',  'IsFullText,true');
 

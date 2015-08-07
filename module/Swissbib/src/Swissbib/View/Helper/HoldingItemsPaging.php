@@ -5,7 +5,6 @@ use Zend\View\Helper\AbstractHelper;
 
 /**
  * Build holdings items paging
- *
  */
 class HoldingItemsPaging extends AbstractHelper
 {

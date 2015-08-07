@@ -5,7 +5,6 @@ use Zend\View\Helper\AbstractHelper;
 
 /**
  * Sort institutions based on position in list
- *
  */
 class InstitutionSorter extends AbstractHelper
 {
@@ -20,7 +19,7 @@ class InstitutionSorter extends AbstractHelper
     /**
      * Initialize with institution list
      *
-     * @param    Array    $institutions
+     * @param Array $institutions
      */
     public function __construct(array $institutions)
     {
@@ -32,8 +31,8 @@ class InstitutionSorter extends AbstractHelper
     /**
      * Sort list of institution
      *
-     * @param    Array    $institutions
-     * @return    Array
+     * @param  Array $institutions
+     * @return Array
      */
     public function sortInstitutions(array $institutions, $extended = false)
     {

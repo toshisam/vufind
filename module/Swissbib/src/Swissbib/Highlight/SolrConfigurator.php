@@ -10,7 +10,6 @@ use VuFind\Search\Memory as VFMemory;
 
 /**
  * Allow configuration of solr highlighting mechanism
- *
  */
 class SolrConfigurator
 {
@@ -20,10 +19,14 @@ class SolrConfigurator
      */
     protected $backend;
 
-    /** @var Config */
+    /**
+ * @var Config 
+*/
     protected $config;
 
-    /** @var SharedEventManagerInterface */
+    /**
+ * @var SharedEventManagerInterface 
+*/
     protected $eventsManager;
 
 
@@ -38,8 +41,8 @@ class SolrConfigurator
      * @param Config                      $config
      */
     public function __construct(SharedEventManagerInterface $eventsManager, Config $config,
-                                VFMemory $memory)
-    {
+        VFMemory $memory
+    ) {
         $this->eventsManager = $eventsManager;
         $this->config        = $config;
         $this->memory        = $memory;
@@ -50,7 +53,7 @@ class SolrConfigurator
     /**
      * Attach event for backend
      *
-     * @param    Backend $backend
+     * @param Backend $backend
      */
     public function attach(Backend $backend)
     {
@@ -64,8 +67,8 @@ class SolrConfigurator
     /**
      * Handle event. Add config values
      *
-     * @param    EventInterface    $event
-     * @return    EventInterface
+     * @param  EventInterface $event
+     * @return EventInterface
      */
     public function onSearchPre(EventInterface $event)
     {

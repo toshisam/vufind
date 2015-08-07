@@ -6,7 +6,6 @@ use Swissbib\RecordDriver\SolrMarc;
 /**
  * Build ebook links depending on institution configuration
  * Config in config_base.ini[eBooksOnDemand]
- *
  */
 class EbooksOnDemand extends EbooksOnDemandBase
 {
@@ -14,10 +13,10 @@ class EbooksOnDemand extends EbooksOnDemandBase
     /**
      * Check whether A100 item is valid for EOD link
      *
-     * @param    Array        $item
-     * @param    SolrMarc    $recordDriver
-     * @param    Holdings    $holdingsHelper
-     * @return    Boolean
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Holdings $holdingsHelper
+     * @return Boolean
      */
 
     protected function isValidForLinkA100(array $item, SolrMarc $recordDriver, Holdings $holdingsHelper)
@@ -36,10 +35,10 @@ class EbooksOnDemand extends EbooksOnDemandBase
     /**
      * Build EOD link for A100 item
      *
-     * @param    Array        $item
-     * @param    SolrMarc    $recordDriver
-     * @param    Holdings    $holdingsHelper
-     * @return    String
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Holdings $holdingsHelper
+     * @return String
      */
 
     protected function buildLinkA100(array $item, SolrMarc $recordDriver, Holdings $holdingsHelper)
@@ -58,10 +57,10 @@ class EbooksOnDemand extends EbooksOnDemandBase
     /**
      * Check whether B400 item is valid for EOD link
      *
-     * @param    Array        $item
-     * @param    SolrMarc    $recordDriver
-     * @param    Holdings    $holdingsHelper
-     * @return    Boolean
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Holdings $holdingsHelper
+     * @return Boolean
      */
 
     protected function isValidForLinkB400(array $item, SolrMarc $recordDriver, Holdings $holdingsHelper)
@@ -74,10 +73,10 @@ class EbooksOnDemand extends EbooksOnDemandBase
     /**
      * Build EOD link for B400 item
      *
-     * @param    Array        $item
-     * @param    SolrMarc    $recordDriver
-     * @param    Holdings    $holdingsHelper
-     * @return    String
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Holdings $holdingsHelper
+     * @return String
      */
 
     protected function buildLinkB400(array $item, SolrMarc $recordDriver, Holdings $holdingsHelper)
@@ -90,10 +89,10 @@ class EbooksOnDemand extends EbooksOnDemandBase
     /**
      * Check whether Z01 item is valid for EOD link
      *
-     * @param    Array        $item
-     * @param    SolrMarc    $recordDriver
-     * @param    Holdings    $holdingsHelper
-     * @return    Boolean
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Holdings $holdingsHelper
+     * @return Boolean
      */
 
     protected function isValidForLinkZ01(array $item, SolrMarc $recordDriver, Holdings $holdingsHelper)
@@ -105,10 +104,10 @@ class EbooksOnDemand extends EbooksOnDemandBase
     /**
      * Build EOD link for Z01 item
      *
-     * @param    Array        $item
-     * @param    SolrMarc    $recordDriver
-     * @param    Holdings    $holdingsHelper
-     * @return    String
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Holdings $holdingsHelper
+     * @return String
      */
 
     protected function buildLinkZ01(array $item, SolrMarc $recordDriver, Holdings $holdingsHelper)
@@ -125,10 +124,10 @@ class EbooksOnDemand extends EbooksOnDemandBase
     /**
      * Check whether Z01 item is valid for EOD link
      *
-     * @param    Array $item
-     * @param    SolrMarc $recordDriver
-     * @param    Holdings $holdingsHelper
-     * @return    Boolean
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Holdings $holdingsHelper
+     * @return Boolean
      */
 
     protected function isValidForLinkZ07(array $item, SolrMarc $recordDriver, Holdings $holdingsHelper)
@@ -139,10 +138,10 @@ class EbooksOnDemand extends EbooksOnDemandBase
     /**
      * Build EOD link for Z07 item
      *
-     * @param    Array $item
-     * @param    SolrMarc $recordDriver
-     * @param    Holdings $holdingsHelper
-     * @return    String
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Holdings $holdingsHelper
+     * @return String
      */
 
     protected function buildLinkZ07(array $item, SolrMarc $recordDriver, Holdings $holdingsHelper)
@@ -159,10 +158,10 @@ class EbooksOnDemand extends EbooksOnDemandBase
     /**
      * Check whether AX005 item is valid for EOD link
      *
-     * @param    Array        $item
-     * @param    SolrMarc    $recordDriver
-     * @param    Holdings    $holdingsHelper
-     * @return    Boolean
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Holdings $holdingsHelper
+     * @return Boolean
      */
 
     protected function isValidForLinkAX5(array $item, SolrMarc $recordDriver, Holdings $holdingsHelper)
@@ -183,10 +182,10 @@ class EbooksOnDemand extends EbooksOnDemandBase
     /**
      * Build EOD link for AX005 item
      *
-     * @param    Array        $item
-     * @param    SolrMarc    $recordDriver
-     * @param    Holdings    $holdingsHelper
-     * @return    String
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Holdings $holdingsHelper
+     * @return String
      */
 
     protected function buildLinkAX5(array $item, SolrMarc $recordDriver, Holdings $holdingsHelper)

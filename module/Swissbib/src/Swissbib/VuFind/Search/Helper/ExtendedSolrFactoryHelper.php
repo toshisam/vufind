@@ -15,7 +15,7 @@ class ExtendedSolrFactoryHelper
     /**
      * Initialize with list of extended targets
      *
-     * @param    String[]        $extendedTargets
+     * @param String[] $extendedTargets
      */
     public function __construct($extendedTargets)
     {
@@ -25,12 +25,11 @@ class ExtendedSolrFactoryHelper
 
 
     /**
-     *
      * Check whether name is in list of extended search targets
      *
-     * @param    String            $name
-     * @param    String            $requestedName
-     * @return    Boolean
+     * @param  String $name
+     * @param  String $requestedName
+     * @return Boolean
      */
     public function isExtendedTarget($name, $requestedName)
     {
@@ -45,9 +44,9 @@ class ExtendedSolrFactoryHelper
      * Get namespace
      * swissbib namespace for extensible targets, else default namespace
      *
-     * @param    String            $name
-     * @param    String            $requestedName
-     * @return    String
+     * @param  String $name
+     * @param  String $requestedName
+     * @return String
      */
     public function getNamespace($name, $requestedName)
     {

@@ -6,11 +6,12 @@ use Swissbib\CRCode\QrCodeService;
 
 /**
  * Build a qr code link or image
- *
  */
 class QrCode extends AbstractHelper
 {
-    /** @var QRCodeService  */
+    /**
+ * @var QRCodeService  
+*/
     protected $qrCodeService;
 
 
@@ -35,8 +36,8 @@ class QrCode extends AbstractHelper
      * Read config from options array
      * Return a new copy of the qr code service
      *
-     * @param    Array    $options
-     * @return    QRCodeService
+     * @param  Array $options
+     * @return QRCodeService
      */
     protected function build(array $options)
     {
@@ -73,8 +74,8 @@ class QrCode extends AbstractHelper
     /**
      * Get URl only
      *
-     * @param    Array    $options
-     * @return    String
+     * @param  Array $options
+     * @return String
      */
     public function url(array $options)
     {
@@ -104,18 +105,20 @@ class QrCode extends AbstractHelper
      * Simplified version of img
      * Get full image tag
      *
-     * @param    String        $text
-     * @param    Integer        $size
-     * @param    Boolean        $encode
-     * @return    String
+     * @param  String  $text
+     * @param  Integer $size
+     * @param  Boolean $encode
+     * @return String
      */
     public function image($text, $size, $encode = true)
     {
-        return $this->img(array(
+        return $this->img(
+            array(
                                'data'        => $text,
                                'encodeData'    => !!$encode,
                                'dimensions' => array($size, $size)
-                          ));
+                          )
+        );
     }
 
 
@@ -123,17 +126,19 @@ class QrCode extends AbstractHelper
     /**
      * Simplified version of url
      *
-     * @param    String        $text
-     * @param    Integer        $size
-     * @param    Boolean        $encode
-     * @return    String
+     * @param  String  $text
+     * @param  Integer $size
+     * @param  Boolean $encode
+     * @return String
      */
     public function source($text, $size, $encode = true)
     {
-        return $this->url(array(
+        return $this->url(
+            array(
                                'data'        => $text,
                                'encodeData'    => !!$encode,
                                'dimensions' => array($size, $size)
-                          ));
+                          )
+        );
     }
 }

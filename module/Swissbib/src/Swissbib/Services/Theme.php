@@ -43,7 +43,7 @@ class Theme implements ServiceLocatorAwareInterface
     /**
      * Get active theme
      *
-     * @return    String
+     * @return String
      */
     protected function getTheme()
     {
@@ -53,7 +53,7 @@ class Theme implements ServiceLocatorAwareInterface
     /**
      * Get all configuration for theme tabs
      *
-     * @return    Array[]
+     * @return Array[]
      */
     public function getThemeTabsConfig()
     {

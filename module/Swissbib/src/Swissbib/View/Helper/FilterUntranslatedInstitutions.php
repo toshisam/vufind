@@ -5,7 +5,6 @@ use Zend\I18n\View\Helper\AbstractTranslatorHelper;
 
 /**
  * Filter out untranslated institutions from list
- *
  */
 class FilterUntranslatedInstitutions extends AbstractTranslatorHelper
 {
@@ -13,8 +12,8 @@ class FilterUntranslatedInstitutions extends AbstractTranslatorHelper
     /**
      * Filter institutions
      *
-     * @param    String[]    $institutionCodes
-     * @return    String[]
+     * @param  String[] $institutionCodes
+     * @return String[]
      */
     public function __invoke($institutionCodes, $extended = false)
     {

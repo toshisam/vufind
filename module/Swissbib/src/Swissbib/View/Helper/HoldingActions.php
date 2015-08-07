@@ -5,7 +5,6 @@ use Zend\I18n\View\Helper\AbstractTranslatorHelper;
 
 /**
  * Build link for for item actions
- *
  */
 class HoldingActions extends AbstractTranslatorHelper
 {
@@ -13,15 +12,17 @@ class HoldingActions extends AbstractTranslatorHelper
     /**
      * Render action link list
      *
-     * @param array $item
-     * @param string $listClass     Custom class for list element
+     * @param array  $item
+     * @param string $listClass Custom class for list element
      * @param string $recordId
      *
      * @return string
      */
     public function __invoke(array $item, $listClass = '', $recordId = '')
     {
-        /** @var RecordLink $recordLink */
+        /**
+ * @var RecordLink $recordLink 
+*/
         $recordLink = $this->getView()->plugin('recordLink');
         $actions    = array();
         $loginURL   = $this->getView()->url('myresearch-home');
@@ -107,9 +108,9 @@ class HoldingActions extends AbstractTranslatorHelper
     /**
      * Translate message
      *
-     * @param        $message
-     * @param string $textDomain
-     * @param null   $locale
+     * @param  $message
+     * @param  string  $textDomain
+     * @param  null    $locale
      * @return string
      */
     protected function translate($message, $textDomain = 'default', $locale = null)

@@ -52,25 +52,39 @@ use Swissbib\Log\Logger;
 class Holdings
 {
 
-    /** @var    IlsConnection    Receive more data from server */
+    /**
+ * @var    IlsConnection    Receive more data from server 
+*/
     protected $ils;
 
-    /** @var    AuthManager        Check login status and info */
+    /**
+ * @var    AuthManager        Check login status and info 
+*/
     protected $authManager;
 
-    /** @var IlsAuth  */
+    /**
+ * @var IlsAuth  
+*/
     protected $ilsAuth;
 
-    /** @var    ConfigManager    Load configurations */
+    /**
+ * @var    ConfigManager    Load configurations 
+*/
     protected $configManager;
 
-    /** @var    \File_MARC_Record */
+    /**
+ * @var    \File_MARC_Record 
+*/
     protected $holdings;
 
-    /** @var    String        Parent item */
+    /**
+ * @var    String        Parent item 
+*/
     protected $idItem;
 
-    /** @var    Array    HMAC keys for ILS */
+    /**
+ * @var    Array    HMAC keys for ILS 
+*/
     protected $hmacKeys = array();
 
     /**
@@ -100,7 +114,9 @@ class Holdings
         'z' => 'public_note',
     );
 
-    /** @var Array      Map fieldId => delimiter, fields listed here get concatenated using the delimiter */
+    /**
+ * @var Array      Map fieldId => delimiter, fields listed here get concatenated using the delimiter 
+*/
     protected $concatenationMapping = array(
         'z' => ' '
     );
@@ -110,7 +126,9 @@ class Holdings
      */
     protected $holdingData = false;
 
-    /** @var    Array[]|Boolean        Holding structure without data */
+    /**
+ * @var    Array[]|Boolean        Holding structure without data 
+*/
     protected $holdingStructure = false;
 
     /**
@@ -148,32 +166,42 @@ class Holdings
      */
     protected $translator;
 
-    /** @var  LocationMap */
+    /**
+ * @var  LocationMap 
+*/
     protected $locationMap;
 
-    /** @var  EbooksOnDemand */
+    /**
+ * @var  EbooksOnDemand 
+*/
     protected $ebooksOnDemand;
 
-    /** @var  Availability */
+    /**
+ * @var  Availability 
+*/
     protected $availability;
-    /** @var BibCode */
+    /**
+ * @var BibCode 
+*/
     protected $bibCodeHelper;
-    /** @var  Logger */
+    /**
+ * @var  Logger 
+*/
     protected $swissbibLogger;
 
 
     /**
      * Initialize helper with dependencies
      *
-     * @param    IlsConnection $ilsConnection
-     * @param    HMAC $hmac
-     * @param    AuthManager $authManager
-     * @param    ConfigManager $configManager
-     * @param    Translator $translator
-     * @param     LocationMap $locationMap
-     * @param     BibCode $bibCodeHelper
-     * @param     Logger $swissbibLogger
-     * @throws    \Exception
+     * @param  IlsConnection $ilsConnection
+     * @param  HMAC          $hmac
+     * @param  AuthManager   $authManager
+     * @param  ConfigManager $configManager
+     * @param  Translator    $translator
+     * @param  LocationMap   $locationMap
+     * @param  BibCode       $bibCodeHelper
+     * @param  Logger        $swissbibLogger
+     * @throws \Exception
      */
     public function __construct(
         IlsConnection $ilsConnection,
@@ -187,8 +215,7 @@ class Holdings
         Availability $availability,
         BibCode $bibCodeHelper,
         Logger $swissbibLogger
-    )
-    {
+    ) {
         $this->ils = $ilsConnection;
         $this->configManager = $configManager;
         $this->configHoldings = $configManager->get('Holdings');
@@ -202,7 +229,9 @@ class Holdings
         $this->bibCodeHelper = $bibCodeHelper;
         $this->swissbibLogger = $swissbibLogger;
 
-        /** @var Config $relationConfig */
+        /**
+ * @var Config $relationConfig 
+*/
         $relationConfig = $configManager->get('libadmin-groups');
 
         // Just ignore missing config to prevent a crashing frontend
@@ -223,8 +252,8 @@ class Holdings
     /**
      * Initialize for item
      *
-     * @param    String $idItem
-     * @param    String $holdingsXml
+     * @param String $idItem
+     * @param String $holdingsXml
      */
     public function setData($idItem, $holdingsXml = '')
     {
@@ -237,9 +266,9 @@ class Holdings
     /**
      * Get holdings data
      *
-     * @param        String $institutionCode
-     * @param        SolrMarc $recordDriver
-     * @return    Array[]|Boolean            Contains lists for items and holdings {items=>[],holdings=>[]}
+     * @param  String   $institutionCode
+     * @param  SolrMarc $recordDriver
+     * @return Array[]|Boolean            Contains lists for items and holdings {items=>[],holdings=>[]}
      */
     public function getHoldings(SolrMarc $recordDriver, $institutionCode, $extend = true)
     {
@@ -298,8 +327,8 @@ class Holdings
      * Sort holdings by group based on position in $this->groupSorting
      * Sort institutions based on position in institution2group
      *
-     * @param    Array $holdings
-     * @return    Array
+     * @param  Array $holdings
+     * @return Array
      */
     protected function sortHoldings(array $holdings)
     {
@@ -345,9 +374,9 @@ class Holdings
      * Merge two arrays. Extend sub arrays or add missing elements,
      * but don't extend existing scalar values (as array_merge_recursive() does)
      *
-     * @param    Array $resultData
-     * @param    Array $newData
-     * @return    Array
+     * @param  Array $resultData
+     * @param  Array $newData
+     * @return Array
      */
     protected function mergeHoldings(array $resultData, array $newData)
     {
@@ -367,7 +396,6 @@ class Holdings
     /**
      * Initialize networks from config
      * (active only for Aleph)
-     *
      */
     protected function initNetworks()
     {
@@ -376,7 +404,9 @@ class Holdings
         foreach ($networkNames as $networkName) {
             $configName = ucfirst($networkName) . 'Networks';
 
-            /** @var Config $networkConfigs */
+            /**
+ * @var Config $networkConfigs 
+*/
             $networkConfigs = $this->configHoldings->get($configName);
 
             foreach ($networkConfigs as $networkCode => $networkConfig)
@@ -395,8 +425,8 @@ class Holdings
     /**
      * Set holdings structure
      *
-     * @param    String $holdingsXml
-     * @throws    \File_MARC_Exception
+     * @param  String $holdingsXml
+     * @throws \File_MARC_Exception
      */
     protected function setHoldingsContent($holdingsXml)
     {
@@ -420,10 +450,10 @@ class Holdings
     /**
      * Get holding items for an institution
      *
-     * @param    SolrMarc $recordDriver
-     * @param    String $institutionCode
-     * @param    Boolean $extend
-     * @return    Array        Institution Items
+     * @param  SolrMarc $recordDriver
+     * @param  String   $institutionCode
+     * @param  Boolean  $extend
+     * @return Array        Institution Items
      */
     protected function getItemsData(SolrMarc $recordDriver, $institutionCode, $extend = true)
     {
@@ -444,8 +474,8 @@ class Holdings
     /**
      * Check whether network is supported
      *
-     * @param    String $networkCode
-     * @return   Boolean
+     * @param  String $networkCode
+     * @return Boolean
      */
     protected function isRestfulNetwork($networkCode)
     {
@@ -456,10 +486,10 @@ class Holdings
     /**
      * Extend item with additional informations
      *
-     * @param    Array $item
-     * @param    SolrMarc $recordDriver
-     * @param    Array $extendingOptions
-     * @return    Array
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Array    $extendingOptions
+     * @return Array
      */
     public function extendItem(array $item, SolrMarc $recordDriver, array $extendingOptions = array())
     {
@@ -475,10 +505,10 @@ class Holdings
      * - Ebooks on Demand Link
      * - Location map
      *
-     * @param    Array $item
-     * @param    SolrMarc $recordDriver
-     * @param    Array $extendingOptions
-     * @return    Array
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Array    $extendingOptions
+     * @return Array
      */
     protected function extendItemBasic(array $item, SolrMarc $recordDriver = null, array $extendingOptions = array())
     {
@@ -522,10 +552,10 @@ class Holdings
     /**
      * Extend item with action links based on ILS
      *
-     * @param    Array $item
-     * @param    SolrMarc $recordDriver
-     * @param    Array $extendingOptions
-     * @return  Array
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Array    $extendingOptions
+     * @return Array
      */
     protected function extendItemIlsActions(array $item, SolrMarc $recordDriver = null, array $extendingOptions = array())
     {
@@ -564,9 +594,9 @@ class Holdings
     /**
      * Extend holding with additional informations
      *
-     * @param    Array $holding
-     * @param    SolrMarc $recordDriver
-     * @return    Array
+     * @param  Array    $holding
+     * @param  SolrMarc $recordDriver
+     * @return Array
      */
     protected function extendHolding(array $holding, SolrMarc $recordDriver = null)
     {
@@ -581,10 +611,10 @@ class Holdings
      *  Extend holding with basic infos
      * - Location map
      *
-     * @param    Array $holding
-     * @param    SolrMarc $recordDriver
-     * @return    Array
-     * @todo    Enable restful check after full features are implemented for holdings
+     * @param  Array    $holding
+     * @param  SolrMarc $recordDriver
+     * @return Array
+     * @todo   Enable restful check after full features are implemented for holdings
      */
     protected function extendHoldingBasic(array $holding, SolrMarc $recordDriver = null)
     {
@@ -595,9 +625,9 @@ class Holdings
 
         // Add backlink for not restful networks
         // @note Disabled check until the
-//        if (!$this->isRestfulNetwork($holding['network'])) {
+        //        if (!$this->isRestfulNetwork($holding['network'])) {
         $holding['backlink'] = $this->getBackLink($holding['network'], strtoupper($holding['institution']), $holding);
-//        }
+        //        }
 
         $bibInfoLink = $this->getBibInfoLink($holding['institution']);
         $holding['institutionUrl'] = $bibInfoLink['url'];
@@ -609,9 +639,9 @@ class Holdings
     /**
      * Add action links to holding item
      *
-     * @param    Array $holding
-     * @param    SolrMarc $recordDriver
-     * @return    Array
+     * @param  Array    $holding
+     * @param  SolrMarc $recordDriver
+     * @return Array
      */
     protected function extendHoldingIlsActions(array $holding, SolrMarc $recordDriver = null)
     {
@@ -647,9 +677,9 @@ class Holdings
      * Build an EOD link if possible
      * Return false if item does not support EOD links
      *
-     * @param    Array $item
-     * @param    SolrMarc $recordDriver
-     * @return    String|Boolean
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @return String|Boolean
      */
     protected function getEODLink(array $item, SolrMarc $recordDriver = null)
     {
@@ -661,8 +691,8 @@ class Holdings
      * Build location map link
      * Return false in case institution is not enable for mapping
      *
-     * @param    Array $item
-     * @return    String|Boolean
+     * @param  Array $item
+     * @return String|Boolean
      */
     protected function getLocationMapLink(array $item)
     {
@@ -674,8 +704,8 @@ class Holdings
      * Get location label
      * Try to translate. Fallback to index data
      *
-     * @param    Array $item
-     * @return    String
+     * @param  Array $item
+     * @return String
      */
     protected function getLocationLabel(array $item)
     {
@@ -709,12 +739,14 @@ class Holdings
     /**
      * Get list of allowed actions for the current user
      *
-     * @param    Array $item
-     * @return    Array
+     * @param  Array $item
+     * @return Array
      */
     protected function getAllowedUserActions($item)
     {
-        /** @var Aleph $ilsDriver */
+        /**
+ * @var Aleph $ilsDriver 
+*/
         $ilsDriver = $this->ils->getDriver();
         $patron = $this->getPatron();
         $source = $ilsDriver->getSource($patron['id']);
@@ -742,9 +774,9 @@ class Holdings
     /**
      * Get link for external photocopy request
      *
-     * @param    String $host
-     * @param    Array $item
-     * @return    String
+     * @param  String $host
+     * @param  Array  $item
+     * @return String
      */
     protected function getPhotoRequestLink($host, array $item)
     {
@@ -763,7 +795,7 @@ class Holdings
     /**
      * Get link for external booking request
      *
-     * @param       $host
+     * @param $host
      * @param array $item
      *
      * @return string
@@ -785,7 +817,7 @@ class Holdings
     /**
      * Check whether user is logged in
      *
-     * @return    Boolean
+     * @return Boolean
      */
     protected function isLoggedIn()
     {
@@ -796,7 +828,7 @@ class Holdings
     /**
      * Get patron (catalog login data)
      *
-     * @return    Array
+     * @return Array
      */
     protected function getPatron()
     {
@@ -807,8 +839,8 @@ class Holdings
     /**
      * Check whether network uses aleph system
      *
-     * @param    String $network
-     * @return    Boolean
+     * @param  String $network
+     * @return Boolean
      */
     protected function isAlephNetwork($network)
     {
@@ -821,15 +853,16 @@ class Holdings
      * Check first if a custom type is defined for this network (only Aleph is implemented as a custom type)
      * Fallback to network default
      *
-     * @param    String $networkCode
-     * @param    String $institutionCode
-     * @param    Array $item
-     * @return    Boolean
+     * @param  String $networkCode
+     * @param  String $institutionCode
+     * @param  Array  $item
+     * @return Boolean
      */
     protected function getBackLink($networkCode, $institutionCode, array $item)
     {
         //return it, if the item has an url included in subfield u
-        if (!empty($item['holding_url'])) return $item['holding_url'];
+        if (!empty($item['holding_url'])) { return $item['holding_url']; 
+        }
 
         $method = false;
         $data = array();
@@ -840,7 +873,7 @@ class Holdings
             $data = array(
                 'pattern' => $this->configHoldings->Backlink->{$networkCode}
             );
-        // no custom type for network
+            // no custom type for network
         } else {
             // check if network is even configured
             if (isset($this->networks[$networkCode])) {
@@ -874,11 +907,11 @@ class Holdings
      * Get backlink for aleph
      * (custom method)
      *
-     * @param    String $networkCode
-     * @param    String $institutionCode
-     * @param    Array $item
-     * @param    Array $data
-     * @return    String
+     * @param  String $networkCode
+     * @param  String $institutionCode
+     * @param  Array  $item
+     * @param  Array  $data
+     * @return String
      */
     protected function getBackLinkAleph($networkCode, $institutionCode, $item, array $data)
     {
@@ -897,13 +930,14 @@ class Holdings
      *
      * set link to orange view of swissbib
      *
-     * @param    String $networkCode
-     * @param    String $institutionCode
-     * @param    Array $item
-     * @param    Array $data
-     * @return    String
+     * @param  String $networkCode
+     * @param  String $institutionCode
+     * @param  Array  $item
+     * @param  Array  $data
+     * @return String
      */
-    protected function getBackLinkIDSBB($networkCode, $institutionCode, $item, array $data) {
+    protected function getBackLinkIDSBB($networkCode, $institutionCode, $item, array $data) 
+    {
         $values = [
             'id' => $this->idItem,
             'sub-library-code' => $institutionCode,
@@ -917,11 +951,11 @@ class Holdings
      *
      * set link to NEBIS Primo View
      *
-     * @param    String $networkCode
-     * @param    String $institutionCode
-     * @param    Array $item
-     * @param    Array $data
-     * @return    String
+     * @param  String $networkCode
+     * @param  String $institutionCode
+     * @param  Array $item
+     * @param  Array $data
+     * @return String
      *
      * Links to Primo work, but login after permalink leads to crashes in Primo. Therefore, use Aleph until Primo allows safe login after permalink
 
@@ -938,11 +972,11 @@ class Holdings
      *
      * set link to iluplus Primo View
      *
-     * @param    String $networkCode
-     * @param    String $institutionCode
-     * @param    Array $item
-     * @param    Array $data
-     * @return    String
+     * @param  String $networkCode
+     * @param  String $institutionCode
+     * @param  Array  $item
+     * @param  Array  $data
+     * @return String
      *
      * Links to Primo work, but login after permalink leads to crashes in Primo. Therefore, use Aleph until Primo allows safe login after permalink
      *
@@ -958,11 +992,11 @@ class Holdings
      * Get back link for IDSSG (self-developed-non-aleph-request)
      * Currently only a wrapper for Aleph
      *
-     * @param    String $networkCode
-     * @param    String $institutionCode
-     * @param    Array $item
-     * @param    Array $data
-     * @return    String
+     * @param  String $networkCode
+     * @param  String $institutionCode
+     * @param  Array  $item
+     * @param  Array  $data
+     * @return String
      */
     protected function getBackLinkIDSSG($networkCode, $institutionCode, array $item, array $data)
     {
@@ -972,10 +1006,10 @@ class Holdings
     /**
      * Get backlink for RERO
      *
-     * @param       $networkCode
-     * @param       $institutionCode
-     * @param       $item
-     * @param array $data
+     * @param  $networkCode
+     * @param  $institutionCode
+     * @param  $item
+     * @param  array           $data
      * @return mixed
      */
     protected function getBackLinkRERO($networkCode, $institutionCode, $item, array $data)
@@ -993,11 +1027,11 @@ class Holdings
     /**
      * Get backlink for Alexandria network
      *
-     * @param    String $networkCode
-     * @param    String $institutionCode
-     * @param    Array $item
-     * @param    Array $data
-     * @return    String
+     * @param  String $networkCode
+     * @param  String $institutionCode
+     * @param  Array  $item
+     * @param  Array  $data
+     * @return String
      */
     protected function getBackLinkAlex($networkCode, $institutionCode, array $item, array $data)
     {
@@ -1010,11 +1044,11 @@ class Holdings
     /**
      * Get backlink for SNL (helveticat)
      *
-     * @param    String $networkCode
-     * @param    String $institutionCode
-     * @param    Array $item
-     * @param    Array $data
-     * @return    String
+     * @param  String $networkCode
+     * @param  String $institutionCode
+     * @param  Array  $item
+     * @param  Array  $data
+     * @return String
      */
     protected function getBackLinkSNL($networkCode, $institutionCode, $item, array $data)
     {
@@ -1028,11 +1062,11 @@ class Holdings
     /**
      * Get backlink for CCSA (poster collection)
      *
-     * @param    String $networkCode
-     * @param    String $institutionCode
-     * @param    Array $item
-     * @param    Array $data
-     * @return    String
+     * @param  String $networkCode
+     * @param  String $institutionCode
+     * @param  Array  $item
+     * @param  Array  $data
+     * @return String
      */
 
     protected function getBackLinkCCSA($networkCode, $institutionCode, $item, array $data)
@@ -1048,11 +1082,11 @@ class Holdings
     /**
      * Get backlink for Helveticarchives (SNL)
      *
-     * @param    String $networkCode
-     * @param    String $institutionCode
-     * @param    Array $item
-     * @param    Array $data
-     * @return    String
+     * @param  String $networkCode
+     * @param  String $institutionCode
+     * @param  Array  $item
+     * @param  Array  $data
+     * @return String
      */
     protected function getBackLinkCHARCH($networkCode, $institutionCode, array $item, array $data)
     {
@@ -1067,9 +1101,9 @@ class Holdings
      * Replace {varName} pattern with names and data from array
      * creates an URL string for backlinks according to data delivered by methods above
      *
-     * @param    String $string
-     * @param    Array $keyValues
-     * @return    String
+     * @param  String $string
+     * @param  Array  $keyValues
+     * @return String
      */
     protected function compileString($string, array $keyValues)
     {
@@ -1087,8 +1121,8 @@ class Holdings
      * false if not found or scheme not ok
      * Array with only url if scheme is ok
      *
-     * @param    String $institutionCode
-     * @return    Array|Boolean
+     * @param  String $institutionCode
+     * @return Array|Boolean
      */
     protected function getBibInfoLink($institutionCode)
     {
@@ -1114,10 +1148,10 @@ class Holdings
     /**
      * Get availability infos for item element
      *
-     * @param    String $sysNumber
-     * @param    String $barcode
-     * @param     String $network
-     * @return    Array|Boolean
+     * @param  String $sysNumber
+     * @param  String $barcode
+     * @param  String $network
+     * @return Array|Boolean
      */
     protected function getAvailabilityInfos($sysNumber, $barcode, $bib)
     {
@@ -1130,8 +1164,8 @@ class Holdings
     /**
      * Get circulation statuses for all elements of the item
      *
-     * @param    String $sysNumber
-     * @return    Array[]
+     * @param  String $sysNumber
+     * @return Array[]
      */
     protected function getItemCirculationStatuses($sysNumber)
     {
@@ -1155,10 +1189,10 @@ class Holdings
     /**
      * Get structured data for holdings
      *
-     * @param    SolrMarc $recordDriver
-     * @param    String $institutionCode
-     * @param    Boolean $extend
-     * @return    Array[]
+     * @param  SolrMarc $recordDriver
+     * @param  String   $institutionCode
+     * @param  Boolean  $extend
+     * @return Array[]
      */
     protected function getHoldingData(SolrMarc $recordDriver, $institutionCode, $extend = true)
     {
@@ -1178,7 +1212,7 @@ class Holdings
     /**
      * Check whether holding holdings are available
      *
-     * @return    Boolean
+     * @return Boolean
      */
     protected function hasHoldings()
     {
@@ -1189,7 +1223,7 @@ class Holdings
     /**
      * Check whether holding items are available
      *
-     * @return    Boolean
+     * @return Boolean
      */
     protected function hasItems()
     {
@@ -1200,10 +1234,10 @@ class Holdings
     /**
      * Get structured elements (grouped by group and institution)
      *
-     * @param    String $fieldName
-     * @param    Array $mapping
-     * @param    String $institutionCode
-     * @return    Array        Items or holdings for institution
+     * @param  String $fieldName
+     * @param  Array  $mapping
+     * @param  String $institutionCode
+     * @return Array        Items or holdings for institution
      */
     protected function getHoldingsData($fieldName, array $mapping, $institutionCode)
     {
@@ -1228,8 +1262,8 @@ class Holdings
     /**
      * Get holdings structure for holdings
      *
-     * @param    Integer $fieldName
-     * @return    Array[]
+     * @param  Integer $fieldName
+     * @return Array[]
      */
     protected function getStructuredHoldingsStructure($fieldName, $data = array())
     {
@@ -1282,8 +1316,8 @@ class Holdings
     /**
      * Get group code for institution based on mapping data
      *
-     * @param    String $institutionCode
-     * @return    String
+     * @param  String $institutionCode
+     * @return String
      */
     public function getGroup($institutionCode)
     {
@@ -1295,9 +1329,9 @@ class Holdings
      * Build itemId from item properties and the id of the item
      * ItemId is not the id of the item, it's a combination of sub fields
      *
-     * @param    Array $holdingItem
-     * @return    String
-     * @todo    How to handle missing information. Throw exception, ignore?
+     * @param  Array $holdingItem
+     * @return String
+     * @todo   How to handle missing information. Throw exception, ignore?
      */
     protected function buildItemId(array $holdingItem)
     {
@@ -1312,8 +1346,8 @@ class Holdings
     /**
      * Get link for holding action
      *
-     * @param    Array $holdingItem
-     * @return    Array
+     * @param  Array $holdingItem
+     * @return Array
      */
     protected function getHoldLink(array $holdingItem)
     {
@@ -1330,9 +1364,11 @@ class Holdings
             'action' => 'Hold',
             'record' => $this->idItem, //'id',
             'anchor' => '#tabnav',
-            'query' => http_build_query($linkValues + array(
+            'query' => http_build_query(
+                $linkValues + array(
                     'hashKey' => $this->hmac->generate($this->hmacKeys, $linkValues)
-                )),
+                )
+            ),
         );
     }
 
@@ -1340,9 +1376,9 @@ class Holdings
     /**
      * Extract field data
      *
-     * @param    \File_MARC_Data_Field $field
-     * @param    Array $fieldMapping Field code=>name mapping
-     * @return    Array
+     * @param  \File_MARC_Data_Field $field
+     * @param  Array                 $fieldMapping Field code=>name mapping
+     * @return Array
      */
     protected function extractFieldData(\File_MARC_Data_Field $field, array $fieldMapping)
     {
@@ -1369,8 +1405,8 @@ class Holdings
 
 
     /**
-     * @param String    $code
-     * @param Array     $rawData
+     * @param String $code
+     * @param Array  $rawData
      *
      * @return bool
      */

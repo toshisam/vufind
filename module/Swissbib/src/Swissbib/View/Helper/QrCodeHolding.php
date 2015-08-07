@@ -6,11 +6,12 @@ use QRCode\Service\QRCode as QRCodeService;
 
 /**
  * Build holding qr code url
- *
  */
 class QrCodeHolding extends AbstractTranslatorHelper
 {
-    /** @var  QrCode */
+    /**
+ * @var  QrCode 
+*/
     protected $qrCodeHelper;
 
 
@@ -18,9 +19,9 @@ class QrCodeHolding extends AbstractTranslatorHelper
     /**
      * Build CRCode image source url for holding
      *
-     * @param    Array    $item
-     * @param    String    $recordTitle
-     * @return    String
+     * @param  Array  $item
+     * @param  String $recordTitle
+     * @return String
      */
     public function __invoke(array $item, $recordTitle = '')
     {
@@ -46,10 +47,12 @@ class QrCodeHolding extends AbstractTranslatorHelper
         $text        = implode(', ', $data);
         $qrCodeUrl    = $this->qrCodeHelper->source($text, 250, false);
 
-        return $this->getView()->render('Holdings/qr-code', array(
+        return $this->getView()->render(
+            'Holdings/qr-code', array(
                                                                  'item'    => $item,
                                                                  'url'    => $qrCodeUrl,
                                                                  'text'    => $text
-                                                            ));
+                                                            )
+        );
     }
 }

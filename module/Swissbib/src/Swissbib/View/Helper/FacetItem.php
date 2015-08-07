@@ -12,9 +12,9 @@ class FacetItem extends AbstractHelper
     /**
      * Render facet item
      *
-     * @param    Array        $facetData
-     * @param    String        $facetType
-     * @return    String
+     * @param  Array  $facetData
+     * @param  String $facetType
+     * @return String
      */
     public function __invoke(array $facetData, $facetType)
     {

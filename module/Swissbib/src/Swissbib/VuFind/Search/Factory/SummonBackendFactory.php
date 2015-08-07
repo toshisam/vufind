@@ -67,7 +67,9 @@ class SummonBackendFactory extends SummonBackendFactoryBase
             }
         }
 
-        /** @var HttpClient $client */
+        /**
+ * @var HttpClient $client 
+*/
         $client  = $this->serviceLocator->get('VuFind\Http')->createClient();
         $timeout = isset($this->summonConfig->General->timeout) ? $this->summonConfig->General->timeout : 30;
         $client->setOptions(array('timeout' => $timeout));
@@ -82,7 +84,7 @@ class SummonBackendFactory extends SummonBackendFactoryBase
     /**
      * Detect client to possibly switch API key from proxy configuration
      *
-     * @return    Boolean|String        false or the API key to switch to
+     * @return Boolean|String        false or the API key to switch to
      */
     protected function getOverrideApiCredentialsFromProxy()
     {

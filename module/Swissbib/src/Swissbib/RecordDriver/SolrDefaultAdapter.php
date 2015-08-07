@@ -33,7 +33,8 @@ namespace Swissbib\RecordDriver;
 use Zend\Config\Config;
 
 
-class SolrDefaultAdapter {
+class SolrDefaultAdapter
+{
 
 
     /**
@@ -45,7 +46,8 @@ class SolrDefaultAdapter {
     /**
      * @param Config $config
      */
-    public function __construct(Config $config) {
+    public function __construct(Config $config) 
+    {
         $this->mainConfig = $config;
     }
 
@@ -57,7 +59,7 @@ class SolrDefaultAdapter {
     {
         if (isset($this->mainConfig->Record->citation_formats)
             && !empty($this->mainConfig->Record->citation_formats)
-        ){
+        ) {
             return explode(",", $this->mainConfig->Record->citation_formats);
         } else {
             return array();

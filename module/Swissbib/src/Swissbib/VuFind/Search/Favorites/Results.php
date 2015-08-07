@@ -75,20 +75,20 @@ class Results extends VFFavoriteResults
                     'list' => array()
                 );
                 switch ($field) {
-                    case 'lists':
-                        $lists = $this->user ? $this->user->getLists() : array();
-                        foreach ($lists as $list) {
-                            $this->facets[$field]['list'][] = array(
-                                'value' => $list->id,
-                                'displayText' => $list->title,
-                                'count' => $list->cnt,
-                                'isApplied' =>
-                                    $this->getParams()->hasFilter("$field:".$list->id)
-                            );
-                        }
-                        break;
+                case 'lists':
+                    $lists = $this->user ? $this->user->getLists() : array();
+                    foreach ($lists as $list) {
+                        $this->facets[$field]['list'][] = array(
+                            'value' => $list->id,
+                            'displayText' => $list->title,
+                            'count' => $list->cnt,
+                            'isApplied' =>
+                                $this->getParams()->hasFilter("$field:".$list->id)
+                        );
+                    }
+                    break;
 
-                    case 'tags':
+                case 'tags':
                     if ($this->list) {
                         $tags = $this->list->getTags();
                     } else {
@@ -103,7 +103,7 @@ class Results extends VFFavoriteResults
                                 $this->getParams()->hasFilter("$field:".$tag->tag)
                         );
                     }
-                    break;
+                        break;
                 }
             }
             if (isset($this->facets[$field])) {

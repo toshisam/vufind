@@ -6,7 +6,6 @@ use Zend\Config\Config;
 
 /**
  * Write imported data to local system
- *
  */
 class Writer
 {
@@ -22,7 +21,7 @@ class Writer
      * Initialize with base path
      * Defaults base path is languages in override dir
      *
-     * @param    String|Null        $basePath
+     * @param String|Null $basePath
      */
     public function __construct($basePath = null)
     {
@@ -35,7 +34,7 @@ class Writer
      * Set base path
      * null or false resets to default base path
      *
-     * @param    String|null $path
+     * @param String|null $path
      */
     protected function setBasePath($path)
     {
@@ -51,11 +50,11 @@ class Writer
     /**
      * Save language file data into defined folder (depends on type and locale)
      *
-     * @param    Array    $data
-     * @param    String    $type
-     * @param    String    $locale
-     * @return    String
-     * @throws    \Exception
+     * @param  Array  $data
+     * @param  String $type
+     * @param  String $locale
+     * @return String
+     * @throws \Exception
      */
     public function saveLanguageFile(array $data, $type, $locale)
     {
@@ -82,10 +81,10 @@ class Writer
     /**
      * Save configuration file
      *
-     * @param    Array    $data
-     * @param    String    $filename
-     * @return    String
-     * @throws    \Exception
+     * @param  Array  $data
+     * @param  String $filename
+     * @return String
+     * @throws \Exception
      */
     public function saveConfigFile(array $data, $filename)
     {
@@ -112,8 +111,8 @@ class Writer
      * Clean data
      * Cleanup: Remove double quotes
      *
-     * @param    Array    $data
-     * @return    Array
+     * @param  Array $data
+     * @return Array
      */
     protected function cleanData(array $data)
     {

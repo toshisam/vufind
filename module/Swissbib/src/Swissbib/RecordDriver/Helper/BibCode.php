@@ -6,11 +6,12 @@ use Zend\Config\Config;
 /**
  * Convert network code into bib code
  * Uses holding config for mapping
- *
  */
 class BibCode
 {
-    /** @var  Array */
+    /**
+ * @var  Array 
+*/
     protected $network2bib = array();
 
     protected $bib2network = array();
@@ -20,7 +21,7 @@ class BibCode
     /**
      *
      *
-     * @param    Config    $alephNetworkConfig
+     * @param    Config $alephNetworkConfig
      */
     public function __construct(Config $alephNetworkConfig)
     {
@@ -39,8 +40,8 @@ class BibCode
     /**
      * Get bib code for network code
      *
-     * @param    String        $networkCode
-     * @return    String
+     * @param  String $networkCode
+     * @return String
      */
     public function getBibCode($networkCode)
     {

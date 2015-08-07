@@ -22,13 +22,15 @@ class Factory
         $builder = new AnnotationBuilder();
         $form = $builder->createForm('\\Swissbib\\Record\\Form\\CopyForm');
         $form->add(new Csrf('security'));
-        $form->add([
+        $form->add(
+            [
             'name' => 'submit',
             'type'  => 'Submit',
             'attributes' => [
                 'value' => 'request_copy_text',
             ],
-        ]);
+            ]
+        );
 
         return $form;
     }

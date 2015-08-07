@@ -14,7 +14,6 @@ use Swissbib\RecordDriver\Helper\Holdings as HoldingsHelper;
  * - buildLocationMapLink
  *
  * Example: isItemValidForLocationMapA100
- *
  */
 class LocationMap extends LocationMapBase
 {
@@ -24,9 +23,9 @@ class LocationMap extends LocationMapBase
      * Check whether item should have a map link
      * Customized for A100
      *
-     * @param    Array    $item
-     * @param    Holdings $holdingsHelper
-     * @return    Boolean
+     * @param  Array    $item
+     * @param  Holdings $holdingsHelper
+     * @return Boolean
      */
     protected function isItemValidForLocationMapA100(array $item, HoldingsHelper $holdingsHelper)
     {
@@ -50,9 +49,9 @@ class LocationMap extends LocationMapBase
     /**
      * Build location map link for A100
      *
-     * @param    Array    $item
-     * @param    Holdings $holdingsHelper
-     * @return    String
+     * @param  Array    $item
+     * @param  Holdings $holdingsHelper
+     * @return String
      */
     protected function buildLocationMapLinkA100(array $item, HoldingsHelper $holdingsHelper)
     {
@@ -66,9 +65,9 @@ class LocationMap extends LocationMapBase
     /**
      * Custom validation check for B500
      *
-     * @param    Array    $item
-     * @param    Holdings $holdingsHelper
-     * @return    Boolean
+     * @param  Array    $item
+     * @param  Holdings $holdingsHelper
+     * @return Boolean
      */
     protected function isItemValidForLocationMapB500(array $item, HoldingsHelper $holdingsHelper)
     {
@@ -81,29 +80,31 @@ class LocationMap extends LocationMapBase
             $isCirculating          = true;
 
             // Compare holding/item status if set
-            if (isset($item['holding_status'])) {
-                $isCirculating = $this->isValueInConfigList($circulatingConfigKey, $item['holding_status']);
-            }
+        if (isset($item['holding_status'])) {
+            $isCirculating = $this->isValueInConfigList($circulatingConfigKey, $item['holding_status']);
+        }
 
             return $isItemAvailable && $hasSignature && $isAccessible && $isCirculating;
-        }    }
+        }    
+    }
 
 
 
     /**
      * Build custom link for B500
      *
-     * @param    Array    $item
-     * @param    Holdings $holdingsHelper
-     * @return    Boolean
+     * @param  Array    $item
+     * @param  Holdings $holdingsHelper
+     * @return Boolean
      */
     protected function buildLocationMapLinkB500(array $item, HoldingsHelper $holdingsHelper)
     {
         $mapLinkPattern  = $this->config->get('B500');
         if (preg_match('/Spiele|Klassensatz|Permanentapparat/', $item['location_expanded'])) {
-           $b500_param = $item['location_expanded'] . '_' . $item['signature'];
-           }
-        else $b500_param = $item['signature'];
+            $b500_param = $item['location_expanded'] . '_' . $item['signature'];
+        }
+        else { $b500_param = $item['signature']; 
+        }
 
 
         return $this->buildSimpleLocationMapLink($mapLinkPattern, $b500_param);
@@ -115,9 +116,9 @@ class LocationMap extends LocationMapBase
      * Check if map link is possible
      * Make sure signature is present
      *
-     * @param    Array        $item
-     * @param    Holdings    $holdingsHelper
-     * @return    Boolean
+     * @param  Array    $item
+     * @param  Holdings $holdingsHelper
+     * @return Boolean
      */
     protected function isItemValidForLocationMapHSG(array $item, HoldingsHelper $holdingsHelper)
     {
@@ -131,9 +132,9 @@ class LocationMap extends LocationMapBase
     /**
      * Build custom link for HSG
      *
-     * @param    Array    $item
-     * @param    Holdings $holdingsHelper
-     * @return    Boolean
+     * @param  Array    $item
+     * @param  Holdings $holdingsHelper
+     * @return Boolean
      */
     protected function buildLocationMapLinkHSG(array $item, HoldingsHelper $holdingsHelper)
     {

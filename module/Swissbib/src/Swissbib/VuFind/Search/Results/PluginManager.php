@@ -8,7 +8,6 @@ use VuFind\Search\Results\PluginManager as VuFindSearchResultsPluginManager;
  * customized ResultsPluginManger has to extend Vufind\Search\Results\PluginManger and not directly
  * Vufind\ServiceManager\AbstractPluginManger because type ResultsPluginManger is expected in (some ?) other methods e.g.
  * Vufind\Db\Table\Search->saveSearch()
- *
  */
 class PluginManager extends VuFindSearchResultsPluginManager
 {

@@ -8,7 +8,9 @@ use Zend\Form\View\Helper\AbstractHelper;
  */
 class AvailabilityInfo extends AbstractHelper
 {
-    /** Expected status codes */
+    /**
+ * Expected status codes 
+*/
     const LENDABLE_AVAILABLE = "lendable_available"; // generell ausleihbar und vorhandene Exemplare
     const LENDABLE_BORROWED = "lendable_borrowed"; // generell ausleihbar, jedoch bereits ausgeliehene Exemplare
     const LENDABLESHORT = "lendableShort"; // Kurzausleihe (1-7 Tage)
@@ -24,8 +26,8 @@ class AvailabilityInfo extends AbstractHelper
     /**
      * Convert availability info into html string
      *
-     * @param    Boolean|Array $availability
-     * @return    String
+     * @param  Boolean|Array $availability
+     * @return String
      */
 
     public function __invoke($availability)
@@ -46,21 +48,51 @@ class AvailabilityInfo extends AbstractHelper
             foreach ($availability as $barcode => $availinfo) {
                 $statusfield = $availinfo["statusfield"];
 
-                if (isset ($availinfo["borrowingInformation"])) {
+                if (isset($availinfo["borrowingInformation"])) {
                     $borrowinginformation = $availinfo["borrowingInformation"];
 
                 }
             }
 
             switch ($statusfield) {
-                case self::LENDABLE_AVAILABLE:
+            case self::LENDABLE_AVAILABLE:
 
-                    $info = "<div class='availability fa-check'>&nbsp;</div>";
-                    break;
-                case self::LENDABLE_BORROWED:
+                $info = "<div class='availability fa-check'>&nbsp;</div>";
+                break;
+            case self::LENDABLE_BORROWED:
 
+                unset($borrowinginformation['due_hour']);
+                $info = "<div class='availability fa-ban'>";
+
+                if ($borrowinginformation['due_date'] === 'on reserve') {
+                    $info .= $escapedTranslation('On Reserve') . " (" . $borrowinginformation['no_requests'] . ")";
+                }
+                elseif ($borrowinginformation['due_date'] === 'claimed returned') {
+                    $info .= $escapedTranslation('Claimed Returned');
+                }
+                elseif ($borrowinginformation['due_date'] === 'lost') {
+                    $info .= $escapedTranslation('Lost');
+                }
+                elseif ($borrowinginformation['due_date'] === 'on hold') {
+                    $info .= $escapedTranslation('on_hold');
+                }
+                else {
+                    foreach ($borrowinginformation as $key => $value) {
+                        if (strcmp(trim($value), "") != 0) {
+                            $info .= "<div>" . $escapedTranslation($key) . "&nbsp;" . $value . "</div>";
+                        }
+                    }
+                }
+
+                $info .= "</div>";
+
+                break;
+
+            case self::LENDABLESHORT:
+                if (!empty($borrowinginformation['due_date'])) {
                     unset($borrowinginformation['due_hour']);
-                    $info = "<div class='availability fa-ban'>";
+                    $infotext = $escapedTranslation($statusfield);
+                    $info = "<div class='availability fa-ban'><div>" . "$infotext" . "</div>";
 
                     if ($borrowinginformation['due_date'] === 'on reserve') {
                         $info .= $escapedTranslation('On Reserve') . " (" . $borrowinginformation['no_requests'] . ")";
@@ -71,7 +103,7 @@ class AvailabilityInfo extends AbstractHelper
                     elseif ($borrowinginformation['due_date'] === 'lost') {
                         $info .= $escapedTranslation('Lost');
                     }
-                    elseif ($borrowinginformation['due_date'] === 'on hold'){
+                    elseif ($borrowinginformation['due_date'] === 'on hold') {
                         $info .= $escapedTranslation('on_hold');
                     }
                     else {
@@ -81,166 +113,136 @@ class AvailabilityInfo extends AbstractHelper
                             }
                         }
                     }
-
                     $info .= "</div>";
-
-                    break;
-
-                case self::LENDABLESHORT:
-                    if (!empty($borrowinginformation['due_date'])) {
-                        unset($borrowinginformation['due_hour']);
-                        $infotext = $escapedTranslation($statusfield);
-                        $info = "<div class='availability fa-ban'><div>" . "$infotext" . "</div>";
-
-                        if ($borrowinginformation['due_date'] === 'on reserve') {
-                            $info .= $escapedTranslation('On Reserve') . " (" . $borrowinginformation['no_requests'] . ")";
-                        }
-                        elseif ($borrowinginformation['due_date'] === 'claimed returned') {
-                            $info .= $escapedTranslation('Claimed Returned');
-                        }
-                        elseif ($borrowinginformation['due_date'] === 'lost') {
-                            $info .= $escapedTranslation('Lost');
-                        }
-                        elseif ($borrowinginformation['due_date'] === 'on hold'){
-                            $info .= $escapedTranslation('on_hold');
-                        }
-                        else {
-                            foreach ($borrowinginformation as $key => $value) {
-                                if (strcmp(trim($value), "") != 0) {
-                                    $info .= "<div>" . $escapedTranslation($key) . "&nbsp;" . $value . "</div>";
-                                }
-                            }
-                        }
-                        $info .= "</div>";
-                    }
+                }
 
 
-                    elseif (empty($borrowinginformation['due_date'])) {
-                        $infotext = $escapedTranslation($statusfield);
-                        $info = "<div class='availability fa-check'><div>" . "$infotext" . "</div></div>";
-                    }
-
-                    break;
-
-
-                case self::USE_ON_SITE:
-
-                    if (!empty($borrowinginformation['due_date'])) {
-                        unset($borrowinginformation['due_hour']);
-                        $infotext = $escapedTranslation($statusfield);
-                        $info = "<div class='availability fa-ban'><div>" . "$infotext" . "</div>";
-
-                        if ($borrowinginformation['due_date'] === 'on reserve') {
-                            $info .= $escapedTranslation('On Reserve') . " (" . $borrowinginformation['no_requests'] . ")";
-                        }
-                        elseif ($borrowinginformation['due_date'] === 'claimed returned') {
-                            $info .= $escapedTranslation('Claimed Returned');
-                        }
-                        elseif ($borrowinginformation['due_date'] === 'lost') {
-                            $info .= $escapedTranslation('Lost');
-                        }
-                        elseif ($borrowinginformation['due_date'] === 'on hold'){
-                            $info .= $escapedTranslation('on_hold');
-                        }
-                        else {
-                            foreach ($borrowinginformation as $key => $value) {
-                                if (strcmp(trim($value), "") != 0) {
-                                    $info .= "<div>" . $escapedTranslation($key) . "&nbsp;" . $value . "</div>";
-                                }
-                            }
-                        }
-                        $info .= "</div>";
-                    }
-
-
-                    elseif (empty($borrowinginformation['due_date'])) {
-                        $infotext = $escapedTranslation($statusfield);
-                        $info = "<div class='availability fa-check'><div>" . "$infotext" . "</div></div>";
-                    }
-
-                    break;
-
-                case self::LIBRARYINFO:
-                    if (!empty($borrowinginformation['due_date'])) {
-                        unset($borrowinginformation['due_hour']);
-                        $infotext = $escapedTranslation($statusfield);
-                        $info = "<div class='availability fa-ban'><div>" . "$infotext" . "</div>";
-
-                        if ($borrowinginformation['due_date'] === 'on reserve') {
-                            $info .= $escapedTranslation('On Reserve') . " (" . $borrowinginformation['no_requests'] . ")";
-                        }
-                        elseif ($borrowinginformation['due_date'] === 'claimed returned') {
-                            $info .= $escapedTranslation('Claimed Returned');
-                        }
-                        elseif ($borrowinginformation['due_date'] === 'lost') {
-                            $info .= $escapedTranslation('Lost');
-                        }
-                        elseif ($borrowinginformation['due_date'] === 'on hold'){
-                            $info .= $escapedTranslation('on_hold');
-                        }
-                        else {
-                            foreach ($borrowinginformation as $key => $value) {
-                                if (strcmp(trim($value), "") != 0) {
-                                    $info .= "<div>" . $escapedTranslation($key) . "&nbsp;" . $value . "</div>";
-                                }
-                            }
-                        }
-                        $info .= "</div>";
-                    }
-
-
-                    elseif (empty($borrowinginformation['due_date'])) {
-                        $infotext = $escapedTranslation($statusfield);
-                        $info = "<div>" . "$infotext" . "</div>";
-                    }
-
-                    break;
-
-                case self::LOOK_ON_SITE:
-
+                elseif (empty($borrowinginformation['due_date'])) {
                     $infotext = $escapedTranslation($statusfield);
-                    $info = "<div class='availability fa-question'><div>" . "$infotext" . "</div></div>";
-                    break;
-                case self::EXHIBITION:
+                    $info = "<div class='availability fa-check'><div>" . "$infotext" . "</div></div>";
+                }
 
+                break;
+
+
+            case self::USE_ON_SITE:
+
+                if (!empty($borrowinginformation['due_date'])) {
                     unset($borrowinginformation['due_hour']);
                     $infotext = $escapedTranslation($statusfield);
-                    $info = "<div class='availability fa-ban'>Ausstellung";
+                    $info = "<div class='availability fa-ban'><div>" . "$infotext" . "</div>";
 
                     if ($borrowinginformation['due_date'] === 'on reserve') {
                         $info .= $escapedTranslation('On Reserve') . " (" . $borrowinginformation['no_requests'] . ")";
-                    } else {
+                    }
+                    elseif ($borrowinginformation['due_date'] === 'claimed returned') {
+                        $info .= $escapedTranslation('Claimed Returned');
+                    }
+                    elseif ($borrowinginformation['due_date'] === 'lost') {
+                        $info .= $escapedTranslation('Lost');
+                    }
+                    elseif ($borrowinginformation['due_date'] === 'on hold') {
+                        $info .= $escapedTranslation('on_hold');
+                    }
+                    else {
                         foreach ($borrowinginformation as $key => $value) {
                             if (strcmp(trim($value), "") != 0) {
                                 $info .= "<div>" . $escapedTranslation($key) . "&nbsp;" . $value . "</div>";
                             }
                         }
                     }
-
                     $info .= "</div>";
+                }
 
-                    break;
-                case self::INPROCESS:
+
+                elseif (empty($borrowinginformation['due_date'])) {
                     $infotext = $escapedTranslation($statusfield);
                     $info = "<div class='availability fa-check'><div>" . "$infotext" . "</div></div>";
-                    break;
-                case self::ONLINE_AVAILABLE:
+                }
 
-                    //do something special for online resources (dedicated icon and / or text?)
-                    $info = $escapedTranslation($statusfield);
-                    break;
-                case self::UNAVAILABLE:
-                case self::SUBSTITUTE:
+                break;
+
+            case self::LIBRARYINFO:
+                if (!empty($borrowinginformation['due_date'])) {
+                    unset($borrowinginformation['due_hour']);
+                    $infotext = $escapedTranslation($statusfield);
+                    $info = "<div class='availability fa-ban'><div>" . "$infotext" . "</div>";
+
+                    if ($borrowinginformation['due_date'] === 'on reserve') {
+                        $info .= $escapedTranslation('On Reserve') . " (" . $borrowinginformation['no_requests'] . ")";
+                    }
+                    elseif ($borrowinginformation['due_date'] === 'claimed returned') {
+                        $info .= $escapedTranslation('Claimed Returned');
+                    }
+                    elseif ($borrowinginformation['due_date'] === 'lost') {
+                        $info .= $escapedTranslation('Lost');
+                    }
+                    elseif ($borrowinginformation['due_date'] === 'on hold') {
+                        $info .= $escapedTranslation('on_hold');
+                    }
+                    else {
+                        foreach ($borrowinginformation as $key => $value) {
+                            if (strcmp(trim($value), "") != 0) {
+                                $info .= "<div>" . $escapedTranslation($key) . "&nbsp;" . $value . "</div>";
+                            }
+                        }
+                    }
+                    $info .= "</div>";
+                }
+
+
+                elseif (empty($borrowinginformation['due_date'])) {
+                    $infotext = $escapedTranslation($statusfield);
+                    $info = "<div>" . "$infotext" . "</div>";
+                }
+
+                break;
+
+            case self::LOOK_ON_SITE:
 
                 $infotext = $escapedTranslation($statusfield);
-                    $info = "<div class='availability fa-ban'>" . "$infotext" . "</div>";
-                    break;
-                default:
-                    /**
+                $info = "<div class='availability fa-question'><div>" . "$infotext" . "</div></div>";
+                break;
+            case self::EXHIBITION:
+
+                unset($borrowinginformation['due_hour']);
+                $infotext = $escapedTranslation($statusfield);
+                $info = "<div class='availability fa-ban'>Ausstellung";
+
+                if ($borrowinginformation['due_date'] === 'on reserve') {
+                    $info .= $escapedTranslation('On Reserve') . " (" . $borrowinginformation['no_requests'] . ")";
+                } else {
+                    foreach ($borrowinginformation as $key => $value) {
+                        if (strcmp(trim($value), "") != 0) {
+                            $info .= "<div>" . $escapedTranslation($key) . "&nbsp;" . $value . "</div>";
+                        }
+                    }
+                }
+
+                $info .= "</div>";
+
+                break;
+            case self::INPROCESS:
+                $infotext = $escapedTranslation($statusfield);
+                $info = "<div class='availability fa-check'><div>" . "$infotext" . "</div></div>";
+                break;
+            case self::ONLINE_AVAILABLE:
+
+                //do something special for online resources (dedicated icon and / or text?)
+                $info = $escapedTranslation($statusfield);
+                break;
+            case self::UNAVAILABLE:
+            case self::SUBSTITUTE:
+
+                $infotext = $escapedTranslation($statusfield);
+                $info = "<div class='availability fa-ban'>" . "$infotext" . "</div>";
+                break;
+            default:
+                /**
                      * Any other value defined in the availability service
                      * should be translated in the language files of VuFind (local/languages/)
                      */
-                    $info = $escapedTranslation($statusfield);
+                $info = $escapedTranslation($statusfield);
             }
 
         } else {

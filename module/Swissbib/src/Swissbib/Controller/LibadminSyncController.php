@@ -10,7 +10,6 @@ use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 /**
  * Synchronize VuFind with LibAdmin
  * Import data into local files
- *
  */
 class LibadminSyncController extends AbstractActionController
 {
@@ -32,7 +31,9 @@ class LibadminSyncController extends AbstractActionController
         $showResult = $request->getParam('result', false) || $request->getParam('r', false);
         $dryRun     = $request->getParam('dry', false) || $request->getParam('d', false);
 
-        /** @var Importer $importer */
+        /**
+ * @var Importer $importer 
+*/
         try {
             $importer = $this->getServiceLocator()->get('Swissbib\Libadmin\Importer');
             $result   = $importer->import($dryRun);
@@ -78,7 +79,9 @@ class LibadminSyncController extends AbstractActionController
         //$dryRun     = $request->getParam('dry', false) || $request->getParam('d', false);
         $path     = $request->getParam('path', 'mapportal/green.json');
 
-        /** @var Importer $importer */
+        /**
+ * @var Importer $importer 
+*/
         try {
             $importer = $this->getServiceLocator()->get('Swissbib\Libadmin\Importer');
             $result   = $importer->importMapPortalData($path);

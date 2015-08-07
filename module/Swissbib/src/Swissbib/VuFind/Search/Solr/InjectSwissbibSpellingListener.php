@@ -43,7 +43,8 @@ use VuFindSearch\Query\Query;
 
 
 
-class InjectSwissbibSpellingListener  extends VFSpellingListener {
+class InjectSwissbibSpellingListener  extends VFSpellingListener
+{
 
 
 

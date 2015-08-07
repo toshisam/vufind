@@ -5,7 +5,6 @@ use Swissbib\VuFind\View\Helper\Root\Translate as SwissbibTranslate;
 
 /**
  * Translate locations
- *
  */
 class TranslateFacets extends SwissbibTranslate
 {
@@ -37,20 +36,23 @@ class TranslateFacets extends SwissbibTranslate
      */
     public function __invoke($str, $tokens = array(), $default = null)
     {
-        if (!is_array($str)) return '';
+        if (!is_array($str)) { return ''; 
+        }
 
         $facetName = $str['facetName'];
         $facetValue = $str['facetValue'];
 
-        $fieldToTranslateInArray =  array_filter($this->translatedFacets,function ($passedValue) use ($facetName){
-            return $passedValue === $facetName || count(preg_grep ( "/" .$facetName . ":" . "/", array ($passedValue))) > 0;
-        }) ;
+        $fieldToTranslateInArray =  array_filter(
+            $this->translatedFacets, function ($passedValue) use ($facetName) {
+                return $passedValue === $facetName || count(preg_grep("/" .$facetName . ":" . "/", array ($passedValue))) > 0;
+            }
+        );
 
         $translate = count($fieldToTranslateInArray) > 0;
         $fieldToEvaluate = $translate ? current($fieldToTranslateInArray) : null;
 
-        return $translate ? strstr($fieldToEvaluate,':') === FALSE ? $this->processTranslation($facetValue) :
-            $this->processTranslation(substr($fieldToEvaluate,strpos( $fieldToEvaluate,':') + 1) . '::' .   $facetValue) : $facetValue;
+        return $translate ? strstr($fieldToEvaluate, ':') === false ? $this->processTranslation($facetValue) :
+            $this->processTranslation(substr($fieldToEvaluate, strpos($fieldToEvaluate, ':') + 1) . '::' .   $facetValue) : $facetValue;
     }
 
 

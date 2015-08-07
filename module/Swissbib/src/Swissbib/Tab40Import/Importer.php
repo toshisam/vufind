@@ -5,11 +5,12 @@ use Zend\Config\Config;
 
 /**
  * Import and convert a tab40 file into a vufind language file
- *
  */
 class Importer
 {
-    /** @var  Config */
+    /**
+ * @var  Config 
+*/
     protected $config;
 
 
@@ -17,7 +18,7 @@ class Importer
     /**
      *
      *
-     * @param    Config    $config
+     * @param    Config $config
      */
     public function __construct(Config $config)
     {
@@ -29,10 +30,10 @@ class Importer
     /**
      * Import data from source file and write to predefined path
      *
-     * @param    String        $network
-     * @param    String        $locale
-     * @param    String        $sourceFile
-     * @return    Result
+     * @param  String $network
+     * @param  String $locale
+     * @param  String $sourceFile
+     * @return Result
      */
     public function import($network, $locale, $sourceFile)
     {
@@ -41,13 +42,15 @@ class Importer
             // Write data
         $languageFile    = $this->write($network, $locale, $importedData);
 
-        return new Result(array(
+        return new Result(
+            array(
             'file'        => $languageFile,
             'count'        => sizeof($importedData),
             'network'    => $network,
             'locale'    => $locale,
             'source'    => $sourceFile
-        ));
+            )
+        );
     }
 
 
@@ -55,8 +58,8 @@ class Importer
     /**
      * Read file into named list
      *
-     * @param    String        $sourceFile
-     * @return    Array[]
+     * @param  String $sourceFile
+     * @return Array[]
      */
     protected function read($sourceFile)
     {
@@ -70,10 +73,10 @@ class Importer
     /**
      * Write imported data to language file
      *
-     * @param    String        $network
-     * @param    String        $locale
-     * @param    Array[]        $data
-     * @return    String
+     * @param  String  $network
+     * @param  String  $locale
+     * @param  Array[] $data
+     * @return String
      */
     protected function write($network, $locale, array $data)
     {

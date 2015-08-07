@@ -48,7 +48,6 @@ use Swissbib\VuFindSearch\Backend\Solr\QueryBuilder;
 
 /**
  * [Description]
- *
  */
 class SolrDefaultBackendFactory extends VuFindSolrDefaultBackendFactory
 {
@@ -91,9 +90,11 @@ class SolrDefaultBackendFactory extends VuFindSolrDefaultBackendFactory
 
     protected function attachHighlightSolrConfigurator(Backend $backend)
     {
-//        $events = $this->serviceLocator->get('SharedEventManager');
+        //        $events = $this->serviceLocator->get('SharedEventManager');
 
-        /** @var HighlightSolrConfigurator $highlightListener */
+        /**
+ * @var HighlightSolrConfigurator $highlightListener 
+*/
         $highlightListener = $this->serviceLocator->get('Swissbib\Highlight\SolrConfigurator');
 
         $highlightListener->attach($backend/*, $events*/);
@@ -167,7 +168,7 @@ class SolrDefaultBackendFactory extends VuFindSolrDefaultBackendFactory
         $caseSensitiveRanges
             = isset($search->General->case_sensitive_ranges)
             ? $search->General->case_sensitive_ranges : true;
-        $helper = new LuceneSyntaxHelper (
+        $helper = new LuceneSyntaxHelper(
             $caseSensitiveBooleans, $caseSensitiveRanges
         );
         $builder->setLuceneHelper($helper);

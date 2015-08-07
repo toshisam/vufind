@@ -37,7 +37,8 @@ namespace Swissbib\VuFindSearch\Backend\Solr;
 use VuFindSearch\Backend\Solr\QueryBuilder as VFBuilder;
 
 
-class QueryBuilder extends VFBuilder {
+class QueryBuilder extends VFBuilder
+{
 
 
     protected $disMaxSearchFields = array();
@@ -51,17 +52,19 @@ class QueryBuilder extends VFBuilder {
             $this->disMaxSearchFields = $tempArray["DismaxFields"];
         }
 
-        $this->disMaxSearchFields = array_map(function($item) {
+        $this->disMaxSearchFields = array_map(
+            function ($item) {
 
-            if (strpos($item, "^") > 0) {
-                return substr($item, 0, strpos($item, "^")  );
+                if (strpos($item, "^") > 0) {
+                    return substr($item, 0, strpos($item, "^"));
 
-            } else {
-                return $item;
-            }
+                } else {
+                    return $item;
+                }
 
 
-        }, $this->disMaxSearchFields );
+            }, $this->disMaxSearchFields 
+        );
         //this search field isn't defined in searchspec
         $this->disMaxSearchFields[] = "hierarchy_parent_id";
         $this->disMaxSearchFields[] = "id";
@@ -72,7 +75,8 @@ class QueryBuilder extends VFBuilder {
     }
 
 
-    protected function prepareForLuceneSyntax($input) {
+    protected function prepareForLuceneSyntax($input) 
+    {
 
         $alreadyPrepared = parent::prepareForLuceneSyntax($input);
 

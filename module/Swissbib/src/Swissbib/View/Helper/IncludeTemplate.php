@@ -8,7 +8,8 @@ use Zend\View\Resolver\AggregateResolver;
 use Zend\View\Resolver\TemplateMapResolver;
 use Zend\View\Resolver\TemplatePathStack;
 
-class IncludeTemplate extends AbstractHelper {
+class IncludeTemplate extends AbstractHelper
+{
 
     /**
      * @param string $templateFile
@@ -16,9 +17,11 @@ class IncludeTemplate extends AbstractHelper {
      *
      * @return string
      */
-    public function __invoke($templateFile = '', $theme = '') {
+    public function __invoke($templateFile = '', $theme = '') 
+    {
         $filePath =  APPLICATION_PATH . '/themes/' . $theme . '/templates/' . $templateFile . '.phtml';
-        if ( !file_exists($filePath) ) return '';
+        if (!file_exists($filePath) ) { return ''; 
+        }
 
         $phpRenderer    = $this->getView();
         $resolverBackup = $phpRenderer->resolver();

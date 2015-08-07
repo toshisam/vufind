@@ -34,11 +34,13 @@
 namespace Swissbib\Services;
 
 
-class RedirectProtocolWrapper {
+class RedirectProtocolWrapper
+{
 
     private $vfConfig = null;
 
-    public function __construct($config) {
+    public function __construct($config) 
+    {
 
         $this->vfConfig = $config;
 
@@ -48,11 +50,12 @@ class RedirectProtocolWrapper {
      * wrapper Function to wrap URL'S for another service
      * for swissbib we use the service for http URL's which should used within a https environment
      */
-    public function getWrappedURL($url) {
+    public function getWrappedURL($url) 
+    {
 
         $wrapper = $this->vfConfig->Content->redirectProtocolWrapper;
 
-        if (!empty ($wrapper)) {
+        if (!empty($wrapper)) {
 
             //& has to be escaped otherwise the wrapper service isn't able to group parts of the QUERY_STRING correctly
             $url = preg_replace("/&/", "ESCAPED_AND_PERCENT", $url);

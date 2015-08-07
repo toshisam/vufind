@@ -133,7 +133,7 @@ interface SwissbibRecordDriver
      *
      * @param boolean $asString define return type
      *
-     * @return  array|string
+     * @return array|string
      */
     public function getCorporationNames($asString = true);
 

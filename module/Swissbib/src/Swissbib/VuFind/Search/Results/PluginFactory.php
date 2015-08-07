@@ -20,7 +20,9 @@ class PluginFactory extends VuFindResultsPluginFactory
      */
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        /** @var ExtendedSolrFactoryHelper $extendedTargetHelper */
+        /**
+ * @var ExtendedSolrFactoryHelper $extendedTargetHelper 
+*/
         $extendedTargetHelper    = $serviceLocator->getServiceLocator()->get('Swissbib\ExtendedSolrFactoryHelper');
         $this->defaultNamespace    = $extendedTargetHelper->getNamespace($name, $requestedName);
 

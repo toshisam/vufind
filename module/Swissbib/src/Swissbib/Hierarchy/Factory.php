@@ -4,14 +4,16 @@ namespace Swissbib\Hierarchy;
 
 use Zend\ServiceManager\ServiceManager;
 
-class Factory {
+class Factory
+{
 
     /**
      * @param   ServiceManager $sm
      *
      * @return  SimpleTreeGenerator
      */
-    public static function getSimpleTreeGenerator(ServiceManager $sm) {
+    public static function getSimpleTreeGenerator(ServiceManager $sm) 
+    {
         $objectCache = $sm->get('VuFind\CacheManager')->getCache('object');
 
         return new SimpleTreeGenerator($objectCache);
@@ -24,7 +26,8 @@ class Factory {
      *
      * @return MultiTreeGenerator
      */
-    public static function getMultiTreeGenerator(ServiceManager $sm) {
+    public static function getMultiTreeGenerator(ServiceManager $sm) 
+    {
         $config                 = $sm->get('Vufind\Config')->get('Config');
         $simpleTreeGenerator    = $sm->get('Swissbib\Hierarchy\SimpleTreeGenerator');
 

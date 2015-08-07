@@ -7,7 +7,6 @@ use VuFind\Search\Memory;
 /**
  * Get last search word from search memory
  * the search word (lookfor) is part of the search URL
- *
  */
 class LastSearchWord extends AbstractHelper
 {
@@ -15,7 +14,7 @@ class LastSearchWord extends AbstractHelper
     /**
      * Get last search word
      *
-     * @return    String
+     * @return String
      */
     public function __invoke()
     {

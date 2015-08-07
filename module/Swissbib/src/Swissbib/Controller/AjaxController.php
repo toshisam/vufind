@@ -37,7 +37,8 @@ use VuFind\Controller\AjaxController as VFAjaxController;
 
 
 
-class AjaxController extends VFAjaxController {
+class AjaxController extends VFAjaxController
+{
 
 
     /**
@@ -45,7 +46,6 @@ class AjaxController extends VFAjaxController {
      *
      * utility function for clients to control the workflow
      * with shibboleth login we can't login in popup dialogs (makes it to complex if at all possible)
-     *
      */
     public function shibloginAction()
     {
@@ -53,8 +53,8 @@ class AjaxController extends VFAjaxController {
         $this->outputMode = 'json';
         $config = $this->getConfig();
         if ((!isset($config->Mail->require_login) || $config->Mail->require_login)
-            &&  strcmp(strtolower($config->Authentication->method), "shibboleth") == 0 &&
-            !$this->getUser()
+            &&  strcmp(strtolower($config->Authentication->method), "shibboleth") == 0 
+            && !$this->getUser()
         ) {
             //no JSON.parse in client
             return $this->output(

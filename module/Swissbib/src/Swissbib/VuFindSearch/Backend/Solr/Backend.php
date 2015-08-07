@@ -45,7 +45,8 @@ use VuFindSearch\Response\RecordCollectionInterface;
 
 
 
-class Backend extends VuFindSearchBackend {
+class Backend extends VuFindSearchBackend
+{
 
 
 
@@ -76,7 +77,7 @@ class Backend extends VuFindSearchBackend {
      * @return RecordCollectionInterface
      */
     public function search(AbstractQuery $query, $offset, $limit,
-                           ParamBag $params = null
+        ParamBag $params = null
     ) {
 
         //it was necessary to overwrite this function before Refactoring of Spellchecking

@@ -116,7 +116,8 @@ class Factory
      * @param ServiceManager $sm
      * @return LayoutClass
      */
-    public static function getLayoutClass(ServiceManager $sm) {
+    public static function getLayoutClass(ServiceManager $sm) 
+    {
         $config = $sm->getServiceLocator()->get('VuFind\Config')->get('config');
         $left = !isset($config->Site->sidebarOnLeft)
             ? false : $config->Site->sidebarOnLeft;

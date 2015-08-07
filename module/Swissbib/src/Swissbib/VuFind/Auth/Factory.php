@@ -44,7 +44,7 @@ class Factory
      * Construct Shibboleth mock object - hand in environments
      * without specific shib service provider installation (e.g. Snowflake)
      *
-     * @param ServiceManager $sm
+     * @param  ServiceManager $sm
      * @return ShibbolethMock
      */
     public static function getShibMock(ServiceManager $sm)

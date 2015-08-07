@@ -59,7 +59,7 @@ class SearchController extends VuFindSearchController
     /**
      * Render advanced search
      *
-     * @return    ViewModel
+     * @return ViewModel
      */
     public function advancedAction()
     {
@@ -84,7 +84,7 @@ class SearchController extends VuFindSearchController
     /**
      * Get facet config
      *
-     * @return    Config
+     * @return Config
      */
     protected function getFacetConfig()
     {
@@ -97,7 +97,7 @@ class SearchController extends VuFindSearchController
      * Get results manager
      * If target is extended, get a customized manager
      *
-     * @return    VuFindSearchResultsPluginManager|SwissbibSearchResultsPluginManager
+     * @return VuFindSearchResultsPluginManager|SwissbibSearchResultsPluginManager
      */
     protected function getResultsManager()
     {

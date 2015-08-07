@@ -58,8 +58,8 @@ class IpMatcher
      * Check whether given IP address matches any of the allowed IP address patterns
      *
      * @throws Exception
-     * @param String $ipAddress
-     * @param Array $patterns Array of allow-patterns, possible types: IP / IP wildcard / IP mask / IP range
+     * @param  String $ipAddress
+     * @param  Array  $patterns  Array of allow-patterns, possible types: IP / IP wildcard / IP mask / IP range
      * @return Boolean
      */
     public function isMatching($ipAddress, array $patterns = array())
@@ -72,8 +72,7 @@ class IpMatcher
             }
 
             $subRst = call_user_func(array($this, 'isIpMatching' . ucfirst($type)), $ipPattern, $ipAddress);
-            if ($subRst)
-            {
+            if ($subRst) {
                 return true;
             }
         }
@@ -84,28 +83,24 @@ class IpMatcher
     /**
      * Detect type of given IP "description" (IP address / IP wildcard / IP mask / IP range)
      *
-     * @param String $ip
+     * @param  String $ip
      * @return Boolean|String
      */
     private function detectIpPatternType($ip)
     {
-        if (strpos($ip, '*'))
-        {
+        if (strpos($ip, '*')) {
             return self::$IP_PATTERN_TYPE_WILDCARD;
         }
 
-        if (strpos($ip, '/'))
-        {
+        if (strpos($ip, '/')) {
             return self::$IP_PATTERN_TYPE_MASK;
         }
 
-        if (strpos($ip, '-'))
-        {
+        if (strpos($ip, '-')) {
             return self::$IP_PATTERN_TYPE_RANGE;
         }
 
-        if (ip2long($ip))
-        {
+        if (ip2long($ip)) {
             return self::$IP_PATTERN_TYPE_SINGLE;
         }
 
@@ -115,9 +110,9 @@ class IpMatcher
     /**
      * Check whether the given IP address matches the given IP address
      *
-     * @param    String    $allowedIp
-     * @param    String    $ip
-     * @return    Boolean
+     * @param  String $allowedIp
+     * @param  String $ip
+     * @return Boolean
      */
     private function isIpMatchingSingle($allowedIp, $ip)
     {
@@ -127,9 +122,9 @@ class IpMatcher
     /**
      * Check whether the given IP address wildcard matches the given IP address
      *
-     * @param    String    $allowedIp
-     * @param    String    $ip
-     * @return    Boolean
+     * @param  String $allowedIp
+     * @param  String $ip
+     * @return Boolean
      */
     private function isIpMatchingWildcard($allowedIp, $ip)
     {
@@ -138,14 +133,12 @@ class IpMatcher
 
         for($i = 0; $i < count($allowedIpArr); $i++)
         {
-            if ($allowedIpArr[$i] == '*')
-            {
+            if ($allowedIpArr[$i] == '*') {
                 return true;
             }
             else
             {
-                if (false == ($allowedIpArr[$i] == $ipArr[$i]))
-                {
+                if (false == ($allowedIpArr[$i] == $ipArr[$i])) {
                     return false;
                 }
             }
@@ -157,9 +150,9 @@ class IpMatcher
     /**
      * Check whether the given IP address mask matches the given IP address
      *
-     * @param    String    $allowedIp
-     * @param    String    $ip
-     * @return    Boolean
+     * @param  String $allowedIp
+     * @param  String $ip
+     * @return Boolean
      */
     private function isIpMatchingMask($allowedIp, $ip)
     {
@@ -175,9 +168,9 @@ class IpMatcher
     /**
      * Check whether the given IP address range includes the given IP address
      *
-     * @param    String    $allowedIp
-     * @param    String    $ip
-     * @return    Boolean
+     * @param  String $allowedIp
+     * @param  String $ip
+     * @return Boolean
      */
     private function isIpMatchingRange($allowedIp, $ip)
     {

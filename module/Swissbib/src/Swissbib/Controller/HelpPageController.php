@@ -9,12 +9,15 @@ use VuFind\Controller\AbstractBase as BaseController;
 
 /**
  * Display help pages located in templates/HelpPages/LOCALE/*
- *
  */
 class HelpPageController extends BaseController
 {
 
-    /** @var  ResolverInterface */
+    /**
+     * The resolver
+     *
+     * @var ResolverInterface
+     */
     protected $resolver;
 
 
@@ -22,8 +25,8 @@ class HelpPageController extends BaseController
     /**
      * Main entry for help pages
      *
-     * @return    ViewModel
-     * @throws    \Exception
+     * @return ViewModel
+     * @throws \Exception
      */
     public function indexAction()
     {
@@ -37,11 +40,13 @@ class HelpPageController extends BaseController
         $helpContent = $this->createViewModel();
         $helpContent->setTemplate($template['template']);
 
-        $helpLayout = $this->createViewModel(array(
-                                              'pages'    => $this->getPages(),
-                                              'first'    => !!$template['first'],
-                                              'topic'    => strtolower($template['topic'])
-                                         ));
+        $helpLayout = $this->createViewModel(
+            array(
+                  'pages'    => $this->getPages(),
+                'first'    => !!$template['first'],
+                'topic'    => strtolower($template['topic'])
+            )
+        );
         $helpLayout->setTemplate('HelpPage/layout');
         $helpLayout->addChild($helpContent, 'helpContent');
 
@@ -58,13 +63,18 @@ class HelpPageController extends BaseController
      * Find matching template
      * Fall back to search topic and english if not available
      *
-     * @param    String|null        $topic
-     * @return    Array    [template,first]
+     * @param  String|null $topic
+     * @return Array    [template,first]
      */
     protected function getTemplate($topic)
     {
-        /** @var ResolverInterface $resolver */
-        $resolver    = $this->serviceLocator->get('Zend\View\Renderer\PhpRenderer')->resolver();
+        /**
+         * The resolver
+         *
+         * @var ResolverInterface $resolver
+         */
+        $resolver    = $this->serviceLocator->get('Zend\View\Renderer\PhpRenderer')
+            ->resolver();
         $language    = $this->serviceLocator->get('VuFind\Translator')->getLocale();
         $template    = null;
         $activeTopic = null;
@@ -101,7 +111,7 @@ class HelpPageController extends BaseController
      * Get default topic
      * Get first item of pages
      *
-     * @return    String
+     * @return String
      */
     protected function getDefaultTopic()
     {
@@ -115,7 +125,7 @@ class HelpPageController extends BaseController
     /**
      * Get current active language
      *
-     * @return    String
+     * @return String
      */
     protected function getLanguage()
     {
@@ -127,7 +137,7 @@ class HelpPageController extends BaseController
     /**
      * Get available pages
      *
-     * @return    String[]
+     * @return String[]
      */
     protected function getPages()
     {

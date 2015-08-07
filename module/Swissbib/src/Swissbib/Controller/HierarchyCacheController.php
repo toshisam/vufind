@@ -10,7 +10,6 @@ use Swissbib\VuFind\Hierarchy\TreeDataSource\Solr as TreeDataSourceSolr;
 
 /**
  * Console controller for hierarchy cache generation
- *
  */
 class HierarchyCacheController extends AbstractActionController
 {
@@ -18,12 +17,14 @@ class HierarchyCacheController extends AbstractActionController
     /**
      * Build cache files
      *
-     * @return    String
+     * @return String
      */
     public function buildCacheAction()
     {
         $counter = 1;
-        /** @var ConsoleRequest $request */
+        /**
+ * @var ConsoleRequest $request 
+*/
         $request = $this->getRequest();
         $verbose = $request->getParam('verbose', false) || $request->getParam('v', false);
         $limit   = $request->getParam('limit');
@@ -37,7 +38,9 @@ class HierarchyCacheController extends AbstractActionController
         echo "\n";
 
         $recordLoader = $this->getServiceLocator()->get('VuFind\RecordLoader');
-        /** @var SolrResults $solrResults */
+        /**
+ * @var SolrResults $solrResults 
+*/
         $solrResults = $this->getServiceLocator()->get('VuFind\SearchResultsPluginManager')->get('Solr');
         $hierarchies = $solrResults->getFullFieldFacets(array('hierarchy_top_id'));
 
@@ -49,7 +52,9 @@ class HierarchyCacheController extends AbstractActionController
             $driver = $recordLoader->load($hierarchy['value']);
                 // Only do this if the record is actually a hierarchy type record
             if ($driver->getHierarchyType()) {
-                /** @var TreeDataSourceSolr $treeDataSource */
+                /**
+ * @var TreeDataSourceSolr $treeDataSource 
+*/
                 $treeDataSource = $driver->getHierarchyDriver()->getTreeSource();
 
                 if ($limit) {

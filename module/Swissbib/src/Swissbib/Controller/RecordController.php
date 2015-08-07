@@ -11,7 +11,6 @@ use Zend\View\Model\ViewModel,
 
 /**
  * [Description]
- *
  */
 class RecordController extends VuFindRecordController
 {
@@ -20,7 +19,7 @@ class RecordController extends VuFindRecordController
      * Record home action
      * Catch record not found exceptions and show error page
      *
-     * @return    ViewModel
+     * @return ViewModel
      */
     public function homeAction()
     {
@@ -278,7 +277,9 @@ class RecordController extends VuFindRecordController
         }
 
         $catalog = $this->getILS();
-        /** @var Form $copyForm */
+        /**
+ * @var Form $copyForm 
+*/
         $copyForm = $this->serviceLocator->get('Swissbib\Record\Form\CopyForm');
         $recordId = $this->request->getQuery('recordId');
         $itemId = $this->request->getQuery('itemId');
@@ -308,10 +309,12 @@ class RecordController extends VuFindRecordController
             return $this->createViewModel();
         }
 
-        return $this->createViewModel([
+        return $this->createViewModel(
+            [
             'form' => $copyForm,
             'driver' => $this->loadRecord(),
-        ]);
+            ]
+        );
     }
 
     /**

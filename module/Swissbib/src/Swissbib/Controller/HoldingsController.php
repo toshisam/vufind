@@ -12,11 +12,12 @@ use Swissbib\RecordDriver\Helper\Holdings;
 
 /**
  * Serve holdings data (items and holdings) for solr records over ajax
- *
  */
 class HoldingsController extends BaseController
 {
-    /** @var    Integer        page size for holding items popup */
+    /**
+ * @var    Integer        page size for holding items popup 
+*/
     protected $PAGESIZE_HOLDINGITEMS = 10;
 
 
@@ -69,11 +70,15 @@ class HoldingsController extends BaseController
         $volume = $this->params()->fromQuery('volume');
         $offset = ($page - 1) * $this->PAGESIZE_HOLDINGITEMS;
 
-        /** @var Aleph $aleph */
+        /**
+ * @var Aleph $aleph 
+*/
         $catalog = $this->getILS();
         $holdingItems = $catalog->getHoldingHoldingItems($resourceId, $institution, $offset, $year, $volume, $this->PAGESIZE_HOLDINGITEMS);
         $totalItems = $catalog->getHoldingItemCount($resourceId, $institution, $offset, $year, $volume);
-        /** @var Holdings $helper */
+        /**
+ * @var Holdings $helper 
+*/
         $helper = $this->getServiceLocator()->get('Swissbib\HoldingsHelper');
         $dummyHoldingItem = $this->getFirstHoldingItem($idRecord, $institution);
         $networkCode = $dummyHoldingItem['network'];
@@ -138,11 +143,11 @@ class HoldingsController extends BaseController
      * The five first chars of the resource are the bib code.
      * Convert the bib code into network code
      *
-     * @todo    Is there a more stable version to do this? It works, but..
+     * @todo Is there a more stable version to do this? It works, but..
      *
-     * @param    String $resourceId
+     * @param String $resourceId
      *
-     * @return    String
+     * @return String
      */
     protected function getNetworkFromResource($resourceId)
     {
@@ -175,7 +180,9 @@ class HoldingsController extends BaseController
      */
     protected function getResourceId($idRecord, $network)
     {
-        /** @var BibCode $bibHelper */
+        /**
+ * @var BibCode $bibHelper 
+*/
         $bibHelper = $this->getServiceLocator()->get('Swissbib\BibCodeHelper');
         $idls = $bibHelper->getBibCode($network);
 
@@ -187,9 +194,9 @@ class HoldingsController extends BaseController
     /**
      * Load solr record
      *
-     * @param    Integer $idRecord
+     * @param Integer $idRecord
      *
-     * @return    SolrMarc
+     * @return SolrMarc
      */
     protected function getRecord($idRecord)
     {

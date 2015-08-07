@@ -3,11 +3,12 @@ namespace Swissbib\Tab40Import;
 
 /**
  * Import result
- *
  */
 class Result
 {
-    /** @var    Array  */
+    /**
+ * @var    Array  
+*/
     protected $importData;
 
 
@@ -15,7 +16,7 @@ class Result
     /**
      * Initialize
      *
-     * @param    Array    $importData
+     * @param Array $importData
      */
     public function __construct(array $importData)
     {
@@ -27,7 +28,7 @@ class Result
     /**
      * Get amount of imported items
      *
-     * @return    Integer
+     * @return Integer
      */
     public function getRecordCount()
     {
@@ -39,7 +40,7 @@ class Result
     /**
      * Get generate file path
      *
-     * @return    String
+     * @return String
      */
     public function getFilePath()
     {

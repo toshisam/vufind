@@ -200,9 +200,10 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     /**
      * Get highlighted fulltext
      *
-     * @return    String
+     * @return String
      */
-    public function getHighlightedFulltext() {
+    public function getHighlightedFulltext() 
+    {
         return null;
     }
 
@@ -250,8 +251,8 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     /**
      * Returns the corporation names
      *
-     * @param boolean $asString
-     * @return  array|string
+     * @param  boolean $asString
+     * @return array|string
      */
     public function getCorporationNames($asString = true)
     {
@@ -278,7 +279,8 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
      * @param string $size
      * @return array|bool|string
      */
-    public function getThumbnail($size = 'small') {
+    public function getThumbnail($size = 'small') 
+    {
         return parent::getThumbnail('small');
     }
 

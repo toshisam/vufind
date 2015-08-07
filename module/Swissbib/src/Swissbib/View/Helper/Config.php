@@ -25,12 +25,12 @@ class Config extends AbstractHelper implements ServiceLocatorAwareInterface
     /**
      * Inject service locator
      *
-     * @param    ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator
      */
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
-//        $this->config            = new ZendConfig($serviceLocator->get('Config'));
+        //        $this->config            = new ZendConfig($serviceLocator->get('Config'));
     }
 
 
@@ -38,7 +38,7 @@ class Config extends AbstractHelper implements ServiceLocatorAwareInterface
     /**
      * Get service locator
      *
-     * @return    ServiceLocatorInterface
+     * @return ServiceLocatorInterface
      */
     public function getServiceLocator()
     {
@@ -61,6 +61,6 @@ class Config extends AbstractHelper implements ServiceLocatorAwareInterface
     public function __invoke()
     {
         return $this->getConfig();
-//        return $this->config;
+        //        return $this->config;
     }
 }

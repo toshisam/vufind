@@ -22,13 +22,15 @@ class FacetItemLabel extends AbstractHelper
      */
     protected $translator;
 
-    /** @var  Number */
+    /**
+ * @var  Number 
+*/
     protected $number;
 
     /**
      * Mapping for special facets to textDomain. Text domains need to be added in bootstrapper initLanguage()
      *
-     * @var    Array
+     * @var Array
      */
     protected $customTranslations = array(
         'institution' => 'institution',
@@ -39,8 +41,8 @@ class FacetItemLabel extends AbstractHelper
 
     /**
      *
-     * @param   Array          $facet
-     * @param    String        $facetType
+     * @param   Array  $facet
+     * @param    String $facetType
      * @return  String
      */
     public function __invoke(array $facet, $facetType)

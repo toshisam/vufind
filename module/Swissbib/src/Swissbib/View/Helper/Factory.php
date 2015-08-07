@@ -52,7 +52,9 @@ class Factory
      */
     public static function getInstitutionSorter(ServiceManager $sm)
     {
-        /** @var Config $relationConfig */
+        /**
+ * @var Config $relationConfig 
+*/
         $relationConfig = $sm->getServiceLocator()->get('VuFind\Config')->get('libadmin-groups');
         $institutionList = array();
 
@@ -67,9 +69,11 @@ class Factory
      * @param ServiceManager $sm
      * @return ExtractFavoriteInstitutionsForHoldings
      */
-    public static function getFavoriteInstitutionsExtractor (ServiceManager $sm)
+    public static function getFavoriteInstitutionsExtractor(ServiceManager $sm)
     {
-        /** @var \Swissbib\Favorites\Manager $favoriteManager */
+        /**
+ * @var \Swissbib\Favorites\Manager $favoriteManager 
+*/
         $favoriteManager = $sm->getServiceLocator()->get('Swissbib\FavoriteInstitutions\Manager');
         $userInstitutionCodes = $favoriteManager->getUserInstitutions();
 
@@ -109,7 +113,9 @@ class Factory
      */
     public static function isFavoriteInstitutionHelper(ServiceManager $sm)
     {
-        /** @var \Swissbib\Favorites\Manager $favoriteManager */
+        /**
+ * @var \Swissbib\Favorites\Manager $favoriteManager 
+*/
         $favoriteManager = $sm->getServiceLocator()->get('Swissbib\FavoriteInstitutions\Manager');
         $userInstitutionCodes = $favoriteManager->getUserInstitutions();
 

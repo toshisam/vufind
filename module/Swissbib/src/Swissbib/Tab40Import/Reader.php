@@ -5,7 +5,6 @@ namespace Swissbib\Tab40Import;
  * Read data from tab40 file
  * Data in tab40 files have a fixed layout
  * See the header of a tab40 file for details about the format
- *
  */
 class Reader
 {
@@ -13,8 +12,8 @@ class Reader
     /**
      * Read source file into associative data array
      *
-     * @param    String        $sourceFile
-     * @return    Array[]
+     * @param  String $sourceFile
+     * @return Array[]
      */
     public function read($sourceFile)
     {
@@ -39,9 +38,9 @@ class Reader
      * Read file into lines
      * Convert data to utf8
      *
-     * @param    String        $sourceFile
-     * @return    String[]
-     * @throws    Exception
+     * @param  String $sourceFile
+     * @return String[]
+     * @throws Exception
      */
     protected function readLines($sourceFile)
     {
@@ -60,8 +59,8 @@ class Reader
     /**
      * Filter out empty and comment lines
      *
-     * @param    String[]    $rawLines
-     * @return    String[]
+     * @param  String[] $rawLines
+     * @return String[]
      */
     protected function filterLines(array $rawLines)
     {

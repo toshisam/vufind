@@ -44,7 +44,8 @@ use VuFindSearch\Query\AbstractQuery;
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org  Main Page
  */
-class SpellingResults {
+class SpellingResults
+{
 
 
     /**
@@ -80,7 +81,6 @@ class SpellingResults {
 
     /**
      * @param array $solrInfoStructure
-     *
      */
     public function addCollocationSOLRStructure(array $solrInfoStructure)
     {
@@ -101,7 +101,7 @@ class SpellingResults {
             }
         }
 
-        if (array_key_exists("query",$collationSuggestion) && array_key_exists("hits",$collationSuggestion)) {
+        if (array_key_exists("query", $collationSuggestion) && array_key_exists("hits", $collationSuggestion)) {
             $this->collocations[] = $collationSuggestion;
         }
 
@@ -109,7 +109,7 @@ class SpellingResults {
 
 
 
-    public function addTerm ($key, $value, $frequency)
+    public function addTerm($key, $value, $frequency)
     {
 
         $this->terms[$key][] = array('query' => $value, 'hits' => $frequency);
@@ -132,12 +132,12 @@ class SpellingResults {
     }
 
 
-    public function setSpellingQuery (AbstractQuery $query)
+    public function setSpellingQuery(AbstractQuery $query)
     {
         $this->spellingQuery = $query;
     }
 
-    public function getSpellingQuery ()
+    public function getSpellingQuery()
     {
         return $this->spellingQuery;
     }

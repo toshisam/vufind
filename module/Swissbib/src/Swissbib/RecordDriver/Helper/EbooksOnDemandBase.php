@@ -9,11 +9,12 @@ use Swissbib\RecordDriver\SolrMarc;
 
 /**
  * Contains all general base methods for ebooks on demand handlings
- *
  */
 abstract class EbooksOnDemandBase extends CustomizedMethods
 {
-    /** @var  Translator */
+    /**
+ * @var  Translator 
+*/
     protected $translator;
 
 
@@ -21,8 +22,8 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
     /**
      * Initialize
      *
-     * @param    Config        $eBooksOnDemandConfig
-     * @param    Translator    $translator
+     * @param Config     $eBooksOnDemandConfig
+     * @param Translator $translator
      */
     public function __construct(Config $eBooksOnDemandConfig, Translator $translator)
     {
@@ -36,10 +37,10 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
     /**
      * Get an ebooks on demand link for item depending on custom checks and building methods
      *
-     * @param    Array        $item
-     * @param    SolrMarc    $recordDriver
-     * @param    Holdings    $holdingsHelper
-     * @return    String|Boolean
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Holdings $holdingsHelper
+     * @return String|Boolean
      */
     public function getEbooksOnDemandLink(array $item, SolrMarc $recordDriver, Holdings $holdingsHelper)
     {
@@ -55,10 +56,10 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
     /**
      * Base method for link validity check
      *
-     * @param    Array        $item
-     * @param    SolrMarc    $recordDriver
-     * @param    Holdings    $holdingsHelper
-     * @return    Boolean
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Holdings $holdingsHelper
+     * @return Boolean
      */
     protected function isValidForLink(array $item, SolrMarc $recordDriver, Holdings $holdingsHelper)
     {
@@ -70,10 +71,10 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
     /**
      * Base method to call custom link build methods for institutions
      *
-     * @param    Array        $item
-     * @param    SolrMarc    $recordDriver
-     * @param    Holdings    $holdingsHelper
-     * @return    String
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Holdings $holdingsHelper
+     * @return String
      */
     protected function buildLink(array $item, SolrMarc $recordDriver, Holdings $holdingsHelper)
     {
@@ -85,10 +86,10 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
     /**
      * Check whether link is active for institution without custom implementation
      *
-     * @param    Array        $item
-     * @param    SolrMarc    $recordDriver
-     * @param    Holdings    $holdingsHelper
-     * @return    Boolean
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Holdings $holdingsHelper
+     * @return Boolean
      */
     protected function isValidForLinkBase(array $item, SolrMarc $recordDriver, Holdings $holdingsHelper)
     {
@@ -100,10 +101,10 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
     /**
      * Build link for all institutions which don't have a custom implementation
      *
-     * @param    Array        $item
-     * @param    SolrMarc    $recordDriver
-     * @param    Holdings    $holdingsHelper
-     * @return    Boolean|String
+     * @param  Array    $item
+     * @param  SolrMarc $recordDriver
+     * @param  Holdings $holdingsHelper
+     * @return Boolean|String
      */
     protected function buildLinkBase(array $item, SolrMarc $recordDriver, Holdings $holdingsHelper)
     {
@@ -117,9 +118,9 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
      * Support full and half ranges
      * Ex: 1500-1900, 1500-, -1900
      *
-     * @param    String        $institutionCode
-     * @param    Integer        $year
-     * @return    Boolean
+     * @param  String  $institutionCode
+     * @param  Integer $year
+     * @return Boolean
      */
     protected function isYearInRange($institutionCode, $yearArray)
     {
@@ -129,16 +130,13 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
         $year2                        = intval($yearArray[1]);
         $noSecondYear = 'se';
 
-        if ( stripos($noSecondYear, $dateType) !== false )
-        {
+        if (stripos($noSecondYear, $dateType) !== false ) {
             $year = $year1;
         }
-        elseif ( $year1 > $year2 )
-        {
+        elseif ($year1 > $year2 ) {
             $year = $year1;
         }
-        elseif ( $year2 > $year1 )
-        {
+        elseif ($year2 > $year1 ) {
             $year = $year2;
         }
         else {
@@ -177,8 +175,8 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
      * Is institution supported
      * Check whether a link pattern is defined
      *
-     * @param    String        $institutionCode
-     * @return    Boolean
+     * @param  String $institutionCode
+     * @return Boolean
      */
     protected function isSupportedInstitution($institutionCode)
     {
@@ -193,9 +191,9 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
      * Check whether formats are supported
      * The config only needs to contain the starting part of the format
      *
-     * @param    String        $institutionCode
-     * @param    String[]    $itemFormats
-     * @return    Boolean
+     * @param  String   $institutionCode
+     * @param  String[] $itemFormats
+     * @return Boolean
      */
     protected function isSupportedFormat($institutionCode, array $itemFormats)
     {
@@ -234,7 +232,7 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
      * Get converted language
      * Language is current selection of user. Converts are defined in config by lang_de = GER
      *
-     * @return    String
+     * @return String
      */
     protected function getConvertedLanguage()
     {
@@ -248,9 +246,9 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
     /**
      * Check whether configured stop words are part of the compare string
      *
-     * @param    String        $institutionCode
-     * @param    String[]    $itemStopWords
-     * @return    Boolean
+     * @param  String   $institutionCode
+     * @param  String[] $itemStopWords
+     * @return Boolean
      */
     protected function hasStopWords($institutionCode, array $itemStopWords)
     {
@@ -280,11 +278,11 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
     /**
      * Get link pattern
      *
-     * @param    String        $institutionCode
-     * @return    String
+     * @param  String $institutionCode
+     * @return String
      */
     protected function getLinkPattern($institutionCode)
     {
-        return $this->getConfigValue($institutionCode . '_link') ;
+        return $this->getConfigValue($institutionCode . '_link');
     }
 }

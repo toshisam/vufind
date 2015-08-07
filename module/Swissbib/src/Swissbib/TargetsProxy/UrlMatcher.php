@@ -21,15 +21,15 @@ class UrlMatcher
     /**
      * Check whether one of the given url patterns matches the URL
      *
-     * @param    String    $host
-     * @param    Array    $hostPatterns
-     * @return    Boolean
+     * @param  String $host
+     * @param  Array  $hostPatterns
+     * @return Boolean
      */
     public function isMatching($host, array $hostPatterns = array())
     {
         foreach($hostPatterns as $hostPattern)
         {
-            if ( !empty($hostPattern) && strstr($hostPattern, $host)!== false ) {
+            if (!empty($hostPattern) && strstr($hostPattern, $host)!== false ) {
                 return true;
             }
 

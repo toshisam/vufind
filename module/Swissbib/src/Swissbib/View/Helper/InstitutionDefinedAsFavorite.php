@@ -41,7 +41,8 @@ use Zend\View\Helper\AbstractHelper;
 
 
 
-class InstitutionDefinedAsFavorite extends AbstractHelper {
+class InstitutionDefinedAsFavorite extends AbstractHelper
+{
 
     protected $allFavoriteInstitutions = array();
 
@@ -51,7 +52,8 @@ class InstitutionDefinedAsFavorite extends AbstractHelper {
     }
 
 
-    public function isInstitutionDefinedAsFavorite($institutionCode) {
+    public function isInstitutionDefinedAsFavorite($institutionCode) 
+    {
 
         return array_key_exists($institutionCode, $this->allFavoriteInstitutions);
 

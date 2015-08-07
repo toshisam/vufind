@@ -9,7 +9,6 @@ use Swissbib\Favorites\Manager as FavoriteManager;
 
 /**
  * Serve holdings data (items and holdings) for solr records over ajax
- *
  */
 class FavoritesController extends BaseController
 {
@@ -40,9 +39,9 @@ class FavoritesController extends BaseController
 
         //facetquery   ->>> facet.query=institution:z01
 
-      $viewModel = new ViewModel($data);
-      $viewModel->setTemplate('myresearch/favorites');
-      return $viewModel;
+        $viewModel = new ViewModel($data);
+        $viewModel->setTemplate('myresearch/favorites');
+        return $viewModel;
     }
 
 
@@ -51,7 +50,7 @@ class FavoritesController extends BaseController
      * Add an institution to users favorite list
      * Return view for selection
      *
-     * @return    ViewModel
+     * @return ViewModel
      */
     public function addAction()
     {
@@ -74,7 +73,7 @@ class FavoritesController extends BaseController
     /**
      * Delete a user institution
      *
-     * @return    ViewModel
+     * @return ViewModel
      */
     public function deleteAction()
     {
@@ -97,13 +96,15 @@ class FavoritesController extends BaseController
     /**
      * Get select list view model
      *
-     * @return    ViewModel
+     * @return ViewModel
      */
     public function getSelectionList()
     {
-        return $this->getAjaxViewModel(array(
+        return $this->getAjaxViewModel(
+            array(
                                             'userInstitutionsList'    => $this->getUserInstitutionsList()
-                                       ), 'favorites/selectionList');
+                                       ), 'favorites/selectionList'
+        );
     }
 
 
@@ -111,7 +112,7 @@ class FavoritesController extends BaseController
     /**
      * Get data for user institution list
      *
-     * @return    Array[]
+     * @return Array[]
      */
     protected function getUserInstitutionsList()
     {
@@ -123,7 +124,7 @@ class FavoritesController extends BaseController
     /**
      * Add an institution to users favorite list
      *
-     * @param    String        $institutionCode
+     * @param String $institutionCode
      */
     protected function addUserInstitution($institutionCode)
     {
@@ -141,7 +142,7 @@ class FavoritesController extends BaseController
     /**
      * Remove an institution from users favorite list
      *
-     * @param    String        $institutionCode
+     * @param String $institutionCode
      */
     protected function removeUserInstitution($institutionCode)
     {
@@ -160,7 +161,7 @@ class FavoritesController extends BaseController
      * Get autocompleter user institutions data
      * Fetch the translated institution name from label files and append general info (not translated)
      *
-     * @return    Array
+     * @return Array
      */
     protected function getAutocompleterData()
     {
@@ -180,7 +181,7 @@ class FavoritesController extends BaseController
     /**
      * Get all available institutions
      *
-     * @return    Array
+     * @return Array
      */
     protected function getAvailableInstitutions()
     {
@@ -192,7 +193,7 @@ class FavoritesController extends BaseController
     /**
      * Get institutions which are users favorite
      *
-     * @return    String[]
+     * @return String[]
      */
     protected function getUserInstitutions()
     {

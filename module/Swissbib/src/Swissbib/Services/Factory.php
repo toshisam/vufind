@@ -50,7 +50,7 @@ class Factory
      * Constructs a type for redirecting resources using the appropriate protocol
      * (most often used for http resources in https environments).
      *
-     * @param ServiceManager $sm Service manager.
+     * @param  ServiceManager $sm Service manager.
      * @return RedirectProtocolWrapper
      */
     public static function getProtocolWrapper(ServiceManager $sm)
@@ -137,7 +137,9 @@ class Factory
             ? 'en'
             : array($config->Site->language, 'en');
         try {
-            /** @var  $pm  LoaderPluginManager*/
+            /**
+ * @var  $pm  LoaderPluginManager
+*/
             $pm = $translator->getPluginManager();
         } catch (\Zend\Mvc\Exception\BadMethodCallException $ex) {
             // If getPluginManager is missing, this means that the user has
@@ -197,7 +199,7 @@ class Factory
 
 
     /**
-     * @param   ServiceManager      $sm
+     * @param   ServiceManager $sm
      * @return  \Swissbib\Export
      */
     public static function getExport(ServiceManager $sm)

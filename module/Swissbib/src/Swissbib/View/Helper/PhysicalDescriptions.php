@@ -6,7 +6,6 @@ use Zend\View\Helper\AbstractHelper;
 /**
  * Format physical descriptions data array
  * Fetch all relevant data and build a comma separated list
- *
  */
 class PhysicalDescriptions extends AbstractHelper
 {
@@ -14,8 +13,8 @@ class PhysicalDescriptions extends AbstractHelper
     /**
      * Format integer with thousand separator
      *
-     * @param    Array        $physicalDescriptions
-     * @return    String
+     * @param  Array $physicalDescriptions
+     * @return String
      */
     public function __invoke(array $physicalDescriptions)
     {

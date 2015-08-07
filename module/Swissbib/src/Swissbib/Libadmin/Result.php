@@ -3,7 +3,6 @@ namespace Swissbib\Libadmin;
 
 /**
  * Synchronization result with messages and status flag
- *
  */
 class Result
 {
@@ -52,8 +51,8 @@ class Result
     /**
      * Add a new message
      *
-     * @param    Integer        $type
-     * @param    String         $message
+     * @param Integer $type
+     * @param String  $message
      */
     public function addMessage($type, $message)
     {
@@ -68,8 +67,8 @@ class Result
     /**
      * Add an error
      *
-     * @param    String        $message
-     * @return    Result        $this
+     * @param  String $message
+     * @return Result        $this
      */
     public function addError($message)
     {
@@ -85,8 +84,8 @@ class Result
     /**
      * Add an info
      *
-     * @param    String        $message
-     * @return    Result        $this
+     * @param  String $message
+     * @return Result        $this
      */
     public function addInfo($message)
     {
@@ -100,8 +99,8 @@ class Result
     /**
      * Add a success
      *
-     * @param    String        $message
-     * @return    Result        $this
+     * @param  String $message
+     * @return Result        $this
      */
     public function addSuccess($message)
     {
@@ -115,7 +114,7 @@ class Result
     /**
      * Check whether import was successful
      *
-     * @return    Boolean
+     * @return Boolean
      */
     public function isSuccess()
     {
@@ -127,7 +126,7 @@ class Result
     /**
      * Check whether import had errors
      *
-     * @return    Boolean
+     * @return Boolean
      */
     public function hasErrors()
     {
@@ -139,7 +138,7 @@ class Result
     /**
      * Get all plain messages
      *
-     * @return    Array
+     * @return Array
      */
     public function getMessages()
     {
@@ -151,7 +150,7 @@ class Result
     /**
      * Get list of formatted (prefixed with status) messages
      *
-     * @return    String[]
+     * @return String[]
      */
     public function getFormattedMessages()
     {

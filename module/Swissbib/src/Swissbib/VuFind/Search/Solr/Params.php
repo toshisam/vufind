@@ -25,7 +25,7 @@ class Params extends VuFindSolrParams
      * Override to prevent problems with namespace
      * See implementation of parent for details
      *
-     * @return    String
+     * @return String
      */
     public function getSearchClassId()
     {
@@ -39,7 +39,8 @@ class Params extends VuFindSolrParams
      * @param \Zend\StdLib\Parameters $request Parameter object representing user
      * request.
      *
-     * @return void */
+     * @return void 
+*/
     protected function initLimit($request)
     {
 
@@ -48,7 +49,7 @@ class Params extends VuFindSolrParams
         $defLimit = $this->getOptions()->getDefaultLimit();
         $limitOptions = $this->getOptions()->getLimitOptions();
         $view = $this->getView();
-        $this->handleLimit($auth, $request,$defLimit, $limitOptions, $view );
+        $this->handleLimit($auth, $request, $defLimit, $limitOptions, $view);
 
     }
 
@@ -76,7 +77,7 @@ class Params extends VuFindSolrParams
     {
         $auth = $this->serviceLocator->get('VuFind\AuthManager');
         $defaultSort = $this->getOptions()->getDefaultSortByHandler();
-        $this->setSort($this->handleSort($auth,$request,$defaultSort,$this->getSearchClassId()));
+        $this->setSort($this->handleSort($auth, $request, $defaultSort, $this->getSearchClassId()));
     }
 
 
@@ -175,15 +176,19 @@ class Params extends VuFindSolrParams
     /**
      * Add user institutions as facet queries to backend params
      *
-     * @param    ParamBag $backendParams
+     * @param ParamBag $backendParams
      *
-     * @return    ParamBag
+     * @return ParamBag
      */
     protected function addUserInstitutions(ParamBag $backendParams)
     {
-        /** @var Manager $favoritesManger */
+        /**
+ * @var Manager $favoritesManger 
+*/
         $favoritesManger = $this->getServiceLocator()->get('Swissbib\FavoriteInstitutions\Manager');
-        /** @var String[] $favoriteInstitutions */
+        /**
+ * @var String[] $favoriteInstitutions 
+*/
         $favoriteInstitutions = $favoritesManger->getUserInstitutions();
 
         if (sizeof($favoriteInstitutions) >  0) {
@@ -213,10 +218,10 @@ class Params extends VuFindSolrParams
     public function getFacetLabel($field)
     {
         switch($field) {
-            case 'publishDate':
-                return 'adv_search_year';
-            default:
-                return parent::getFacetLabel($field);
+        case 'publishDate':
+            return 'adv_search_year';
+        default:
+            return parent::getFacetLabel($field);
         }
     }
 

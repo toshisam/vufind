@@ -22,7 +22,7 @@ class SummonController extends VuFindSummonController
     {
         // Check if we have facet results cached, and build them if we don't.
         $cache = $this->getServiceLocator()->get('VuFind\CacheManager')
-                ->getCache('object');
+            ->getCache('object');
 
         /**
          * Loads the Summon Results object. This is necessary because otherwise it would fail to load the object
@@ -143,10 +143,10 @@ class SummonController extends VuFindSummonController
      */
     protected function isRestrictedTarget()
     {
-    // check if client is inside Basel / Berne universities
-    $targetsProxy = $this->serviceLocator->get('Swissbib\TargetsProxy\TargetsProxy');
-    $external = $targetsProxy->detectTarget() === false ? true : false;
-    return $external;
+        // check if client is inside Basel / Berne universities
+        $targetsProxy = $this->serviceLocator->get('Swissbib\TargetsProxy\TargetsProxy');
+        $external = $targetsProxy->detectTarget() === false ? true : false;
+        return $external;
     }
 
 
@@ -154,7 +154,7 @@ class SummonController extends VuFindSummonController
     /**
      * Render advanced search
      *
-     * @return    ViewModel
+     * @return ViewModel
      */
     public function advancedAction()
     {
@@ -183,7 +183,8 @@ class SummonController extends VuFindSummonController
      *
      * @return \Zend\View\Model\ViewModel
      */
-    public function resultsAction() {
+    public function resultsAction() 
+    {
         $viewModel = parent::resultsAction();
 
         if ($viewModel instanceof Response) {

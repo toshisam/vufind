@@ -16,10 +16,14 @@ use Zend\View\Resolver\ResolverInterface;
 class TabTemplate extends AbstractHelper implements ServiceLocatorAwareInterface
 {
 
-    /** @var  ServiceLocatorInterface */
+    /**
+ * @var  ServiceLocatorInterface 
+*/
     protected $serviceLocator;
 
-    /** @var ResolverInterface $resolver */
+    /**
+ * @var ResolverInterface $resolver 
+*/
     protected $resolver;
 
 
@@ -27,9 +31,9 @@ class TabTemplate extends AbstractHelper implements ServiceLocatorAwareInterface
     /**
      * Get tab specific template path if present
      *
-     * @param    String        $baseTemplate
-     * @param    String        $tab
-     * @return    String
+     * @param  String $baseTemplate
+     * @param  String $tab
+     * @return String
      */
     public function __invoke($baseTemplate, $tab = null)
     {

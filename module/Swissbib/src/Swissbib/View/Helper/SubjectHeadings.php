@@ -13,8 +13,10 @@ use Zend\View\Helper\AbstractHelper;
  * @link     http://www.swissbib.org
  */
 
-class SubjectHeadings extends AbstractHelper {
-    public function __invoke(array $subjectHeadings = array()) {
+class SubjectHeadings extends AbstractHelper
+{
+    public function __invoke(array $subjectHeadings = array()) 
+    {
         $title= '';
         $lcsh = '';
         foreach ($subjectHeadings as $heading) {

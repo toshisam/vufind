@@ -6,11 +6,12 @@ use Zend\Config\Writer\Ini as IniWriter;
 
 /**
  * Write tab40 data to label file
- *
  */
 class Writer
 {
-    /** @var String    Base path for storage */
+    /**
+ * @var String    Base path for storage 
+*/
     protected $basePath;
 
 
@@ -18,7 +19,7 @@ class Writer
     /**
      * Initialize with base path
      *
-     * @param    String        $basePath
+     * @param String $basePath
      */
     public function __construct($basePath)
     {
@@ -30,10 +31,10 @@ class Writer
     /**
      * Write data to label file
      *
-     * @param    String        $network
-     * @param    String        $locale
-     * @param    Array[]        $data
-     * @return    String        Path to file
+     * @param  String  $network
+     * @param  String  $locale
+     * @param  Array[] $data
+     * @return String        Path to file
      */
     public function write($network, $locale, array $data)
     {
@@ -53,8 +54,8 @@ class Writer
     /**
      * Convert data to label file format
      *
-     * @param    Array    $data
-     * @return    Array
+     * @param  Array $data
+     * @return Array
      */
     protected function convertData(array $data)
     {
@@ -75,9 +76,9 @@ class Writer
     /**
      * Build file path based on base path, network and locale
      *
-     * @param    String        $network
-     * @param    String        $locale
-     * @return    String
+     * @param  String $network
+     * @param  String $locale
+     * @return String
      */
     protected function buildPath($network, $locale)
     {

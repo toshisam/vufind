@@ -9,13 +9,16 @@ use Swissbib\RecordDriver\Helper\BibCode as BibCodeHelper;
 
 /**
  * Get availability for items
- *
  */
 class Availability
 {
-    /** @var Config  */
+    /**
+ * @var Config  
+*/
     protected $config;
-    /** @var  BibCode */
+    /**
+ * @var  BibCode 
+*/
     protected $bibCodeHelper;
 
 
@@ -24,8 +27,8 @@ class Availability
      * Initialize
      * Build IDLS mapping for networks
      *
-     * @param    BibCode        $bibCodeHelper
-     * @param    Config        $config
+     * @param BibCode $bibCodeHelper
+     * @param Config  $config
      */
     public function __construct(BibCodeHelper $bibCodeHelper, Config $config)
     {
@@ -38,17 +41,17 @@ class Availability
     /**
      * Get availability info
      *
-     * @param    String        $sysNumber
-     * @param    String        $barcode
-     * @param    String        $network
-     * @param    String        $locale
-     * @return    Array|Boolean
+     * @param  String $sysNumber
+     * @param  String $barcode
+     * @param  String $network
+     * @param  String $locale
+     * @return Array|Boolean
      */
     public function getAvailability($sysNumber, $barcode, $bib, $locale)
     {
         $apiUrl    = $this->getApiUrl($sysNumber, $barcode, $bib, $locale);
 
-//        echo $network . ' : ' . $apiUrl;
+        //        echo $network . ' : ' . $apiUrl;
 
         try {
             $responseBody    = $this->fetch($apiUrl);
@@ -71,8 +74,8 @@ class Availability
     /**
      * Get IDLS code for network
      *
-     * @param    String        $network
-     * @return    String
+     * @param  String $network
+     * @return String
      */
     protected function getIDLS($network)
     {
@@ -84,11 +87,11 @@ class Availability
     /**
      * Build API url from params
      *
-     * @param    String        $sysNumber
-     * @param    String        $barcode
-     * @param    String        $idls
-     * @param    String        $locale
-     * @return    String
+     * @param  String $sysNumber
+     * @param  String $barcode
+     * @param  String $idls
+     * @param  String $locale
+     * @return String
      */
     protected function getApiUrl($sysNumber, $barcode, $bib, $locale)
     {
@@ -104,18 +107,22 @@ class Availability
     /**
      * Download data from server
      *
-     * @param    String        $url
-     * @return    Array
-     * @throws    \Exception
+     * @param  String $url
+     * @return Array
+     * @throws \Exception
      */
     protected function fetch($url)
     {
-        $client = new HttpClient($url, array(
+        $client = new HttpClient(
+            $url, array(
             'timeout'      => 3
-        ));
+            )
+        );
         $client->setOptions(array('sslverifypeer' => false));
 
-        /** @var HttpResponse $response */
+        /**
+ * @var HttpResponse $response 
+*/
         $response = $client->send();
 
         if ($response->isSuccess()) {

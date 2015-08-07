@@ -10,7 +10,7 @@ class Missing extends VFMissing implements SwissbibRecordDriver
      * Get short title
      * Override base method to assure a string and not an array
      *
-     * @return    String
+     * @return String
      */
     public function getTitle()
     {
@@ -33,7 +33,7 @@ class Missing extends VFMissing implements SwissbibRecordDriver
      * Get short title
      * Override base method to assure a string and not an array
      *
-     * @return    String
+     * @return String
      */
     public function getShortTitle()
     {
@@ -172,7 +172,8 @@ class Missing extends VFMissing implements SwissbibRecordDriver
     /**
      * @return  string
      */
-    public function getUniqueID() {
+    public function getUniqueID() 
+    {
         $uniqueID = parent::getUniqueID();
 
         return empty($uniqueID) ? '' : $uniqueID;

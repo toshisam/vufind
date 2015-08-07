@@ -63,7 +63,7 @@ class TargetsProxy implements ServiceLocatorAwareInterface
     /**
      * Initialize proxy with config
      *
-     * @param    Config    $config
+     * @param Config $config
      */
     public function __construct(Config $config, ZendLogger $logger, Request $request)
     {
@@ -148,9 +148,9 @@ class TargetsProxy implements ServiceLocatorAwareInterface
     /**
      * Get target to be used for the client's IP range + sub domain
      *
-     * @param   String     $overrideIP      Simulate request from given instead of detecting real IP
-     * @param   String       $overrideHost    Simulate request from given instead of detecting from real URL
-     * @return    Boolean   Target detected or not?
+     * @param  String $overrideIP   Simulate request from given instead of detecting real IP
+     * @param  String $overrideHost Simulate request from given instead of detecting from real URL
+     * @return Boolean   Target detected or not?
      */
     public function detectTarget($overrideIP = '', $overrideHost = '')
     {
@@ -162,8 +162,7 @@ class TargetsProxy implements ServiceLocatorAwareInterface
         // Check whether the current IP address matches against any of the configured targets' IP / sub domain patterns
         $ipAddress = !empty($overrideIP) ? $overrideIP : $this->getClientIpV4();
 
-        if (empty($overrideHost))
-        {
+        if (empty($overrideHost)) {
             $url = $this->getClientUrl();
         } else {
             $url = new \Zend\Uri\Http();
@@ -178,18 +177,18 @@ class TargetsProxy implements ServiceLocatorAwareInterface
             $isMatchingIP = false;
             $isMatchingUrl = false;
 
-            /** @var    \Zend\Config\Config    $targetConfig */
+            /**
+ * @var    \Zend\Config\Config    $targetConfig 
+*/
             $targetConfig = $this->config->get($targetKey);
             $patternsIP = '';
             $patternsURL = '';
 
                 // Check match of IP address if any pattern configured.
                 // If match is found, set corresponding keys and continue matching
-            if ($targetConfig->offsetExists('patterns_ip'))
-            {
+            if ($targetConfig->offsetExists('patterns_ip')) {
                 $patternsIP = $targetConfig->get('patterns_ip');
-                if (!empty($patternsIP))
-                {
+                if (!empty($patternsIP)) {
                     $targetPatternsIp = explode(',', $patternsIP);
                     $isMatchingIP = $IpMatcher->isMatching($ipAddress, $targetPatternsIp);
 
@@ -201,15 +200,12 @@ class TargetsProxy implements ServiceLocatorAwareInterface
 
             // Check match of URL hostname if any pattern configured.
             // If match is found, set corresponding keys and exit immediately
-            if ($targetConfig->offsetExists('patterns_url'))
-            {
+            if ($targetConfig->offsetExists('patterns_url')) {
                 $patternsURL = $targetConfig->get('patterns_url');
-                if (!empty($patternsURL))
-                {
+                if (!empty($patternsURL)) {
                     $targetPatternsUrl = explode(',', $patternsURL);
                     $isMatchingUrl = $UrlMatcher->isMatching($url->getHost(), $targetPatternsUrl);
-                    if ($isMatchingUrl === true)
-                    {
+                    if ($isMatchingUrl === true) {
                         $this->setConfigKeys($targetKey);
                         return true;
                     }
@@ -223,7 +219,7 @@ class TargetsProxy implements ServiceLocatorAwareInterface
     /**
      * Set relevant keys from the target key section in config.ini
      *
-     * @param $targetKey
+     * @param  $targetKey
      * @return void
      */
     private function setConfigKeys($targetKey)

@@ -58,7 +58,7 @@ class JSTree extends VfJsTree implements ServiceLocatorAwareInterface
         if ($hierarchyID) {
             // Specific Hierarchy Supplied
             if (in_array($hierarchyID, $inHierarchies)
-                    && $this->getDataSource()->supports($hierarchyID)
+                && $this->getDataSource()->supports($hierarchyID)
             ) {
                 return array(
                     $hierarchyID => $this->getHierarchyName(
@@ -97,8 +97,8 @@ class JSTree extends VfJsTree implements ServiceLocatorAwareInterface
     /**
      * Check whether item has children in hierarchy
      *
-     * @param    String        $id
-     * @return    Boolean
+     * @param  String $id
+     * @return Boolean
      */
     protected function hasChildren($id)
     {
@@ -152,10 +152,10 @@ class JSTree extends VfJsTree implements ServiceLocatorAwareInterface
     /**
      * Recursive function to convert the json to the right format
      *
-     * @param object $node        JSON object of a node/top node
-     * @param string $context     Record or Collection
-     * @param string $hierarchyID Collection ID
-     * @param integer $level      Indicating the depth of recursion
+     * @param object  $node        JSON object of a node/top node
+     * @param string  $context     Record or Collection
+     * @param string  $hierarchyID Collection ID
+     * @param integer $level       Indicating the depth of recursion
      *
      * @return array
      */

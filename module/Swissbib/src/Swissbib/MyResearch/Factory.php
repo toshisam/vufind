@@ -21,13 +21,15 @@ class Factory
         $builder = new AnnotationBuilder();
         $form = $builder->createForm('\\Swissbib\\MyResearch\\Form\\AddressForm');
         $form->add(new Csrf('security'));
-        $form->add([
+        $form->add(
+            [
             'name' => 'submit',
             'type'  => 'Submit',
             'attributes' => [
                 'value' => 'Save',
             ],
-        ]);
+            ]
+        );
 
         return $form;
     }

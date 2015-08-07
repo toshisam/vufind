@@ -23,7 +23,7 @@ class Module implements Autoloadable, Configurable, Initializable, Consolable
 
 
     /**
-     * @param    MvcEvent    $event
+     * @param    MvcEvent $event
      */
     public function onBootstrap(MvcEvent $event)
     {
@@ -101,7 +101,7 @@ class Module implements Autoloadable, Configurable, Initializable, Consolable
 
 
     /**
-     * @param    ModuleManagerInterface    $m
+     * @param    ModuleManagerInterface $m
      */
     public function init(ModuleManagerInterface $m)
     {

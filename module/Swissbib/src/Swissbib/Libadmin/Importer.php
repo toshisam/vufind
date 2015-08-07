@@ -18,7 +18,6 @@ use Swissbib\Libadmin\Writer as LibadminWriter;
 /**
  * Libadmin data importer
  * Fetch data from libadmin api and store in local files
- *
  */
 class Importer implements ServiceLocatorAwareInterface
 {
@@ -33,7 +32,9 @@ class Importer implements ServiceLocatorAwareInterface
      */
     protected $cacheDir;
 
-    /** @var Result */
+    /**
+ * @var Result 
+*/
     protected $result;
 
     /**
@@ -78,8 +79,8 @@ class Importer implements ServiceLocatorAwareInterface
     /**
      * Import data from libadmin api
      *
-     * @param    Boolean        $dryRun
-     * @return    Result
+     * @param  Boolean $dryRun
+     * @return Result
      */
     public function import($dryRun = false)
     {
@@ -189,8 +190,8 @@ class Importer implements ServiceLocatorAwareInterface
     /**
      * Store received data in different formats
      *
-     * @param    Array[]        $data
-     * @return    Boolean
+     * @param  Array[] $data
+     * @return Boolean
      */
     protected function storeData(array $data)
     {
@@ -221,8 +222,8 @@ class Importer implements ServiceLocatorAwareInterface
     /**
      * Store translated labels in local/languages/institution/xx.ini files
      *
-     * @param    Array    $data
-     * @return    Boolean
+     * @param  Array $data
+     * @return Boolean
      */
     protected function storeInstitutionLabels(array $data)
     {
@@ -234,8 +235,8 @@ class Importer implements ServiceLocatorAwareInterface
     /**
      * Store bib info links as language file
      *
-     * @param    Array $data
-     * @return    Boolean
+     * @param  Array $data
+     * @return Boolean
      */
     protected function storeLibraryInfoLinks(array $data)
     {
@@ -247,8 +248,8 @@ class Importer implements ServiceLocatorAwareInterface
     /**
      * Store group labels
      *
-     * @param    Array $data
-     * @return    Boolean
+     * @param  Array $data
+     * @return Boolean
      */
     protected function storeGroupLabels(array $data)
     {
@@ -287,8 +288,8 @@ class Importer implements ServiceLocatorAwareInterface
      * Store relation of each institution to a group as flat list
      * Config file: local/config/vufind/groups.ini
      *
-     * @param    Array        $data
-     * @return    Boolean
+     * @param  Array $data
+     * @return Boolean
      */
     protected function storeGroupInstitutionRelations(array $data)
     {
@@ -344,8 +345,8 @@ class Importer implements ServiceLocatorAwareInterface
     /**
      * Store favorite institutions as config file
      *
-     * @param    Array    $data
-     * @return    Boolean
+     * @param  Array $data
+     * @return Boolean
      */
     protected function storeFavorites(array $data)
     {
@@ -358,10 +359,12 @@ class Importer implements ServiceLocatorAwareInterface
                 if ($institution['favorite']) {
                     $institutionCode    = $institution['bib_code'];
 
-                    $favorites[$institutionCode] = trim('(' . $institution['bib_code'] . ') '
-                                                            . $institution['address']['address']
-                                                            . ' ' . $institution['address']['zip']
-                                                            . ' ' . $institution['address']['city']);
+                    $favorites[$institutionCode] = trim(
+                        '(' . $institution['bib_code'] . ') '
+                        . $institution['address']['address']
+                        . ' ' . $institution['address']['zip']
+                        . ' ' . $institution['address']['city']
+                    );
                 }
             }
         }
@@ -387,11 +390,11 @@ class Importer implements ServiceLocatorAwareInterface
     /**
      * Store localized institution fields in local language files
      *
-     * @param    Array     $data
-     * @param    String    $type
-     * @param    String    $fieldName
-     * @param    String    $fieldKey
-     * @return    Boolean
+     * @param  Array  $data
+     * @param  String $type
+     * @param  String $fieldName
+     * @param  String $fieldKey
+     * @return Boolean
      */
     protected function storeInstitutionField(array $data, $type, $fieldName, $fieldKey = 'bib_code')
     {
@@ -431,7 +434,8 @@ class Importer implements ServiceLocatorAwareInterface
     /**
      * @return void
      */
-    protected function downloadAndStoreAllInstitutionData() {
+    protected function downloadAndStoreAllInstitutionData() 
+    {
         $this->downloadAllInstitutions = true;
         $this->getData();
         $this->downloadAllInstitutions = false;
@@ -442,9 +446,9 @@ class Importer implements ServiceLocatorAwareInterface
     /**
      * Download data from server
      *
-     * @return    String
-     * @throws    Exceptions\Fetch
-     * @throws    \Exception
+     * @return String
+     * @throws Exceptions\Fetch
+     * @throws \Exception
      */
     protected function download()
     {
@@ -465,7 +469,9 @@ class Importer implements ServiceLocatorAwareInterface
 
         $this->result->addInfo('Send request to: ' . $url);
 
-        /** @var Response $response */
+        /**
+ * @var Response $response 
+*/
         $response = $client->send();
 
         if ($response->isSuccess()) {
@@ -487,8 +493,8 @@ class Importer implements ServiceLocatorAwareInterface
      * Save downloaded response
      * Just for history and debugging
      *
-     * @param    String        $responseBody
-     * @return    Boolean
+     * @param  String $responseBody
+     * @return Boolean
      */
     protected function storeDownloadedData($responseBody)
     {
@@ -514,7 +520,7 @@ class Importer implements ServiceLocatorAwareInterface
     /**
      * Get/download and verify data from server
      *
-     * @return    Array
+     * @return Array
      * @throws Exception\Data
      * @throws Exception\Fetch
      */
@@ -543,8 +549,8 @@ class Importer implements ServiceLocatorAwareInterface
     /**
      * Get full API url from config
      *
-     * @return    String
-     * @throws    Exceptions\Fetch
+     * @return String
+     * @throws Exceptions\Fetch
      */
     protected function getApiEndpointUrl()
     {
@@ -552,7 +558,8 @@ class Importer implements ServiceLocatorAwareInterface
         $path = isset($this->configPath) ? $this->configPath : $this->config->path;
 
         $apiUrl = $this->config->host . '/' . $this->config->api . '/' . $path;
-        if ($this->downloadAllInstitutions) $apiUrl .= '?option[all]=true';
+        if ($this->downloadAllInstitutions) { $apiUrl .= '?option[all]=true'; 
+        }
 
         if (!filter_var($apiUrl, FILTER_VALIDATE_URL)) {
             throw new Exceptions\Fetch('Invalid api url, please check config in Libadmin.ini. Current url "' . $apiUrl . '"');

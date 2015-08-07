@@ -39,7 +39,6 @@ use VuFind\View\Helper\Root\Record as VuFindRecord;
 /**
  * Build record links
  * Override related method to support ctrlnum type
- *
  */
 class Record extends VuFindRecord
 {
@@ -144,8 +143,10 @@ class Record extends VuFindRecord
      */
     public function getExtendedLinkDetails()
     {
-        if (!isset($this->urlFilter[$this->config->Site->theme]) ||
-            !($this->driver instanceof \VuFind\RecordDriver\SolrMarc)) return null;
+        if (!isset($this->urlFilter[$this->config->Site->theme]) 
+            || !($this->driver instanceof \VuFind\RecordDriver\SolrMarc)
+        ) { return null; 
+        }
 
         $select = $this->urlFilter[$this->config->Site->theme]['select'];
         $exclude = $this->urlFilter[$this->config->Site->theme]['exclude'];
@@ -155,14 +156,19 @@ class Record extends VuFindRecord
             $driverFields = $this->driver->getMarcRecord()->getFields($field);
 
             if (!empty($driverFields)) {
-                /** @var \File_MARC_Data_Field $marcDataField */
+                /**
+ * @var \File_MARC_Data_Field $marcDataField 
+*/
                 foreach ($driverFields as $marcDataField) {
                     $url = $this->getFirstSubfieldMatch($selectFieldConfig['url'], $marcDataField);
 
-                    if ($url === null) continue;
+                    if ($url === null) { continue; 
+                    }
 
-                    if (!$this->matchesConditions($selectFieldConfig['conditions'], $marcDataField) ||
-                        isset($exclude[$field]) && $this->matchesConditions($exclude[$field], $marcDataField)) continue;
+                    if (!$this->matchesConditions($selectFieldConfig['conditions'], $marcDataField) 
+                        || isset($exclude[$field]) && $this->matchesConditions($exclude[$field], $marcDataField)
+                    ) { continue; 
+                    }
 
                     $desc = $this->getFirstSubfieldMatch($selectFieldConfig['desc'], $marcDataField);
 
@@ -184,9 +190,8 @@ class Record extends VuFindRecord
      * only the first will be kept.
      * Overwrite configuration in local config.ini if you want to display all URLs
      *
-     * @param $urlArray
+     * @param  $urlArray
      * @return array
-     *
      */
     private function createUniqueLinks($urlArray)
     {
@@ -200,7 +205,7 @@ class Record extends VuFindRecord
             $uniqueURLs = [];
             $collectedArrays = [];
             foreach ($urlArray as $url) {
-                if (!array_key_exists($url['url'],$uniqueURLs)) {
+                if (!array_key_exists($url['url'], $uniqueURLs)) {
                     $uniqueURLs[$url['url']] = "";
                     $collectedArrays[] = $url;
                 }
@@ -233,8 +238,10 @@ class Record extends VuFindRecord
      * @param array $links
      * @return array
      */
-    private function mergeLinksByDescription(array $links) {
-        if (empty($this->urlFilter[$this->config->Site->theme]['mergeLinksByDescription'])) return $links;
+    private function mergeLinksByDescription(array $links) 
+    {
+        if (empty($this->urlFilter[$this->config->Site->theme]['mergeLinksByDescription'])) { return $links; 
+        }
 
         $mergeLinksByDescription = $this->urlFilter[$this->config->Site->theme]['mergeLinksByDescription'];
         $filteredLinks = [];
@@ -250,7 +257,8 @@ class Record extends VuFindRecord
                 }
             }
 
-            if (!$isPreferredLink) $filteredLinks[] = $link;
+            if (!$isPreferredLink) { $filteredLinks[] = $link; 
+            }
         }
 
         if (!empty($preferredLinks)) {
@@ -262,7 +270,7 @@ class Record extends VuFindRecord
     }
 
     /**
-     * @param array $fields
+     * @param array                 $fields
      * @param \File_MARC_Data_Field $marcDataField
      *
      * @return null|string
@@ -279,14 +287,15 @@ class Record extends VuFindRecord
     }
 
     /**
-     * @param array $conditions
+     * @param array                 $conditions
      * @param \File_MARC_Data_Field $marcRecord
      *
      * @return bool
      */
     private function matchesConditions(array $conditions, \File_MARC_Data_Field $marcRecord)
     {
-        if (empty($conditions)) return true;
+        if (empty($conditions)) { return true; 
+        }
 
         $matchesOr = false;
         $orConditionsCount = count($conditions);
@@ -323,7 +332,8 @@ class Record extends VuFindRecord
      */
     public function getFormatClass($format)
     {
-        if (!($this->driver instanceof \Swissbib\RecordDriver\SolrMarc) || !$this->driver->getUseMostSpecificFormat()) return parent::getFormatClass($format);
+        if (!($this->driver instanceof \Swissbib\RecordDriver\SolrMarc) || !$this->driver->getUseMostSpecificFormat()) { return parent::getFormatClass($format); 
+        }
 
         $mediatypesIconsConfig = $this->driver->getServiceLocator()->get('VuFind\Config')->get('mediatypesicons');
         $mediaType = $mediatypesIconsConfig->MediatypesIcons->$format;
@@ -376,18 +386,15 @@ class Record extends VuFindRecord
             $title_remainder      = $titleStatement['title_remainder'];
         }
 
-        if (!empty($title_remainder) && empty($parts))
-        {
+        if (!empty($title_remainder) && empty($parts)) {
             return $title_remainder;
         }
 
-        elseif (!empty($title_remainder) && !empty($parts))
-        {
+        elseif (!empty($title_remainder) && !empty($parts)) {
             return $parts . '. ' . $title_remainder;
         }
 
-        elseif (empty($title_remainder) && !empty($parts))
-        {
+        elseif (empty($title_remainder) && !empty($parts)) {
             return $parts;
         }
     }
@@ -400,31 +407,26 @@ class Record extends VuFindRecord
      */
     public function getResponsible($titleStatement, $record)
     {
-        if ($record instanceof \VuFind\RecordDriver\Summon)
-        {
+        if ($record instanceof \VuFind\RecordDriver\Summon) {
             if ($record->getAuthor()) {
                 return $record->getAuthor();
             }
         }
         else
         {
-            if (isset($titleStatement['statement_responsibility']))
-            {
+            if (isset($titleStatement['statement_responsibility'])) {
                 return $titleStatement['statement_responsibility'];
             }
 
-            elseif ($record->getPrimaryAuthor(true))
-            {
+            elseif ($record->getPrimaryAuthor(true)) {
                 return $record->getPrimaryAuthor();
             }
 
-            elseif ($record->getSecondaryAuthors(true))
-            {
+            elseif ($record->getSecondaryAuthors(true)) {
                 return implode('; ', $record->getSecondaryAuthors());
             }
 
-            elseif ($record->getCorporationNames(true))
-            {
+            elseif ($record->getCorporationNames(true)) {
                 return implode('; ', $record->getCorporationNames());
             }
             else
@@ -451,12 +453,12 @@ class Record extends VuFindRecord
         // Array?  It's parameters to send to the cover generator:
         if (is_array($thumb)) {
 
-            if (!empty ($this->config->Content->externalResourcesServer)) {
+            if (!empty($this->config->Content->externalResourcesServer)) {
                 $urlHelper = $this->getView()->plugin('url');
                 $urlSrc = $urlHelper('cover-show');
                 //sometimes our app is not the root domain
-                $position =  strpos($urlSrc,'/Cover');
-                return  $this->config->Content->externalResourcesServer . substr($urlSrc,$position) .  '?' . http_build_query($thumb);
+                $position =  strpos($urlSrc, '/Cover');
+                return  $this->config->Content->externalResourcesServer . substr($urlSrc, $position) .  '?' . http_build_query($thumb);
 
             } else {
 
@@ -470,26 +472,26 @@ class Record extends VuFindRecord
         return $thumb;
     }
 
-	  /**
-		 * Returns css class of media type icon placeholder
-		 *
-	   * @param
-	   * @return string
-	  */
-	public function getThumbnailPlaceholder()
-	{
-		$this->driver->setUseMostSpecificFormat(true);
+    /**
+         * Returns css class of media type icon placeholder
+         *
+       * @param
+       * @return string
+      */
+    public function getThumbnailPlaceholder()
+    {
+        $this->driver->setUseMostSpecificFormat(true);
 
-		$formats = $this->driver->getFormats();
+        $formats = $this->driver->getFormats();
 
-		//Only get Placeholder for first Media Type
-		foreach ($formats as $format)
-		{
-			return $this->getFormatClass($format);
-		}
+        //Only get Placeholder for first Media Type
+        foreach ($formats as $format)
+        {
+            return $this->getFormatClass($format);
+        }
 
-		return '';
-	}
+        return '';
+    }
 
 
     /**
@@ -526,7 +528,8 @@ class Record extends VuFindRecord
      */
     public function getLinkSFX()
     {
-        if ( !($this->driver instanceof \VuFind\RecordDriver\Summon) ) return null;
+        if (!($this->driver instanceof \VuFind\RecordDriver\Summon) ) { return null; 
+        }
 
         $linkSFX = $this->view->openUrl($this->driver->getOpenURL());
         $linkSFX_param = 'title = "' . $this->view->transEsc('articles.linkSFX') . '" target="_blank"';

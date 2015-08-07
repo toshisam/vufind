@@ -89,13 +89,16 @@ class Bootstrapper
     /**
      * Initialize locale change
      * Save changed locale in user
-     *
      */
     protected function initLocaleChange()
     {
-        /** @var ServiceManager $serviceLocator */
+        /**
+ * @var ServiceManager $serviceLocator 
+*/
         $serviceLocator    = $this->serviceManager;
-        /** @var Manager $authManager */
+        /**
+ * @var Manager $authManager 
+*/
         $authManager    = $serviceLocator->get('VuFind\AuthManager');
 
         if ($authManager->isLoggedIn()) {
@@ -104,8 +107,9 @@ class Bootstrapper
             $callback = function ($event) use ($user) {
                 $request = $event->getRequest();
 
-                if (($locale = $request->getPost()->get('mylang', false)) ||
-                    ($locale = $request->getQuery()->get('lng', false))) {
+                if (($locale = $request->getPost()->get('mylang', false)) 
+                    || ($locale = $request->getQuery()->get('lng', false))
+                ) {
                     $user->language = $locale;
                     $user->save();
                 }
@@ -123,26 +127,35 @@ class Bootstrapper
      */
     protected function initUserLocale()
     {
-        /** @var ServiceManager $serviceLocator */
+        /**
+ * @var ServiceManager $serviceLocator 
+*/
         $serviceLocator    = $this->serviceManager;
-        /** @var Manager $authManager */
+        /**
+ * @var Manager $authManager 
+*/
         $authManager    = $serviceLocator->get('VuFind\AuthManager');
-        /** @var Config $config */
+        /**
+ * @var Config $config 
+*/
         $config = $this->config;
 
         if ($authManager->isLoggedIn()) {
             $locale = $authManager->isLoggedIn()->language;
 
             if ($locale) {
-                /** @var TranslatorImpl $translator */
+                /**
+ * @var TranslatorImpl $translator 
+*/
                 $translator = $this->serviceManager->get('VuFind\Translator');
                 $viewModel = $serviceLocator->get('viewmanager')->getViewModel();
 
                 $callback = function ($event) use ($locale, $translator, $viewModel, $config) {
                     $request = $event->getRequest();
 
-                    if ( ($languageChange = $request->getPost()->get('mylang', false)) || ($languageChange = $request->getQuery()->get('lng', false)) ) {
-                        if ( in_array($languageChange, array_keys($config->Languages->toArray())) ) $locale = $languageChange;
+                    if (($languageChange = $request->getPost()->get('mylang', false)) || ($languageChange = $request->getQuery()->get('lng', false)) ) {
+                        if (in_array($languageChange, array_keys($config->Languages->toArray())) ) { $locale = $languageChange; 
+                        }
                     }
 
                     $translator->setLocale($locale);
@@ -173,11 +186,13 @@ class Bootstrapper
             $callback = function ($event) {
                 $response = $event->getApplication()->getResponse();
                 //for expires use date in the past
-                $response->getHeaders()->addHeaders(array(
+                $response->getHeaders()->addHeaders(
+                    array(
                     'Cache-Control' => 'no-cache, no-store, must-revalidate',
                     'Pragma' => 'no-cache',
                     'Expires' => 'Thu, 1 Jan 2015 00:00:00 GMT'
-                ));
+                    )
+                );
 
 
             };
@@ -201,7 +216,9 @@ class Bootstrapper
         $baseDir = LOCAL_OVERRIDE_DIR . '/languages';
 
         $callback = function ($event) use ($baseDir) {
-            /** @var TranslatorImpl $translator */
+            /**
+ * @var TranslatorImpl $translator 
+*/
             $translator = $event->getApplication()->getServiceManager()->get('VuFind\Translator');
             $locale     = $translator->getLocale();
             $fallback    = 'en';
@@ -230,7 +247,9 @@ class Bootstrapper
         $config =& $this->config;
         $callback = function ($event) use ($config) {
 
-            /** @var TranslatorImpl $translator */
+            /**
+ * @var TranslatorImpl $translator 
+*/
             $translator = $event->getApplication()->getServiceManager()->get('VuFind\Translator');
             if (isset($config->TextDomains)
                 && isset($config->TextDomains->textDomains)
@@ -255,7 +274,7 @@ class Bootstrapper
      * Adds text-domain language files
      *
      * @param TranslatorImpl $translator  Translator Object
-     * @param Config     $textDomains Text-domain configuration
+     * @param Config         $textDomains Text-domain configuration
      *
      * @return void
      */
@@ -289,11 +308,17 @@ class Bootstrapper
     protected function initTab40LocationTranslation()
     {
         $callback = function ($event) {
-            /** @var ServiceManager $serviceLocator */
+            /**
+ * @var ServiceManager $serviceLocator 
+*/
             $serviceLocator    = $event->getApplication()->getServiceManager();
-            /** @var Translator $translator */
+            /**
+ * @var Translator $translator 
+*/
             $translator = $serviceLocator->get('VuFind\Translator');
-            /** @var Config $tab40Config */
+            /**
+ * @var Config $tab40Config 
+*/
             $tab40Config    = $serviceLocator->get('VuFind\Config')->get('config')->tab40import;
 
             if ($tab40Config) {
@@ -320,7 +345,6 @@ class Bootstrapper
 
     /**
      * Add log listener for missing institution translations
-     *
      */
     protected function initMissingTranslationObserver()
     {
@@ -328,11 +352,17 @@ class Bootstrapper
             return;
         }
 
-        /** @var ServiceManager $serviceLocator */
+        /**
+ * @var ServiceManager $serviceLocator 
+*/
         $serviceLocator    = $this->event->getApplication()->getServiceManager();
-        /** @var \Swissbib\Log\Logger $logger */
+        /**
+ * @var \Swissbib\Log\Logger $logger 
+*/
         $logger    = $serviceLocator->get('Swissbib\Logger');
-        /** @var TranslatorImpl $translator */
+        /**
+ * @var TranslatorImpl $translator 
+*/
         $translator = $serviceLocator->get('VuFind\Translator');
 
         /**
@@ -355,7 +385,9 @@ class Bootstrapper
     protected function initZendValidatorTranslations()
     {
         $callback = function ($event) {
-            /** @var TranslatorImpl $translator */
+            /**
+ * @var TranslatorImpl $translator 
+*/
             $translator = $event->getApplication()->getServiceManager()->get('VuFind\Translator');
 
             $translator->addTranslationFile(

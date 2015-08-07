@@ -54,7 +54,7 @@ class Results extends VFSummonResults
      */
     public function getTarget()
     {
-      return $this->target;
+        return $this->target;
     }
 
     public function getMyLibrariesFacets()
@@ -64,7 +64,6 @@ class Results extends VFSummonResults
 
 
     /**
-     *
      * Returns the stored list of facets for the last search
      * GH:
      * The function is overridden because the current VF2 implementation does'nt take care (22.12.2014) about the number of facets shown for each category.

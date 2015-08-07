@@ -12,13 +12,13 @@ use Swissbib\RecordDriver\Helper\Holdings;
 
 /**
  * Serve holdings data (items and holdings) for solr records over ajax
- *
  */
 class ShibtestController extends BaseController
 {
 
 
-    public function shibAction() {
+    public function shibAction() 
+    {
 
         $serverArray = [];
 
@@ -27,10 +27,7 @@ class ShibtestController extends BaseController
         }
 
         return $this->createViewModel(
-
-
             array ('serverVariables' =>  $serverArray)
-
         );
 
 

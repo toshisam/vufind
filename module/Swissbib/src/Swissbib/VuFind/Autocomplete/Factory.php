@@ -31,7 +31,6 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * Factory for autocomplete plugins.
  *
- *
  * PHP version 5
  *
  * Copyright (C) project swissbib, University Library Basel, Switzerland
@@ -70,7 +69,7 @@ class Factory
      */
     public static function getSolr(ServiceManager $sm)
     {
-        return new \Swissbib\VuFind\Autocomplete\Solr (
+        return new \Swissbib\VuFind\Autocomplete\Solr(
             $sm->getServiceLocator()->get('VuFind\SearchResultsPluginManager')
         );
     }

@@ -5,7 +5,6 @@ use Zend\View\Helper\AbstractHelper;
 
 /**
  * Prepare authors link list
- *
  */
 class Authors extends AbstractHelper
 {
@@ -13,8 +12,8 @@ class Authors extends AbstractHelper
     /**
      * Merge author fields to a single list with urls
      *
-     * @param    Array    $authors
-     * @return    Array[]
+     * @param  Array $authors
+     * @return Array[]
      */
     public function __invoke(array $authors = array())
     {

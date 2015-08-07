@@ -5,7 +5,6 @@ use Zend\View\Helper\AbstractHelper;
 
 /**
  * Format integers
- *
  */
 class Number extends AbstractHelper
 {
@@ -13,8 +12,8 @@ class Number extends AbstractHelper
     /**
      * Format integer with thousand separator
      *
-     * @param    Integer        $number
-     * @return    String
+     * @param  Integer $number
+     * @return String
      */
     public function __invoke($number)
     {

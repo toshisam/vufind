@@ -10,7 +10,6 @@ use Swissbib\Tab40Import\Importer as Tab40Importer;
 /**
  * Import tab40.xxx files and convert them to label files
  * Use this controller over the command line
- *
  */
 class Tab40ImportController extends AbstractActionController
 {
@@ -18,8 +17,8 @@ class Tab40ImportController extends AbstractActionController
     /**
      * Import file as label data
      *
-     * @return    String
-     * @throws    \RuntimeException
+     * @return String
+     * @throws \RuntimeException
      */
     public function importAction()
     {

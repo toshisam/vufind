@@ -73,8 +73,8 @@ class ExtendedIni extends VFExtendedIni
      * @param string $locale   Locale to read from language file
      * @param string $filename Language file to read (not used)
      *
-     * @return TextDomain
-     * @throws InvalidArgumentException
+     * @return                                        TextDomain
+     * @throws                                        InvalidArgumentException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function load($locale, $filename)
@@ -131,16 +131,17 @@ class ExtendedIni extends VFExtendedIni
 
             //is the case with native.ini translations
             $data = $this->reader->getTextDomain($filename);
-        } elseif (preg_match('/(.*?-.*?)\\.ini/',$filename,$matchesLocation)) {
+        } elseif (preg_match('/(.*?-.*?)\\.ini/', $filename, $matchesLocation)) {
 
             //GH: this is a big hack to fetch the multi domain location translations
             //compare comment in config_base.ini
-            $wholeFileName = array_filter($matchesLocation, function ($arrValue) {
-                return preg_match("#ini#",$arrValue);
-            });
+            $wholeFileName = array_filter(
+                $matchesLocation, function ($arrValue) {
+                    return preg_match("#ini#", $arrValue);
+                }
+            );
 
-            if (is_array($wholeFileName) && count($wholeFileName) == 1)
-            {
+            if (is_array($wholeFileName) && count($wholeFileName) == 1) {
                 foreach ($this->pathStack as $path) {
 
                     if (preg_match('/location$/', $path)) {
@@ -167,8 +168,7 @@ class ExtendedIni extends VFExtendedIni
             //simple VuFind translation
             //we have to collect the translation files in APP_BASE/languages and
             //APP_BASE/locale/languages
-            if (!preg_match('/\//',$filename))
-            {
+            if (!preg_match('/\//', $filename)) {
                 foreach ($this->pathStack as $path) {
 
                     if (preg_match('/languages$/', $path)) {
@@ -192,15 +192,17 @@ class ExtendedIni extends VFExtendedIni
                 //if we are dealing with a multi domain translation the filename contains a slash character
                 //compare the initialization method initSpecialTranslations in Bootstrapper
                 $matches = [];
-                preg_match('/(.*?)\\//',$filename,$matches);
+                preg_match('/(.*?)\\//', $filename, $matches);
                 foreach ($this->pathStack as $path) {
 
-                    $found = array_filter($matches, function ($arrValue) use ($path) {
-                        return preg_match("#{$arrValue}#",$path);
-                    });
+                    $found = array_filter(
+                        $matches, function ($arrValue) use ($path) {
+                            return preg_match("#{$arrValue}#", $path);
+                        }
+                    );
                     if (count($found) > 0) {
-                        $test = strrpos($filename,"/");
-                        $fileNameWithoutPath = $test ? substr($filename,$test + 1) : $filename;
+                        $test = strrpos($filename, "/");
+                        $fileNameWithoutPath = $test ? substr($filename, $test + 1) : $filename;
                         //preg_match('//',$filename,$matches);
                         $fullFilePath = $path . '/' . $fileNameWithoutPath;
                         if ($fullFilePath && file_exists($fullFilePath)) {

@@ -6,7 +6,8 @@ use Zend\Config\Config;
 use Swissbib\Hierarchy\SimpleTreeGenerator;
 
 
-class MultiTreeGenerator {
+class MultiTreeGenerator
+{
 
     /**
      * @var array
@@ -26,7 +27,8 @@ class MultiTreeGenerator {
      * @param Config              $config
      * @param SimpleTreeGenerator $simpleTreeGenerator
      */
-    public function __construct(Config $config, SimpleTreeGenerator $simpleTreeGenerator) {
+    public function __construct(Config $config, SimpleTreeGenerator $simpleTreeGenerator) 
+    {
         $this->setTreeConfig($config);
         $this->simpleTreeGenerator = $simpleTreeGenerator;
     }
@@ -38,7 +40,8 @@ class MultiTreeGenerator {
      *
      * @return array
      */
-    public function getTrees(array $facetList) {
+    public function getTrees(array $facetList) 
+    {
         $treesToGenerate = array_intersect(array_keys($facetList), $this->treeConfig);
         $generatedTrees = array();
 
@@ -54,7 +57,8 @@ class MultiTreeGenerator {
     /**
      * @param Config $config
      */
-    protected function setTreeConfig(Config $config) {
+    protected function setTreeConfig(Config $config) 
+    {
         if ($config->Site->classificationTrees instanceof Config) {
             $this->treeConfig = $config->Site->classificationTrees->toArray();
         } else {

@@ -34,12 +34,14 @@ class Results extends VuFindSolrResults
      * Data is extracted
      * Format: {field, value, count, name}
      *
-     * @param    Boolean        $onlyNonZero
-     * @return    Array[]
+     * @param  Boolean $onlyNonZero
+     * @return Array[]
      */
     protected function getResultQueryFacets($onlyNonZero = false)
     {
-        /** @var \ArrayObject $queryFacets */
+        /**
+ * @var \ArrayObject $queryFacets 
+*/
 
         //GH 19.12.2014
         //this might need a redesign. It's the old implementation for swissbib classic
@@ -71,7 +73,7 @@ class Results extends VuFindSolrResults
      * Get special facets
      * - User favorite institutions
      *
-     * @return    Array[]
+     * @return Array[]
      */
     public function getMyLibrariesFacets()
     {
@@ -80,16 +82,14 @@ class Results extends VuFindSolrResults
 
         $configQuerySettings = $this->getServiceLocator()->get('VuFind\Config')
             ->get($this->getOptions()->getFacetsIni())->QueryFacets;
-        if (count($queryFacets) > 0 && isset($configQuerySettings))
-        {
+        if (count($queryFacets) > 0 && isset($configQuerySettings)) {
             $configResultSettings = $this->getServiceLocator()->get('VuFind\Config')
                 ->get($this->getOptions()->getFacetsIni())->Results_Settings;
 
 
             foreach ($queryFacets as $queryFacet) {
 
-                if (isset($configQuerySettings[$queryFacet['field']]))
-                {
+                if (isset($configQuerySettings[$queryFacet['field']])) {
                     $facetGroupName = $queryFacet['field'];
 
 
@@ -116,8 +116,7 @@ class Results extends VuFindSolrResults
                     }
 
 
-                    if (!isset($list[$facetGroupName]['list']))
-                    {
+                    if (!isset($list[$facetGroupName]['list'])) {
                         $list[$facetGroupName]['list'] = array();
                     }
 
@@ -154,8 +153,8 @@ class Results extends VuFindSolrResults
      * Get facet list
      * Add institution query facets on top of the list
      *
-     * @param    Array|Null        $filter
-     * @return    Array[]
+     * @param  Array|Null $filter
+     * @return Array[]
      */
     public function getFacetList($filter = null)
     {
@@ -346,12 +345,14 @@ class Results extends VuFindSolrResults
         $refValuesToTranslate = $this->getOptions()->getTranslatedFacets();
         //is the current field a facet which should be translated?
         //we have to use this customized filter mechanism because facets going to be translated are indicated in conjunction with their domain facetName:domainName
-        $fieldToTranslateInArray =  array_filter($refValuesToTranslate,function ($passedValue) use ($field){
-            //return true, if the field shoul be translated
-            //either $field==value in arra with facets to be translated (simple translation)
-            //or multi domain translation where the domain is part of the configuration fieldname:domainName
-            return $passedValue === $field || count(preg_grep ( "/" .$field . ":" . "/", array ($passedValue))) > 0;
-        }) ;
+        $fieldToTranslateInArray =  array_filter(
+            $refValuesToTranslate, function ($passedValue) use ($field) {
+                //return true, if the field shoul be translated
+                //either $field==value in arra with facets to be translated (simple translation)
+                //or multi domain translation where the domain is part of the configuration fieldname:domainName
+                return $passedValue === $field || count(preg_grep("/" .$field . ":" . "/", array ($passedValue))) > 0;
+            }
+        );
 
         //Did we detect the field should be translated (field is part of the filtered array)
         $translateInfo['translate'] = count($fieldToTranslateInArray) > 0;
@@ -361,7 +362,7 @@ class Results extends VuFindSolrResults
 
         $fieldToTranslate = $translateInfo['translate'] ? current($fieldToTranslateInArray) : null;
         if ($translateInfo['translate']) {
-            $translateInfo['field_domain'] =  strstr($fieldToTranslate,':') === FALSE ? array($field) : array($field,substr($fieldToTranslate,strpos( $fieldToTranslate,':') + 1 ));
+            $translateInfo['field_domain'] =  strstr($fieldToTranslate, ':') === false ? array($field) : array($field,substr($fieldToTranslate, strpos($fieldToTranslate, ':') + 1));
             //normalizedFieldName contains only the fieldname without any colons as seperator for the domain name (it's handy)
             $translateInfo['normalizedFieldName'] = $translateInfo['field_domain'][0];
         }

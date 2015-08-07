@@ -10,11 +10,12 @@ use Zend\Config\Config;
  * - myDummyMethodA100
  * - myDummyMethodBase
  * - missingMethod
- *
  */
 abstract class CustomizedMethods
 {
-    /** @var    Config */
+    /**
+ * @var    Config 
+*/
     protected $config;
 
 
@@ -22,7 +23,7 @@ abstract class CustomizedMethods
     /**
      * Initialize with config
      *
-     * @param    Config $config
+     * @param Config $config
      */
     public function __construct(Config $config)
     {
@@ -34,7 +35,7 @@ abstract class CustomizedMethods
     /**
      * @param       $methodName
      * @param       $key
-     * @param array $arguments
+     * @param array      $arguments
      * @return mixed
      */
     protected function callMethod($methodName, $key, array $arguments = array())
@@ -57,10 +58,10 @@ abstract class CustomizedMethods
      * Handle calls to missing methods
      * This means neither the base method nor the custom method was implemented
      *
-     * @param    String        $methodName
-     * @param    String        $key
-     * @param    Array        $arguments
-     * @return    Boolean|Mixed
+     * @param  String $methodName
+     * @param  String $key
+     * @param  Array  $arguments
+     * @return Boolean|Mixed
      */
     protected function missingMethod($methodName, $key, $arguments)
     {
@@ -72,10 +73,10 @@ abstract class CustomizedMethods
     /**
      * Parse values from data array into template string
      *
-     * @param    String        $string
-     * @param    Array        $data
-     * @param    Boolean        $addBraces        Wrap array keys with currly braces for template usage
-     * @return    String
+     * @param  String  $string
+     * @param  Array   $data
+     * @param  Boolean $addBraces Wrap array keys with currly braces for template usage
+     * @return String
      */
     protected function templateString($string, array $data, $addBraces = true)
     {
@@ -95,8 +96,8 @@ abstract class CustomizedMethods
     /**
      * Check whether config value exits
      *
-     * @param    String        $key
-     * @return    Boolean
+     * @param  String $key
+     * @return Boolean
      */
     protected function hasConfigValue($key)
     {
@@ -108,8 +109,8 @@ abstract class CustomizedMethods
     /**
      * Get config value
      *
-     * @param    String        $key
-     * @return    String
+     * @param  String $key
+     * @return String
      */
     protected function getConfigValue($key)
     {
@@ -121,9 +122,9 @@ abstract class CustomizedMethods
     /**
      * Check whether value is defined in a comma separated config parameter
      *
-     * @param    String $configKey
-     * @param    String $value
-     * @return    Boolean
+     * @param  String $configKey
+     * @param  String $value
+     * @return Boolean
      */
     protected function isValueInConfigList($configKey, $value)
     {
@@ -137,11 +138,11 @@ abstract class CustomizedMethods
     /**
      * Get list items from config
      *
-     * @param    String        $configKey
-     * @param    Boolean        $toLower
-     * @param    Boolean        $trim
-     * @param    String        $delimiter
-     * @return    String[]
+     * @param  String  $configKey
+     * @param  Boolean $toLower
+     * @param  Boolean $trim
+     * @param  String  $delimiter
+     * @return String[]
      */
     protected function getConfigList($configKey, $trim = true, $delimiter = ',')
     {

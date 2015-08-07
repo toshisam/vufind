@@ -5,19 +5,20 @@ use Zend\View\Helper\AbstractHelper;
 
 /**
  * Check whether an institution code is a user favorite
- *
  */
 class IsFavoriteInstitution extends AbstractHelper
 {
 
-    /** @var    Array  */
+    /**
+ * @var    Array  
+*/
     protected $userInstitutionCodes;
 
 
     /**
      * Initialize with user favorites
      *
-     * @param    String[]    $userInstitutionCodes
+     * @param String[] $userInstitutionCodes
      */
     public function __construct(array $userInstitutionCodes)
     {
@@ -29,8 +30,8 @@ class IsFavoriteInstitution extends AbstractHelper
     /**
      * Check whether one of the item institutions matches with one of the user institutions
      *
-     * @param    String[]        $institutionCodes
-     * @return    Boolean
+     * @param  String[] $institutionCodes
+     * @return Boolean
      */
     public function __invoke(array $institutionCodes)
     {

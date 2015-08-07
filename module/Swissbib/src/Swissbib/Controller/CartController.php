@@ -6,7 +6,6 @@ use VuFind\Controller\CartController as VuFindCartController;
 
 /**
  * Customized cart controller
- *
  */
 class CartController extends VuFindCartController
 {
@@ -14,7 +13,7 @@ class CartController extends VuFindCartController
     /**
      * Catch exception after login redirect
      *
-     * @return    Response
+     * @return Response
      */
     public function myresearchbulkAction()
     {

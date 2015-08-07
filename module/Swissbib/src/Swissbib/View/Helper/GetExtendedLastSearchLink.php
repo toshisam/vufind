@@ -35,7 +35,8 @@ namespace Swissbib\View\Helper;
 use VuFind\Search\Memory, Zend\View\Helper\AbstractHelper;
 
 
-class GetExtendedLastSearchLink extends AbstractHelper {
+class GetExtendedLastSearchLink extends AbstractHelper
+{
 
 
     /**

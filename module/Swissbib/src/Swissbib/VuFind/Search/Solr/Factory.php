@@ -40,15 +40,18 @@ use Zend\ServiceManager\ServiceManager;
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.vufind.org  Main Page
  */
-class Factory {
+class Factory
+{
 
 
 
-    public static function getSpellchecker(ServiceManager $sm) {
+    public static function getSpellchecker(ServiceManager $sm) 
+    {
         return new SpellingProcessor($sm->get("sbSpellingResults"));
     }
 
-    public static function getSpellingResults(ServiceManager $sm) {
+    public static function getSpellingResults(ServiceManager $sm) 
+    {
         return new SpellingResults();
     }
 

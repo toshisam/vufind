@@ -35,7 +35,8 @@ namespace Swissbib\VuFind\Autocomplete;
 
 use VuFind\Autocomplete\Solr as VFAutocompleteSolr;
 
-class Solr extends VFAutocompleteSolr {
+class Solr extends VFAutocompleteSolr
+{
 
 
     protected function getSuggestionsFromSearch($searchResults, $query, $exact)

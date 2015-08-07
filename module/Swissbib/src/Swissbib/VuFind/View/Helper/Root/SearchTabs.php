@@ -35,8 +35,8 @@ use VuFind\View\Helper\Root\SearchTabs as VuFindSearchTabs;
 /**
  * Authentication view helper
  *
- * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link    http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
 class SearchTabs extends VuFindSearchTabs
 {

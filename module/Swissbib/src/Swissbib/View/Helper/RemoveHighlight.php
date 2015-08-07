@@ -15,7 +15,7 @@ use Zend\View\Helper\AbstractHelper;
 class RemoveHighlight extends AbstractHelper
 {
     /**
-     * @param   String   $shortTitle
+     * @param   String $shortTitle
      * @return  String
      */
     public function __invoke($shortTitle)

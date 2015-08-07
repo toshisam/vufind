@@ -49,7 +49,7 @@ class Factory
     /**
      * Constructs TargetsProxy
      *
-     * @param ServiceManager $sm Service manager.
+     * @param  ServiceManager $sm Service manager.
      * @return TargetsProxy
      */
     public static function getTargetsProxy(ServiceManager $sm)
@@ -63,10 +63,10 @@ class Factory
     /**
      * Constructs IpMatcher
      *
-     * @param ServiceManager $sm Service manager.
+     * @param  ServiceManager $sm Service manager.
      * @return IpMatcher
      */
-    public static function getIpMatcher (ServiceManager $sm)
+    public static function getIpMatcher(ServiceManager $sm)
     {
         return new IpMatcher();
 
@@ -75,10 +75,10 @@ class Factory
     /**
      * Constructs UrlMatcher
      *
-     * @param ServiceManager $sm Service manager.
+     * @param  ServiceManager $sm Service manager.
      * @return UrlMatcher
      */
-    public static function getURLMatcher (ServiceManager $sm)
+    public static function getURLMatcher(ServiceManager $sm)
     {
         return new UrlMatcher();
 

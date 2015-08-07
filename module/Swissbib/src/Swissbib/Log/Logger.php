@@ -5,13 +5,16 @@ use Zend\Log\Logger as ZendLogger;
 
 /**
  * Log special events
- *
  */
 class Logger extends ZendLogger
 {
-    /** @var String[] */
+    /**
+ * @var String[] 
+*/
     protected $untranslatedInstitutions = array();
-    /** @var String[] */
+    /**
+ * @var String[] 
+*/
     protected $ungroupedInstitutinos = array();
 
 
@@ -19,7 +22,7 @@ class Logger extends ZendLogger
     /**
      * Log an untranslated institution
      *
-     * @param    String        $institutionCode
+     * @param String $institutionCode
      */
     public function logUntranslatedInstitution($institutionCode)
     {
@@ -35,7 +38,7 @@ class Logger extends ZendLogger
     /**
      * Log an ungrouped institution
      *
-     * @param    String        $institutionCode
+     * @param String $institutionCode
      */
     public function logUngroupedInstitution($institutionCode)
     {

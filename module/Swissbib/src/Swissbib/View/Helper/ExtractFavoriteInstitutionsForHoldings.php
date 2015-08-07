@@ -5,18 +5,19 @@ use Zend\I18n\View\Helper\AbstractTranslatorHelper;
 
 /**
  * Search favorite institutions in holding list and add as a new group as first group
- *
  */
 class ExtractFavoriteInstitutionsForHoldings extends AbstractTranslatorHelper
 {
-    /** @var    Array  */
+    /**
+ * @var    Array  
+*/
     protected $userInstitutionCodes;
 
 
 
     /**
      *
-     * @param    String[]    $userInstitutionCodes
+     * @param    String[] $userInstitutionCodes
      */
     public function __construct(array $userInstitutionCodes)
     {
@@ -28,8 +29,8 @@ class ExtractFavoriteInstitutionsForHoldings extends AbstractTranslatorHelper
     /**
      * Convert holdings list. Copy favorite institutions
      *
-     * @param    Array[]        $holdings
-     * @return    Array[]
+     * @param  Array[] $holdings
+     * @return Array[]
      */
     public function __invoke(array $holdings)
     {

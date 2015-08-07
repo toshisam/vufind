@@ -6,7 +6,6 @@ use Zend\Http\Request;
 
 /**
  * get the basic domain for view script
- *
  */
 class DomainURL extends AbstractHelper
 {
@@ -21,19 +20,22 @@ class DomainURL extends AbstractHelper
     }
 
 
-    public function normalize() {
+    public function normalize() 
+    {
 
         return $this->request->getUri()->normalize();
 
     }
 
-    public function basePath () {
+    public function basePath() 
+    {
 
         return $this->request->getBasePath();
     }
 
 
-    public function getRefererURL() {
+    public function getRefererURL() 
+    {
 
         return  $this->request->getServer('HTTP_REFERER');
 

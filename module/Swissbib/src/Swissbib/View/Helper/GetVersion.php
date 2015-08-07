@@ -8,6 +8,7 @@ use Zend\View\Helper\AbstractHelper;
  * Read-out latest git tag
  *
  * Class GitTagNumber
+ *
  * @package Swissbib\View\Helper
  */
 class GetVersion extends AbstractHelper
@@ -15,7 +16,7 @@ class GetVersion extends AbstractHelper
     /**
      * Get tab specific template path if present
      *
-     * @return    String
+     * @return String
      */
     public function __invoke()
     {

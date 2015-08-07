@@ -22,7 +22,7 @@ use Zend\Filter\AbstractFilter;
  * Activating the filter: call SbTemplateFilenameFilter::onBootstrap() from within the
  * onBootstap() method of the module class (\path\to\module\Namespace\Module.php)
  *
- * @package    Swissbib\Filter
+ * @package Swissbib\Filter
  */
 class TemplateFilenameFilter extends AbstractFilter implements ServiceLocatorAwareInterface
 {
@@ -31,13 +31,15 @@ class TemplateFilenameFilter extends AbstractFilter implements ServiceLocatorAwa
 
 
     /**
-     * @param    Mixed    $content
+     * @param    Mixed $content
      * @return    Mixed|String
      */
     public function filter($content)
     {
         $sm = $this->getServiceLocator();
-        /** @var $phpRenderer \Zend\View\Renderer\PhpRenderer */
+        /**
+ * @var $phpRenderer \Zend\View\Renderer\PhpRenderer 
+*/
         $phpRenderer = $sm->get('Zend\View\Renderer\PhpRenderer');
 
         // Fetch private property PhpRenderer::__file via reflection
@@ -48,9 +50,9 @@ class TemplateFilenameFilter extends AbstractFilter implements ServiceLocatorAwa
         $templateFilename = $fileProperty->getValue($phpRenderer);
 
         // Don't wrap export stuff
-        if ( (stristr($templateFilename, 'export-') !== false) ||
-            (stristr($templateFilename, '/email/') !== false) ||
-            (stristr($templateFilename, '/link') !== false)
+        if ((stristr($templateFilename, 'export-') !== false) 
+            || (stristr($templateFilename, '/email/') !== false) 
+            || (stristr($templateFilename, '/link') !== false)
         ) {
             return $content;
         }
@@ -65,8 +67,8 @@ class TemplateFilenameFilter extends AbstractFilter implements ServiceLocatorAwa
 
 
     /**
-     * @param    String    $content
-     * @param    String    $templateFilename
+     * @param    String $content
+     * @param    String $templateFilename
      * @return    String
      */
     private function wrapContentWithComment($content, $templateFilename)
@@ -84,7 +86,7 @@ class TemplateFilenameFilter extends AbstractFilter implements ServiceLocatorAwa
 
 
     /**
-     * @param    ServiceLocatorInterface    $serviceLocator
+     * @param    ServiceLocatorInterface $serviceLocator
      */
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {

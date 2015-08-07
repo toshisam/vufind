@@ -38,11 +38,13 @@ use Zend\View\Helper\AbstractHelper;
 use Swissbib\Services\RedirectProtocolWrapper as ServiceRedirectProtocolWrapper;
 
 
-class RedirectProtocolWrapper extends AbstractHelper {
+class RedirectProtocolWrapper extends AbstractHelper
+{
 
     private  $serviceProtolWrapper;
 
-    public function __construct(ServiceRedirectProtocolWrapper $spW) {
+    public function __construct(ServiceRedirectProtocolWrapper $spW) 
+    {
 
         $this->serviceProtolWrapper = $spW;
 
@@ -52,7 +54,8 @@ class RedirectProtocolWrapper extends AbstractHelper {
      * wrapper Function to wrap URL'S for another service
      * for swissbib we use the service for http URL's which should used within a https environment
      */
-    public function getWrappedURL($url) {
+    public function getWrappedURL($url) 
+    {
         return $this->serviceProtolWrapper->getWrappedURL($url);
 
     }

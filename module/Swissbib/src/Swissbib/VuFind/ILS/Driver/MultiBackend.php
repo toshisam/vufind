@@ -37,9 +37,11 @@ use VuFind\ILS\Driver\MultiBackend as VFMultiBackend,
     Zend\ServiceManager\ServiceLocatorInterface,
     Zend\Log\LoggerInterface;
 
-class MultiBackend extends VFMultiBackend {
+class MultiBackend extends VFMultiBackend
+{
 
-    public function getBookings($id) {
+    public function getBookings($id) 
+    {
         $source = $this->getSource($id);
         $driver = $this->getDriver($source);
         if ($driver) {
@@ -48,7 +50,8 @@ class MultiBackend extends VFMultiBackend {
         return array();
     }
 
-    public function getPhotoCopies($id) {
+    public function getPhotoCopies($id) 
+    {
         $source = $this->getSource($id);
         $driver = $this->getDriver($source);
         if ($driver) {
@@ -57,7 +60,8 @@ class MultiBackend extends VFMultiBackend {
         return array();
     }
 
-    public function getAllowedActionsForItem($patronId, $id, $group, $bib) {
+    public function getAllowedActionsForItem($patronId, $id, $group, $bib) 
+    {
         $source = $this->getSource($patronId);
         $driver = $this->getDriver($source);
         if ($driver) {
@@ -66,7 +70,8 @@ class MultiBackend extends VFMultiBackend {
         return array();
     }
 
-    public function getRequiredDate($patron, $holdInfo=null) {
+    public function getRequiredDate($patron, $holdInfo=null) 
+    {
         $id = $patron['id'];
         $source = $this->getSource($id);
         $driver = $this->getDriver($source);
@@ -114,8 +119,8 @@ class MultiBackend extends VFMultiBackend {
         $year = 0,
         $volume = 0,
         $numItems = 10,
-        array $extraRestParams = array() )
-    {
+        array $extraRestParams = array() 
+    ) {
         $source = $this->getSource($resourceId);
         $driver = $this->getDriver($source);
         if ($driver) {
@@ -126,22 +131,25 @@ class MultiBackend extends VFMultiBackend {
                 $year,
                 $volume,
                 $numItems,
-                $extraRestParams );
+                $extraRestParams 
+            );
         }
     }
 
 
-    public function getHoldingItemCount( $resourceId, $institutionCode = '', $offset = 0, $year = 0, $volume = 0 ) {
+    public function getHoldingItemCount( $resourceId, $institutionCode = '', $offset = 0, $year = 0, $volume = 0 ) 
+    {
         $source = $this->getSource($resourceId);
         $driver = $this->getDriver($source);
         if ($driver) {
-            return $driver->getHoldingItemCount( $resourceId, $institutionCode, $offset, $year, $volume );
+            return $driver->getHoldingItemCount($resourceId, $institutionCode, $offset, $year, $volume);
         }
         throw new ILSException('No suitable backend driver found');
     }
 
 
-    public function getResourceFilters($resourceId) {
+    public function getResourceFilters($resourceId) 
+    {
         $source = $this->getSource($resourceId);
         $driver = $this->getDriver($source);
         if ($driver) {
@@ -160,7 +168,8 @@ class MultiBackend extends VFMultiBackend {
      * Circumvent the private declaration in parent class
      */
 
-    public function getSource($id, $delimiter = '') {
+    public function getSource($id, $delimiter = '') 
+    {
         return parent::getSource($id, $delimiter = '');
     }
 
@@ -177,7 +186,8 @@ class MultiBackend extends VFMultiBackend {
      * Circumvent the private declaration in parent class
      */
 
-    public function getDriverConfig($source) {
+    public function getDriverConfig($source) 
+    {
         return parent::getDriverConfig($source);
     }
 
@@ -216,7 +226,7 @@ class MultiBackend extends VFMultiBackend {
     }
 
     /**
-     * @param array $patron
+     * @param array  $patron
      * @param string $id
      * @param string $group
      *
@@ -235,14 +245,15 @@ class MultiBackend extends VFMultiBackend {
     }
 
     /**
-     * @param array $patron
+     * @param array  $patron
      * @param string $id
      * @param string $group
-     * @param array $copyRequest
+     * @param array  $copyRequest
      *
      * @return array
      */
-    public function putCopy(array $patron, $id, $group, array $copyRequest) {
+    public function putCopy(array $patron, $id, $group, array $copyRequest) 
+    {
         $source = $this->getSource($patron['cat_username'], 'login');
         $driver = $this->getDriver($source);
 

@@ -31,7 +31,7 @@ class ResourceContainer extends VfResourceContainer implements ServiceLocatorAwa
     /**
      * Inject service locator
      *
-     * @param    ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator
      */
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
@@ -47,7 +47,7 @@ class ResourceContainer extends VfResourceContainer implements ServiceLocatorAwa
     /**
      * Get service locator
      *
-     * @return    ServiceLocatorInterface
+     * @return ServiceLocatorInterface
      */
     public function getServiceLocator()
     {
@@ -59,7 +59,7 @@ class ResourceContainer extends VfResourceContainer implements ServiceLocatorAwa
     /**
      * Remove ignored file before they're added to the resources
      *
-     * @param    Array|String $css
+     * @param Array|String $css
      */
     public function addCss($css)
     {
@@ -90,9 +90,9 @@ class ResourceContainer extends VfResourceContainer implements ServiceLocatorAwa
     /**
      * Remove files which are on the ignore list
      *
-     * @param    String[]    $resourcesToInspect
-     * @param    String[]    $resourcesToIgnore
-     * @return    String[]
+     * @param  String[] $resourcesToInspect
+     * @param  String[] $resourcesToIgnore
+     * @return String[]
      */
     protected function removeIgnoredFiles($resourcesToInspect, $resourcesToIgnore)
     {

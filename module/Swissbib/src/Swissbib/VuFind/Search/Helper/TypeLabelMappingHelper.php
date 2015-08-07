@@ -15,7 +15,8 @@ class TypeLabelMappingHelper
     {
         if ($params->getQuery() instanceof Query) {
             $type = strtolower($params->getQuery()->getHandler());
-            if ($type !== 'allfields') return 'adv_search_' . $type;
+            if ($type !== 'allfields') { return 'adv_search_' . $type; 
+            }
         }
 
         return 'All_Fields';

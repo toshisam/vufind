@@ -12,7 +12,7 @@ class Options extends VuFindSolrOptions
     /**
      * Set default limit
      *
-     * @param    Integer        $limit
+     * @param Integer $limit
      */
     public function setDefaultLimit($limit)
     {
@@ -21,7 +21,7 @@ class Options extends VuFindSolrOptions
 
 
     /**
-     * @param String    $defaultSort
+     * @param String $defaultSort
      */
     public function setDefaultSort($defaultSort)
     {
@@ -32,6 +32,7 @@ class Options extends VuFindSolrOptions
     /**
      * Translate a string if a translator is available.
      * We have to override this method because VF2 core doesn't support multiple Textdomains for translations at the moment
+     *
      * @override
      *
      * @param string $str     String to translate
@@ -44,7 +45,7 @@ class Options extends VuFindSolrOptions
     public function translate($str, $tokens = [], $default = null)
     {
         return null !== $this->translator
-            ? is_array($str) && count($str) == 2 ?  $this->translator->translate($str[0],$str[1]) : $this->translator->translate($str) : $str;
+            ? is_array($str) && count($str) == 2 ?  $this->translator->translate($str[0], $str[1]) : $this->translator->translate($str) : $str;
     }
 
 

@@ -112,14 +112,16 @@ class Bootstrap
 
         }
 
-        AutoloaderFactory::factory(array(
+        AutoloaderFactory::factory(
+            array(
                                         'Zend\Loader\StandardAutoloader' => array(
                                             'autoregister_zf' => true,
                                             'namespaces'      => array(
                                                 __NAMESPACE__ => __DIR__ . '/' . __NAMESPACE__,
                                             ),
                                         ),
-                                   ));
+                                   )
+        );
     }
 
 
@@ -130,7 +132,8 @@ class Bootstrap
         $previousDir = '.';
         while (!is_dir($dir . '/' . $path)) {
             $dir = dirname($dir);
-            if ($previousDir === $dir) return false;
+            if ($previousDir === $dir) { return false; 
+            }
             $previousDir = $dir;
         }
         return $dir . '/' . $path;

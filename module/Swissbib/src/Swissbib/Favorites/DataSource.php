@@ -8,14 +8,17 @@ use VuFind\Config\PluginManager as ConfigManager;
 
 /**
  * Helper for favorite institutions
- *
  */
 class DataSource
 {
 
-    /** @var StorageInterface  */
+    /**
+ * @var StorageInterface  
+*/
     protected $cache;
-    /** @var  ConfigManager */
+    /**
+ * @var  ConfigManager 
+*/
     protected $configManager;
 
     const CACHE_KEY = 'favorite-institutions';
@@ -39,7 +42,7 @@ class DataSource
     /**
      * Get favorite institutions
      *
-     * @return    Array
+     * @return Array
      */
     public function getFavoriteInstitutions()
     {
@@ -59,7 +62,7 @@ class DataSource
     /**
      * Check whether institutions are already cached
      *
-     * @return    Boolean
+     * @return Boolean
      */
     protected function isCached()
     {
@@ -71,7 +74,7 @@ class DataSource
     /**
      * Load data from cache
      *
-     * @return    Array
+     * @return Array
      */
     protected function getCachedData()
     {
@@ -83,8 +86,8 @@ class DataSource
     /**
      * Write data to cache
      *
-     * @param    Array    $institutionList
-     * @return    Boolean
+     * @param  Array $institutionList
+     * @return Boolean
      */
     protected function setCachedData(array $institutionList)
     {
@@ -97,11 +100,13 @@ class DataSource
      * Load favorites data
      * Extract from a config object
      *
-     * @return    Array
+     * @return Array
      */
     protected function loadInstitutionFavoriteData()
     {
-        /** @var Config $config */
+        /**
+ * @var Config $config 
+*/
         $config    = $this->configManager->get('favorite-institutions');
 
         return $config->toArray();

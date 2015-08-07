@@ -12,7 +12,8 @@
 namespace Swissbib\Controller;
 use VuFind\Controller\AbstractBase;
 
-class NoProductiveSupportController extends AbstractBase {
+class NoProductiveSupportController extends AbstractBase
+{
 
 
     /**
@@ -25,9 +26,9 @@ class NoProductiveSupportController extends AbstractBase {
      *
      * @return mixed
      */
-    public function homeAction ()
+    public function homeAction()
     {
-        return $this->forwardTo('Error','home');
+        return $this->forwardTo('Error', 'home');
     }
 
 }

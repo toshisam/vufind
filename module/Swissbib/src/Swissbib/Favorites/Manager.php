@@ -8,7 +8,6 @@ use VuFind\Auth\Manager as AuthManager;
 /**
  * Manage user favorites
  * Depending on login status, save in session or database
- *
  */
 class Manager
 {
@@ -16,11 +15,17 @@ class Manager
 
     protected $SESSION_DOWNLOADED = 'institution-favorites-downloaded';
 
-    /** @var SessionStorageInterface  */
+    /**
+ * @var SessionStorageInterface  
+*/
     protected $session;
-    /** @var  Config */
+    /**
+ * @var  Config 
+*/
     protected $groupMapping;
-    /** @var  AuthManager */
+    /**
+ * @var  AuthManager 
+*/
     protected $authManager;
 
 
@@ -28,14 +33,14 @@ class Manager
     /**
      * Initialize
      *
-     * @param    SessionStorageInterface $session
-     * @param    Config                    $groupMapping
-     * @param    AuthManager                $authManager
+     * @param SessionStorageInterface $session
+     * @param Config                  $groupMapping
+     * @param AuthManager             $authManager
      */
     public function __construct(
-                    SessionStorageInterface $session,
-                    Config $groupMapping,
-                    AuthManager $authManager
+        SessionStorageInterface $session,
+        Config $groupMapping,
+        AuthManager $authManager
     ) {
         $this->session        = $session;
         $this->groupMapping    = $groupMapping;
@@ -47,8 +52,8 @@ class Manager
     /**
      * Get user institutions
      *
-     * @return    String[]
-     * @todo    Do login check
+     * @return String[]
+     * @todo   Do login check
      */
     public function getUserInstitutions()
     {
@@ -60,7 +65,7 @@ class Manager
     /**
      * Check whether download flag is set
      *
-     * @return    Boolean
+     * @return Boolean
      */
     public function hasInstitutionsDownloaded()
     {
@@ -71,7 +76,6 @@ class Manager
 
     /**
      * Set downloaded flag in session
-     *
      */
     public function setInstitutionsDownloaded()
     {
@@ -83,7 +87,7 @@ class Manager
     /**
      * Save user institutions
      *
-     * @param    String[]    $institutionCodes
+     * @param String[] $institutionCodes
      */
     public function saveUserInstitutions(array $institutionCodes)
     {
@@ -95,7 +99,7 @@ class Manager
     /**
      * Get listing data for user institutions
      *
-     * @return    Array[]
+     * @return Array[]
      */
     public function getUserInstitutionsListingData()
     {
@@ -116,7 +120,7 @@ class Manager
     /**
      * ave institutions in session
      *
-     * @param    String[]    $institutions
+     * @param String[] $institutions
      */
     protected function saveInSession(array $institutions)
     {
@@ -128,7 +132,7 @@ class Manager
     /**
      * Save institutions as user setting in database
      *
-     * @param    String[]    $institutionCodes
+     * @param String[] $institutionCodes
      */
     protected function saveInDatabase(array $institutionCodes)
     {
@@ -143,7 +147,7 @@ class Manager
     /**
      * Get user institutions from session
      *
-     * @return    String[]
+     * @return String[]
      */
     protected function getFromSession()
     {
@@ -159,7 +163,7 @@ class Manager
     /**
      * Get user institutions from database
      *
-     * @return    String[]
+     * @return String[]
      */
     protected function getFromDatabase()
     {
