@@ -1035,14 +1035,22 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getRelatedEntries()
     {
         $related = explode(',', $this->mainConfig->RelatedEntries->related);
-        $related_persons = $this->getMarcSubFieldMaps('700', $this->personFieldMap);
-        $related_corporations = $this->getMarcSubFieldMaps('710', $this->corporationFieldMap);
-
-        //return array_filter($fields, function($field) use ($related) {
-        //    $test = isset($field['relator_code']) && in_array($field['relator_code'], $related);
-        //    return isset($field['relation']) && in_array($field['relation'], $related);
-        //});
-        return null;
+        $related_persons = array_filter($this->getMarcSubFieldMaps('700', $this->personFieldMap), function($field) use ($related) {
+            return isset($field['relator_code']) && in_array($field['relator_code'], $related);
+        });
+        $related_corporations = array_filter($this->getMarcSubFieldMaps('710', $this->corporationFieldMap), function($field) use ($related) {
+            return isset($field['relator_code']) && in_array($field['relator_code'], $related);
+        });
+        if (!$related_persons || !$related_corporations) {
+            return null;
+        }
+        else {
+            $related_entries = [
+                'persons' => $related_persons,
+                'corporations' => $related_corporations,
+            ];
+            return $related_entries;
+        }
     }
 
 
