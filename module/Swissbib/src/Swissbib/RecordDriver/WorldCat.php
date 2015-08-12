@@ -1,6 +1,6 @@
 <?php
 /**
- * Swissbib / VuFind swissbib enhancements for MARC records in Solr
+ * WorldCat
  *
  * PHP version 5
  *
@@ -34,7 +34,7 @@ namespace Swissbib\RecordDriver;
 use VuFind\RecordDriver\WorldCat as VFWorldCat;
 
 /**
- * Class SwissbibRecordDriver
+ * WorldCat
  *
  * @category Swissbib_VuFind2
  * @package  RecordDriver
