@@ -64,11 +64,11 @@ class Factory
         $form->add(new Csrf('security'));
         $form->add(
             [
-            'name' => 'submit',
-            'type'  => 'Submit',
-            'attributes' => [
-                'value' => 'request_copy_text',
-            ],
+                'name' => 'submit',
+                'type'  => 'Submit',
+                'attributes' => [
+                    'value' => 'request_copy_text',
+                ],
             ]
         );
 

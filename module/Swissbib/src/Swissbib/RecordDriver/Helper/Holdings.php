@@ -1,6 +1,6 @@
 <?php
 /**
- * swissbib / VuFind: Helper class for swissbib holdings
+ * Swissbib / VuFind: Helper class for swissbib holdings
  *
  * PHP version 5
  *
@@ -20,8 +20,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * @category swissbib_VuFind2
- * @package  RecordDriver
+ * @category Swissbib_VuFind2
+ * @package  RecordDriver_Helper
  * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @author   Oliver Schihin <oliver.schihin@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
@@ -32,7 +32,6 @@ namespace Swissbib\RecordDriver\Helper;
 
 use Zend\Config\Config;
 use Zend\I18n\Translator\TranslatorInterface as Translator;
-
 
 use VuFind\Crypt\HMAC;
 use VuFind\ILS\Connection as IlsConnection;
@@ -46,49 +45,68 @@ use Swissbib\RecordDriver\Helper\BibCode;
 use Swissbib\Log\Logger;
 
 /**
- * probably Holdings should be a subtype of ZF2 AbstractHelper
- *at first I need a better understanding how things are wired up in this case using means of ZF2
+ * Probably Holdings should be a subtype of ZF2 AbstractHelper at first I need a
+ * better understanding how things are wired up in this case using means of ZF2
+ *
+ * @category Swissbib_VuFind2
+ * @package  RecordDriver_Helper
+ * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
 class Holdings
 {
-
     /**
- * @var    IlsConnection    Receive more data from server 
-*/
+     * Receive more data from server
+     *
+     * @var IlsConnection
+     */
     protected $ils;
 
     /**
- * @var    AuthManager        Check login status and info 
-*/
+     * Check login status and info
+     * @var AuthManager
+     */
     protected $authManager;
 
     /**
- * @var IlsAuth  
-*/
+     * IlsAuth
+     * @var IlsAuth
+     */
     protected $ilsAuth;
 
     /**
- * @var    ConfigManager    Load configurations 
-*/
+     * Load configurations
+     *
+     * @var ConfigManager
+     */
     protected $configManager;
 
     /**
- * @var    \File_MARC_Record 
-*/
+     * Holdings
+     *
+     * @var \File_MARC_Record
+     */
     protected $holdings;
 
     /**
- * @var    String        Parent item 
-*/
+     * Parent item
+     *
+     * @var String
+     */
     protected $idItem;
 
     /**
- * @var    Array    HMAC keys for ILS 
-*/
+     * HMAC keys for ILS
+     *
+     * @var Array
+     */
     protected $hmacKeys = array();
 
     /**
-     * @var    Array    Map of fields to named params
+     * Map of fields to named params
+     *
+     * @var Array
      */
     protected $fieldMapping = array(
         '0' => 'local_branch_expanded',
@@ -115,92 +133,128 @@ class Holdings
     );
 
     /**
- * @var Array      Map fieldId => delimiter, fields listed here get concatenated using the delimiter 
-*/
+     * Map fieldId => delimiter, fields listed here get
+     * concatenated using the delimiter
+     *
+     * @var Array
+     */
     protected $concatenationMapping = array(
         'z' => ' '
     );
 
     /**
-     * @var    Array[]|Boolean
+     * HoldingData
+     *
+     * @var Array[]|Boolean
      */
     protected $holdingData = false;
 
     /**
- * @var    Array[]|Boolean        Holding structure without data 
-*/
+     * Holding structure without data
+     *
+     * @var Array[]|Boolean
+     */
     protected $holdingStructure = false;
 
     /**
-     * @var    Array[]    List of availabilities per item and barcode
+     * List of availabilities per item and barcode
+     *
+     * @var Array[]
      */
     protected $availabilities = array();
 
     /**
-     * @var    Array[]    List of network domains and libs
+     * List of network domains and libs
+     *
+     * @var Array[]
      */
     protected $networks = array();
 
     /**
-     * @var    Config
+     * HoldingsConfig
+     *
+     * @var Config
      */
     protected $configHoldings;
 
     /**
-     * @var    HMAC
+     * HMAC
+     *
+     * @var HMAC
      */
     protected $hmac;
 
     /**
-     * @var    Array        Mapping from institutions to groups
+     * Mapping from institutions to groups
+     *
+     * @var Array
      */
     protected $institution2group = array();
 
     /**
-     * @var        Array
+     * GroupSorting
+     *
+     * @var Array
      */
     protected $groupSorting = array();
 
     /**
-     * @var        Translator
+     * Translator
+     *
+     * @var Translator
      */
     protected $translator;
 
     /**
- * @var  LocationMap 
-*/
+     * LocationMap
+     *
+     * @var LocationMap
+     */
     protected $locationMap;
 
     /**
- * @var  EbooksOnDemand 
-*/
+     * EbooksOnDemand
+     *
+     * @var EbooksOnDemand
+     */
     protected $ebooksOnDemand;
 
     /**
- * @var  Availability 
-*/
+     * Availability
+     *
+     * @var Availability
+     */
     protected $availability;
-    /**
- * @var BibCode 
-*/
-    protected $bibCodeHelper;
-    /**
- * @var  Logger 
-*/
-    protected $swissbibLogger;
 
+    /**
+     * BibCodeHelper
+     *
+     * @var BibCode
+     */
+    protected $bibCodeHelper;
+
+    /**
+     * Logger
+     *
+     * @var Logger
+     */
+    protected $swissbibLogger;
 
     /**
      * Initialize helper with dependencies
      *
-     * @param  IlsConnection $ilsConnection
-     * @param  HMAC          $hmac
-     * @param  AuthManager   $authManager
-     * @param  ConfigManager $configManager
-     * @param  Translator    $translator
-     * @param  LocationMap   $locationMap
-     * @param  BibCode       $bibCodeHelper
-     * @param  Logger        $swissbibLogger
+     * @param IlsConnection  $ilsConnection  IlsConnection
+     * @param HMAC           $hmac           Hmac
+     * @param AuthManager    $authManager    AuthManager
+     * @param IlsAuth        $ilsAuth        IlsAuth
+     * @param ConfigManager  $configManager  ConfigManager
+     * @param Translator     $translator     Translator
+     * @param LocationMap    $locationMap    LocationMap
+     * @param EbooksOnDemand $ebooksOnDemand EBooksOnDemand
+     * @param Availability   $availability   Availability
+     * @param BibCode        $bibCodeHelper  BibCodeHelper
+     * @param Logger         $swissbibLogger Logger
+     *
      * @throws \Exception
      */
     public function __construct(
@@ -230,8 +284,10 @@ class Holdings
         $this->swissbibLogger = $swissbibLogger;
 
         /**
- * @var Config $relationConfig 
-*/
+         * Config
+         *
+         * @var Config $relationConfig
+         */
         $relationConfig = $configManager->get('libadmin-groups');
 
         // Just ignore missing config to prevent a crashing frontend
@@ -239,7 +295,10 @@ class Holdings
             $this->institution2group = $relationConfig->institutions->toArray();
             $this->groupSorting = $relationConfig->groups->toArray();
         } elseif (APPLICATION_ENV == 'development') {
-            throw new \Exception('Missing config file libadmin-groups.ini. Run libadmin sync to solve this problem');
+            throw new \Exception(
+                'Missing config file libadmin-groups.ini. Run libadmin sync ' .
+                'to solve this problem'
+            );
         }
 
         $holdsIlsConfig = $this->ils->checkFunction('Holds');
@@ -248,12 +307,13 @@ class Holdings
         $this->initNetworks();
     }
 
-
     /**
      * Initialize for item
      *
-     * @param String $idItem
-     * @param String $holdingsXml
+     * @param String $idItem      ItemId
+     * @param String $holdingsXml HoldingsXml
+     *
+     * @return void
      */
     public function setData($idItem, $holdingsXml = '')
     {
@@ -262,30 +322,36 @@ class Holdings
         $this->setHoldingsContent($holdingsXml);
     }
 
-
     /**
      * Get holdings data
      *
-     * @param  String   $institutionCode
-     * @param  SolrMarc $recordDriver
-     * @return Array[]|Boolean            Contains lists for items and holdings {items=>[],holdings=>[]}
+     * @param SolrMarc $recordDriver    RecordDriver
+     * @param String   $institutionCode InstitutionCode
+     * @param Boolean  $extend          Extend
+     *
+     * @return Array[]|Boolean Contains lists for items and holdings
+     *                         {items=>[],holdings=>[]}
      */
-    public function getHoldings(SolrMarc $recordDriver, $institutionCode, $extend = true)
-    {
+    public function getHoldings(SolrMarc $recordDriver, $institutionCode,
+        $extend = true
+    ) {
         if ($this->holdingData === false) {
             $this->holdingData = array();
 
             if ($this->hasItems()) {
-                $this->holdingData['items'] = $this->getItemsData($recordDriver, $institutionCode, $extend);
+                $this->holdingData['items'] = $this->getItemsData(
+                    $recordDriver, $institutionCode, $extend
+                );
             }
             if ($this->hasHoldings()) {
-                $this->holdingData['holdings'] = $this->getHoldingData($recordDriver, $institutionCode, $extend);
+                $this->holdingData['holdings'] = $this->getHoldingData(
+                    $recordDriver, $institutionCode, $extend
+                );
             }
         }
 
         return $this->holdingData;
     }
-
 
     /**
      * Get holdings structure grouped by group and institution
@@ -302,19 +368,25 @@ class Holdings
 
             if ($this->hasItems()) {
                 //$structure949 = $this->getStructuredHoldingsStructure(949);
-                $holdingStructure = $this->getStructuredHoldingsStructure(949, $holdingStructure);
+                $holdingStructure = $this->getStructuredHoldingsStructure(
+                    949, $holdingStructure
+                );
             }
             if ($this->hasHoldings()) {
                 //$structure852 = $this->getStructuredHoldingsStructure(852);
-                $holdingStructure = $this->getStructuredHoldingsStructure(852, $holdingStructure);
+                $holdingStructure = $this->getStructuredHoldingsStructure(
+                    852, $holdingStructure
+                );
             }
-            //using this method imposes problems in the context of institutions with holdings and items at the same time
-            //the final data structure $this->holdingsStructure doubles entries in the array (for example label) which causes problems e.g. in conjunction
+            //using this method imposes problems in the context of institutions with
+            //holdings and items at the same time the final data structure
+            //$this->holdingsStructure doubles entries in the array
+            //(for example label) which causes problems e.g. in conjunction
             //with the translation mechanism
             //and such datastructure is simply a mess
             //example id:299403270 (SNL)
 
-            //$holdingStructure = array_merge_recursive($structure852, $structure949);
+            //$holdingStructure = array_merge_recursive($structure852,$structure949);
 
             $this->holdingStructure = $this->sortHoldings($holdingStructure);
         }
@@ -327,7 +399,8 @@ class Holdings
      * Sort holdings by group based on position in $this->groupSorting
      * Sort institutions based on position in institution2group
      *
-     * @param  Array $holdings
+     * @param Array $holdings Holdings
+     *
      * @return Array
      */
     protected function sortHoldings(array $holdings)
@@ -340,16 +413,19 @@ class Holdings
                 if (sizeof($this->institution2group)) {
                     $sortedInstitutions = array();
 
-                    foreach ($this->institution2group as $institutionCode => $groupCodeAgain) {
+                    foreach ($this->institution2group as
+                        $institutionCode => $groupCodeAgain
+                    ) {
+                        // @codingStandardsIgnoreStart
                         if (isset($holdings[$groupCode]['institutions'][$institutionCode])) {
                             $sortedInstitutions[$institutionCode] = $holdings[$groupCode]['institutions'][$institutionCode];
                         }
+                        // @codingStandardsIgnoreEnd
                     }
                 } else {
                     // No sorting available, just use available data
                     $sortedInstitutions = $holdings[$groupCode]['institutions'];
                 }
-
 
                 // Add group to sorted list
                 $sortedHoldings[$groupCode] = $holdings[$groupCode];
@@ -369,13 +445,13 @@ class Holdings
         return $sortedHoldings;
     }
 
-
     /**
      * Merge two arrays. Extend sub arrays or add missing elements,
      * but don't extend existing scalar values (as array_merge_recursive() does)
      *
-     * @param  Array $resultData
-     * @param  Array $newData
+     * @param Array $resultData ResultData
+     * @param Array $newData    NewData
+     *
      * @return Array
      */
     protected function mergeHoldings(array $resultData, array $newData)
@@ -384,7 +460,8 @@ class Holdings
             if (!isset($resultData[$newKey])) {
                 $resultData[$newKey] = $newValue;
             } elseif (is_array($resultData[$newKey])) {
-                $resultData[$newKey] = $this->mergeHoldings($resultData[$newKey], $newValue);
+                $resultData[$newKey]
+                    = $this->mergeHoldings($resultData[$newKey], $newValue);
             }
             // else = Already existing scalar value => ignore (keep first items data)
         }
@@ -392,10 +469,11 @@ class Holdings
         return $resultData;
     }
 
-
     /**
      * Initialize networks from config
      * (active only for Aleph)
+     *
+     * @return void
      */
     protected function initNetworks()
     {
@@ -405,12 +483,13 @@ class Holdings
             $configName = ucfirst($networkName) . 'Networks';
 
             /**
- * @var Config $networkConfigs 
-*/
+             * NetworkConfigs
+             *
+             * @var Config $networkConfigs
+             */
             $networkConfigs = $this->configHoldings->get($configName);
 
-            foreach ($networkConfigs as $networkCode => $networkConfig)
-            {
+            foreach ($networkConfigs as $networkCode => $networkConfig) {
                 list($domain, $library) = explode(',', $networkConfig, 2);
                 $this->networks[$networkCode] = [
                     'domain' => $domain,
@@ -425,13 +504,18 @@ class Holdings
     /**
      * Set holdings structure
      *
-     * @param  String $holdingsXml
+     * @param String $holdingsXml HoldingsXml
+     *
+     * @return void
+     *
      * @throws \File_MARC_Exception
      */
     protected function setHoldingsContent($holdingsXml)
     {
         if (is_string($holdingsXml) && strlen($holdingsXml) > 30) {
-            $holdingsMarcXml = new \File_MARCXML($holdingsXml, \File_MARCXML::SOURCE_STRING);
+            $holdingsMarcXml = new \File_MARCXML(
+                $holdingsXml, \File_MARCXML::SOURCE_STRING
+            );
             $marcData = $holdingsMarcXml->next();
 
             if (!$marcData) {
@@ -446,19 +530,22 @@ class Holdings
         }
     }
 
-
     /**
      * Get holding items for an institution
      *
-     * @param  SolrMarc $recordDriver
-     * @param  String   $institutionCode
-     * @param  Boolean  $extend
-     * @return Array        Institution Items
+     * @param SolrMarc $recordDriver    RecordDriver
+     * @param String   $institutionCode InstitutionCode
+     * @param Boolean  $extend          Extend
+     *
+     * @return Array Institution Items
      */
-    protected function getItemsData(SolrMarc $recordDriver, $institutionCode, $extend = true)
-    {
+    protected function getItemsData(SolrMarc $recordDriver, $institutionCode,
+        $extend = true
+    ) {
         $fieldName = 949; // Field code for item information in holdings xml
-        $institutionItems = $this->getHoldingsData($fieldName, $this->fieldMapping, $institutionCode);
+        $institutionItems = $this->getHoldingsData(
+            $fieldName, $this->fieldMapping, $institutionCode
+        );
 
         if ($extend) {
             foreach ($institutionItems as $index => $item) {
@@ -470,48 +557,51 @@ class Holdings
         return $institutionItems;
     }
 
-
     /**
      * Check whether network is supported
      *
-     * @param  String $networkCode
+     * @param String $networkCode NetworkCode
+     *
      * @return Boolean
      */
     protected function isRestfulNetwork($networkCode)
     {
-        return isset($this->configHoldings->Restful->{$networkCode}) && $this->configHoldings->Restful->{$networkCode} == true ?: false;
+        return isset($this->configHoldings->Restful->{$networkCode})
+            && $this->configHoldings->Restful->{$networkCode} == true ?: false;
     }
-
 
     /**
      * Extend item with additional informations
      *
-     * @param  Array    $item
-     * @param  SolrMarc $recordDriver
-     * @param  Array    $extendingOptions
+     * @param Array    $item             Item
+     * @param SolrMarc $recordDriver     RecordDriver
+     * @param Array    $extendingOptions ExtendingOptions
+     *
      * @return Array
      */
-    public function extendItem(array $item, SolrMarc $recordDriver, array $extendingOptions = array())
-    {
+    public function extendItem(array $item, SolrMarc $recordDriver,
+        array $extendingOptions = array()
+    ) {
         $item = $this->extendItemBasic($item, $recordDriver, $extendingOptions);
         $item = $this->extendItemIlsActions($item, $recordDriver, $extendingOptions);
 
         return $item;
     }
 
-
     /**
      * Extend item with basic infos
      * - Ebooks on Demand Link
      * - Location map
      *
-     * @param  Array    $item
-     * @param  SolrMarc $recordDriver
-     * @param  Array    $extendingOptions
+     * @param Array    $item             Item
+     * @param SolrMarc $recordDriver     RecordDriver
+     * @param Array    $extendingOptions ExtendingOptions
+     *
      * @return Array
      */
-    protected function extendItemBasic(array $item, SolrMarc $recordDriver = null, array $extendingOptions = array())
-    {
+    protected function extendItemBasic(array $item, SolrMarc $recordDriver = null,
+        array $extendingOptions = array()
+    ) {
         // EOD LINK
         if (!isset($extendingOptions['eod']) || $extendingOptions['eod']) {
             $item['eodlink'] = $this->getEODLink($item, $recordDriver);
@@ -530,17 +620,22 @@ class Holdings
         $item['availability'] = false;
 
         if (!isset($extendingOptions['backlink']) || $extendingOptions['backlink']) {
-            // @todo dies ist ein dreckiger Hack, um die Exemplardarstellung für E-Books aus dem ERM korrekt zu halten
+            // @todo Hack um Exemplardarstellung von E-Books aus dem ERM zu erhalten
             // sollte auf Ebene der Daten gelöst werden
             if (!empty($item['holding_url']) && $item['network'] === 'IDSBB') {
                 $item['network'] = 'SSERM';
             }
-            if (isset($item['network']) && !$this->isRestfulNetwork($item['network'])) {
-                $item['backlink'] = $this->getBackLink($item['network'], strtoupper($item['institution']), $item);
+            if (isset($item['network']) && !$this->isRestfulNetwork($item['network'])
+            ) {
+                $item['backlink'] = $this->getBackLink(
+                    $item['network'], strtoupper($item['institution']), $item
+                );
             }
         }
 
-        if (!isset($extendingOptions['institutionUrl']) || $extendingOptions['institutionUrl']) {
+        if (!isset($extendingOptions['institutionUrl'])
+            || $extendingOptions['institutionUrl']
+        ) {
             $bibInfoLink = $this->getBibInfoLink($item['institution']);
             $item['institutionUrl'] = $bibInfoLink['url'];
         }
@@ -552,13 +647,15 @@ class Holdings
     /**
      * Extend item with action links based on ILS
      *
-     * @param  Array    $item
-     * @param  SolrMarc $recordDriver
-     * @param  Array    $extendingOptions
+     * @param Array    $item             Item
+     * @param SolrMarc $recordDriver     RecordDriver
+     * @param Array    $extendingOptions ExtendingOptions
+     *
      * @return Array
      */
-    protected function extendItemIlsActions(array $item, SolrMarc $recordDriver = null, array $extendingOptions = array())
-    {
+    protected function extendItemIlsActions(array $item,
+        SolrMarc $recordDriver = null, array $extendingOptions = array()
+    ) {
         $networkCode = isset($item['network']) ? $item['network'] : '';
 
         // Only add links for supported networks
@@ -569,11 +666,12 @@ class Holdings
                     $item['holdLink'] = $this->getHoldLink($item);
                 }
 
-                if (!isset($extendingOptions['actions']) || $extendingOptions['actions']) {
+                if (!isset($extendingOptions['actions'])
+                    || $extendingOptions['actions']
+                ) {
                     if ($this->isLoggedIn()) {
                         $item['userActions'] = $this->getAllowedUserActions($item);
-                    } // if a user is not logged in
-                    elseif (!$this->isLoggedIn()) {
+                    } elseif (!$this->isLoggedIn()) {
                         $item['userActions'] = array(
                             'login' => 'true',
                         );
@@ -582,20 +680,24 @@ class Holdings
             }
 
             // Add availability
-            if (!isset($extendingOptions['availability']) || $extendingOptions['availability']) {
-                $item['availability'] = $this->getAvailabilityInfos($item['bibsysnumber'], $item['barcode'], $item['bib_library']);
+            if (!isset($extendingOptions['availability'])
+                || $extendingOptions['availability']
+            ) {
+                $item['availability'] = $this->getAvailabilityInfos(
+                    $item['bibsysnumber'], $item['barcode'], $item['bib_library']
+                );
             }
         }
 
         return $item;
     }
 
-
     /**
      * Extend holding with additional informations
      *
-     * @param  Array    $holding
-     * @param  SolrMarc $recordDriver
+     * @param Array    $holding      Holding
+     * @param SolrMarc $recordDriver RecordDriver
+     *
      * @return Array
      */
     protected function extendHolding(array $holding, SolrMarc $recordDriver = null)
@@ -606,18 +708,20 @@ class Holdings
         return $holding;
     }
 
-
     /**
      *  Extend holding with basic infos
      * - Location map
      *
-     * @param  Array    $holding
-     * @param  SolrMarc $recordDriver
+     * @param Array    $holding      Holding
+     * @param SolrMarc $recordDriver RecordDriver
+     *
      * @return Array
-     * @todo   Enable restful check after full features are implemented for holdings
+     *
+     * @todo Enable restful check after full features are implemented for holdings
      */
-    protected function extendHoldingBasic(array $holding, SolrMarc $recordDriver = null)
-    {
+    protected function extendHoldingBasic(array $holding,
+        SolrMarc $recordDriver = null
+    ) {
         // Location Map Link
         $holding['locationMap'] = $this->getLocationMapLink($holding);
         // Location label
@@ -626,7 +730,9 @@ class Holdings
         // Add backlink for not restful networks
         // @note Disabled check until the
         //        if (!$this->isRestfulNetwork($holding['network'])) {
-        $holding['backlink'] = $this->getBackLink($holding['network'], strtoupper($holding['institution']), $holding);
+        $holding['backlink'] = $this->getBackLink(
+            $holding['network'], strtoupper($holding['institution']), $holding
+        );
         //        }
 
         $bibInfoLink = $this->getBibInfoLink($holding['institution']);
@@ -635,26 +741,30 @@ class Holdings
         return $holding;
     }
 
-
     /**
      * Add action links to holding item
      *
-     * @param  Array    $holding
-     * @param  SolrMarc $recordDriver
+     * @param Array    $holding      Holding
+     * @param SolrMarc $recordDriver RecordDriver
+     *
      * @return Array
      */
-    protected function extendHoldingIlsActions(array $holding, SolrMarc $recordDriver = null)
-    {
+    protected function extendHoldingIlsActions(array $holding,
+        SolrMarc $recordDriver = null
+    ) {
         $networkCode = $holding['network'];
 
         if ($this->isAlephNetwork($networkCode)) {
             if ($this->isRestfulNetwork($networkCode)) {
-                // no backlink for Restful enabled networks, either actions are possible, or nothing
+                // no backlink for Restful enabled networks, either
+                // actions are possible, or nothing
                 unset($holding['backlink']);
                 $bib = $holding['bib_library'];
                 $resourceId = $bib . $holding['bibsysnumber'];
                 $ilsDriver = $this->ils->getDriver();
-                $itemsCount = $ilsDriver->getHoldingItemCount($resourceId, $holding['institution']);
+                $itemsCount = $ilsDriver->getHoldingItemCount(
+                    $resourceId, $holding['institution']
+                );
 
                 $holding['itemsLink'] = array(
                     'count' => $itemsCount,
@@ -672,39 +782,43 @@ class Holdings
         return $holding;
     }
 
-
     /**
      * Build an EOD link if possible
      * Return false if item does not support EOD links
      *
-     * @param  Array    $item
-     * @param  SolrMarc $recordDriver
+     * @param Array    $item         Item
+     * @param SolrMarc $recordDriver RecordDriver
+     *
      * @return String|Boolean
      */
     protected function getEODLink(array $item, SolrMarc $recordDriver = null)
     {
-        return $this->ebooksOnDemand ? $this->ebooksOnDemand->getEbooksOnDemandLink($item, $recordDriver, $this) : false;
+        return $this->ebooksOnDemand ?
+            $this->ebooksOnDemand->getEbooksOnDemandLink(
+                $item, $recordDriver, $this
+            ) : false;
     }
-
 
     /**
      * Build location map link
      * Return false in case institution is not enable for mapping
      *
-     * @param  Array $item
+     * @param Array $item Item
+     *
      * @return String|Boolean
      */
     protected function getLocationMapLink(array $item)
     {
-        return $this->locationMap ? $this->locationMap->getLinkForItem($this, $item) : false;
+        return $this->locationMap ?
+            $this->locationMap->getLinkForItem($this, $item) : false;
     }
-
 
     /**
      * Get location label
      * Try to translate. Fallback to index data
      *
-     * @param  Array $item
+     * @param Array $item Item
+     *
      * @return String
      */
     protected function getLocationLabel(array $item)
@@ -712,9 +826,14 @@ class Holdings
         $label = '';
 
         // Has informations with translation?
-        if (isset($item['location_code']) && isset($item['institution']) && isset($item['network'])) {
+        if (isset($item['location_code'])
+            && isset($item['institution'])
+            && isset($item['network'])
+        ) {
             // @todo keep strtolower or fix in tab40.sync
-            $labelKey = strtolower($item['institution'] . '_' . $item['location_code']);
+            $labelKey = strtolower(
+                $item['institution'] . '_' . $item['location_code']
+            );
             $textDomain = 'location-' . strtolower($item['network']);
             $translated = $this->translator->translate($labelKey, $textDomain);
 
@@ -735,18 +854,20 @@ class Holdings
         return $label;
     }
 
-
     /**
      * Get list of allowed actions for the current user
      *
-     * @param  Array $item
+     * @param Array $item Item
+     *
      * @return Array
      */
     protected function getAllowedUserActions($item)
     {
         /**
- * @var Aleph $ilsDriver 
-*/
+         * IlsDriver
+         *
+         * @var Aleph $ilsDriver
+         */
         $ilsDriver = $this->ils->getDriver();
         $patron = $this->getPatron();
         $source = $ilsDriver->getSource($patron['id']);
@@ -756,26 +877,30 @@ class Holdings
         $bib = $item['bib_library'];
         $groupId = $this->buildItemId($item);
 
-        $allowedActions = $ilsDriver->getAllowedActionsForItem($patron['id'], $itemId, $groupId, $bib);
+        $allowedActions = $ilsDriver->getAllowedActionsForItem(
+            $patron['id'], $itemId, $groupId, $bib
+        );
         $host = $sourceConfiguration['Catalog']['host'];
 
         if ($allowedActions['photorequest']) {
-            $allowedActions['photoRequestLink'] = $this->getPhotoRequestLink($host, $item);
+            $allowedActions['photoRequestLink']
+                = $this->getPhotoRequestLink($host, $item);
         }
 
         if ($allowedActions['bookingrequest']) {
-            $allowedActions['bookingRequestLink'] = $this->getBookingRequestLink($host, $item);
+            $allowedActions['bookingRequestLink']
+                = $this->getBookingRequestLink($host, $item);
         }
 
         return $allowedActions;
     }
 
-
     /**
      * Get link for external photocopy request
      *
-     * @param  String $host
-     * @param  Array  $item
+     * @param String $host Host
+     * @param Array  $item Item
+     *
      * @return String
      */
     protected function getPhotoRequestLink($host, array $item)
@@ -795,12 +920,11 @@ class Holdings
     /**
      * Get link for external booking request
      *
-     * @param $host
-     * @param array $item
+     * @param String $host Host
+     * @param Array  $item Item
      *
      * @return string
      */
-
     protected function getBookingRequestLink($host, array $item)
     {
         $queryParams = array(
@@ -813,7 +937,6 @@ class Holdings
         return 'http://' . $host . '/F/?' . http_build_query($queryParams);
     }
 
-
     /**
      * Check whether user is logged in
      *
@@ -823,7 +946,6 @@ class Holdings
     {
         return $this->authManager->isLoggedIn() !== false;
     }
-
 
     /**
      * Get patron (catalog login data)
@@ -835,33 +957,36 @@ class Holdings
         return $this->ilsAuth->storedCatalogLogin();
     }
 
-
     /**
      * Check whether network uses aleph system
      *
-     * @param  String $network
+     * @param String $network Network
+     *
      * @return Boolean
      */
     protected function isAlephNetwork($network)
     {
-        return isset($this->networks[$network]) ? $this->networks[$network]['type'] === 'Aleph' : false;
+        return isset($this->networks[$network])
+            ? $this->networks[$network]['type'] === 'Aleph' : false;
     }
-
 
     /**
      * Get a backlink
-     * Check first if a custom type is defined for this network (only Aleph is implemented as a custom type)
+     * Check first if a custom type is defined for this network
+     * (only Aleph is implemented as a custom type)
      * Fallback to network default
      *
-     * @param  String $networkCode
-     * @param  String $institutionCode
-     * @param  Array  $item
+     * @param String $networkCode     NetworkCode
+     * @param String $institutionCode InstitutionCode
+     * @param Array  $item            Item
+     *
      * @return Boolean
      */
     protected function getBackLink($networkCode, $institutionCode, array $item)
     {
         //return it, if the item has an url included in subfield u
-        if (!empty($item['holding_url'])) { return $item['holding_url']; 
+        if (!empty($item['holding_url'])) {
+            return $item['holding_url'];
         }
 
         $method = false;
@@ -880,7 +1005,8 @@ class Holdings
                 $networkType = strtoupper($this->networks[$networkCode]['type']);
                 $method = 'getBackLink' . ucfirst($networkType);
 
-                // Has the network type  general link by its system (only Aleph is implemented)
+                // Has the network type  general link by its
+                // system (only Aleph is implemented)
                 if (isset($this->configHoldings->Backlink->$networkType)) {
                     $data = array(
                         'pattern' => $this->configHoldings->Backlink->$networkType
@@ -907,14 +1033,16 @@ class Holdings
      * Get backlink for aleph
      * (custom method)
      *
-     * @param  String $networkCode
-     * @param  String $institutionCode
-     * @param  Array  $item
-     * @param  Array  $data
+     * @param String $networkCode     NetworkCode
+     * @param String $institutionCode InstitutioncCode
+     * @param Array  $item            Item
+     * @param Array  $data            Data
+     *
      * @return String
      */
-    protected function getBackLinkAleph($networkCode, $institutionCode, $item, array $data)
-    {
+    protected function getBackLinkAleph($networkCode, $institutionCode, $item,
+        array $data
+    ) {
         $values = array(
             'server' => $data['domain'],
             'bib-library-code' => $data['library'],
@@ -927,182 +1055,209 @@ class Holdings
 
     /**
      * Get backlink for IDSBB
-     *
      * set link to orange view of swissbib
      *
-     * @param  String $networkCode
-     * @param  String $institutionCode
-     * @param  Array  $item
-     * @param  Array  $data
+     * @param String $networkCode     NetworkCode
+     * @param String $institutionCode InstitionCode
+     * @param Array  $item            Item
+     * @param Array  $data            Data
+     *
      * @return String
      */
-    protected function getBackLinkIDSBB($networkCode, $institutionCode, $item, array $data) 
-    {
+    protected function getBackLinkIDSBB($networkCode, $institutionCode, $item,
+        array $data
+    ) {
         $values = [
             'id' => $this->idItem,
             'sub-library-code' => $institutionCode,
             'network' => $networkCode,
         ];
+
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
      * Get backlink for NEBIS
-     *
      * set link to NEBIS Primo View
      *
-     * @param  String $networkCode
-     * @param  String $institutionCode
-     * @param  Array $item
-     * @param  Array $data
+     * @param String $networkCode     NetworkCode
+     * @param String $institutionCode InstitionCode
+     * @param Array  $item            Item
+     * @param Array  $data            Data
+     *
      * @return String
      *
-     * Links to Primo work, but login after permalink leads to crashes in Primo. Therefore, use Aleph until Primo allows safe login after permalink
-
-    protected function getBackLinkNEBIS($networkCode, $institutionCode, $item, array $data) {
-        $values = [
-            'bib-system-number' => $item['bibsysnumber'],
+     * Links to Primo work, but login after permalink leads to crashes in Primo.
+     * Therefore, use Aleph until Primo allows safe login after permalink
+     *
+     * protected function getBackLinkNEBIS($networkCode, $institutionCode, $item,
+            array $data
+       ) {
+            $values = [
+                'bib-system-number' => $item['bibsysnumber'],
             ];
-        return $this->compileString($data['pattern'], $values);
-    }
+            return $this->compileString($data['pattern'], $values);
+       }
      */
 
     /**
      * Get backlink for IDSLU
-     *
      * set link to iluplus Primo View
      *
-     * @param  String $networkCode
-     * @param  String $institutionCode
-     * @param  Array  $item
-     * @param  Array  $data
+     * @param String $networkCode     NetworkCode
+     * @param String $institutionCode InstitionCode
+     * @param Array  $item            Item
+     * @param Array  $data            Data
+     *
      * @return String
      *
-     * Links to Primo work, but login after permalink leads to crashes in Primo. Therefore, use Aleph until Primo allows safe login after permalink
+     * Links to Primo work, but login after permalink leads to crashes in Primo.
+     * Therefore, use Aleph until Primo allows safe login after permalink
      *
-    protected function getBackLinkIDSLU($networkCode, $institutionCode, $item, array $data) {
-        $values = [
-            'bib-system-number' => $item['bibsysnumber'],
-        ];
-        return $this->compileString($data['pattern'], $values);
-    }
-     * /
+     * protected function getBackLinkIDSLU($networkCode, $institutionCode, $item,
+     * array $data
+     * ) {
+        * $values = [
+            * 'bib-system-number' => $item['bibsysnumber'],
+        * ];
+        * return $this->compileString($data['pattern'], $values);
+     * }
+     */
 
     /**
      * Get back link for IDSSG (self-developed-non-aleph-request)
      * Currently only a wrapper for Aleph
      *
-     * @param  String $networkCode
-     * @param  String $institutionCode
-     * @param  Array  $item
-     * @param  Array  $data
+     * @param String $networkCode     NetworkCode
+     * @param String $institutionCode InstitionCode
+     * @param Array  $item            Item
+     * @param Array  $data            Data
+     *
      * @return String
      */
-    protected function getBackLinkIDSSG($networkCode, $institutionCode, array $item, array $data)
-    {
+    protected function getBackLinkIDSSG($networkCode, $institutionCode, array $item,
+        array $data
+    ) {
         return $this->getBackLinkAleph($networkCode, $institutionCode, $item, $data);
     }
 
     /**
      * Get backlink for RERO
      *
-     * @param  $networkCode
-     * @param  $institutionCode
-     * @param  $item
-     * @param  array           $data
+     * @param String $networkCode     NetworkCode
+     * @param String $institutionCode InstitionCode
+     * @param Array  $item            Item
+     * @param Array  $data            Data
+     *
      * @return mixed
      */
-    protected function getBackLinkRERO($networkCode, $institutionCode, $item, array $data)
-    {
+    protected function getBackLinkRERO($networkCode, $institutionCode, $item,
+        array $data
+    ) {
         $values = [
             'language-code' => 'de', // @todo fetch from user,
-            'RERO-network-code' => (int)substr($institutionCode, 2, 2), // third and fourth character
+            // third and fourth character
+            'RERO-network-code' => (int)substr($institutionCode, 2, 2),
             'bib-system-number' => $item['bibsysnumber'],
-            'sub-library-code' => preg_replace('[\D]', '', $institutionCode) //removes the RE-characters from the number string
+            //removes the RE-characters from the number string
+            'sub-library-code' => preg_replace('[\D]', '', $institutionCode)
         ];
+
         return $this->compileString($data['pattern'], $values);
     }
-
 
     /**
      * Get backlink for Alexandria network
      *
-     * @param  String $networkCode
-     * @param  String $institutionCode
-     * @param  Array  $item
-     * @param  Array  $data
+     * @param String $networkCode     NetworkCode
+     * @param String $institutionCode InstitionCode
+     * @param Array  $item            Item
+     * @param Array  $data            Data
+     *
      * @return String
      */
-    protected function getBackLinkAlex($networkCode, $institutionCode, array $item, array $data)
-    {
+    protected function getBackLinkAlex($networkCode, $institutionCode, array $item,
+        array $data
+    ) {
         $values = [
-            'bib-system-number' => preg_replace('[\D]', '', $item['bibsysnumber']) // remove characters from number string
+            // remove characters from number string
+            'bib-system-number' => preg_replace('[\D]', '', $item['bibsysnumber'])
         ];
+
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
      * Get backlink for SNL (helveticat)
      *
-     * @param  String $networkCode
-     * @param  String $institutionCode
-     * @param  Array  $item
-     * @param  Array  $data
+     * @param String $networkCode     NetworkCode
+     * @param String $institutionCode InstitionCode
+     * @param Array  $item            Item
+     * @param Array  $data            Data
+     *
      * @return String
      */
-    protected function getBackLinkSNL($networkCode, $institutionCode, $item, array $data)
-    {
+    protected function getBackLinkSNL($networkCode, $institutionCode, $item,
+        array $data
+    ) {
         $bibsysnumber = preg_replace('/^vtls0*/', '', $item['bibsysnumber']);
         $values = [
             'bib-system-number' => $bibsysnumber,
         ];
+
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
      * Get backlink for CCSA (poster collection)
      *
-     * @param  String $networkCode
-     * @param  String $institutionCode
-     * @param  Array  $item
-     * @param  Array  $data
+     * @param String $networkCode     NetworkCode
+     * @param String $institutionCode InstitionCode
+     * @param Array  $item            Item
+     * @param Array  $data            Data
+     *
      * @return String
      */
-
-    protected function getBackLinkCCSA($networkCode, $institutionCode, $item, array $data)
-    {
+    protected function getBackLinkCCSA($networkCode, $institutionCode, $item,
+        array $data
+    ) {
         $bibsysnumber = preg_replace('/^vtls0*/', '', $item['bibsysnumber']);
         $values = [
             'bib-system-number' => $bibsysnumber,
         ];
+
         return $this->compileString($data['pattern'], $values);
     }
-
 
     /**
      * Get backlink for Helveticarchives (SNL)
      *
-     * @param  String $networkCode
-     * @param  String $institutionCode
-     * @param  Array  $item
-     * @param  Array  $data
+     * @param String $networkCode     NetworkCode
+     * @param String $institutionCode InstitionCode
+     * @param Array  $item            Item
+     * @param Array  $data            Data
+     *
      * @return String
      */
-    protected function getBackLinkCHARCH($networkCode, $institutionCode, array $item, array $data)
-    {
+    protected function getBackLinkCHARCH($networkCode, $institutionCode, array $item,
+        array $data
+    ) {
         $values = [
             'bib-system-number' => $item['bibsysnumber'],
         ];
+
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
      * Compile string
      * Replace {varName} pattern with names and data from array
-     * creates an URL string for backlinks according to data delivered by methods above
+     * creates an URL string for backlinks according to data delivered
+     * by methods above
      *
-     * @param  String $string
-     * @param  Array  $keyValues
+     * @param String $string    String
+     * @param Array  $keyValues KeyValues
+     *
      * @return String
      */
     protected function compileString($string, array $keyValues)
@@ -1113,7 +1268,9 @@ class Holdings
             $newKeyValues['{' . $key . '}'] = $value;
         }
 
-        return str_replace(array_keys($newKeyValues), array_values($newKeyValues), $string);
+        return str_replace(
+            array_keys($newKeyValues), array_values($newKeyValues), $string
+        );
     }
 
     /**
@@ -1121,7 +1278,8 @@ class Holdings
      * false if not found or scheme not ok
      * Array with only url if scheme is ok
      *
-     * @param  String $institutionCode
+     * @param String $institutionCode InstitutionCode
+     *
      * @return Array|Boolean
      */
     protected function getBibInfoLink($institutionCode)
@@ -1136,48 +1294,48 @@ class Holdings
                 $bibInfoLink = [
                     'url' => $bibInfoLink,
                 ];
-            }
-            else {
+            } else {
                 $bibInfoLink = false;
             }
         }
         return $bibInfoLink;
     }
 
-
     /**
      * Get availability infos for item element
      *
-     * @param  String $sysNumber
-     * @param  String $barcode
-     * @param  String $network
+     * @param String $sysNumber SysNumber
+     * @param String $barcode   Barcode
+     * @param String $bib       Bib
+     *
      * @return Array|Boolean
      */
     protected function getAvailabilityInfos($sysNumber, $barcode, $bib)
     {
         $userLocale = $this->translator->getLocale();
 
-        return $this->availability->getAvailability($sysNumber, $barcode, $bib, $userLocale);
+        return $this->availability->getAvailability(
+            $sysNumber, $barcode, $bib, $userLocale
+        );
     }
-
 
     /**
      * Get circulation statuses for all elements of the item
      *
-     * @param  String $sysNumber
+     * @param String $sysNumber SysNumber
+     *
      * @return Array[]
      */
     protected function getItemCirculationStatuses($sysNumber)
     {
         $data = array();
         try {
-            $circulationStatuses = $this->ils->getDriver()->getCirculationStatus($sysNumber);
-
+            $circulationStatuses
+                = $this->ils->getDriver()->getCirculationStatus($sysNumber);
 
             foreach ($circulationStatuses as $circulationStatus) {
                 $data[$circulationStatus['barcode']] = $circulationStatus;
             }
-
         } catch (\Exception $e) {
             //todo: GH get logging service
         }
@@ -1185,29 +1343,32 @@ class Holdings
         return $data;
     }
 
-
     /**
      * Get structured data for holdings
      *
-     * @param  SolrMarc $recordDriver
-     * @param  String   $institutionCode
-     * @param  Boolean  $extend
+     * @param SolrMarc $recordDriver    RecordDriver
+     * @param String   $institutionCode InstitutionCode
+     * @param Boolean  $extend          Extend
+     *
      * @return Array[]
      */
-    protected function getHoldingData(SolrMarc $recordDriver, $institutionCode, $extend = true)
-    {
+    protected function getHoldingData(SolrMarc $recordDriver, $institutionCode,
+        $extend = true
+    ) {
         $fieldName = 852; // Field code for item information in holdings xml
-        $institutionHoldings = $this->getHoldingsData($fieldName, $this->fieldMapping, $institutionCode);
+        $institutionHoldings = $this->getHoldingsData(
+            $fieldName, $this->fieldMapping, $institutionCode
+        );
 
         if ($extend) {
             foreach ($institutionHoldings as $index => $holding) {
-                $institutionHoldings[$index] = $this->extendHolding($holding, $recordDriver);
+                $institutionHoldings[$index]
+                    = $this->extendHolding($holding, $recordDriver);
             }
         }
 
         return $institutionHoldings;
     }
-
 
     /**
      * Check whether holding holdings are available
@@ -1219,7 +1380,6 @@ class Holdings
         return $this->holdings && $this->holdings->getField(852) !== false;
     }
 
-
     /**
      * Check whether holding items are available
      *
@@ -1230,14 +1390,14 @@ class Holdings
         return $this->holdings && $this->holdings->getField(949) !== false;
     }
 
-
     /**
      * Get structured elements (grouped by group and institution)
      *
-     * @param  String $fieldName
-     * @param  Array  $mapping
-     * @param  String $institutionCode
-     * @return Array        Items or holdings for institution
+     * @param String $fieldName       FieldName
+     * @param Array  $mapping         Mapping
+     * @param String $institutionCode InstitutionCode
+     *
+     * @return Array Items or holdings for institution
      */
     protected function getHoldingsData($fieldName, array $mapping, $institutionCode)
     {
@@ -1258,11 +1418,12 @@ class Holdings
         return $data;
     }
 
-
     /**
      * Get holdings structure for holdings
      *
-     * @param  Integer $fieldName
+     * @param Integer $fieldName Fieldname
+     * @param Array   $data      Data
+     *
      * @return Array[]
      */
     protected function getStructuredHoldingsStructure($fieldName, $data = array())
@@ -1282,7 +1443,9 @@ class Holdings
                 $groupCode = $this->getGroup($institution);
 
                 // Prevent display of untranslated and ungrouped institutions
-                $institutionLabel = $this->translator->translate($institution, 'institution');
+                $institutionLabel = $this->translator->translate(
+                    $institution, 'institution'
+                );
                 if ($groupCode == 'unknown' || $institutionLabel === $institution) {
                     if ($groupCode === 'unknown') {
                         $this->swissbibLogger->logUngroupedInstitution($institution);
@@ -1312,41 +1475,47 @@ class Holdings
         return $data;
     }
 
-
     /**
      * Get group code for institution based on mapping data
      *
-     * @param  String $institutionCode
+     * @param String $institutionCode InstitutionCode
+     *
      * @return String
      */
     public function getGroup($institutionCode)
     {
-        return isset($this->institution2group[$institutionCode]) ? $this->institution2group[$institutionCode] : 'unknown';
+        return isset($this->institution2group[$institutionCode]) ?
+            $this->institution2group[$institutionCode] : 'unknown';
     }
-
 
     /**
      * Build itemId from item properties and the id of the item
      * ItemId is not the id of the item, it's a combination of sub fields
      *
-     * @param  Array $holdingItem
+     * @param Array $holdingItem HoldingItem
+     *
      * @return String
+     *
      * @todo   How to handle missing information. Throw exception, ignore?
      */
     protected function buildItemId(array $holdingItem)
     {
-        if (isset($holdingItem['adm_code']) && isset($holdingItem['localid']) && isset($holdingItem['sequencenumber'])) {
-            return $holdingItem['adm_code'] . $holdingItem['localid'] . $holdingItem['sequencenumber'];
+        if (isset($holdingItem['adm_code'])
+            && isset($holdingItem['localid'])
+            && isset($holdingItem['sequencenumber'])
+        ) {
+            return $holdingItem['adm_code'] . $holdingItem['localid'] .
+                $holdingItem['sequencenumber'];
         }
 
         return 'incompleteItemData';
     }
 
-
     /**
      * Get link for holding action
      *
-     * @param  Array $holdingItem
+     * @param Array $holdingItem HoldingItem
+     *
      * @return Array
      */
     protected function getHoldLink(array $holdingItem)
@@ -1372,16 +1541,17 @@ class Holdings
         );
     }
 
-
     /**
      * Extract field data
      *
-     * @param  \File_MARC_Data_Field $field
-     * @param  Array                 $fieldMapping Field code=>name mapping
+     * @param \File_MARC_Data_Field $field        Field
+     * @param Array                 $fieldMapping Field code=>name mapping
+     *
      * @return Array
      */
-    protected function extractFieldData(\File_MARC_Data_Field $field, array $fieldMapping)
-    {
+    protected function extractFieldData(\File_MARC_Data_Field $field,
+        array $fieldMapping
+    ) {
         $subFields = $field->getSubfields();
         $rawData = array();
         $data = array();
@@ -1389,7 +1559,8 @@ class Holdings
         // Fetch data
         foreach ($subFields as $code => $subdata) {
             if ($this->useConcatenation($code, $rawData)) {
-                $rawData[$code] .= $this->concatenationMapping[$code] . $subdata->getData();
+                $rawData[$code] .= $this->concatenationMapping[$code] .
+                    $subdata->getData();
             } else {
                 $rawData[$code] = $subdata->getData();
             }
@@ -1402,18 +1573,17 @@ class Holdings
         return $data;
     }
 
-
-
     /**
-     * @param String $code
-     * @param Array  $rawData
+     * UseConcatenation
+     *
+     * @param String $code    Code
+     * @param Array  $rawData RawData
      *
      * @return bool
      */
     protected function useConcatenation($code, array $rawData)
     {
-        return array_key_exists($code, $rawData) && array_key_exists($code, $this->concatenationMapping);
+        return array_key_exists($code, $rawData)
+            && array_key_exists($code, $this->concatenationMapping);
     }
-
-
 }
