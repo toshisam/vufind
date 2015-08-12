@@ -1,7 +1,6 @@
 <?php
-
 /**
- * swissbib / VuFind swissbib enhancements for Summon records
+ * Swissbib / VuFind swissbib enhancements for Summon records
  *
  * PHP version 5
  *
@@ -23,7 +22,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * @category swissbib_VuFind2
+ * @category Swissbib_VuFind2
  * @package  RecordDriver
  * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
@@ -37,16 +36,18 @@ use VuFind\RecordDriver\Summon as VuFindSummon;
 /**
  * Enhancement for swissbib Summon records
  *
- * @category swissbib_VuFind2
- * @package  RecordDrivers
+ * @category Swissbib_VuFind2
+ * @package  RecordDriver
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
 class Summon extends VuFindSummon implements SwissbibRecordDriver
 {
-
     /**
-     * @return    String    Author name(s)
+     * Get Author
+     *
+     * @return String Author name(s)
      */
     public function getAuthor()
     {
@@ -56,7 +57,9 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     }
 
     /**
-     * @return    Array
+     * Get URI
+     *
+     * @return Array
      */
     public function getURI()
     {
@@ -64,8 +67,9 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     }
 
     /**
-     * @return string ??
-     * return 360-summon-link (field 'link')
+     * Get Link
+     *
+     * @return String ?? return 360-summon-link (field 'link')
      */
     public function getLink()
     {
@@ -73,7 +77,9 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     }
 
     /**
-     * @return    Boolean
+     * Has DirectLink
+     *
+     * @return Boolean
      */
     public function hasDirectLink()
     {
@@ -81,7 +87,9 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     }
 
     /**
-     * @return    Boolean
+     * Has Fulltext
+     *
+     * @return Boolean
      */
     public function hasFulltext()
     {
@@ -89,7 +97,9 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     }
 
     /**
-     * @return  string
+     * Get AllSubjectHeadingsAsString
+     *
+     * @return string
      */
     public function getAllSubjectHeadingsAsString()
     {
@@ -106,7 +116,9 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     }
 
     /**
-     * @return string
+     * Get DatabaseTitle
+     *
+     * @return String
      */
     public function getDatabaseTitle()
     {
@@ -120,7 +132,9 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     }
 
     /**
-     * @return string
+     * Get AltTitle
+     *
+     * @return String
      */
     public function getAltTitle()
     {
@@ -128,12 +142,16 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     }
 
     /**
+     * Get CitationFormats
+     *
      * @override
+     *
      * @return array Strings representing citation formats.
      */
     public function getCitationFormats()
     {
-        $solrDefaultAdapter = $this->hierarchyDriverManager->getServiceLocator()->get('Swissbib\RecordDriver\SolrDefaultAdapter');
+        $solrDefaultAdapter = $this->hierarchyDriverManager->getServiceLocator()
+            ->get('Swissbib\RecordDriver\SolrDefaultAdapter');
 
         return $solrDefaultAdapter->getCitationFormats();
     }
@@ -188,7 +206,7 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     }
 
     /**
-     * get Cartographic Mathematical Data
+     * Get Cartographic Mathematical Data
      *
      * @return string
      */
@@ -207,9 +225,8 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
         return null;
     }
 
-
     /**
-     * get group-id from solr-field to display FRBR-Button
+     * Get group-id from solr-field to display FRBR-Button
      *
      * @return string|number
      */
@@ -251,7 +268,8 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     /**
      * Returns the corporation names
      *
-     * @param  boolean $asString
+     * @param Boolean $asString AsString
+     *
      * @return array|string
      */
     public function getCorporationNames($asString = true)
@@ -260,7 +278,9 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     }
 
     /**
-     * @return boolean
+     * DisplayHoldings
+     *
+     * @return Boolean
      */
     public function displayHoldings()
     {
@@ -268,6 +288,8 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     }
 
     /**
+     * DisplayLinks
+     *
      * @return boolean
      */
     public function displayLinks()
@@ -276,7 +298,10 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     }
 
     /**
-     * @param string $size
+     * GetThumbnail
+     *
+     * @param string $size Size
+     *
      * @return array|bool|string
      */
     public function getThumbnail($size = 'small') 
@@ -285,18 +310,23 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     }
 
     /**
-     * @param    String $fieldName
-     * @param    String $fallbackValue
+     * Get Field
      *
-     * @return    String
+     * @param String $fieldName     FieldName
+     * @param String $fallbackValue FallBackValue
+     *
+     * @return String
      */
     private function getField($fieldName, $fallbackValue = '')
     {
-        return array_key_exists($fieldName, $this->fields) ? $this->fields[$fieldName] : $fallbackValue;
+        return array_key_exists($fieldName, $this->fields) ?
+            $this->fields[$fieldName] : $fallbackValue;
     }
 
     /**
-     * @return    Array
+     * Get LinkModel
+     *
+     * @return Array
      */
     private function getLinkModel()
     {
