@@ -29,7 +29,7 @@
 
 namespace Swissbib\View\Helper\Swissbib;
 
-use Swissbib\View\Helper\FormatRelatedEntry;
+use Swissbib\View\Helper\FormatRelatedEntries;
 use Zend\ServiceManager\ServiceManager;
 
 use VuFind\View\Helper\Root\SearchParams;
@@ -190,10 +190,10 @@ class Factory
     /**
      * @param ServiceManager $sm Service manager.
      *
-     * @return FormatRelatedEntry
+     * @return FormatRelatedEntries
      */
-    public static function getFormatRelatedEntry(ServiceManager $sm)
+    public static function getFormatRelatedEntries(ServiceManager $sm)
     {
-        return new FormatRelatedEntry($sm->getServiceLocator()->get('VuFind\Translator'));
+        return new FormatRelatedEntries($sm->getServiceLocator()->get('VuFind\Translator'));
     }
 }

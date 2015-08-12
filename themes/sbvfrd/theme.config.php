@@ -44,7 +44,7 @@ return array(
       'searchBox'                 => 'Swissbib\View\Helper\Swissbib\Factory::getSearchBox',
       'includeTemplate'           => 'Swissbib\View\Helper\Swissbib\Factory::getIncludeTemplate',
       'translateFacets'           => 'Swissbib\View\Helper\Swissbib\Factory::getFacetTranslator',
-      'formatRelatedEntry'        => 'Swissbib\View\Helper\Swissbib\Factory::getFormatRelatedEntry',
+      'formatRelatedEntries'      => 'Swissbib\View\Helper\Swissbib\Factory::getFormatRelatedEntries',
     ),
     'invokables' => array(
       'translate' => 'Swissbib\VuFind\View\Helper\Root\Translate',

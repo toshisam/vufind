@@ -382,8 +382,8 @@ $prevTitles  = $record->getPreviousTitles();
         <tr>
             <th><?= $this->transEsc('Related Entries') . ':' ?></th>
             <td>
-                <? foreach ($relatedEntries as $relatedEntry): ?>
-                    <?= $this->escapeHtml($this->formatRelatedEntry($relatedEntry))?> <br>
+                <? foreach ($this->formatRelatedEntries($relatedEntries) as $relatedEntry): ?>
+                    <?= $this->escapeHtml($relatedEntry)?> <br>
                 <? endforeach; ?>
             </td>
         </tr>
