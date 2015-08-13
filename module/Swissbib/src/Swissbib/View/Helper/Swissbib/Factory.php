@@ -20,8 +20,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * @category swissbib VuFind2
- * @package  Swissbib\View\Helper\Swissbib
+ * @category Swissbib_VuFind2
+ * @package  View_Helper_Swissbib
  * @author   Guenter Hipler <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
@@ -41,52 +41,74 @@ use Swissbib\View\Helper\LayoutClass;
 use Swissbib\View\Helper\IncludeTemplate;
 use Swissbib\View\Helper\TranslateFacets;
 
-
 /**
  * Factory for swissbib specific view helpers related to the Swissbib Theme.
  * these theme related static factory functions were refactored from Closures
- * which were part of the configuration. Because configuration can now be cached we have to write factory methods
+ * which were part of the configuration. Because configuration can now be cached we
+ * have to write factory methods
  *
- * @category swissbib VuFind2
- * @package  Controller
+ * @category Swissbib_VuFind2
+ * @package  View_Helper_Swissbib
  * @author   Guenter Hipler <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
 class Factory
 {
-
-
+    /**
+     * GetRecordHelper
+     *
+     * @param ServiceManager $sm ServiceManager
+     *
+     * @return \Swissbib\View\Helper\Record
+     */
     public static function getRecordHelper(ServiceManager $sm)
     {
         return new \Swissbib\View\Helper\Record(
             $sm->getServiceLocator()->get('VuFind\Config')->get('config')
         );
-
     }
 
+    /**
+     * GetCitation
+     *
+     * @param ServiceManager $sm ServiceManager
+     *
+     * @return \Swissbib\VuFind\View\Helper\Root\Citation
+     */
     public static function getCitation(ServiceManager $sm)
     {
         return new \Swissbib\VuFind\View\Helper\Root\Citation(
             $sm->getServiceLocator()->get('VuFind\DateConverter')
         );
-
     }
 
+    /**
+     * GetRecordLink
+     *
+     * @param ServiceManager $sm ServiceManager
+     *
+     * @return \Swissbib\View\Helper\RecordLink
+     */
     public static function getRecordLink(ServiceManager $sm)
     {
         return new \Swissbib\View\Helper\RecordLink(
             $sm->getServiceLocator()->get('VuFind\RecordRouter')
         );
-
     }
 
+    /**
+     * GetExtendedLastSearchLink
+     *
+     * @param ServiceManager $sm ServiceManager
+     *
+     * @return \Swissbib\View\Helper\GetExtendedLastSearchLink
+     */
     public static function getExtendedLastSearchLink(ServiceManager $sm)
     {
         return new \Swissbib\View\Helper\GetExtendedLastSearchLink(
             $sm->getServiceLocator()->get('VuFind\Search\Memory')
         );
-
     }
 
     /**
@@ -98,22 +120,37 @@ class Factory
      */
     public static function getAuth(ServiceManager $sm)
     {
+        $config = isset(
+            $sm->getServiceLocator()->get('VuFind\Config')->get('config')
+                ->Authentication->noAjaxLogin
+        ) ? $sm->getServiceLocator()->get('VuFind\Config')->get('config')
+            ->Authentication->noAjaxLogin->toArray() : array();
 
-        $config = isset($sm->getServiceLocator()->get('VuFind\Config')->get('config')->Authentication->noAjaxLogin) ?
-            $sm->getServiceLocator()->get('VuFind\Config')->get('config')->Authentication->noAjaxLogin->toArray() : array();
-        return new Auth($sm->getServiceLocator()->get('VuFind\AuthManager'), $config);
-    }
-
-
-    public static function getFacetTranslator(ServiceManager $sm)
-    {
-        $config =  $sm->getServiceLocator()->get('VuFind\Config')->get('facets')->Advanced_Settings->translated_facets->toArray();
-        return new TranslateFacets($config);
-
+        return new Auth(
+            $sm->getServiceLocator()->get('VuFind\AuthManager'),
+            $config
+        );
     }
 
     /**
-     * @param ServiceManager $sm
+     * GetFacetTranslator
+     *
+     * @param ServiceManager $sm ServiceManager
+     *
+     * @return TranslateFacets
+     */
+    public static function getFacetTranslator(ServiceManager $sm)
+    {
+        $config =  $sm->getServiceLocator()->get('VuFind\Config')->get('facets')
+            ->Advanced_Settings->translated_facets->toArray();
+        return new TranslateFacets($config);
+    }
+
+    /**
+     * GetLayoutClass
+     *
+     * @param ServiceManager $sm ServiceManager
+     *
      * @return LayoutClass
      */
     public static function getLayoutClass(ServiceManager $sm) 
@@ -126,7 +163,9 @@ class Factory
     }
 
     /**
-     * @param ServiceManager $sm
+     * GetSearchTabs
+     *
+     * @param ServiceManager $sm ServiceManager
      *
      * @return SearchTabs
      */
@@ -140,6 +179,8 @@ class Factory
     }
 
     /**
+     * GetSearchParams
+     *
      * @param ServiceManager $sm Service manager.
      *
      * @return SearchParams
@@ -152,6 +193,8 @@ class Factory
     }
 
     /**
+     * GetSearchOptions
+     *
      * @param ServiceManager $sm Service manager.
      *
      * @return SearchOptions
@@ -164,6 +207,8 @@ class Factory
     }
 
     /**
+     * GetSearchBox
+     *
      * @param ServiceManager $sm Service manager.
      *
      * @return SearchBox
@@ -178,6 +223,8 @@ class Factory
     }
 
     /**
+     * GetIncludeTemplate
+     *
      * @param ServiceManager $sm Service manager.
      *
      * @return IncludeTemplate
