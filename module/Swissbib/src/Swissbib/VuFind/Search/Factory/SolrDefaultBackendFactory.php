@@ -1,7 +1,6 @@
 <?php
-
 /**
- * extended version of the VuFind Solr Backend Factory
+ * Extended version of the VuFind Solr Backend Factory
  *
  * PHP version 5
  *
@@ -24,20 +23,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category swissbib_VuFind2
- * @package  Swissbib\VuFind\Search
+ * @package  VuFind_Search_Factory
  * @author   Fabian Erni
  * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
 
-
-
 namespace Swissbib\VuFind\Search\Factory;
 
 use Swissbib\VuFind\Search\Backend\Solr\LuceneSyntaxHelper;
 use Swissbib\VuFind\Search\Solr\InjectSwissbibSpellingListener;
-use VuFind\Search\Factory\SolrDefaultBackendFactory as VuFindSolrDefaultBackendFactory;
+use VuFind\Search\Factory\SolrDefaultBackendFactory
+    as VuFindSolrDefaultBackendFactory;
 use VuFindSearch\Backend\Solr\Backend;
 
 use Swissbib\Highlight\SolrConfigurator as HighlightSolrConfigurator;
@@ -45,17 +43,25 @@ use VuFindSearch\Backend\Solr\Connector;
 use VuFindSearch\Backend\Solr\Response\Json\RecordCollectionFactory;
 use Swissbib\VuFindSearch\Backend\Solr\QueryBuilder;
 
-
 /**
- * [Description]
+ * SolrDefaultBackendFactory
+ *
+ * @category Swissbib_VuFind2
+ * @package  VuFind_Search_Factory
+ * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
 class SolrDefaultBackendFactory extends VuFindSolrDefaultBackendFactory
 {
-
+    /**
+     * Creating Listeners
+     *
+     * @param Backend $backend Backend
+     */
     protected function createListeners(Backend $backend)
     {
         parent::createListeners($backend);
-
 
         $events = $this->serviceLocator->get('SharedEventManager');
 
@@ -67,39 +73,32 @@ class SolrDefaultBackendFactory extends VuFindSolrDefaultBackendFactory
         } else {
             $dictionaries = array('default', 'basicSpell');
         }
-        $spellingListener = new InjectSwissbibSpellingListener($backend, $dictionaries);
+        $spellingListener = new InjectSwissbibSpellingListener(
+            $backend, $dictionaries
+        );
         $spellingListener->attach($events);
-
-
-
-        /*
-        $test =  $events->getListeners("VuFind\Search","post");
-        foreach ($test as $tListener) {
-            if (is_array( $tListener->getCallback()) && $tListener->getCallback()[0] instanceof VFSpellingListener) {
-                $h = "";
-                //$events->detach( "VuFind\Search",$tListener);
-            }
-        }
-        */
-
-
 
         $this->attachHighlightSolrConfigurator($backend);
     }
 
-
+    /**
+     * AttachHighlightSolrConfigurator
+     *
+     * @param Backend $backend Backend
+     */
     protected function attachHighlightSolrConfigurator(Backend $backend)
     {
-        //        $events = $this->serviceLocator->get('SharedEventManager');
-
         /**
- * @var HighlightSolrConfigurator $highlightListener 
-*/
-        $highlightListener = $this->serviceLocator->get('Swissbib\Highlight\SolrConfigurator');
+         * HighlightSolrConfigurator
+         *
+         * @var HighlightSolrConfigurator $highlightListener
+         */
+        $highlightListener = $this->serviceLocator->get(
+            'Swissbib\Highlight\SolrConfigurator'
+        );
 
-        $highlightListener->attach($backend/*, $events*/);
+        $highlightListener->attach($backend);
     }
-
 
     /**
      * Create the SOLR backend.
@@ -110,41 +109,21 @@ class SolrDefaultBackendFactory extends VuFindSolrDefaultBackendFactory
      */
     protected function createBackend(Connector $connector)
     {
+        //we can't use zje original funtion because Backend is overwritten
+        // by Swissbib
 
-
-        //return parent::createBackend($connector);
-
-        //we can't use zje original funtion because Backend is overwritten by Swissbib
-        //look at it later if really necessary
-
-        //$config  = $this->config->get('config');
         $backend = new Backend($connector);
         $backend->setQueryBuilder($this->createQueryBuilder());
-
-        // Spellcheck
-        //if (isset($config->Spelling->enabled) && $config->Spelling->enabled) {
-        //    if (isset($config->Spelling->simple) && $config->Spelling->simple) {
-        //        $dictionaries = array('basicSpell');
-        //    } else {
-        //        $dictionaries = array('default', 'basicSpell');
-        //    }
-        //    $backend->setDictionaries($dictionaries);
-        //}
-
 
         if ($this->logger) {
             $backend->setLogger($this->logger);
         }
 
-
-
         $manager = $this->serviceLocator->get('VuFind\RecordDriverPluginManager');
         $factory = new RecordCollectionFactory(array($manager, 'getSolrRecord'));
         $backend->setRecordCollectionFactory($factory);
+
         return $backend;
-
-
-
     }
 
     /**
@@ -175,8 +154,4 @@ class SolrDefaultBackendFactory extends VuFindSolrDefaultBackendFactory
 
         return $builder;
     }
-
-
-
-
 }

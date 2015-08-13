@@ -1,25 +1,58 @@
 <?php
+/**
+ * Params
+ *
+ * PHP version 5
+ *
+ * Copyright (C) project swissbib, 2015.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @category Swissbib_VuFind2
+ * @package  VuFind_Search_Solr
+ * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org  Main Page
+ */
+
 namespace Swissbib\VuFind\Search\Solr;
 
 use VuFind\Search\Solr\Params as VuFindSolrParams;
 use VuFindSearch\ParamBag;
 use Swissbib\Favorites\Manager;
 
-/*
+/**
  * Class to extend the core VF2 SOLR functionality related to Parameters
+ *
+ * @category Swissbib_VuFind2
+ * @package  VuFind_Search_Solr
+ * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.vufind.org  Main Page
  */
 class Params extends VuFindSolrParams
 {
     use \Swissbib\VuFind\Search\Helper\PersonalSettingsHelper;
 
     /**
+     * DateRange
+     *
      * @var array
      */
     protected $dateRange = array(
         'isActive' => false
     );
-
-
 
     /**
      * Override to prevent problems with namespace
@@ -32,44 +65,44 @@ class Params extends VuFindSolrParams
         return 'Solr';
     }
 
-
     /**
      * Pull the page size parameter or set to default
      *
      * @param \Zend\StdLib\Parameters $request Parameter object representing user
-     * request.
+     *                                         request.
      *
      * @return void 
-*/
+     */
     protected function initLimit($request)
     {
-
-
         $auth = $this->serviceLocator->get('VuFind\AuthManager');
         $defLimit = $this->getOptions()->getDefaultLimit();
         $limitOptions = $this->getOptions()->getLimitOptions();
         $view = $this->getView();
-        $this->handleLimit($auth, $request, $defLimit, $limitOptions, $view);
 
+        $this->handleLimit($auth, $request, $defLimit, $limitOptions, $view);
     }
 
-    /*
-     * GH: we need this method to call initLimit (which is protected in base class and shouldn't be changed only because
-     * of hacks relaed to silly personal settings (although is possible in the current PHP version)
+    /**
+     * GH: we need this method to call initLimit (which is protected in base
+     * class and shouldn't be changed only because
+     * of hacks relaed to silly personal settings (although is possible in the
+     * current PHP version)
      *
+     * @param \Zend\StdLib\Parameters $request Request
+     *
+     * @return void
      */
     public function initLimitAdvancedSearch($request)
     {
         $this->initLimit($request);
     }
 
-
-
     /**
      * Get the value for which type of sorting to use
      *
      * @param \Zend\StdLib\Parameters $request Parameter object representing user
-     * request.
+     *                                         request.
      *
      * @return string
      */
@@ -77,12 +110,13 @@ class Params extends VuFindSolrParams
     {
         $auth = $this->serviceLocator->get('VuFind\AuthManager');
         $defaultSort = $this->getOptions()->getDefaultSortByHandler();
-        $this->setSort($this->handleSort($auth, $request, $defaultSort, $this->getSearchClassId()));
+        $this->setSort($this->handleSort(
+            $auth, $request, $defaultSort, $this->getSearchClassId()
+        ));
     }
 
-
     /**
-     * overridden function - we need some more parameters.
+     * Overridden function - we need some more parameters.
      *
      * @return ParamBag
      */
@@ -96,13 +130,11 @@ class Params extends VuFindSolrParams
         $backendParams = $this->addUserInstitutions($backendParams);
 
         return $backendParams;
-
-
     }
 
-
-
     /**
+     * GetSpellcheckBackendParameters
+     *
      * @return ParamBag
      */
     public function getSpellcheckBackendParameters()
@@ -113,29 +145,28 @@ class Params extends VuFindSolrParams
         //with SOLR 4.3 AND is no longer the default parameter
         $backendParams->add("q.op", "AND");
 
-        //we need this homegrown param to control the behaviour of InjectSwissbibSpellingListener
+        //we need this homegrown param to control the behaviour of
+        // InjectSwissbibSpellingListener
         //I don't see another possibilty yet
         $backendParams->add("swissbibspellcheck", "true");
-
-
-        //$backendParams = $this->addUserInstitutions($backendParams);
 
         return $backendParams;
     }
 
-
-
     /**
+     * GetTypeLabel
+     *
      * @return string
      */
     public function getTypeLabel()
     {
-        return $this->getServiceLocator()->get('Swissbib\TypeLabelMappingHelper')->getLabel($this);
+        return $this->getServiceLocator()->get('Swissbib\TypeLabelMappingHelper')
+            ->getLabel($this);
     }
 
-
-
     /**
+     * GetDateRange
+     *
      * @return array
      */
     public function getDateRange()
@@ -151,10 +182,8 @@ class Params extends VuFindSolrParams
         return $this->dateRange;
     }
 
-
-
     /**
-     * @Override
+     * BuildDateRangeFilter
      *
      * @param string $field field to use for filtering.
      * @param string $from  year for start of range.
@@ -171,24 +200,26 @@ class Params extends VuFindSolrParams
         return parent::buildDateRangeFilter($field, $from, $to);
     }
 
-
-
     /**
      * Add user institutions as facet queries to backend params
      *
-     * @param ParamBag $backendParams
+     * @param ParamBag $backendParams ParamBag
      *
      * @return ParamBag
      */
     protected function addUserInstitutions(ParamBag $backendParams)
     {
         /**
- * @var Manager $favoritesManger 
-*/
+         * Manager
+         *
+         * @var Manager $favoritesManger
+         */
         $favoritesManger = $this->getServiceLocator()->get('Swissbib\FavoriteInstitutions\Manager');
+
         /**
- * @var String[] $favoriteInstitutions 
-*/
+         * FavoriteInstitutions array
+         * @var String[] $favoriteInstitutions
+         */
         $favoriteInstitutions = $favoritesManger->getUserInstitutions();
 
         if (sizeof($favoriteInstitutions) >  0) {
@@ -206,14 +237,12 @@ class Params extends VuFindSolrParams
         return $backendParams;
     }
 
-
-
     /**
-     * @override
+     * GetFacetLabel
      *
      * @param string $field Facet field name.
      *
-     * @return string       Human-readable description of field.
+     * @return string Human-readable description of field.
      */
     public function getFacetLabel($field)
     {
@@ -224,5 +253,4 @@ class Params extends VuFindSolrParams
             return parent::getFacetLabel($field);
         }
     }
-
 }

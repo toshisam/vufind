@@ -20,12 +20,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category VuFind2
- * @package  Search_Favorites
+ * @package  VuFind_Search_Favorites
  * @author   Demian Katz <demian.katz@villanova.edu>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org   Main Site
  */
+
 namespace Swissbib\VuFind\Search\Favorites;
+
 use VuFind\Exception\ListPermission as ListPermissionException,
     VuFind\Search\Base\Results as BaseResults;
 
@@ -35,14 +37,13 @@ use VuFind\Search\Favorites\Results as VFFavoriteResults;
  * Search Favorites Results
  *
  * @category VuFind2
- * @package  Search_Favorites
+ * @package  VuFind_Search_Favorites
  * @author   Demian Katz <demian.katz@villanova.edu>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org   Main Site
  */
 class Results extends VFFavoriteResults
 {
-
     /**
      * Returns the stored list of facets for the last search
      *
@@ -110,8 +111,7 @@ class Results extends VFFavoriteResults
                 $retVal[$field] = $this->facets[$field];
             }
         }
+
         return $retVal;
     }
-
-
 }

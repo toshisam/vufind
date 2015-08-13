@@ -25,13 +25,13 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org   Main Site
  */
+
 namespace Swissbib\VuFind\l18n\Translator\Loader;
+
 use Zend\I18n\Exception\InvalidArgumentException,
     Zend\I18n\Translator\Loader\FileLoaderInterface,
     Zend\I18n\Translator\TextDomain,
     VuFind\I18n\Translator\Loader\ExtendedIni as VFExtendedIni;
-
-
 
 /**
  * Handles the language loading and language file parsing
@@ -56,34 +56,36 @@ class ExtendedIni extends VFExtendedIni
      * Constructor
      *
      * @param array  $pathStack      List of directories to search for language
-     * files.
+     *                               files.
      * @param string $fallbackLocale Fallback locale to use for language strings
-     * missing from selected file.
+     *                               missing from selected file.
      */
     public function __construct($pathStack = array(), $fallbackLocale = null)
     {
-
         parent::__construct($pathStack, $fallbackLocale);
-
     }
 
     /**
-     * load(): defined by LoaderInterface.
+     * Load(): defined by LoaderInterface.
      *
      * @param string $locale   Locale to read from language file
      * @param string $filename Language file to read (not used)
      *
-     * @return                                        TextDomain
-     * @throws                                        InvalidArgumentException
+     * @return TextDomain
+     *
+     * @throws InvalidArgumentException
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function load($locale, $filename)
     {
         // Load base data:
         //VuFind itself doesn't use at all the filename information itself
-        //we are running into problems with domain entities having the same name but being part of different domains
-        //specialized domains are registered in Swissbib\Bootstraper->initSpecialTranslations
-        //todo: discuss this with VuFind list! we sent already a pull request but still open
+        //we are running into problems with domain entities having the same name
+        // but being part of different domains
+        //specialized domains are registered in
+        // Swissbib\Bootstraper->initSpecialTranslations
+        //todo: discuss this with VuFind list!
 
         // Reset the loaded files list:
         $this->resetLoadedFiles();
@@ -108,12 +110,12 @@ class ExtendedIni extends VFExtendedIni
         return $data;
     }
 
-
-
     /**
      * Search the path stack for language files and merge them together.
      *
      * @param string $filename Name of file to search path stack for.
+     *
+     * @throws InvalidArgumentException
      *
      * @return TextDomain
      */
@@ -189,8 +191,10 @@ class ExtendedIni extends VFExtendedIni
                 }
             } else {
                 //we are dealing with a specialized domain
-                //if we are dealing with a multi domain translation the filename contains a slash character
-                //compare the initialization method initSpecialTranslations in Bootstrapper
+                //if we are dealing with a multi domain translation the filename
+                // contains a slash character
+                //compare the initialization method initSpecialTranslations
+                // in Bootstrapper
                 $matches = [];
                 preg_match('/(.*?)\\//', $filename, $matches);
                 foreach ($this->pathStack as $path) {
@@ -202,7 +206,8 @@ class ExtendedIni extends VFExtendedIni
                     );
                     if (count($found) > 0) {
                         $test = strrpos($filename, "/");
-                        $fileNameWithoutPath = $test ? substr($filename, $test + 1) : $filename;
+                        $fileNameWithoutPath = $test ?
+                            substr($filename, $test + 1) : $filename;
                         //preg_match('//',$filename,$matches);
                         $fullFilePath = $path . '/' . $fileNameWithoutPath;
                         if ($fullFilePath && file_exists($fullFilePath)) {
@@ -227,8 +232,5 @@ class ExtendedIni extends VFExtendedIni
 
         // Load parent data, if necessary:
         return $this->loadParentData($data);
-
-
     }
-
 }
