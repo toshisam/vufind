@@ -54,6 +54,8 @@ class HoldingActions extends AbstractTranslatorHelper
     public function __invoke(array $item, $listClass = '', $recordId = '')
     {
         /**
+         * RecordLink
+         *
          * @var RecordLink $recordLink
          */
         $recordLink = $this->getView()->plugin('recordLink');

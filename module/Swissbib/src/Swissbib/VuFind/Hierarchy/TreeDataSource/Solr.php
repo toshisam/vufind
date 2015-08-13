@@ -35,6 +35,12 @@ use VuFindSearch\ParamBag;
 
 /**
  * Override Solr tree data source
+ *
+ * @category Swissbib_VuFind2
+ * @package  VuFind_Hierarchy_TreeDataSource
+ * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
 class Solr extends VuFindTreeDataSourceSolr
 {
@@ -59,14 +65,13 @@ class Solr extends VuFindTreeDataSourceSolr
      */
     protected $filters = array();
 
-
     /**
      * Get Solr Children for JSON
      *
      * @param string $parentID The starting point for the current recursion
-     * (equivlent to Solr field hierarchy_parent_id)
-     * @param string &$count   The total count of items in the tree
-     * before this recursion
+     *                         (equivlent to Solr field hierarchy_parent_id)
+     * @param string $count    The total count of items in the tree
+     *                         before this recursion
      *
      * @return string
      */
@@ -77,11 +82,20 @@ class Solr extends VuFindTreeDataSourceSolr
         );
         $results = $this->searchService->search(
             'Solr', $query, 0, 10000,
-            new ParamBag(array('fq' => $this->filters, 'hl' => 'false', 'fl' => 'id, title_in_hierarchy, hierarchy_parent_id, hierarchy_sequence, hierarchy_top_title, title'))
+            new ParamBag(
+                array(
+                    'fq' => $this->filters,
+                    'hl' => 'false',
+                    'fl' => 'id, title_in_hierarchy, hierarchy_parent_id, ' .
+                        'hierarchy_sequence, hierarchy_top_title, title'
+                )
+            )
         );
+
         if ($results->getTotal() < 1) {
             return '';
         }
+
         $json = array();
         $sorting = $this->getHierarchyDriver()->treeSorting();
 
@@ -100,8 +114,10 @@ class Solr extends VuFindTreeDataSourceSolr
                     : 'record',
                 'title' => htmlspecialchars($title)
             );
-            // here, the logic seems to have changed with respect to ::getChildren (creating xml caches). Beforehand, the
-            // building of subchildren were not dependent on the type collection=true/false
+            // here, the logic seems to have changed with respect to ::getChildren
+            // (creating xml caches). Beforehand, the
+            // building of subchildren were not dependent on the type
+            // collection=true/false
             // commentend this out to get old behaviour
             //if ($current->isCollection()) {
             $children = $this->getChildrenJson(
@@ -127,24 +143,21 @@ class Solr extends VuFindTreeDataSourceSolr
         return $sorting ? $this->sortNodes($json) : $json;
     }
 
-
-
     /**
      * Sort Nodes, special sort for Swissbib purposes
      *
-     * @param array  &$array The Array to Sort
-     * @param string $key    The key to sort on
+     * @param array $array The Array to Sort
      *
-     * @return void
+     * @return array
      */
     protected function sortNodes($array) 
     {
-
          $sorter = function ($a, $b) {
              // consider first element for the sort: $a[0]
             if (preg_match("/^(\d+)(\D+.*)?$/", $a[0], $allMatches)) {
                 if (sizeof($allMatches) == 3) {
-                    $first = $allMatches[1] . "." . preg_replace("/\D/", "", ($allMatches[2]));
+                    $first = $allMatches[1] . "." .
+                        preg_replace("/\D/", "", ($allMatches[2]));
                 } else {
                     $first = $allMatches[1];
                 }
@@ -154,7 +167,8 @@ class Solr extends VuFindTreeDataSourceSolr
              // consider first element for the sort: $b[0]
             if (preg_match("/^(\d+)(\D+.*)?$/", $b[0], $allMatches)) {
                 if (sizeof($allMatches) == 3) {
-                    $second = $allMatches[1] . "." . preg_replace("/\D/", "", ($allMatches[2]));
+                    $second = $allMatches[1] . "." .
+                        preg_replace("/\D/", "", ($allMatches[2]));
                 } else {
                     $second = $allMatches[1];
                 }
@@ -164,18 +178,20 @@ class Solr extends VuFindTreeDataSourceSolr
 
              // Sort arrays with precision of up to 6 decimals
              return $first === $second ? 0 : $first < $second ? -1 : 1;
-             //don't use bccomp. needs a special compiler configuration for PHP (works on Ubuntu but not on RedHat host (PHP version 5.4 as well as 5.5)
+             //don't use bccomp. needs a special compiler configuration for
+             // PHP (works on Ubuntu but not on RedHat host
+             // (PHP version 5.4 as well as 5.5)
              //PHP 5.5 was tested by myself on sb-vf16
              //return bccomp($first, $second, 6);
          };
+
         usort($array, $sorter);
 
         // Collapse array to remove sort values
         $mapper = function ($i) {
             return $i[1];
         };
+
         return array_map($mapper, $array);
     }
-
-
 }

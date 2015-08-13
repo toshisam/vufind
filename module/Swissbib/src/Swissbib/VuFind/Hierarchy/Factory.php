@@ -1,6 +1,6 @@
 <?php
 /**
- * Hierarchy Driver Factory Class *
+ * Hierarchy Driver Factory Class
  *
  * Copyright (C) project swissbib, University Library Basel, Switzerland
  * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
@@ -18,43 +18,42 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * @category swissbib VuFind2
- * @package  Swissbib\VuFind\Hierarchy\TreeDataSource
+ * @category Swissbib_VuFind2
+ * @package  VuFind_Hierarchy_TreeDataSource
  * @author   Guenter Hipler <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
 
-
 namespace Swissbib\VuFind\Hierarchy;
+
 use Zend\ServiceManager\ServiceManager;
 use Swissbib\VuFind\Hierarchy\TreeDataSource\Solr as TreeDataSourceSolr;
 use Swissbib\VuFind\Hierarchy\TreeRenderer\JSTree as SwissbibJsTree;
 
-
-
-
-
-
 /**
  * Hierarchy Data Source Factory Class
  * This is a factory class to build objects for managing hierarchies.
- * @category swissbib VuFind2
- * @package  Swissbib\VuFind\Hierarchy\TreeDataSource
+ *
+ * @category Swissbib_VuFind2
+ * @package  VuFind_Hierarchy_TreeDataSource
  * @author   Guenter Hipler <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
 class Factory
 {
-
     /**
-     * @param ServiceManager $sm
+     * GetSolrTreeDataSource
+     *
+     * @param ServiceManager $sm ServiceManager
+     *
      * @return \Swissbib\VuFind\Hierarchy\TreeDataSource\Solr
      */
     public static function getSolrTreeDataSource(ServiceManager $sm)
     {
-        $cacheDir = $sm->getServiceLocator()->get('VuFind\CacheManager')->getCacheDir(false);
+        $cacheDir = $sm->getServiceLocator()->get('VuFind\CacheManager')
+            ->getCacheDir(false);
 
         $hierarchyFilters = $sm->getServiceLocator()->get('VuFind\Config')
             ->get('HierarchyDefault');
@@ -63,7 +62,6 @@ class Factory
             ? $hierarchyFilters->HierarchyTree->filterQueries->toArray()
             : array();
 
-
         return new TreeDataSourceSolr(
             $sm->getServiceLocator()->get('VuFind\Search'),
             rtrim($cacheDir, '/') . '/hierarchy',
@@ -71,17 +69,29 @@ class Factory
         );
     }
 
+    /**
+     * GetHierarchyDriverSeries
+     *
+     * @param ServiceManager $sm ServiceManager
+     *
+     * @return mixed
+     */
     public static function getHierarchyDriverSeries(ServiceManager $sm)
     {
         //Todo: Question GH:
-        //Why this additional Factory method? Here we use another VuFind Factory method which could be called directly
+        //Why this additional Factory method? Here we use another VuFind
+        // Factory method which could be called directly
         // by the client in need for this type.
-        return \VuFind\Hierarchy\Driver\Factory::get($sm->getServiceLocator(), 'HierarchySeries');
+        return \VuFind\Hierarchy\Driver\Factory::get(
+            $sm->getServiceLocator(), 'HierarchySeries'
+        );
     }
 
-
     /**
-     * @param ServiceManager $sm
+     * GetJsTree
+     *
+     * @param ServiceManager $sm ServiceManager
+     *
      * @return \Swissbib\VuFind\Hierarchy\TreeRenderer\JSTree
      */
     public static function getJSTree(ServiceManager $sm)
@@ -89,7 +99,5 @@ class Factory
         return new SwissbibJsTree(
             $sm->getServiceLocator()->get('ControllerPluginManager')->get('Url')
         );
-
-
     }
 }
