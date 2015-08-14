@@ -72,7 +72,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         'l' => 'language',
         '_n' => 'number_of_parts', // R
         'q' => 'fullername',
-        'D' => 'forname',
+        'D' => 'forename',
         't' => 'title_of_work',
         '4' => 'relator_code',
         '_8' => 'extras',
@@ -940,7 +940,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
         if ($asString) {
             $name = isset($data['name']) ? $data['name'] : '';
-            $name .= isset($data['forname']) ? ', ' . $data['forname'] : '';
+            $name .= isset($data['forename']) ? ', ' . $data['forename'] : '';
 
             return trim($name);
         }
@@ -964,7 +964,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
             foreach ($authors as $author) {
                 $name = isset($author['name']) ? $author['name'] : '';
-                $forename = isset($author['forname']) ? $author['forname'] : '';
+                $forename = isset($author['forename']) ? $author['forename'] : '';
                 $stringAuthors[] = trim($name . ', ' . $forename);
             }
 
