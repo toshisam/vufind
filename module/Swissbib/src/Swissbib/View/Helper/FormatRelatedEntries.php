@@ -142,10 +142,8 @@ class FormatRelatedEntries extends AbstractHelper {
             $formattedEntry = $relatedCorporation['name'];
         }
 
-        if (isset($relatedCorporation['unit'])) {
-            foreach($relatedCorporation['unit'] as $unit) {
-                $formattedEntry .= '. ' . $unit;
-            }
+        if (isset($relatedCorporation['1unit'])) {
+                $formattedEntry .= '. ' . $relatedCorporation['1unit'];
         }
 
         $formattedEntry .= ' (' . $translatedRelatorCode . ')';

@@ -112,20 +112,33 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         'P' => 'originField', // swissbib specific subfield, indicates original tag of park field. Only in use for field 950
     ];
 
+    /**
+     * protocoll wrapper
+     *
+     * @var null
+     */
     protected $protocolWrapper = null;
 
+    /**
+     * FRBR field
+     * 
+     * @var bool
+     */
     protected $multiValuedFRBRField = true;
 
     /**
-     * @var    Array    List of all Elements of the description, to figure out whether to show tab or not
+     * List of all elements in the description tab
+     * used to figure out whether to show tab or not
+     *
+     * @var    Array
      */
-    protected $partsOfDescription = array(
-        'ISBNs', 'ISSNs', 'ISMNs', 'DOIs', 'URNs', 'AllSubjectVocabularies',
-        'Series', 'AltTitle', 'NewerTitles', 'PreviousTitles',
-        'GeneralNotes', 'DissertationNotes', 'BibliographyNotes', 'AccessRestrictions',
-        'ProductionCredits', 'OriginalTitle', 'PerformerNote', 'Awards', 'CitationNotes',
-        'OriginalVersionNotes', 'CopyNotes', 'SystemDetails', 'RelationshipNotes'
-    );
+    protected $partsOfDescription = [
+        'ISBNs', 'ISSNs', 'ISMNs', 'DOIs', 'URNs', 'AllSubjectVocabularies', 'Series', 'AltTitle', 'NewerTitles',
+        'PreviousTitles', 'GeneralNotes', 'DissertationNotes', 'BibliographyNotes', 'PublicationFrequency',
+        'AccessRestrictions', 'ProductionCredits', 'OriginalTitle', 'PerformerNote', 'Awards', 'CitationNotes',
+        'ContResourceDates', 'OriginalVersionNotes', 'CopyNotes', 'SystemDetails', 'RelationshipNotes',
+        'HierarchicalPlaceNames', 'RelatedEntries',
+    ];
 
 
     public function __construct($mainConfig = null, $recordConfig = null,
