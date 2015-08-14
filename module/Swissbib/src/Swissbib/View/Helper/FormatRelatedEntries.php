@@ -107,8 +107,16 @@ class FormatRelatedEntries extends AbstractHelper {
             $formattedEntry = $relatedPerson['name'];
         }
 
-        if (isset($relatedPerson['secondName'])) {
-            $formattedEntry .= ', ' . $relatedPerson['secondName'];
+        if (isset($relatedPerson['forename'])) {
+            $formattedEntry .= ', ' . $relatedPerson['forename'];
+        }
+
+        if (isset($relatedPerson['1titles'])) {
+            $formattedEntry .= ' ' . $relatedPerson['1titles'];
+        }
+
+        if (isset($relatedPerson['dates'])) {
+            $formattedEntry .= ' (' . $relatedPerson['dates'] . ')';
         }
 
         $formattedEntry .= ' (' . $translatedRelatorCode . ')';
@@ -132,6 +140,12 @@ class FormatRelatedEntries extends AbstractHelper {
 
         if (isset($relatedCorporation['name'])) {
             $formattedEntry = $relatedCorporation['name'];
+        }
+
+        if (isset($relatedCorporation['unit'])) {
+            foreach($relatedCorporation['unit'] as $unit) {
+                $formattedEntry .= '. ' . $unit;
+            }
         }
 
         $formattedEntry .= ' (' . $translatedRelatorCode . ')';
