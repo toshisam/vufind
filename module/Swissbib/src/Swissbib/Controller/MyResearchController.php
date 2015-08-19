@@ -1,4 +1,34 @@
 <?php
+/**
+ * Swissbib MyResearchController
+ *
+ * PHP version 5
+ *
+ * Copyright (C) project swissbib, University Library Basel, Switzerland
+ * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
+ *
+ * Date: 1/2/13
+ * Time: 4:09 PM
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @category Swissbib_VuFind2
+ * @package  Controller
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org
+ */
+
 namespace Swissbib\Controller;
 
 use VuFind\Search\RecommendListener;
@@ -23,6 +53,15 @@ use VuFind\Exception\ListPermission as ListPermissionException,
 
 use Zend\Uri\UriFactory;
 
+/**
+ * Swissbib MyResearchController
+ *
+ * @category Swissbib_VuFind2
+ * @package  Controller
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org
+ */
 class MyResearchController extends VuFindMyResearchController
 {
 
@@ -38,7 +77,11 @@ class MyResearchController extends VuFindMyResearchController
       return $patron;
     }
 
-    /** @var Aleph $catalog */
+    /**
+     * Aleph
+     *
+     * @var Aleph $catalog 
+     */
     $catalog = $this->getILS();
 
     // Get photo copies details:
@@ -59,8 +102,12 @@ class MyResearchController extends VuFindMyResearchController
     if (!is_array($patron = $this->catalogLogin())) {
       return $patron;
     }
-
-    /** @var Aleph $catalog */
+      
+    /**
+     * Aleph
+     *
+     * @var Aleph $catalog
+     */
     $catalog = $this->getILS();
 
     // Get photo copies details:
@@ -70,21 +117,23 @@ class MyResearchController extends VuFindMyResearchController
   }
 
 
-  /**
-   * Get location parameter from route
-   *
-   * @return    String|Boolean
-   */
-  protected function getLocationFromRoute()
-  {
-    return $this->params()->fromRoute('location', false);
-  }
+    /**
+     * Get location parameter from route
+     *
+     * @return String|Boolean
+     */
+    protected function getLocationFromRoute()
+    {
+        return $this->params()->fromRoute('location', false);
+    }
 
 
   /**
    * Inject location from route
    *
-   * @inheritDoc
+   * @param null $params Parameters
+   *
+   * @return ViewModel
    */
   protected function createViewModel($params = null)
   {
@@ -108,7 +157,11 @@ class MyResearchController extends VuFindMyResearchController
       return $this->forceLogin();
     }
 
-    /** @var User $user */
+    /**
+     * User
+     *
+     * @var User $user
+     */
     $user = $this->getUser();
 
     if ($this->getRequest()->isPost() && $this->params()->fromPost('myResearchSettingsForm')) {
@@ -154,17 +207,17 @@ class MyResearchController extends VuFindMyResearchController
         'defaultSort' => $sortOptions
     ));
   }
-
-
-  /**
-   * creates View snippet to provide users more information about the multi accounts in swissbib
-   *
-   * @return ViewModel
-   */
-  public function backgroundaccountsAction()
-  {
-    return $this->createViewModel();
-  }
+    
+    /**
+     * Creates View snippet to provide users more information
+     * about the multi accounts in swissbib
+     *
+     * @return ViewModel
+     */
+    public function backgroundaccountsAction()
+    {
+        return $this->createViewModel();
+    }
 
 
   /**
@@ -249,88 +302,100 @@ class MyResearchController extends VuFindMyResearchController
   }
 
 
-  /**
+    /**
    * Convenience method to get a session initiator URL. Returns false if not
    * applicable.
    * what does "not applicable" mean:
-   * for me (GH) it makes no sense to create a session initiator instance in case we are within the normal workflow of the application
-   * (no authentication procedure in conjunction with shibboleth authentication took place)
-   * at the moment I compare the domain strings to decide if we should create a session initiator because an authentication with shibboleth tool place
+   * for me (GH) it makes no sense to create a session initiator instance in
+   * case we are within the normal workflow of the application
+   * (no authentication procedure in conjunction with shibboleth authentication
+   * took place) at the moment I compare the domain strings to decide if we should
+   * create a session initiator because an authentication with shibboleth tool place
    * another possibilty might be to test the Sibboleth.sso/Session response
    * at the moment we have to issues:
    * a) why redirect prefix in apache session variables?
-   * b) access to the shibboleth session variables is only possible immediately after shibboleth authentication process - why?
+   * b) access to the shibboleth session variables is only possible immediately
+   * after shibboleth authentication process - why?
    * question are pending at switch
    *
    * @return string|bool
    */
-  protected function getSessionInitiator()
-  {
-    $uri = $this->getRequest()->getUri();
-    $base = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
-    $baseEscaped = str_replace("/", "\/", $base);
+    protected function getSessionInitiator()
+    {
+        $uri = $this->getRequest()->getUri();
+        $base = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
+        $baseEscaped = str_replace("/", "\/", $base);
 
-    if (preg_match("/$baseEscaped/", $this->getRequest()->getServer()->get('HTTP_REFERER')) == 0) {
-      $url = $this->getServerUrl('myresearch-home');
-      return $this->getAuthManager()->getSessionInitiator($url);
-    } else {
-      return false;
-    }
-  }
-
-
-  /**
-   * Login Action
-   * Need to overwrite because of a special handling for Shibboleth workflow
-   *
-   * @return mixed
-   */
-  public function loginAction()
-  {
-
-
-    //we need to differantiate between Shibboleh and not Shibboleth authentication mechanisms
-    //in case of Shibboleth we will get a problem with HTTP_Referer after successful authentication at IDP
-    //because then the Referer points to the IDP address instead of a valid VuFind resource (often something like save a record in various contexts)
-    //therefor this mechanisms where we store a temporary session for the latest Referer before the IDP request is executed in the next step by the user
-    //at the moment it is used in Swissbib/Controller/RecordController
-    $clazz = $this->getAuthManager()->getAuthClassForTemplateRendering();
-    if ($clazz == "Swissbib\\VuFind\\Auth\\Shibboleth") {
-      //store the current referrer into a special Session
-      $followup = new SessionContainer('ShibbolethSaveFollowup');
-      $tURL = $this->getRequest()->getServer()->get('HTTP_REFERER');
-      $followup->url = $tURL;
+        if (preg_match(
+            "/$baseEscaped/",
+            $this->getRequest()->getServer()->get('HTTP_REFERER')
+        ) == 0) {
+            $url = $this->getServerUrl('myresearch-home');
+            return $this->getAuthManager()->getSessionInitiator($url);
+        } else {
+            return false;
+        }
     }
 
-    // If this authentication method doesn't use a VuFind-generated login
-    // form, force it through:
-    if ($this->getSessionInitiator()) {
-      // Don't get stuck in an infinite loop -- if processLogin is already
-      // set, it probably means Home action is forwarding back here to
-      // report an error!
-      //
-      // Also don't attempt to process a login that hasn't happened yet;
-      // if we've just been forced here from another page, we need the user
-      // to click the session initiator link before anything can happen.
-      //
-      // Finally, we don't want to auto-forward if we're in a lightbox, since
-      // it may cause weird behavior -- better to display an error there!
-      if (!$this->params()->fromPost('processLogin', false)
-          && !$this->params()->fromPost('forcingLogin', false)
-          && !$this->inLightbox()
-      ) {
-        $this->getRequest()->getPost()->set('processLogin', true);
-        return $this->forwardTo('MyResearch', 'Home');
-      }
+    /**
+     * Login Action
+     * Need to overwrite because of a special handling for Shibboleth workflow
+     *
+     * @return mixed
+     */
+    public function loginAction()
+    {
+        //we need to differantiate between Shibboleh and not Shibboleth
+        // authentication mechanisms
+        //in case of Shibboleth we will get a problem with HTTP_Referer after
+        // successful authentication at IDP
+        //because then the Referer points to the IDP address instead of a valid
+        // VuFind resource (often something like save a record in various contexts)
+        //therefor this mechanisms where we store a temporary session for the latest
+        // Referer before the IDP request is executed in the next step by the user
+        //at the moment it is used in Swissbib/Controller/RecordController
+        $clazz = $this->getAuthManager()->getAuthClassForTemplateRendering();
+        if ($clazz == "Swissbib\\VuFind\\Auth\\Shibboleth") {
+            //store the current referrer into a special Session
+            $followup = new SessionContainer('ShibbolethSaveFollowup');
+            $tURL = $this->getRequest()->getServer()->get('HTTP_REFERER');
+            $followup->url = $tURL;
+        }
+
+        // If this authentication method doesn't use a VuFind-generated login
+        // form, force it through:
+        if ($this->getSessionInitiator()) {
+            // Don't get stuck in an infinite loop -- if processLogin is already
+            // set, it probably means Home action is forwarding back here to
+            // report an error!
+            //
+            // Also don't attempt to process a login that hasn't happened yet;
+            // if we've just been forced here from another page, we need the user
+            // to click the session initiator link before anything can happen.
+            //
+            // Finally, we don't want to auto-forward if we're in a lightbox, since
+            // it may cause weird behavior -- better to display an error there!
+            if (!$this->params()->fromPost('processLogin', false)
+                && !$this->params()->fromPost('forcingLogin', false)
+                && !$this->inLightbox()
+            ) {
+                $this->getRequest()->getPost()->set('processLogin', true);
+                return $this->forwardTo('MyResearch', 'Home');
+            }
+        }
+
+        // Make request available to view for form updating:
+        $view = $this->createViewModel();
+        $view->request = $this->getRequest()->getPost();
+
+        return $view;
     }
 
-    // Make request available to view for form updating:
-    $view = $this->createViewModel();
-    $view->request = $this->getRequest()->getPost();
-
-    return $view;
-  }
-
+    /**
+     * Logout
+     *
+     * @return HttpResponse
+     */
     public function logoutAction()
     {
         $config = $this->getConfig();
@@ -353,14 +418,19 @@ class MyResearchController extends VuFindMyResearchController
         }
 
 
-        if (count(preg_grep('/Search\/Results|Summon\/Search/',[$logoutTarget])) > 0 )
-        {
-            //GH: It might happen (depends on context) that limit and sort query parameter are still
-            //part of the former URL when user called the logout function (logoutTarget) and contains sort
-            // or limit parameter customized by the user. This is not desired especially at access points in the public space
-            //But we have to be careful: we should append additional default parameters only for Solr or Summon
+        if (count(preg_grep('/Search\/Results|Summon\/Search/', [$logoutTarget])) > 0
+        ) {
+            //GH: It might happen (depends on context) that limit and sort query
+            // parameter are still
+            //part of the former URL when user called the logout function
+            // (logoutTarget) and contains sort
+            // or limit parameter customized by the user. This is not desired
+            // especially at access points in the public space
+            //But we have to be careful: we should append additional default
+            // parameters only for Solr or Summon
             // search Routes
-            $solrResultsManager = $this->getServiceLocator()->get('VuFind\SearchResultsPluginManager')->get('Solr');
+            $solrResultsManager = $this->getServiceLocator()
+                ->get('VuFind\SearchResultsPluginManager')->get('Solr');
             $options = $solrResultsManager->getParams()->getOptions();
             $defaultSort = $options->getDefaultSortByHandler();
             $defaultLimit = $options->getDefaultLimit();
@@ -373,86 +443,117 @@ class MyResearchController extends VuFindMyResearchController
     }
 
 
-  /**
-   * User login action -- clear any previous follow-up information prior to
-   * triggering a login process. This is used for explicit login links within
-   * the UI to differentiate them from contextual login links that are triggered
-   * by attempting to access protected actions.
-   *
-   * @return mixed
-   */
-  public function userloginAction()
-  {
-      $forward = parent::userloginAction();
-      if ($this->inLightbox()) {
-          $this->clearFollowupUrl();
-      }
+    /**
+     * User login action -- clear any previous follow-up information prior to
+     * triggering a login process. This is used for explicit login links within
+     * the UI to differentiate them from contextual login links that are triggered
+     * by attempting to access protected actions.
+     *
+     * @return mixed
+     */
+    public function userloginAction()
+    {
+        $forward = parent::userloginAction();
+        if ($this->inLightbox()) {
+            $this->clearFollowupUrl();
+        }
 
-      return $forward;
-  }
-
-  /**
-   * Store a referer (if appropriate) to keep post-login redirect pointing
-   * to an appropriate location.
-   *
-   * @return void
-   */
-  protected function storeRefererForPostLoginRedirect()
-  {
-    // Get the referer -- if it's empty, there's nothing to store!
-    $referer = $this->getRequest()->getServer()->get('HTTP_REFERER');
-    if (empty($referer)) {
-      return;
+        return $forward;
     }
 
-    // Normalize the referer URL so that inconsistencies in protocol
-    // and trailing slashes do not break comparisons; this same normalization
-    // is applied to all URLs examined below.
-    $refererNorm = trim(end(explode('://', $referer, 2)), '/');
+    /**
+     * Store a referer (if appropriate) to keep post-login redirect pointing
+     * to an appropriate location.
+     *
+     * @return void
+     */
+    protected function storeRefererForPostLoginRedirect()
+    {
+        // Get the referer -- if it's empty, there's nothing to store!
+        $referer = $this->getRequest()->getServer()->get('HTTP_REFERER');
+        if (empty($referer)) {
+            return;
+        }
 
-    // If the referer lives outside of VuFind, don't store it! We only
-    // want internal post-login redirects.
-    $clazz = $this->getAuthManager()->getAuthClass();
-    if ($clazz === "VuFind\\Auth\\ILS") {
-      //tests were done with referrers from outside and inside
-      //$referer = "http://www.woz.ch/diesunddas"; // -> not stored
-      //$referer = "http://sb-vf1.swissbib.unibas.ch"; // -> stored
-      //$referer = "http://test.swissbib.ch"; // -> stored
-      //$referer = "http://baselbern.swissbib.ch"; // -> stored
+        // Normalize the referer URL so that inconsistencies in protocol
+        // and trailing slashes do not break comparisons; this same normalization
+        // is applied to all URLs examined below.
+        $refererNorm = trim(end(explode('://', $referer, 2)), '/');
 
-      //I guess we should use only the scheme (hostname) because the whole URL
-      //something like this: http://localhost/vufind/Record/304410349/HierarchyTree?hierarchy=125488483&recordID=304410349
-      //could contain the searched pattern with no intent (especially webpages from UB Basel)
-      $uri = UriFactory::factory($referer);
-      $scheme = $uri->getHost();
+        // If the referer lives outside of VuFind, don't store it! We only
+        // want internal post-login redirects.
+        $clazz = $this->getAuthManager()->getAuthClass();
+        if ($clazz === "VuFind\\Auth\\ILS") {
+            //tests were done with referrers from outside and inside
+            //$referer = "http://www.woz.ch/diesunddas"; // -> not stored
+            //$referer = "http://sb-vf1.swissbib.unibas.ch"; // -> stored
+            //$referer = "http://test.swissbib.ch"; // -> stored
+            //$referer = "http://baselbern.swissbib.ch"; // -> stored
 
-      //hosts running VuFind are labeled similar to
-      //test.swissbib.ch || sb-vf1.swissbib.unibas.ch ..
-      //these links could be defined via configuration once the "Bestellvorgang" - seems to be a monster -  is stable (I guess this won't happen in the future...)
-      $matches = array_filter(array("/swissbib\.?.*?\.ch/", "/localhost/"), function ($pattern) use ($scheme) {
-        $matched = preg_match($pattern, $scheme);
-        return $matched == 1 ? true : false;
-      });
-      if (count($matches) == 0) {
-        //referrer doesn't match against a "friendly" domain
-        //so it has to be a link from outside of the VuFind world which we don't store for later use
-        return;
-      }
+            //I guess we should use only the scheme (hostname) because the whole URL
+            //something like this: http://localhost/vufind/Record/304410349/
+            //HierarchyTree?hierarchy=125488483&recordID=304410349
+            //could contain the searched pattern with no intent
+            // (especially webpages from UB Basel)
+            $uri = UriFactory::factory($referer);
+            $scheme = $uri->getHost();
 
+            //hosts running VuFind are labeled similar to
+            //test.swissbib.ch || sb-vf1.swissbib.unibas.ch ..
+            //these links could be defined via configuration once the
+            // "Bestellvorgang" - seems to be a monster -  is stable
+            // (I guess this won't happen in the future...)
+            $matches = array_filter(
+                array("/swissbib\.?.*?\.ch/", "/localhost/"),
+                function ($pattern) use ($scheme) {
+                    $matched = preg_match($pattern, $scheme);
+                    return $matched == 1 ? true : false;
+                }
+            );
+            if (count($matches) == 0) {
+                //referrer doesn't match against a "friendly" domain
+                //so it has to be a link from outside of the VuFind world
+                // which we don't store for later use
+                return;
+            }
+
+        }
+        // If the referer is the MyResearch/Home action, it probably means
+        // that the user is repeatedly mistyping their password. We should
+        // ignore this and instead rely on any previously stored referer.
+        $myResearchHomeUrl = $this->url()->fromRoute('myresearch-home');
+        $mrhuNorm = trim(end(explode('://', $myResearchHomeUrl, 2)), '/');
+        if ($mrhuNorm === $refererNorm) {
+            return;
+        }
+
+        // If we got this far, we want to store the referer:
+        $this->followup()->store(array(), $referer);
     }
-    // If the referer is the MyResearch/Home action, it probably means
-    // that the user is repeatedly mistyping their password. We should
-    // ignore this and instead rely on any previously stored referer.
-    $myResearchHomeUrl = $this->url()->fromRoute('myresearch-home');
-    $mrhuNorm = trim(end(explode('://', $myResearchHomeUrl, 2)), '/');
-    if ($mrhuNorm === $refererNorm) {
-      return;
-    }
 
-    // If we got this far, we want to store the referer:
-    $this->followup()->store(array(), $referer);
-  }
+    /**
+     * Sort Options
+     *
+     * @param ServiceManager $serviceManager Service Manager
+     * @param Array          $defaultSort    Default sorting
+     *
+     * @return Array
+     */
+    protected function getSortOptions(ServiceManager $serviceManager, $defaultSort)
+    {
+        $sortOptions = array();
+        $searchTabs = $this->getConfig()->get('SearchTabs');
+        $searchOptionsPluginManager = $serviceManager
+            ->get('Swissbib\SearchOptionsPluginManager');
 
+        if (!$searchTabs->count() ) {
+            $config = $this->getConfig()->get('Index');
+            $sortOptions[] = array(
+            'options' => $searchOptionsPluginManager
+                ->get($config['engine'])->getSortOptions(),
+            'engine'  => $config['engine'],
+            'selected'  => $defaultSort[$config['engine']]
+            );
 
   /**
    * @param   ServiceManager  $serviceManager
@@ -465,30 +566,22 @@ class MyResearchController extends VuFindMyResearchController
     $searchTabs = $this->getConfig()->get('SearchTabs');
     $searchOptionsPluginManager = $serviceManager->get('VuFind\SearchOptionsPluginManager');
 
-    if( !$searchTabs->count() ) {
-      $config = $this->getConfig()->get('Index');
-      $sortOptions[] = array(
-          'options' => $searchOptionsPluginManager->get($config['engine'])->getSortOptions(),
-          'engine'  => $config['engine'],
-          'selected'  => $defaultSort[$config['engine']]
-      );
+        foreach ($searchTabs as $searchTabEngine => $searchTabLabel) {
+            $sortOptions[] = array (
+            'engine'  => $searchTabEngine,
+            'options' => $searchOptionsPluginManager->get($searchTabEngine)
+                ->getSortOptions(),
+            'label'   => $searchTabLabel,
+            'selected'  => $defaultSort[$searchTabEngine]
+            );
+        }
 
-      return $sortOptions;
+        return $sortOptions;
     }
-
-    foreach($searchTabs as $searchTabEngine => $searchTabLabel) {
-        $sortOptions[] = array (
-          'engine'  => $searchTabEngine,
-          'options' => $searchOptionsPluginManager->get($searchTabEngine)->getSortOptions(),
-          'label'   => $searchTabLabel,
-          'selected'  => $defaultSort[$searchTabEngine]
-        );
-    }
-
-    return $sortOptions;
-  }
 
     /**
+     * Action to change address
+     *
      * @return ViewModel
      */
     public function changeAddressAction()
@@ -497,38 +590,52 @@ class MyResearchController extends VuFindMyResearchController
             return $patron;
         }
 
-        $addressForm = $this->serviceLocator->get('Swissbib\MyResearch\Form\AddressForm');
+        $addressForm = $this->serviceLocator
+            ->get('Swissbib\MyResearch\Form\AddressForm');
 
         try {
-            if ($this->request->isPost() && $this->request->getPost('form-name') === 'changeaddress') {
+            if ($this->request->isPost()
+                && $this->request->getPost('form-name') === 'changeaddress'
+            ) {
                 $addressForm->setData($this->request->getPost());
 
                 if ($addressForm->isValid()) {
                     $address = $this->getILS()->getMyAddress($patron);
                     $newAddress = $addressForm->getData();
-                    $newAddress['z304-address-1'] = $address['z304-address-1']; //make sure nobody changes his name
-                    $newAddress['z304-date-from'] = $address['z304-date-from'] === '00000000' ? date('Ymd') : $address['z304-date-from'];
-                    $newAddress['z304-date-to'] = $address['z304-date-to'] === '00000000' ? date('Ymd', strtotime('+10 years')) : $address['z304-date-to'];
+                    //make sure nobody changes his name
+                    $newAddress['z304-address-1'] = $address['z304-address-1'];
+                    $newAddress['z304-date-from']
+                        = $address['z304-date-from'] === '00000000' ?
+                            date('Ymd') : $address['z304-date-from'];
+                    $newAddress['z304-date-to']
+                        = $address['z304-date-to'] === '00000000' ?
+                            date('Ymd', strtotime('+10 years')) :
+                            $address['z304-date-to'];
 
                     $this->getILS()->changeMyAddress($patron, $newAddress);
-                    $this->flashMessenger()->setNamespace('success')->addMessage('save_address_success');
+                    $this->flashMessenger()->setNamespace('success')
+                        ->addMessage('save_address_success');
                 } else {
-                    $this->flashMessenger()->setNamespace('error')->addMessage('save_address_error');
+                    $this->flashMessenger()->setNamespace('error')
+                        ->addMessage('save_address_error');
                 }
             } else {
                 $addressForm->setData($this->getILS()->getMyAddress($patron));
             }
         } catch (AlephRestfulException $e) {
-            $this->flashMessenger()->setNamespace('error')->addMessage('address_error');
+            $this->flashMessenger()->setNamespace('error')
+                ->addMessage('address_error');
         } catch (ILS $e) {
-            $this->flashMessenger()->setNamespace('error')->addMessage('address_error');
+            $this->flashMessenger()->setNamespace('error')
+                ->addMessage('address_error');
 
             return $this->createViewModel();
         }
 
-        return $this->createViewModel([
+        return $this->createViewModel(
+            [
             'form' => $addressForm
-        ]);
+            ]
+        );
     }
-
 }

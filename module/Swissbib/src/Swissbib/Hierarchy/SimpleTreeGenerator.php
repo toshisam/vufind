@@ -1,44 +1,90 @@
 <?php
+/**
+ * Swissbib SimpleTreeGenerator
+ *
+ * PHP version 5
+ *
+ * Copyright (C) project swissbib, University Library Basel, Switzerland
+ * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
+ *
+ * Date: 1/2/13
+ * Time: 4:09 PM
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @category Swissbib_VuFind2
+ * @package  Hierarchy
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org
+ */
 
 namespace Swissbib\Hierarchy;
 
 use Zend\Cache\Storage\Adapter\Filesystem as ObjectCache;
 
-class SimpleTreeGenerator {
-
+/**
+ * Swissbib SimpleTreeGenerator
+ *
+ * @category Swissbib_VuFind2
+ * @package  Hierarchy
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org
+ */
+class SimpleTreeGenerator
+{
     /**
+     * Zend object cache
+     *
      * @var ObjectCache
      */
-    private $objectCache;
-
-
+    protected $objectCache;
 
     /**
-     * @param ObjectCache $objectCache
+     * Constructor
+     *
+     * @param ObjectCache $objectCache ObjectCache
      */
-    public function __construct(ObjectCache $objectCache) {
+    public function __construct(ObjectCache $objectCache) 
+    {
         $this->objectCache = $objectCache;
     }
 
-
-
     /**
-     * @param array     $datas
-     * @param string    $currentNode
+     * Generating tree
+     *
+     * @param array   $datas        Tree data as list
+     * @param string  $currentNode  Current node being prcoessed
+     * @param integer $nestingLevel Indicationg nesting level
      *
      * @return string
      */
-    private function generatePageTree(array &$datas, $currentNode = "", $nestingLevel = 0){
+    protected function generatePageTree(array &$datas, $currentNode = "",
+        $nestingLevel = 0
+    ) {
         $tree = array();
 
         $currentNodeHead = explode(".", $currentNode);
         $currentNodeHead = $currentNodeHead[0];
 
-        foreach($datas as $key => $data){
+        foreach ($datas as $key => $data) {
             $datasParent = explode(".", $data['value']);
             $head = $datasParent[0];
 
-            if (!empty($currentNodeHead) && $head > $currentNodeHead) break;
+            if (!empty($currentNodeHead) && $head > $currentNodeHead) {
+                break;
+            }
 
             array_pop($datasParent);
             $parent = implode(".", $datasParent);
@@ -48,7 +94,9 @@ class SimpleTreeGenerator {
                 unset($datas[$key]);
                 $tree[] = array(
                     "entry" => $data,
-                    "children" => $this->generatePageTree($datas, $data['value'], $nestingLevel + 1)
+                    "children" => $this->generatePageTree(
+                        $datas, $data['value'], $nestingLevel + 1
+                    )
                 );
             }
         }
@@ -56,19 +104,22 @@ class SimpleTreeGenerator {
         return $tree;
     }
 
-
-
     /**
-     * Orders Facets and removes wrong instances. For instance D 14.5, D 14.5 e and D 14.5 CH get trunked to D 14.5
-     * @param $arrayList
+     * Orders Facets and removes wrong instances. For instance D 14.5, D 14.5 e
+     * and D 14.5 CH get trunked to D 14.5
+     *
+     * @param array $arrayList list of items
      *
      * @return array
      */
-    private function orderAndFilter(array $arrayList = array()) {
+    protected function orderAndFilter(array $arrayList = array())
+    {
         $sorted = array();
 
         foreach ($arrayList as $classification) {
-            preg_match_all("/[0-9]/", $classification['value'], $out, PREG_OFFSET_CAPTURE );
+            preg_match_all(
+                "/[0-9]/", $classification['value'], $out, PREG_OFFSET_CAPTURE
+            );
             $lastMatch = end($out[0]);
             $key = substr($classification['value'], 0, $lastMatch[1]+1);
 
@@ -86,25 +137,29 @@ class SimpleTreeGenerator {
         return $sorted;
     }
 
-
-
     /**
-     * @param   array $facets
-     * @param   string $treeKey
+     * Returns tree
      *
-     * @return  array
+     * @param array  $facets  Facets
+     * @param string $treeKey Facet tree key for cache
+     *
+     * @return array
      */
-    public function getTree(array $facets = array(), $treeKey = '') {
+    public function getTree(array $facets = array(), $treeKey = '') 
+    {
         $cacheTreeId    = 'simpleTree-' . $treeKey;
         $cachedTree     = $this->objectCache->getItem($cacheTreeId);
 
-        if (is_array($cachedTree))  return $cachedTree;
-        if ($treeKey === '')        return $this->generatePageTree($this->orderAndFilter($facets));
+        if (is_array($cachedTree)) {
+            return $cachedTree;
+        }
+        if ($treeKey === '') {
+            return $this->generatePageTree($this->orderAndFilter($facets));
+        }
 
         $tree = $this->generatePageTree($this->orderAndFilter($facets));
         $this->objectCache->setItem($cacheTreeId, $tree);
 
         return $tree;
     }
-
 } 
