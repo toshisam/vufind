@@ -101,7 +101,7 @@ class SearchController extends VuFindSearchController
     {
         $viewModel = parent::advancedAction();
         $viewModel->options = $this->getServiceLocator()
-            ->get('Swissbib\SearchOptionsPluginManager')->get($this->searchClassId);
+            ->get('VuFind\SearchOptionsPluginManager')->get($this->searchClassId);
         $results = $this->getResultsManager()->get($this->searchClassId);
 
         $params = $results->getParams();
@@ -150,7 +150,7 @@ class SearchController extends VuFindSearchController
 
         if (in_array($this->searchClassId, $this->extendedTargets)) {
             return $this->getServiceLocator()
-                ->get('Swissbib\SearchResultsPluginManager');
+                ->get('VuFind\SearchResultsPluginManager');
         }
 
         return parent::getResultsManager();

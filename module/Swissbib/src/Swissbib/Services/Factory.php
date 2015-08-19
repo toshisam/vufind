@@ -30,7 +30,6 @@
 namespace Swissbib\Services;
 
 use Zend\ServiceManager\ServiceManager;
-use Swissbib\VuFind\Recommend\FavoriteFacets;
 use Zend\I18n\Translator\LoaderPluginManager;
 
 use Swissbib\VuFind\Recommend\FavoriteFacets;

@@ -544,35 +544,27 @@ class MyResearchController extends VuFindMyResearchController
         $sortOptions = array();
         $searchTabs = $this->getConfig()->get('SearchTabs');
         $searchOptionsPluginManager = $serviceManager
-            ->get('Swissbib\SearchOptionsPluginManager');
+            ->get('VuFind\SearchOptionsPluginManager');
 
         if (!$searchTabs->count() ) {
             $config = $this->getConfig()->get('Index');
             $sortOptions[] = array(
-            'options' => $searchOptionsPluginManager
-                ->get($config['engine'])->getSortOptions(),
-            'engine'  => $config['engine'],
-            'selected'  => $defaultSort[$config['engine']]
+                'options' => $searchOptionsPluginManager
+                    ->get($config['engine'])->getSortOptions(),
+                'engine'  => $config['engine'],
+                'selected'  => $defaultSort[$config['engine']]
             );
 
-  /**
-   * @param   ServiceManager  $serviceManager
-   * @param   Array           $defaultSort
-   * @return  Array
-   */
-  protected function getSortOptions(ServiceManager $serviceManager, $defaultSort)
-  {
-    $sortOptions = array();
-    $searchTabs = $this->getConfig()->get('SearchTabs');
-    $searchOptionsPluginManager = $serviceManager->get('VuFind\SearchOptionsPluginManager');
+            return $sortOptions;
+        }
 
         foreach ($searchTabs as $searchTabEngine => $searchTabLabel) {
             $sortOptions[] = array (
-            'engine'  => $searchTabEngine,
-            'options' => $searchOptionsPluginManager->get($searchTabEngine)
-                ->getSortOptions(),
-            'label'   => $searchTabLabel,
-            'selected'  => $defaultSort[$searchTabEngine]
+                'engine'  => $searchTabEngine,
+                'options' => $searchOptionsPluginManager->get($searchTabEngine)
+                    ->getSortOptions(),
+                'label'   => $searchTabLabel,
+                'selected'  => $defaultSort[$searchTabEngine]
             );
         }
 
