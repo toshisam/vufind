@@ -104,7 +104,7 @@ class Results extends VFFavoriteResults
                                 $this->getParams()->hasFilter("$field:".$tag->tag)
                         );
                     }
-                        break;
+                    break;
                 }
             }
             if (isset($this->facets[$field])) {

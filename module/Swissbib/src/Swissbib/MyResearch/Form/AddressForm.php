@@ -47,6 +47,9 @@ use Zend\Form\Annotation;
  */
 class AddressForm
 {
+    // @codingStandardsIgnoreStart
+    // Annotations might be impossible to comply with CodeSniffer
+
     /**
      * $z304_address_1
      *
@@ -238,4 +241,6 @@ class AddressForm
      * })
      */
     public $z304_telephone_4;
+
+    // @codingStandardsIgnoreEnd
 }

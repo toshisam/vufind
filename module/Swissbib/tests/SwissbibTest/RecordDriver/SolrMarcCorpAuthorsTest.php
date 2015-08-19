@@ -1,12 +1,14 @@
 <?php
 /**
- * Factory for controllers.
+ * SolrMarcCorpAuthorsTest
  *
  * PHP version 5
  *
  * Copyright (C) project swissbib, University Library Basel, Switzerland
  * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
  *
+ * Date: 1/2/13
+ * Time: 4:09 PM
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
  * as published by the Free Software Foundation.
@@ -21,38 +23,51 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category Swissbib_VuFind2
- * @package  Controller
- * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @package  SwissbibTest_RecordDriver
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
+ * @link     http://www.swissbib.org
  */
 
-namespace Swissbib\Controller;
-
-use Zend\ServiceManager\ServiceManager;
+namespace SwissbibTest\RecordDriver;
 
 /**
- * Factory for controllers.
+ * SolrMarcCorpAuthorsTest
  *
  * @category Swissbib_VuFind2
- * @package  Controller
- * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @package  SwissbibTest_RecordDriver
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
+ * @link     http://vufind.org
  */
-class Factory
+class SolrMarcCorpAuthorsTest extends SolrMarcTestCase
 {
     /**
-     * Construct the RecordController.
+     * Setup
      *
-     * @param ServiceManager $sm Service manager.
-     *
-     * @return RecordController
+     * @return void
      */
-    public static function getRecordController(ServiceManager $sm)
+    public function setUp()
     {
-        return new RecordController(
-            $sm->getServiceLocator()->get('VuFind\Config')->get('config')
-        );
+        $this->initialize('marc-withcorpauthors.json');
+    }
+
+    /**
+     * TestGetAddedCorporateNames
+     *
+     * @return void
+     */
+    public function testGetAddedCorporateNames()
+    {
+        $corpNames = $this->driver->getAddedCorporateNames();
+
+        $this->assertInternalType('array', $corpNames);
+        $this->assertEquals(1, sizeof($corpNames));
+
+        $this->assertArrayHasKey('@ind1', $corpNames[0]);
+        $this->assertArrayHasKey('@ind2', $corpNames[0]);
+
+        $expect = 'Schule für Gestaltung Bern und Biel';
+        $this->assertEquals($expect, $corpNames[0]['name']);
     }
 }

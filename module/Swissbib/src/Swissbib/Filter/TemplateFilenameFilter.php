@@ -23,7 +23,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category Swissbib_VuFind2
- * @package  Controller
+ * @package  Filter
  * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
@@ -47,7 +47,7 @@ use Zend\Filter\AbstractFilter;
  * the onBootstap() method of the module class (\path\to\module\Namespace\Module.php)
  *
  * @category Swissbib_Filter
- * @package  Controller
+ * @package  Filter
  * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org
@@ -100,7 +100,7 @@ class TemplateFilenameFilter extends AbstractFilter
             $templateFilename, strpos($templateFilename, $directoryDelimiter)+7
         );
 
-        return $this->wrapContentWithComment($content, $templateFilename, '');
+        return $this->_wrapContentWithComment($content, $templateFilename);
     }
 
     /**
@@ -111,7 +111,7 @@ class TemplateFilenameFilter extends AbstractFilter
      *
      * @return String
      */
-    private function wrapContentWithComment($content, $templateFilename)
+    private function _wrapContentWithComment($content, $templateFilename)
     {
         $templateFilename = str_replace('\\', '/', $templateFilename);
         $isStartOfHtml = strstr($content, '<html') !== false

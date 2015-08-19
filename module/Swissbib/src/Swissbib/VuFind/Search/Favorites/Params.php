@@ -28,18 +28,17 @@
 
 namespace Swissbib\VuFind\Search\Favorites;
 
+use VuFind\Search\Favorites\Params as VFFavoritesParams;
+
 /**
  * Search Favorites Parameters
  *
- * @category VuFind2
+ * @category Swissbib_VuFind2
  * @package  VuFind_Search_Favorites
- * @author   Demian Katz <demian.katz@villanova.edu>
+ * @author   Guenter Hipler <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://vufind.org   Main Site
+ * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
-use VuFind\Search\Favorites\Params as VFFavoritesParams;
-
 class Params extends VFFavoritesParams
 {
 

@@ -22,9 +22,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * @category swissbib_VuFind2
+ * @category Swissbib_VuFind2
  * @package  VuFind_Search_Factory
- * @author   Fabian Erni
+ * @author   Fabian Erni <ferni@snowflake.ch>
  * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
@@ -58,6 +58,8 @@ class SolrDefaultBackendFactory extends VuFindSolrDefaultBackendFactory
      * Creating Listeners
      *
      * @param Backend $backend Backend
+     *
+     * @return void
      */
     protected function createListeners(Backend $backend)
     {
@@ -85,6 +87,8 @@ class SolrDefaultBackendFactory extends VuFindSolrDefaultBackendFactory
      * AttachHighlightSolrConfigurator
      *
      * @param Backend $backend Backend
+     *
+     * @return void
      */
     protected function attachHighlightSolrConfigurator(Backend $backend)
     {

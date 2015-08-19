@@ -110,9 +110,11 @@ class Params extends VuFindSolrParams
     {
         $auth = $this->serviceLocator->get('VuFind\AuthManager');
         $defaultSort = $this->getOptions()->getDefaultSortByHandler();
-        $this->setSort($this->handleSort(
-            $auth, $request, $defaultSort, $this->getSearchClassId()
-        ));
+        $this->setSort(
+            $this->handleSort(
+                $auth, $request, $defaultSort, $this->getSearchClassId()
+            )
+        );
     }
 
     /**
@@ -214,7 +216,8 @@ class Params extends VuFindSolrParams
          *
          * @var Manager $favoritesManger
          */
-        $favoritesManger = $this->getServiceLocator()->get('Swissbib\FavoriteInstitutions\Manager');
+        $favoritesManger = $this->getServiceLocator()
+            ->get('Swissbib\FavoriteInstitutions\Manager');
 
         /**
          * FavoriteInstitutions array
@@ -230,7 +233,7 @@ class Params extends VuFindSolrParams
                 //GH 19.12.2014: use configuration for index name
                 //more investigation for a better solution necessary
                 $backendParams->add("facet.query", "mylibrary:" . $institutionCode);
-                //$backendParams->add("bq", "institution:" . $institutionCode . "^5000");
+                //$backendParams->add("bq","institution:".$institutionCode "^5000");
             }
         }
 

@@ -411,7 +411,8 @@ class Results extends VuFindSolrResults
         $translateInfo['normalizedFieldName'] = $field;
         $translateInfo['field_domain'] = array();
 
-        $fieldToTranslate = $translateInfo['translate'] ? current($fieldToTranslateInArray) : null;
+        $fieldToTranslate = $translateInfo['translate'] ?
+            current($fieldToTranslateInArray) : null;
 
         if ($translateInfo['translate']) {
             $translateInfo['field_domain']

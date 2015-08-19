@@ -1,14 +1,14 @@
 <?php
 /**
- * Swissbib Authentication view helper
+ * SolrMarcTestCase
  *
  * PHP version 5
  *
  * Copyright (C) project swissbib, University Library Basel, Switzerland
  * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
  *
- * Date: 7/22/14
- * Time: 4:49 PM
+ * Date: 1/2/13
+ * Time: 4:09 PM
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
  * as published by the Free Software Foundation.
@@ -23,68 +23,61 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category Swissbib_VuFind2
- * @package  VuFind_View_Helper_Root
+ * @package  SwissbibTest_RecordDriver
  * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
 
-namespace Swissbib\VuFind\View\Helper\Root;
+namespace SwissbibTest\RecordDriver;
 
-use Zend\View\Exception\RuntimeException;
-use VuFind\View\Helper\Root\Auth as VFAuthHelper;
+use VuFindTest\Unit\TestCase as VuFindTestCase;
+use Swissbib\RecordDriver\SolrMarc as SolrMarcDriver;
 
 /**
- * Authentication view helper
+ * SolrMarcTestCase
  *
  * @category Swissbib_VuFind2
- * @package  VuFind_View_Helper_Root
- * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @package  SwissbibTest_RecordDriver
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://www.swissbib.org  Main Page
+ * @link     http://vufind.org
  */
-class Auth extends VFAuthHelper
+class SolrMarcTestCase extends VuFindTestCase
 {
     /**
-     * Authentication classes where Ajax Login is not possible
+     * SolrMarcDriver
      *
-     * @var array
+     * @var SolrMarcDriver
      */
-    protected $noAjaxConfig;
+    protected $driver;
 
     /**
-     * Constructor
+     * Initialize driver with fixture
      *
-     * @param \VuFind\Auth\Manager $manager      Manager
-     * @param array                $noAjaxConfig NoAjaxConfig
+     * @param String $file File
+     *
+     * @return void
      */
-    public function __construct(\VuFind\Auth\Manager $manager, array $noAjaxConfig)
+    public function initialize($file)
     {
-        parent::__construct($manager);
-        $this->noAjaxConfig = $noAjaxConfig;
+        if (!$this->driver) {
+            $this->driver = new SolrMarcDriver();
+            $fixture = $this->getFixtureData($file);
 
+            $this->driver->setRawData($fixture);
+        }
     }
 
     /**
-     * GetLoginTargets
+     * Get record fixture
      *
-     * @return \VuFind\Auth\AbstractBase
-     */
-    public function getLoginTargets()
-    {
-        return $this->getManager()->getLoginTargets();
-    }
-
-    /**
-     * IsAjaxLoginAllowed
+     * @param String $file File
      *
-     * @return bool
+     * @return Array
      */
-    public function isAjaxLoginAllowed()
+    protected function getFixtureData($file)
     {
-        return !in_array(
-            $this->getManager()->getAuthClassForTemplateRendering(),
-            $this->noAjaxConfig
-        );
+        return json_decode(file_get_contents(realpath(SWISSBIB_TEST_FIXTURES . '/' . $file)), true);
     }
 }

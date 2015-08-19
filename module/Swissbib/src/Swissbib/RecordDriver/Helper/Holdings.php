@@ -500,7 +500,6 @@ class Holdings
         }
     }
 
-
     /**
      * Set holdings structure
      *
@@ -642,7 +641,6 @@ class Holdings
 
         return $item;
     }
-
 
     /**
      * Extend item with action links based on ILS
@@ -1496,7 +1494,7 @@ class Holdings
      *
      * @return String
      *
-     * @todo   How to handle missing information. Throw exception, ignore?
+     * @todo How to handle missing information. Throw exception, ignore?
      */
     protected function buildItemId(array $holdingItem)
     {

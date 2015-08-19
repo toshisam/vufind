@@ -49,7 +49,7 @@ class SimpleTreeGenerator
      *
      * @var ObjectCache
      */
-    private $objectCache;
+    protected $objectCache;
 
     /**
      * Constructor
@@ -70,7 +70,7 @@ class SimpleTreeGenerator
      *
      * @return string
      */
-    private function generatePageTree(array &$datas, $currentNode = "",
+    protected function generatePageTree(array &$datas, $currentNode = "",
         $nestingLevel = 0
     ) {
         $tree = array();
@@ -112,7 +112,7 @@ class SimpleTreeGenerator
      *
      * @return array
      */
-    private function orderAndFilter(array $arrayList = array()) 
+    protected function orderAndFilter(array $arrayList = array())
     {
         $sorted = array();
 

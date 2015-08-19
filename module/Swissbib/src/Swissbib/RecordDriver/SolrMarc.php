@@ -451,6 +451,9 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      * the URLs consider restrictions by unions and tags defined by the client
      * of this functionality
      *
+     * @param array $globalunions GlobalUnions
+     * @param array $tags         Tags
+     *
      * @return array
      */
     public function getExtendedURLs($globalunions = array(),
@@ -656,8 +659,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * @return string
      */
+    // @codingStandardsIgnoreStart
     protected function getThumbnail_956_1()
     {
+        // @codingStandardsIgnoreEnd
         $thumbnailURL = null;
 
         $fields = $this->getMarcSubFieldMaps(
@@ -740,8 +745,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * @return string
      */
+    // @codingStandardsIgnoreStart
     protected function getThumbnail_856_1()
     {
+        // @codingStandardsIgnoreEnd
         $fields = $this->get950();
         if (!$fields) {
             return array();
@@ -788,8 +795,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * @return string
      */
+    // @codingStandardsIgnoreStart
     protected function getThumbnail_erara()
     {
+        // @codingStandardsIgnoreEnd
         $field = $this->getDOIs();
         if (!empty($field) && preg_match('/^.*e-rara/', $field['0'])) {
             $URL_thumb = 'http://www.e-rara.ch/titlepage/doi/'
@@ -1066,8 +1075,9 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     /**
      * Get corporate name (authors)
      *
-     * @todo   Implement or remove note
-     * @note   exclude: if $l == fre|eng
+     * @todo Implement or remove note
+     * @note exclude: if $l == fre|eng
+     *
      * @return Array[]
      */
     public function getMainCorporateName()
@@ -1739,8 +1749,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * @return string
      */
+    // @codingStandardsIgnoreStart
     public function getIs_hierarchy_title() 
     {
+        // @codingStandardsIgnoreEnd
         return isset($this->fields['is_hierarchy_title']) ?
             $this->fields['is_hierarchy_title'] : $this->getTitle();
     }

@@ -1,21 +1,65 @@
 <?php
+/**
+ * SolrMarcSimpleTest
+ *
+ * PHP version 5
+ *
+ * Copyright (C) project swissbib, University Library Basel, Switzerland
+ * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
+ *
+ * Date: 1/2/13
+ * Time: 4:09 PM
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @category Swissbib_VuFind2
+ * @package  SwissbibTest_RecordDriver
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org
+ */
+
 namespace SwissbibTest\RecordDriver;
 
 use Swissbib\RecordDriver\SolrMarc;
 use SwissbibTest\RecordDriver\SolrMarcTestCase;
 
 /**
- * [Description]
+ * SolrMarcSimpleTest
+ *
+ * @category Swissbib_VuFind2
+ * @package  SwissbibTest_RecordDriver
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org
  */
 class SolrMarcSimpleTest extends SolrMarcTestCase
 {
-
+    /**
+     * Setup
+     *
+     * @return void
+     */
     public function setUp()
     {
         $this->initialize('marc-simple.json');
     }
 
-
+    /**
+     * TestPrimaryAuthor
+     *
+     * @return void
+     */
     public function testPrimaryAuthor()
     {
         $primaryAuthor = $this->driver->getPrimaryAuthor(false);
@@ -26,7 +70,13 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
 
     }
 
-
+    /**
+     * TestGetUniqueId
+     *
+     * @return void
+     *
+     * @throws \Exception
+     */
     public function testGetUniqueId()
     {
         $id = $this->driver->getUniqueID();
@@ -34,7 +84,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertEquals('005378974', $id);
     }
 
-
+    /**
+     * TestGetPublicationDates
+     *
+     * @return void
+     */
     public function testGetPublicationDates()
     {
         $dates = $this->driver->getPublicationDates();
@@ -43,7 +97,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertEquals(1954, $dates[1]);
     }
 
-
+    /**
+     * TestGetSecondaryAuthors
+     *
+     * @return void
+     */
     public function testGetSecondaryAuthors()
     {
         $authors = $this->driver->getSecondaryAuthors(false);
@@ -55,7 +113,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertEquals('Herbert', $authors[0]['forname']);
     }
 
-
+    /**
+     * TestGetEdition
+     *
+     * @return void
+     */
     public function testGetEdition()
     {
         $edition = $this->driver->getEdition();
@@ -63,7 +125,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertNull($edition);
     }
 
-
+    /**
+     * TestGetGroup
+     *
+     * @return void
+     */
     public function testGetGroup()
     {
         $group = $this->driver->getGroup();
@@ -72,7 +138,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertEquals('005378974', $group);
     }
 
-
+    /**
+     * TestGetInstitutions
+     *
+     * @return void
+     */
     public function testGetInstitutions()
     {
         $institutions = $this->driver->getInstitutions();
@@ -81,7 +151,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertEquals('LUMH1', $institutions[0]);
     }
 
-
+    /**
+     * TestGetLocalTopicTerms
+     *
+     * @return void
+     */
     public function testGetLocalTopicTerms()
     {
         $terms = $this->driver->getLocalTopicalTerms();
@@ -93,7 +167,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertArrayHasKey('label', $terms[0]);
     }
 
-
+    /**
+     * TestGetHostItemEntry
+     *
+     * @return void
+     */
     public function testGetHostItemEntry()
     {
         $entry = $this->driver->getHostItemEntry();
@@ -102,7 +180,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertEquals(0, sizeof($entry));
     }
 
-
+    /**
+     * TestGetPublisher
+     *
+     * @return void
+     */
     public function testGetPublisher()
     {
         $publishers = $this->driver->getPublishers(false);
@@ -117,7 +199,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertEquals('Kassel', $publishers[0]['place']);
     }
 
-
+    /**
+     * TestGetPhysicalDescriptions
+     *
+     * @return void
+     */
     public function testGetPhysicalDescriptions()
     {
         $physicalDescriptions = $this->driver->getPhysicalDescriptions(false);
@@ -128,7 +214,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertEquals('1 Partitur', $physicalDescriptions[0]['extent'][0]);
     }
 
-
+    /**
+     * TestGetTitle
+     *
+     * @return void
+     */
     public function testGetTitle()
     {
         $title = $this->driver->getTitle();
@@ -139,7 +229,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertEquals($expect, $title);
     }
 
-
+    /**
+     * TestGetShortTitle
+     *
+     * @return void
+     */
     public function testGetShortTitle()
     {
         $title = $this->driver->getShortTitle();
@@ -149,7 +243,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertEquals($expect, $title);
     }
 
-
+    /**
+     * TestGetUnions
+     *
+     * @return void
+     */
     public function testGetUnions()
     {
         $unions = $this->driver->getUnions();
@@ -159,7 +257,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertEquals('IDSLU', $unions[0]);
     }
 
-
+    /**
+     * TestGetTitleStatementSimple
+     *
+     * @return void
+     */
     public function testGetTitleStatementSimple()
     {
         $titleSimple = $this->driver->getTitleStatement();
@@ -169,7 +271,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertEquals($expectSimple, $titleSimple);
     }
 
-
+    /**
+     * TestGetTitleStatementFull
+     *
+     * @return void
+     */
     public function testGetTitleStatementFull()
     {
         $titleFull = $this->driver->getTitleStatement(true);
@@ -181,7 +287,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertEquals($expect, $titleFull['title']);
     }
 
-
+    /**
+     * TestGetAddedCorporateNames
+     *
+     * @return void
+     */
     public function testGetAddedCorporateNames()
     {
         $corporateName = $this->driver->getAddedCorporateNames();
@@ -189,7 +299,11 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertInternalType('array', $corporateName);
     }
 
-
+    /**
+     * TestIndicators
+     *
+     * @return void
+     */
     public function testIndicators()
     {
         $terms = $this->driver->getLocalTopicalTerms();

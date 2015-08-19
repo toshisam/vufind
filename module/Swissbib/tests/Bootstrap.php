@@ -1,4 +1,34 @@
 <?php
+/**
+ * Bootstrap
+ *
+ * PHP version 5
+ *
+ * Copyright (C) project swissbib, University Library Basel, Switzerland
+ * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
+ *
+ * Date: 1/2/13
+ * Time: 4:09 PM
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @category Swissbib_VuFind2
+ * @package  SwissbibTest
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org
+ */
+
 namespace SwissbibTest;
 
 use Zend\Loader\AutoloaderFactory;
@@ -10,20 +40,47 @@ use RuntimeException;
 error_reporting(E_ALL | E_STRICT);
 chdir(__DIR__);
 
+/**
+ * Bootstrap
+ *
+ * @category Swissbib_VuFind2
+ * @package  SwissbibTest
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org
+ */
 class Bootstrap
 {
-
+    /**
+     * ServiceManager
+     *
+     * @var ServiceManager
+     */
     protected static $serviceManager;
 
+    /**
+     * Config
+     *
+     * @var Config
+     */
     protected static $config;
 
+    /**
+     * Bootstrap
+     *
+     * @var
+     */
     protected static $bootstrap;
 
-
-
+    /**
+     * Init
+     *
+     * @return void
+     */
     public static function init()
     {
-        // Load the user-defined test configuration file, if it exists; otherwise, load
+        // Load the user-defined test configuration file, if it exists;
+        // otherwise, load
         if (is_readable(__DIR__ . '/TestConfig.php')) {
             $testConfig = include __DIR__ . '/TestConfig.php';
         } else {
@@ -65,8 +122,11 @@ class Bootstrap
         static::$config         = $config;
     }
 
-
-
+    /**
+     * InitVuFind
+     *
+     * @return void
+     */
     public static function initVuFind()
     {
         define('APPLICATION_ENV', 'development');
@@ -76,25 +136,35 @@ class Bootstrap
         $loader = \Zend\Loader\AutoloaderFactory::getRegisteredAutoloader(
             \Zend\Loader\AutoloaderFactory::STANDARD_AUTOLOADER
         );
+
         $loader->registerNamespace('VuFindTest', __DIR__ . '/../../VuFind/src/VuFindTest');
     }
 
-
-
+    /**
+     * GetServiceManager
+     *
+     * @return ServiceManager
+     */
     public static function getServiceManager()
     {
         return static::$serviceManager;
     }
 
-
-
+    /**
+     * GetConfig
+     *
+     * @return Config
+     */
     public static function getConfig()
     {
         return static::$config;
     }
 
-
-
+    /**
+     * InitAutoloader
+     *
+     * @return void
+     */
     protected static function initAutoloader()
     {
         $vendorPath = static::findParentPath('vendor');
@@ -114,28 +184,37 @@ class Bootstrap
 
         AutoloaderFactory::factory(
             array(
-                                        'Zend\Loader\StandardAutoloader' => array(
-                                            'autoregister_zf' => true,
-                                            'namespaces'      => array(
-                                                __NAMESPACE__ => __DIR__ . '/' . __NAMESPACE__,
-                                            ),
-                                        ),
-                                   )
+                'Zend\Loader\StandardAutoloader' => array(
+                    'autoregister_zf' => true,
+                    'namespaces'      => array(
+                        __NAMESPACE__ => __DIR__ . '/' . __NAMESPACE__,
+                    ),
+                ),
+            )
         );
     }
 
-
-
+    /**
+     * FindParentPath
+     *
+     * @param String $path Path
+     *
+     * @return bool|string
+     */
     protected static function findParentPath($path)
     {
         $dir         = __DIR__;
         $previousDir = '.';
         while (!is_dir($dir . '/' . $path)) {
             $dir = dirname($dir);
-            if ($previousDir === $dir) { return false; 
+
+            if ($previousDir === $dir) {
+                return false;
             }
+
             $previousDir = $dir;
         }
+
         return $dir . '/' . $path;
     }
 }

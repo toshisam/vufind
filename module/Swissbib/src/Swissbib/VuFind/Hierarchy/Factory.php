@@ -2,6 +2,8 @@
 /**
  * Hierarchy Driver Factory Class
  *
+ * PHP version 5
+ *
  * Copyright (C) project swissbib, University Library Basel, Switzerland
  * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
  *

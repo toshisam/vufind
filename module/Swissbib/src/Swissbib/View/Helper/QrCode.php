@@ -44,6 +44,8 @@ use Swissbib\CRCode\QrCodeService;
 class QrCode extends AbstractHelper
 {
     /**
+     * QRCodeService
+     *
      * @var QRCodeService
      */
     protected $qrCodeService;

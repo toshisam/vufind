@@ -71,7 +71,8 @@ class JSTree extends VfJsTree implements ServiceLocatorAwareInterface
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator= $serviceLocator;
-        $this->searchService = $serviceLocator->getServiceLocator()->get('VuFind\Search');
+        $this->searchService = $serviceLocator->getServiceLocator()
+            ->get('VuFind\Search');
     }
 
     /**

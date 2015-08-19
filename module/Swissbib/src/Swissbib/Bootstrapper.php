@@ -1,4 +1,34 @@
 <?php
+/**
+ * Bootstraper
+ *
+ * PHP version 5
+ *
+ * Copyright (C) project swissbib, University Library Basel, Switzerland
+ * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
+ *
+ * Date: 9/12/13
+ * Time: 11:46 AM
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @category Swissbib_VuFind2
+ * @package  Swissbib
+ * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org
+ */
+
 namespace Swissbib;
 
 use Zend\Config\Config;
@@ -14,45 +44,72 @@ use VuFind\Auth\Manager;
 
 use Swissbib\Filter\TemplateFilenameFilter;
 
+/**
+ * Bootstraper
+ *
+ * @category Swissbib_VuFind2
+ * @package  Swissbib
+ * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org  Main Page
+ */
 class Bootstrapper
 {
-
+    /**
+     * Config
+     *
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * Bootstrap Event
+     *
+     * @var MvcEvent
+     */
     protected $event;
 
+    /**
+     * Events
+     *
+     * @var \Zend\EventManager\EventManagerInterface
+     */
     protected $events;
 
-
     /**
+     * Application
+     *
      * @var \Zend\Mvc\ApplicationInterface
      */
     protected $application;
 
     /**
+     * ServiceManager
+     *
      * @var \Zend\ServiceManager\ServiceLocatorInterface
      */
     protected $serviceManager;
 
-
     /**
-     * @param MvcEvent $event
+     * Constructor
+     *
+     * @param MvcEvent $event Bootstrap Event
      */
     public function __construct(MvcEvent $event)
     {
         $this->application = $event->getApplication();
-        $this->serviceManager    = $this->application->getServiceManager();
-
+        $this->serviceManager = $this->application->getServiceManager();
         $this->config = $this->serviceManager->get('VuFind\Config')->get('config');
-        $this->event  = $event;
+        $this->event = $event;
         $this->events = $this->application->getEventManager();
     }
 
-
-
     /**
      * Bootstrap
-     * Automatically discovers and evokes all class methods with names starting with 'init'
+     * Automatically discovers and evokes all class methods
+     * with names starting with 'init'
+     *
+     * @return void
      */
     public function bootstrap()
     {
@@ -65,14 +122,16 @@ class Bootstrapper
         }
     }
 
-
-
     /**
      * Add template path filter to filter chain
+     *
+     * @return void
      */
     protected function initFilterChain()
     {
-        if (APPLICATION_ENV == 'development' && !$this->event->getRequest() instanceof ConsoleRequest) {
+        if (APPLICATION_ENV == 'development'
+            && !$this->event->getRequest() instanceof ConsoleRequest
+        ) {
             $sm = $this->event->getApplication()->getServiceManager();
 
             $widgetFilter = new TemplateFilenameFilter();
@@ -84,22 +143,26 @@ class Bootstrapper
         }
     }
 
-
-
     /**
      * Initialize locale change
      * Save changed locale in user
+     *
+     * @return void
      */
     protected function initLocaleChange()
     {
         /**
- * @var ServiceManager $serviceLocator 
-*/
-        $serviceLocator    = $this->serviceManager;
+         * ServiceLocator
+         *
+         * @var ServiceManager $serviceLocator
+         */
+        $serviceLocator = $this->serviceManager;
         /**
- * @var Manager $authManager 
-*/
-        $authManager    = $serviceLocator->get('VuFind\AuthManager');
+         * AuthManager
+         *
+         * @var Manager $authManager
+         */
+        $authManager = $serviceLocator->get('VuFind\AuthManager');
 
         if ($authManager->isLoggedIn()) {
             $user = $authManager->isLoggedIn();
@@ -119,25 +182,33 @@ class Bootstrapper
         }
     }
 
-
-
     /**
      * Initialize translation from user settings
      * Executes later than vufind language init (vufind has priority 9000)
+     *
+     * @return void
      */
     protected function initUserLocale()
     {
         /**
- * @var ServiceManager $serviceLocator 
-*/
-        $serviceLocator    = $this->serviceManager;
+         * ServiceManager
+         *
+         * @var ServiceManager $serviceLocator
+         */
+        $serviceLocator = $this->serviceManager;
+
         /**
- * @var Manager $authManager 
-*/
+         * AuthManager
+         *
+         * @var Manager $authManager
+         */
         $authManager    = $serviceLocator->get('VuFind\AuthManager');
+
         /**
- * @var Config $config 
-*/
+         * Config
+         *
+         * @var Config $config
+         */
         $config = $this->config;
 
         if ($authManager->isLoggedIn()) {
@@ -145,16 +216,26 @@ class Bootstrapper
 
             if ($locale) {
                 /**
- * @var TranslatorImpl $translator 
-*/
+                 * Translator
+                 *
+                 * @var TranslatorImpl $translator
+                 */
                 $translator = $this->serviceManager->get('VuFind\Translator');
                 $viewModel = $serviceLocator->get('viewmanager')->getViewModel();
 
-                $callback = function ($event) use ($locale, $translator, $viewModel, $config) {
+                $callback = function ($event) use ($locale, $translator,
+                    $viewModel, $config
+                ) {
                     $request = $event->getRequest();
 
-                    if (($languageChange = $request->getPost()->get('mylang', false)) || ($languageChange = $request->getQuery()->get('lng', false)) ) {
-                        if (in_array($languageChange, array_keys($config->Languages->toArray())) ) { $locale = $languageChange; 
+                    if (($languageChange = $request->getPost()->get('mylang', false))
+                        ||($languageChange = $request->getQuery()->get('lng', false))
+                    ) {
+                        if (in_array(
+                            $languageChange,
+                            array_keys($config->Languages->toArray())
+                        )) {
+                            $locale = $languageChange;
                         }
                     }
 
@@ -167,12 +248,13 @@ class Bootstrapper
         }
     }
 
-
     /**
-     * set headers no-cache in case it is configured
+     * Set headers no-cache in case it is configured
      * we need this functionality especially after the deployment of new versions
      * with significant CSS changes
      * then we want to suppress the browser caching for a limited period of time
+     *
+     * @return void
      */
     protected function initNoCache()
     {
@@ -182,7 +264,8 @@ class Bootstrapper
         }
         $config =& $this->config;
 
-        if (isset($config->Site->header_no_cache) &&  $config->Site->header_no_cache) {
+        if (isset($config->Site->header_no_cache) &&  $config->Site->header_no_cache
+        ) {
             $callback = function ($event) {
                 $response = $event->getApplication()->getResponse();
                 //for expires use date in the past
@@ -201,10 +284,10 @@ class Bootstrapper
         }
     }
 
-
-
-    /*
+    /**
      * Set fallback locale to english
+     *
+     * @return void
      */
     protected function initTranslationFallback()
     {
@@ -217,25 +300,30 @@ class Bootstrapper
 
         $callback = function ($event) use ($baseDir) {
             /**
- * @var TranslatorImpl $translator 
-*/
-            $translator = $event->getApplication()->getServiceManager()->get('VuFind\Translator');
-            $locale     = $translator->getLocale();
-            $fallback    = 'en';
+             * Translator
+             *
+             * @var TranslatorImpl $translator
+             */
+            $translator = $event->getApplication()->getServiceManager()
+                ->get('VuFind\Translator');
+            $locale = $translator->getLocale();
+            $fallback = 'en';
             $translator->setFallbackLocale($fallback);
                 // Add file for fallback locale if not already en
             if ($locale !== $fallback) {
-                $translator->addTranslationFile('ExtendedIni', null, 'default', $fallback);
+                $translator->addTranslationFile(
+                    'ExtendedIni', null, 'default', $fallback
+                );
             }
         };
 
         $this->events->attach('dispatch', $callback, 8999);
     }
 
-
-
     /**
      * Initialize translator for custom label files
+     *
+     * @return void
      */
     protected function initSpecialTranslations()
     {
@@ -248,9 +336,12 @@ class Bootstrapper
         $callback = function ($event) use ($config) {
 
             /**
- * @var TranslatorImpl $translator 
-*/
-            $translator = $event->getApplication()->getServiceManager()->get('VuFind\Translator');
+             * Translator
+             *
+             * @var TranslatorImpl $translator
+             */
+            $translator = $event->getApplication()->getServiceManager()
+                ->get('VuFind\Translator');
             if (isset($config->TextDomains)
                 && isset($config->TextDomains->textDomains)
             ) {
@@ -264,11 +355,6 @@ class Bootstrapper
         // Attach right AFTER base translator, so it is initialized
         $this->events->attach('dispatch', $callback, 8998);
     }
-
-
-
-
-
 
     /**
      * Adds text-domain language files
@@ -298,28 +384,33 @@ class Bootstrapper
         }
     }
 
-
-
-
-
     /**
      * Add files for location translation based on tab40 data to the translator
+     *
+     * @return void
      */
     protected function initTab40LocationTranslation()
     {
         $callback = function ($event) {
             /**
- * @var ServiceManager $serviceLocator 
-*/
-            $serviceLocator    = $event->getApplication()->getServiceManager();
+             * ServiceManager
+             *
+             * @var ServiceManager $serviceLocator
+             */
+            $serviceLocator = $event->getApplication()->getServiceManager();
             /**
- * @var Translator $translator 
-*/
+             * Translator
+             *
+             * @var Translator $translator
+             */
             $translator = $serviceLocator->get('VuFind\Translator');
             /**
- * @var Config $tab40Config 
-*/
-            $tab40Config    = $serviceLocator->get('VuFind\Config')->get('config')->tab40import;
+             * Config
+             *
+             * @var Config $tab40Config
+             */
+            $tab40Config = $serviceLocator->get('VuFind\Config')
+                ->get('config')->tab40import;
 
             if ($tab40Config) {
                 $basePath        = $tab40Config->path;
@@ -327,12 +418,22 @@ class Bootstrapper
 
                     // Add all found files
                 foreach ($languageFiles as $languageFile) {
-                    list($network, $locale) = explode('-', basename($languageFile, '.ini'));
-                    //GH (26.3.2015): in the past we initialized the translator by using the absolute path of the language file
-                    //by now we have to use only the filename. At the moment I don't zhe background of this and I don't have enough
-                    // time to take a look on it. Second thing: At the moment I don't have any idea why the other structured language file
+                    list($network, $locale) = explode(
+                        '-', basename($languageFile, '.ini')
+                    );
+                    //GH (26.3.2015): in the past we initialized the translator by
+                    // using the absolute path of the language file
+                    //by now we have to use only the filename. At the moment I don't
+                    // zhe background of this and I don't have enough
+                    // time to take a look on it. Second thing: At the moment I don't
+                    // have any idea why the other structured language file
                     //of swissbib (not flat as used in VuFind) seems to work...
-                    $translator->addTranslationFile('ExtendedIni', basename($languageFile), 'location-' . $network, $locale);
+                    $translator->addTranslationFile(
+                        'ExtendedIni',
+                        basename($languageFile),
+                        'location-' . $network,
+                        $locale
+                    );
                 }
             }
         };
@@ -341,10 +442,10 @@ class Bootstrapper
         $this->events->attach('dispatch', $callback, 8997);
     }
 
-
-
     /**
      * Add log listener for missing institution translations
+     *
+     * @return void
      */
     protected function initMissingTranslationObserver()
     {
@@ -353,20 +454,32 @@ class Bootstrapper
         }
 
         /**
- * @var ServiceManager $serviceLocator 
-*/
+         * ServiceManager
+         *
+         * @var ServiceManager $serviceLocator
+         */
         $serviceLocator    = $this->event->getApplication()->getServiceManager();
+
         /**
- * @var \Swissbib\Log\Logger $logger 
-*/
+         * Logger
+         *
+         * @var \Swissbib\Log\Logger $logger
+         */
         $logger    = $serviceLocator->get('Swissbib\Logger');
+
         /**
- * @var TranslatorImpl $translator 
-*/
+         * Translator
+         *
+         * @var TranslatorImpl $translator
+         */
         $translator = $serviceLocator->get('VuFind\Translator');
 
         /**
-         * @param    Event $event
+         * Logging untranslated institutions
+         *
+         * @param Event $event
+         *
+         * @return void
          */
         $callback = function ($event) use ($logger) {
             if ($event->getParam('text_domain') === 'institution') {
@@ -378,21 +491,26 @@ class Bootstrapper
         $translator->getEventManager()->attach('missingTranslation', $callback);
     }
 
-
     /**
      * Add translation for Form Validation
+     *
+     * @return void
      */
     protected function initZendValidatorTranslations()
     {
         $callback = function ($event) {
             /**
- * @var TranslatorImpl $translator 
-*/
-            $translator = $event->getApplication()->getServiceManager()->get('VuFind\Translator');
+             * Translator
+             *
+             * @var TranslatorImpl $translator
+             */
+            $translator = $event->getApplication()->getServiceManager()
+                ->get('VuFind\Translator');
 
             $translator->addTranslationFile(
                 'phparray',
-                'vendor/zendframework/zendframework/resources/languages/' . $translator->getLocale() . '/Zend_Validate.php',
+                'vendor/zendframework/zendframework/resources/languages/' .
+                $translator->getLocale() . '/Zend_Validate.php',
                 'default',
                 $translator->getLocale()
             );
@@ -401,10 +519,10 @@ class Bootstrapper
         $this->events->attach('dispatch', $callback, 8996);
     }
 
-
-
     /**
      * Set up plugin managers.
+     *
+     * @return void
      */
     protected function initPluginManagers()
     {
@@ -425,7 +543,9 @@ class Bootstrapper
             $serviceConfig    = $config['swissbib']['plugin_managers'][$configKey];
             $className        = 'Swissbib\\' . $namespace . '\PluginManager';
 
-            $pluginManagerFactoryService = function ($sm) use ($className, $serviceConfig) {
+            $pluginManagerFactoryService = function ($sm) use (
+                $className, $serviceConfig
+            ) {
                 return new $className(
                     new \Zend\ServiceManager\Config($serviceConfig)
                 );
@@ -437,6 +557,8 @@ class Bootstrapper
 
     /**
      * Enables class loading for local composer dependencies
+     *
+     * @return void
      */
     protected function initLocalComposerDependencies()
     {
@@ -446,5 +568,4 @@ class Bootstrapper
             include $autoloadFilePath;
         }
     }
-
 }

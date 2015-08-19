@@ -51,7 +51,7 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
      */
     public function getAuthor()
     {
-        $author = $this->getField('Author', '-');
+        $author = $this->_getField('Author', '-');
 
         return is_array($author) ? implode('; ', $author) : $author;
     }
@@ -63,7 +63,7 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
      */
     public function getURI()
     {
-        return $this->getField('URI');
+        return $this->_getField('URI');
     }
 
     /**
@@ -73,7 +73,7 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
      */
     public function getLink()
     {
-        return $this->getField('link');
+        return $this->_getField('link');
     }
 
     /**
@@ -83,7 +83,7 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
      */
     public function hasDirectLink()
     {
-        return in_array('DirectLink', $this->getLinkModel());
+        return in_array('DirectLink', $this->_getLinkModel());
     }
 
     /**
@@ -93,7 +93,7 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
      */
     public function hasFulltext()
     {
-        return 1 === intval($this->getField('hasFullText'));
+        return 1 === intval($this->_getField('hasFullText'));
     }
 
     /**
@@ -123,7 +123,7 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     public function getDatabaseTitle()
     {
         $ret = '';
-        $db = $this->getField('DatabaseTitle');
+        $db = $this->_getField('DatabaseTitle');
         if (is_array($db)) {
             $ret = implode('; ', $db);
         }
@@ -317,7 +317,7 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
      *
      * @return String
      */
-    private function getField($fieldName, $fallbackValue = '')
+    private function _getField($fieldName, $fallbackValue = '')
     {
         return array_key_exists($fieldName, $this->fields) ?
             $this->fields[$fieldName] : $fallbackValue;
@@ -328,8 +328,8 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
      *
      * @return Array
      */
-    private function getLinkModel()
+    private function _getLinkModel()
     {
-        return $this->getField('LinkModel');
+        return $this->_getField('LinkModel');
     }
 }

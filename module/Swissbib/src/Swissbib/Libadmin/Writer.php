@@ -68,6 +68,8 @@ class Writer
      * null or false resets to default base path
      *
      * @param String|null $path Path
+     *
+     * @return void
      */
     protected function setBasePath($path)
     {

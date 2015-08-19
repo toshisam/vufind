@@ -62,7 +62,7 @@ class FacetItemLabel extends AbstractHelper
     /**
      * Number
      *
-     * @var  Number
+     * @var Number
      */
     protected $number;
 

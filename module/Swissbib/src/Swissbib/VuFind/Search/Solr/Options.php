@@ -30,7 +30,7 @@ namespace Swissbib\VuFind\Search\Solr;
 
 use VuFind\Search\Solr\Options as VuFindSolrOptions;
 
-/*
+/**
  * Class to extend the core VF2 SOLR functionality related to Options
  *
  * @category Swissbib_VuFind2

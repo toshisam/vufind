@@ -1,12 +1,14 @@
 <?php
 /**
- * Factory for controllers.
+ * NumberTest
  *
  * PHP version 5
  *
  * Copyright (C) project swissbib, University Library Basel, Switzerland
  * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
  *
+ * Date: 1/2/13
+ * Time: 4:09 PM
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
  * as published by the Free Software Foundation.
@@ -21,38 +23,54 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category Swissbib_VuFind2
- * @package  Controller
- * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @package  SwissbibTest_View_Helper
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
+ * @link     http://www.swissbib.org
  */
 
-namespace Swissbib\Controller;
+namespace SwissbibTest\View\Helper;
 
-use Zend\ServiceManager\ServiceManager;
+use Swissbib\View\Helper\Number;
 
 /**
- * Factory for controllers.
+ * NumberTest
  *
  * @category Swissbib_VuFind2
- * @package  Controller
- * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @package  SwissbibTest_View_Helper
+ * @author   Guenter Hipler  <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
+ * @link     http://vufind.org
  */
-class Factory
+class NumberTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Construct the RecordController.
+     * TestInvokeLarge
      *
-     * @param ServiceManager $sm Service manager.
-     *
-     * @return RecordController
+     * @return void
      */
-    public static function getRecordController(ServiceManager $sm)
+    public function testInvokeLarge()
     {
-        return new RecordController(
-            $sm->getServiceLocator()->get('VuFind\Config')->get('config')
-        );
+        $number = new Number();
+        $input = 123456;
+        $expected = '123\'456';
+        $output = $number($input);
+
+        $this->assertEquals($expected, $output);
+    }
+
+    /**
+     * TestInvokeSmall
+     *
+     * @return void
+     */
+    public function testInvokeSmall()
+    {
+        $number = new Number();
+        $input = 123;
+        $expected = '123';
+        $output = $number($input);
+
+        $this->assertEquals($expected, $output);
     }
 }
