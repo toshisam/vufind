@@ -82,16 +82,18 @@ class PluginFactory extends VuFindResultsPluginFactory
      *
      * @return object
      */
-
-    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
-    {
+    public function createServiceWithName(ServiceLocatorInterface $serviceLocator,
+        $name, $requestedName
+    ) {
         /**
          * ExtendedSolrFactoryHelper
          * 
          * @var ExtendedSolrFactoryHelper $extendedTargetHelper
          */
-        $extendedTargetHelper    = $serviceLocator->getServiceLocator()->get('Swissbib\ExtendedSolrFactoryHelper');
-        $this->defaultNamespace    = $extendedTargetHelper->getNamespace($name, $requestedName);
+        $extendedTargetHelper = $serviceLocator->getServiceLocator()
+            ->get('Swissbib\ExtendedSolrFactoryHelper');
+        $this->defaultNamespace = $extendedTargetHelper
+            ->getNamespace($name, $requestedName);
 
         return parent::createServiceWithName($serviceLocator, $name, $requestedName);
     }

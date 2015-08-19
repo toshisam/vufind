@@ -65,56 +65,56 @@ use Zend\Uri\UriFactory;
 class MyResearchController extends VuFindMyResearchController
 {
 
-  /**
-   * Show photo copy requests
-   *
-   * @return    ViewModel
-   */
-  public function photocopiesAction()
-  {
-    // Stop now if the user does not have valid catalog credentials available:
-    if (!is_array($patron = $this->catalogLogin())) {
-      return $patron;
+    /**
+     * Show photo copy requests
+     *
+     * @return ViewModel
+     */
+    public function photocopiesAction()
+    {
+        // Stop now if the user does not have valid catalog credentials available:
+        if (!is_array($patron = $this->catalogLogin())) {
+            return $patron;
+        }
+
+        /**
+         * Aleph
+         *
+         * @var Aleph $catalog
+         */
+        $catalog = $this->getILS();
+
+        // Get photo copies details:
+        $photoCopies = $catalog->getPhotocopies($patron['id']);
+
+        return $this->createViewModel(['photoCopies' => $photoCopies]);
     }
 
+
     /**
-     * Aleph
+     * Get bookings
      *
-     * @var Aleph $catalog 
+     * @return ViewModel
      */
-    $catalog = $this->getILS();
+    public function bookingsAction()
+    {
+        // Stop now if the user does not have valid catalog credentials available:
+        if (!is_array($patron = $this->catalogLogin())) {
+            return $patron;
+        }
 
-    // Get photo copies details:
-    $photoCopies = $catalog->getPhotocopies($patron['id']);
+        /**
+         * Aleph
+         *
+         * @var Aleph $catalog
+         */
+        $catalog = $this->getILS();
 
-    return $this->createViewModel(array('photoCopies' => $photoCopies));
-  }
+        // Get photo copies details:
+        $bookings = $catalog->getBookings($patron['id']);
 
-
-  /**
-   * Get bookings
-   *
-   * @return    ViewModel
-   */
-  public function bookingsAction()
-  {
-    // Stop now if the user does not have valid catalog credentials available:
-    if (!is_array($patron = $this->catalogLogin())) {
-      return $patron;
+        return $this->createViewModel(['bookings' => $bookings]);
     }
-      
-    /**
-     * Aleph
-     *
-     * @var Aleph $catalog
-     */
-    $catalog = $this->getILS();
-
-    // Get photo copies details:
-    $bookings = $catalog->getBookings($patron['id']);
-
-    return $this->createViewModel(array('bookings' => $bookings));
-  }
 
 
     /**
@@ -128,86 +128,94 @@ class MyResearchController extends VuFindMyResearchController
     }
 
 
-  /**
-   * Inject location from route
-   *
-   * @param null $params Parameters
-   *
-   * @return ViewModel
-   */
-  protected function createViewModel($params = null)
-  {
-    $viewModel = parent::createViewModel($params);
-    $viewModel->location = $this->getLocationFromRoute() ? : 'baselbern';
+    /**
+     * Inject location from route
+     *
+     * @param null $params Parameters
+     *
+     * @return ViewModel
+     */
+    protected function createViewModel($params = null)
+    {
+        $viewModel = parent::createViewModel($params);
+        $viewModel->location = $this->getLocationFromRoute() ?: 'baselbern';
 
-    return $viewModel;
-  }
-
-
-  /**
-   * (local) Search User Settings
-   *
-   * @return mixed
-   */
-  public function settingsAction()
-  {
-    $account = $this->getAuthManager();
-
-    if ($account->isLoggedIn() == false) {
-      return $this->forceLogin();
+        return $viewModel;
     }
+
 
     /**
-     * User
+     * (local) Search User Settings
      *
-     * @var User $user
+     * @return mixed
      */
-    $user = $this->getUser();
+    public function settingsAction()
+    {
+        $account = $this->getAuthManager();
 
-    if ($this->getRequest()->isPost() && $this->params()->fromPost('myResearchSettingsForm')) {
-      $language = $this->params()->fromPost('language');
-      $maxHits = $this->params()->fromPost('max_hits');
-      $defaultSort = $this->params()->fromPost('default_sort');
+        if ($account->isLoggedIn() == false) {
+            return $this->forceLogin();
+        }
 
-      $user->language = trim($language);
-      $user->max_hits = intval($maxHits);
-      $user->default_sort = serialize($defaultSort);
+        /**
+         * User
+         *
+         * @var User $user
+         */
+        $user = $this->getUser();
 
-      $user->save();
+        if ($this->getRequest()->isPost()
+            && $this->params()->fromPost(
+                'myResearchSettingsForm'
+            )
+        ) {
+            $language = $this->params()->fromPost('language');
+            $maxHits = $this->params()->fromPost('max_hits');
+            $defaultSort = $this->params()->fromPost('default_sort');
 
-      $this->flashMessenger()->setNamespace('success')->addMessage('save_settings_success');
+            $user->language = trim($language);
+            $user->max_hits = intval($maxHits);
+            $user->default_sort = serialize($defaultSort);
 
-      setcookie('language', $language, time() + 3600 * 24 * 100, '/');
+            $user->save();
 
-      return $this->redirect()->toRoute('myresearch-settings');
+            $this->flashMessenger()->setNamespace('success')->addMessage(
+                'save_settings_success'
+            );
+
+            setcookie('language', $language, time() + 3600 * 24 * 100, '/');
+
+            return $this->redirect()->toRoute('myresearch-settings');
+        }
+
+        $serviceManager = $this->event->getApplication()->getServiceManager();
+
+
+        $defaultSort = unserialize($user->default_sort);
+        $sortOptions = $this->getSortOptions($serviceManager, $defaultSort);
+
+
+        $language = $user->language;
+        $maxHits = $user->max_hits;
+
+        return new ViewModel(
+            [
+                'max_hits' => $maxHits,
+                'language' => $language,
+                'optsLanguage' => [
+                    'de' => 'Deutsch',
+                    'en' => 'English',
+                    'fr' => 'Francais',
+                    'it' => 'Italiano'
+                ],
+                'optsMaxHits' => [
+                    10, 20, 40, 60, 80, 100
+                ],
+                'defaultSort' => $sortOptions
+            ]
+        );
     }
 
-    $serviceManager = $this->event->getApplication()->getServiceManager();
-
-
-    $defaultSort = unserialize($user->default_sort);
-    $sortOptions = $this->getSortOptions($serviceManager, $defaultSort);
-
-
-    $language = $user->language;
-    $maxHits = $user->max_hits;
-
-    return new ViewModel(array(
-        'max_hits' => $maxHits,
-        'language' => $language,
-        'optsLanguage' => array(
-            'de' => 'Deutsch',
-            'en' => 'English',
-            'fr' => 'Francais',
-            'it' => 'Italiano'
-        ),
-        'optsMaxHits' => array(
-            10, 20, 40, 60, 80, 100
-        ),
-        'defaultSort' => $sortOptions
-    ));
-  }
-    
     /**
      * Creates View snippet to provide users more information
      * about the multi accounts in swissbib
@@ -220,106 +228,110 @@ class MyResearchController extends VuFindMyResearchController
     }
 
 
-  /**
-   * Catch error for not allowed list view
-   * Redirect list own lists with message
-   *
-   * @return    HttpResponse
-   */
-  public function mylistAction()
-  {
-    // Fail if lists are disabled:
-    if (!$this->listsEnabled()) {
-      throw new \Exception('Lists disabled');
-    }
-
-    // Check for "delete item" request; parameter may be in GET or POST depending
-    // on calling context.
-    $deleteId = $this->params()->fromPost(
-        'delete', $this->params()->fromQuery('delete')
-    );
-    if ($deleteId) {
-      $deleteSource = $this->params()->fromPost(
-          'source', $this->params()->fromQuery('source', 'VuFind')
-      );
-      // If the user already confirmed the operation, perform the delete now;
-      // otherwise prompt for confirmation:
-      $confirm = $this->params()->fromPost(
-          'confirm', $this->params()->fromQuery('confirm')
-      );
-      if ($confirm) {
-        $success = $this->performDeleteFavorite($deleteId, $deleteSource);
-        if ($success !== true) {
-          return $success;
+    /**
+     * Catch error for not allowed list view
+     * Redirect list own lists with message
+     *
+     * @return HttpResponse
+     *
+     * @throws \Exception
+     */
+    public function mylistAction()
+    {
+        // Fail if lists are disabled:
+        if (!$this->listsEnabled()) {
+            throw new \Exception('Lists disabled');
         }
-      } else {
-        return $this->confirmDeleteFavorite($deleteId, $deleteSource);
-      }
-    }
 
-    // If we got this far, we just need to display the favorites:
-    try {
-      $runner = $this->getServiceLocator()->get('VuFind\SearchRunner');
-
-      // We want to merge together GET, POST and route parameters to
-      // initialize our search object:
-      $request = $this->getRequest()->getQuery()->toArray()
-        + $this->getRequest()->getPost()->toArray()
-        + ['id' => $this->params()->fromRoute('id')];
-
-      // Set up listener for recommendations:
-      $rManager = $this->getServiceLocator()
-        ->get('VuFind\RecommendPluginManager');
-      $setupCallback = function ($runner, $params, $searchId) use ($rManager) {
-        $listener = new RecommendListener($rManager, $searchId);
-        $listener->setConfig(
-          $params->getOptions()->getRecommendationSettings()
+        // Check for "delete item" request; parameter may be in GET or POST depending
+        // on calling context.
+        $deleteId = $this->params()->fromPost(
+            'delete', $this->params()->fromQuery('delete')
         );
-        $listener->attach($runner->getEventManager()->getSharedManager());
-      };
+        if ($deleteId) {
+            $deleteSource = $this->params()->fromPost(
+                'source', $this->params()->fromQuery('source', 'VuFind')
+            );
+            // If the user already confirmed the operation, perform the delete now;
+            // otherwise prompt for confirmation:
+            $confirm = $this->params()->fromPost(
+                'confirm', $this->params()->fromQuery('confirm')
+            );
+            if ($confirm) {
+                $success = $this->performDeleteFavorite($deleteId, $deleteSource);
+                if ($success !== true) {
+                    return $success;
+                }
+            } else {
+                return $this->confirmDeleteFavorite($deleteId, $deleteSource);
+            }
+        }
 
-      $results = $runner->run($request, 'Favorites', $setupCallback);
+        // If we got this far, we just need to display the favorites:
+        try {
+            $runner = $this->getServiceLocator()->get('VuFind\SearchRunner');
 
-      //GH: ermoegliche die Navigation zwischen Merkliste und Fullview
-      $currentURL = $this->getRequest()->getRequestUri();
-      $this->getSearchMemory()->rememberSearch($currentURL);
+            // We want to merge together GET, POST and route parameters to
+            // initialize our search object:
+            $request = $this->getRequest()->getQuery()->toArray()
+                + $this->getRequest()->getPost()->toArray()
+                + ['id' => $this->params()->fromRoute('id')];
 
-      return $this->createViewModel(
-          array('params' => $results->getParams(), 'results' => $results)
-      );
-    } catch (ListPermissionException $e) {
-      if (!$this->getUser()) {
-        return $this->forceLogin();
-      }
-      throw $e;
-    } catch (\Exception $e) {
-      $this->flashMessenger()->setNamespace('error')->addMessage($e->getMessage());
+            // Set up listener for recommendations:
+            $rManager = $this->getServiceLocator()
+                ->get('VuFind\RecommendPluginManager');
+            $setupCallback = function ($runner, $params, $searchId) use ($rManager) {
+                $listener = new RecommendListener($rManager, $searchId);
+                $listener->setConfig(
+                    $params->getOptions()->getRecommendationSettings()
+                );
+                $listener->attach($runner->getEventManager()->getSharedManager());
+            };
 
-      $target = $this->url()->fromRoute('userList');
+            $results = $runner->run($request, 'Favorites', $setupCallback);
 
-      return $this->redirect()->toUrl($target);
+            //GH: ermoegliche die Navigation zwischen Merkliste und Fullview
+            $currentURL = $this->getRequest()->getRequestUri();
+            $this->getSearchMemory()->rememberSearch($currentURL);
+
+            return $this->createViewModel(
+                ['params' => $results->getParams(), 'results' => $results]
+            );
+        } catch (ListPermissionException $e) {
+            if (!$this->getUser()) {
+                return $this->forceLogin();
+            }
+            throw $e;
+        } catch (\Exception $e) {
+            $this->flashMessenger()->setNamespace('error')->addMessage(
+                $e->getMessage()
+            );
+
+            $target = $this->url()->fromRoute('userList');
+
+            return $this->redirect()->toUrl($target);
+        }
     }
-  }
 
 
     /**
-   * Convenience method to get a session initiator URL. Returns false if not
-   * applicable.
-   * what does "not applicable" mean:
-   * for me (GH) it makes no sense to create a session initiator instance in
-   * case we are within the normal workflow of the application
-   * (no authentication procedure in conjunction with shibboleth authentication
-   * took place) at the moment I compare the domain strings to decide if we should
-   * create a session initiator because an authentication with shibboleth tool place
-   * another possibilty might be to test the Sibboleth.sso/Session response
-   * at the moment we have to issues:
-   * a) why redirect prefix in apache session variables?
-   * b) access to the shibboleth session variables is only possible immediately
-   * after shibboleth authentication process - why?
-   * question are pending at switch
-   *
-   * @return string|bool
-   */
+     * Convenience method to get a session initiator URL. Returns false if not
+     * applicable.
+     * what does "not applicable" mean:
+     * for me (GH) it makes no sense to create a session initiator instance in
+     * case we are within the normal workflow of the application
+     * (no authentication procedure in conjunction with shibboleth authentication
+     * took place) at the moment I compare the domain strings to decide if we should
+     * create a session initiator because an authentication with shibboleth tool
+     * place another possibilty might be to test the Sibboleth.sso/Session response
+     * at the moment we have to issues:
+     * a) why redirect prefix in apache session variables?
+     * b) access to the shibboleth session variables is only possible immediately
+     * after shibboleth authentication process - why?
+     * question are pending at switch
+     *
+     * @return string|bool
+     */
     protected function getSessionInitiator()
     {
         $uri = $this->getRequest()->getUri();
@@ -329,8 +341,10 @@ class MyResearchController extends VuFindMyResearchController
         if (preg_match(
             "/$baseEscaped/",
             $this->getRequest()->getServer()->get('HTTP_REFERER')
-        ) == 0) {
+        ) == 0
+        ) {
             $url = $this->getServerUrl('myresearch-home');
+
             return $this->getAuthManager()->getSessionInitiator($url);
         } else {
             return false;
@@ -380,6 +394,7 @@ class MyResearchController extends VuFindMyResearchController
                 && !$this->inLightbox()
             ) {
                 $this->getRequest()->getPost()->set('processLogin', true);
+
                 return $this->forwardTo('MyResearch', 'Home');
             }
         }
@@ -434,7 +449,7 @@ class MyResearchController extends VuFindMyResearchController
             $options = $solrResultsManager->getParams()->getOptions();
             $defaultSort = $options->getDefaultSortByHandler();
             $defaultLimit = $options->getDefaultLimit();
-            $logoutTarget .= '&limit=' . $defaultLimit .'&sort=' . $defaultSort;
+            $logoutTarget .= '&limit=' . $defaultLimit . '&sort=' . $defaultSort;
 
         }
 
@@ -504,9 +519,10 @@ class MyResearchController extends VuFindMyResearchController
             // "Bestellvorgang" - seems to be a monster -  is stable
             // (I guess this won't happen in the future...)
             $matches = array_filter(
-                array("/swissbib\.?.*?\.ch/", "/localhost/"),
+                ["/swissbib\.?.*?\.ch/", "/localhost/"],
                 function ($pattern) use ($scheme) {
                     $matched = preg_match($pattern, $scheme);
+
                     return $matched == 1 ? true : false;
                 }
             );
@@ -528,7 +544,7 @@ class MyResearchController extends VuFindMyResearchController
         }
 
         // If we got this far, we want to store the referer:
-        $this->followup()->store(array(), $referer);
+        $this->followup()->store([], $referer);
     }
 
     /**
@@ -541,31 +557,31 @@ class MyResearchController extends VuFindMyResearchController
      */
     protected function getSortOptions(ServiceManager $serviceManager, $defaultSort)
     {
-        $sortOptions = array();
+        $sortOptions = [];
         $searchTabs = $this->getConfig()->get('SearchTabs');
         $searchOptionsPluginManager = $serviceManager
             ->get('VuFind\SearchOptionsPluginManager');
 
-        if (!$searchTabs->count() ) {
+        if (!$searchTabs->count()) {
             $config = $this->getConfig()->get('Index');
-            $sortOptions[] = array(
+            $sortOptions[] = [
                 'options' => $searchOptionsPluginManager
                     ->get($config['engine'])->getSortOptions(),
-                'engine'  => $config['engine'],
-                'selected'  => $defaultSort[$config['engine']]
-            );
+                'engine' => $config['engine'],
+                'selected' => $defaultSort[$config['engine']]
+            ];
 
             return $sortOptions;
         }
 
         foreach ($searchTabs as $searchTabEngine => $searchTabLabel) {
-            $sortOptions[] = array (
-                'engine'  => $searchTabEngine,
+            $sortOptions[] = [
+                'engine' => $searchTabEngine,
                 'options' => $searchOptionsPluginManager->get($searchTabEngine)
                     ->getSortOptions(),
-                'label'   => $searchTabLabel,
-                'selected'  => $defaultSort[$searchTabEngine]
-            );
+                'label' => $searchTabLabel,
+                'selected' => $defaultSort[$searchTabEngine]
+            ];
         }
 
         return $sortOptions;
@@ -598,11 +614,13 @@ class MyResearchController extends VuFindMyResearchController
                     $newAddress['z304-address-1'] = $address['z304-address-1'];
                     $newAddress['z304-date-from']
                         = $address['z304-date-from'] === '00000000' ?
-                            date('Ymd') : $address['z304-date-from'];
+                        date('Ymd') : $address['z304-date-from'];
                     $newAddress['z304-date-to']
-                        = $address['z304-date-to'] === '00000000' ?
-                            date('Ymd', strtotime('+10 years')) :
-                            $address['z304-date-to'];
+                        = $address['z304-date-to'] === '00000000'
+                        ?
+                        date('Ymd', strtotime('+10 years'))
+                        :
+                        $address['z304-date-to'];
 
                     $this->getILS()->changeMyAddress($patron, $newAddress);
                     $this->flashMessenger()->setNamespace('success')
@@ -626,7 +644,7 @@ class MyResearchController extends VuFindMyResearchController
 
         return $this->createViewModel(
             [
-            'form' => $addressForm
+                'form' => $addressForm
             ]
         );
     }
