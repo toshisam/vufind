@@ -468,9 +468,9 @@ class MyResearchController extends VuFindMyResearchController
     if( !$searchTabs->count() ) {
       $config = $this->getConfig()->get('Index');
       $sortOptions[] = array(
-          'options' => $searchOptionsPluginManager->get($config['engine'])->getSortOptions(),
+          'options' => $searchOptionsPluginManager->get('solr')->getSortOptions(),
           'engine'  => $config['engine'],
-          'selected'  => $defaultSort[$config['engine']]
+          'selected'  => $defaultSort['solr']
       );
 
       return $sortOptions;

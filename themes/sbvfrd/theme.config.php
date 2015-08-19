@@ -43,7 +43,7 @@ return array(
       'translateFacets'           => 'Swissbib\View\Helper\Swissbib\Factory::getFacetTranslator'
     ),
     'invokables' => array(
-      'translate' => 'Swissbib\VuFind\View\Helper\Root\Translate',
+      //'translate' => 'Swissbib\VuFind\View\Helper\Root\Translate',
     )
   )
 );
