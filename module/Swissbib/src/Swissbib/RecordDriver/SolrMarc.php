@@ -620,6 +620,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             return $path;
         } elseif ($path = $this->getThumbnail_erara()) {
             return $path;
+        } elseif ($path = $this->getThumbnail_emanuscripta()) {
+            return $path;
         }
 
         return false;
@@ -758,6 +760,25 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         return false;
     }
 
+    /**
+     * get thumbnail link from e-manuscripta-DOI (see wiki documentation)
+     *
+     * @return string
+     */
+
+    protected function getThumbnail_emanuscripta()
+    {
+        $field = $this->getDOIs();
+        if (!empty($field) && preg_match('/^.*e-manuscripta/', $field['0'])) {
+            $URL_thumb = 'http://www.e-manuscripta.ch/titlepage/doi/'
+                . $field['0']
+                . '/128';
+            return 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath='
+            . $URL_thumb
+            . '&scale=1';
+        }
+        return false;
+    }
     /**
      * Get fully mapped field 956 (local links, ADAM objects)
      *
