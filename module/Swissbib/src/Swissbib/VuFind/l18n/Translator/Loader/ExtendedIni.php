@@ -25,13 +25,13 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org   Main Site
  */
+
 namespace Swissbib\VuFind\l18n\Translator\Loader;
+
 use Zend\I18n\Exception\InvalidArgumentException,
     Zend\I18n\Translator\Loader\FileLoaderInterface,
     Zend\I18n\Translator\TextDomain,
     VuFind\I18n\Translator\Loader\ExtendedIni as VFExtendedIni;
-
-
 
 /**
  * Handles the language loading and language file parsing
@@ -49,33 +49,29 @@ class ExtendedIni extends VFExtendedIni
      * Constructor
      *
      * @param array  $pathStack      List of directories to search for language
-     * files.
+     *                               files.
      * @param string $fallbackLocale Fallback locale to use for language strings
-     * missing from selected file.
+     *                               missing from selected file.
      */
     public function __construct($pathStack = array(), $fallbackLocale = null)
     {
-
         parent::__construct($pathStack, $fallbackLocale);
-
     }
 
     /**
-     * load(): defined by LoaderInterface.
+     * Load(): defined by LoaderInterface.
      *
      * @param string $locale   Locale to read from language file
      * @param string $filename Language file to read (not used)
      *
      * @return TextDomain
+     *
      * @throws InvalidArgumentException
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function load($locale, $filename)
     {
-
         return parent::load($locale,$filename);
-
     }
-
-
 }

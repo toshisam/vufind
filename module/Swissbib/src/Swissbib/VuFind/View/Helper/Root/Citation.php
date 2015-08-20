@@ -1,6 +1,6 @@
 <?php
 /**
- * [...description of the type ...]
+ * Citation
  *
  * PHP version 5
  *
@@ -22,25 +22,37 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * @category swissbib_VuFind2
- * @package  [...package name...]
- * @author   Maechler Markus
+ * @category Swissbib_VuFind2
+ * @package  VuFind_View_Helper_Root
+ * @author   Guenter Hipler <guenter.hipler@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
+
 namespace Swissbib\VuFind\View\Helper\Root;
 
 use VuFind\View\Helper\Root\Citation as VuFindCitation;
 use VuFind\Exception\Date as DateException;
 
+/**
+ * Summon Search Options
+ *
+ * @category Swissbib_VuFind2
+ * @package  VuFind_View_Helper_Root
+ * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org  Main Page
+ */
 class Citation extends VuFindCitation
 {
-
     /**
-     * @override
+     * Invoke Citation
+     *
      * @param \VuFind\RecordDriver\Base $driver Record driver object.
      *
      * @return Citation
+     *
+     * @override
      */
     public function __invoke($driver)
     {
@@ -50,7 +62,6 @@ class Citation extends VuFindCitation
 
         return $this;
     }
-
 
     /**
      * Get Custom citation.
@@ -78,10 +89,12 @@ class Citation extends VuFindCitation
         }
     }
 
-
     /**
-     * @override
+     * GetPublisher
+     *
      * @return string
+     *
+     * @override
      */
     protected function getPublisher()
     {
@@ -95,12 +108,14 @@ class Citation extends VuFindCitation
     }
 
     /**
-     * @override
+     * GetYear
+     *
      * @return string
+     *
+     * @override
      */
     protected function getYear()
     {
         return !empty($this->details['pubDate']) ? $this->details['pubDate'] : '';
     }
-
 }
