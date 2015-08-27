@@ -1,6 +1,6 @@
 <?php
 /**
- * HierarchyTreeArchival
+ * HierarchyTree
  *
  * PHP version 5
  *
@@ -31,10 +31,10 @@
 
 namespace Swissbib\RecordTab;
 
-use VuFind\RecordTab\HierarchyTree;
+use VuFind\RecordTab\HierarchyTree as VuFindHierarchyTree;
 
 /**
- * HierarchyTreeArchival
+ * HierarchyTree
  *
  * @category Swissbib_VuFind2
  * @package  RecordTab
@@ -42,18 +42,8 @@ use VuFind\RecordTab\HierarchyTree;
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org
  */
-class HierarchyTreeArchival extends HierarchyTree
+class HierarchyTree extends VuFindHierarchyTree
 {
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return 'hierarchy_tree_archival';
-    }
-
     /**
      * IsActive
      *
@@ -65,7 +55,9 @@ class HierarchyTreeArchival extends HierarchyTree
     {
         $trees = $this->getTreeList();
 
-        return !empty($trees)
-            && $this->getRecordDriver()->getHierarchyType() === 'archival';
+        return !empty($trees) && in_array(
+            $this->getRecordDriver()->getHierarchyType(),
+            ['Default', 'series']
+        );
     }
 }

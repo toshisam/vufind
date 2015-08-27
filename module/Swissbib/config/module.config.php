@@ -285,7 +285,24 @@ return array(
                     'Description'  => 'articledetails',
                     'TOC'          => null, // Disable TOC tab
                 )
-            )
+            ),
+            'VuFind\RecordDriver\SolrMarc' => [
+                'tabs' => [
+                    'Holdings' => 'HoldingsILS',
+                    'Description' => 'Description',
+                    'TOC' => 'TOC',
+                    'UserComments' => 'UserComments',
+                    'Reviews' => 'Reviews',
+                    'Excerpt' => 'Excerpt',
+                    'Preview' => 'preview',
+                    'HierarchyTree' => 'HierarchyTree',
+                    'HierarchyTreeArchival' => 'HierarchyTreeArchival',
+                    'Map' => 'Map',
+                    'Similar' => 'SimilarItemsCarousel',
+                    'Details' => 'StaffViewMARC',
+                ],
+                'defaultTab' => null,
+            ]
         ),
         // This section contains service manager configurations for all VuFind
         // pluggable components:
@@ -351,7 +368,8 @@ return array(
                     'description'    => 'Swissbib\RecordTab\Description'
                 ),
                 'factories' => [
-                    'hierarchytree' => 'Swissbib\RecordTab\Factory::getHierarchyTree'
+                    'hierarchytree' => 'Swissbib\RecordTab\Factory::getHierarchyTree',
+                    'hierarchytreearchival' => 'Swissbib\RecordTab\Factory::getHierarchyTreeArchival'
                 ]
             ),
         )

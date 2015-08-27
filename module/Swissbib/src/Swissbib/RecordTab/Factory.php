@@ -27,7 +27,6 @@
  */
 namespace Swissbib\RecordTab;
 
-use Swissbib\RecordTab\HierarchyTree2;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -50,9 +49,23 @@ class Factory
      *
      * @return HierarchyTreeArchival
      */
-    public static function getHierarchyTree(ServiceManager $sm)
+    public static function getHierarchyTreeArchival(ServiceManager $sm)
     {
         return new HierarchyTreeArchival(
+            $sm->getServiceLocator()->get('VuFind\Config')->get('config')
+        );
+    }
+
+    /**
+     * Factory for HierarchyTree tab plugin.
+     *
+     * @param ServiceManager $sm Service manager.
+     *
+     * @return HierarchyTreeArchival
+     */
+    public static function getHierarchyTree(ServiceManager $sm)
+    {
+        return new HierarchyTree(
             $sm->getServiceLocator()->get('VuFind\Config')->get('config')
         );
     }
