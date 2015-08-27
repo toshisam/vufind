@@ -332,6 +332,7 @@ return array(
             'hierarchy_driver'         => array(
                 'factories' => array(
                     'series' => 'Swissbib\VuFind\Hierarchy\Factory::getHierarchyDriverSeries',
+                    'archival' => 'Swissbib\VuFind\Hierarchy\Factory::getHierarchyDriverArchival',
                 )
             ),
             'hierarchy_treedatasource' =>  array(
@@ -348,7 +349,10 @@ return array(
                 'invokables' => array(
                     'articledetails' => 'Swissbib\RecordTab\ArticleDetails',
                     'description'    => 'Swissbib\RecordTab\Description'
-                )
+                ),
+                'factories' => [
+                    'hierarchytree' => 'Swissbib\RecordTab\Factory::getHierarchyTree'
+                ]
             ),
         )
     ),
