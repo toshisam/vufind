@@ -534,8 +534,8 @@ class MyResearchController extends VuFindMyResearchController
             }
         }
 
-    // If we got this far, we want to store the referer:
-    $this->followup()->store(array(), $referer);
+        // If we got this far, we want to store the referer:
+        $this->followup()->store(array(), $referer);
     }
 
 

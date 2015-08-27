@@ -72,6 +72,6 @@ class ExtendedIni extends VFExtendedIni
      */
     public function load($locale, $filename)
     {
-        return parent::load($locale,$filename);
+        return parent::load($locale, $filename);
     }
 }
