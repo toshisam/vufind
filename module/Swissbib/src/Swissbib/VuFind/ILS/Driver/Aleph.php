@@ -1129,8 +1129,8 @@ post_xml=<?xml version="1.0"?>
     <sub-author>{$sub_author}</sub-author>
     <sub-title>{$sub_title}</sub-title>
     <pages>{$pages}</pages>
-    <note1>{$note1}</note1>
-    <note2>{$note2}</note2>
+    <note-1>{$note1}</note-1>
+    <note-2>{$note2}</note-2>
 </photo-request-parameters>
 EOT;
 

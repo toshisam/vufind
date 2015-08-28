@@ -40,7 +40,8 @@ return array(
       'layoutClass'               => 'Swissbib\View\Helper\Swissbib\Factory::getLayoutClass',
       'searchtabs'                => 'Swissbib\View\Helper\Swissbib\Factory::getSearchTabs',
       'includeTemplate'           => 'Swissbib\View\Helper\Swissbib\Factory::getIncludeTemplate',
-      'translateFacets'           => 'Swissbib\View\Helper\Swissbib\Factory::getFacetTranslator'
+      'translateFacets'           => 'Swissbib\View\Helper\Swissbib\Factory::getFacetTranslator',
+      'formatRelatedEntries'      => 'Swissbib\View\Helper\Swissbib\Factory::getFormatRelatedEntries',
     ),
     'invokables' => array(
       //'translate' => 'Swissbib\VuFind\View\Helper\Root\Translate',

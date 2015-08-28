@@ -33,11 +33,11 @@
 
 namespace Swissbib\RecordDriver;
 
+use Zend\Filter\Null;
 use Zend\I18n\Translator\TranslatorInterface as Translator;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use VuFind\RecordDriver\SolrMarc as VuFindSolrMarc;
 use Swissbib\RecordDriver\Helper\Holdings as HoldingsHelper;
-use Zend\XmlRpc\Value\Boolean;
 
 /**
  * SolrDefaultAdapter
@@ -87,10 +87,12 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         'l' => 'language',
         '_n' => 'number_of_parts', // R
         'q' => 'fullername',
-        'D' => 'forname',
+        'D' => 'forename',
         't' => 'title_of_work',
+        '4' => 'relator_code',
         '_8' => 'extras',
-        '9' => 'unknownNumber'
+        '9' => 'unknownNumber',
+        'P' => 'originField', // swissbib specific subfield, indicates original tag of park field. Only in use for field 950
     ];
 
     /**
@@ -121,7 +123,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         '3' => 'materials_specified',
         '4' => 'relator_code',
         '5' => 'institution',
-        '_8' => 'label'
+        '_8' => 'label',
+        'P' => 'originField', // swissbib specific subfield, indicates original tag of park field. Only in use for field 950
     ];
 
     /**
@@ -144,14 +147,13 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * @var Array
      */
-    protected $partsOfDescription = array(
-        'ISBNs', 'ISSNs', 'ISMNs', 'DOIs', 'URNs', 'AllSubjectVocabularies',
-        'Series', 'AltTitle', 'NewerTitles', 'PreviousTitles', 'GeneralNotes',
-        'DissertationNotes', 'BibliographyNotes', 'AccessRestrictions',
-        'ProductionCredits', 'OriginalTitle', 'PerformerNote', 'Awards',
-        'CitationNotes', 'OriginalVersionNotes', 'CopyNotes', 'SystemDetails',
-        'RelationshipNotes'
-    );
+    protected $partsOfDescription = [
+        'ISBNs', 'ISSNs', 'ISMNs', 'DOIs', 'URNs', 'AllSubjectVocabularies', 'Series', 'AltTitle', 'NewerTitles',
+        'PreviousTitles', 'GeneralNotes', 'DissertationNotes', 'BibliographyNotes', 'PublicationFrequency',
+        'AccessRestrictions', 'ProductionCredits', 'OriginalTitle', 'PerformerNote', 'Awards', 'CitationNotes',
+        'ContResourceDates', 'OriginalVersionNotes', 'CopyNotes', 'SystemDetails', 'RelationshipNotes',
+        'HierarchicalPlaceNames', 'RelatedEntries',
+    ];
 
     /**
      * Constructor
@@ -1005,7 +1007,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
         if ($asString) {
             $name = isset($data['name']) ? $data['name'] : '';
-            $name .= isset($data['forname']) ? ', ' . $data['forname'] : '';
+            $name .= isset($data['forename']) ? ', ' . $data['forename'] : '';
 
             return trim($name);
         }
@@ -1029,7 +1031,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
             foreach ($authors as $author) {
                 $name = isset($author['name']) ? $author['name'] : '';
-                $forename = isset($author['forname']) ? $author['forname'] : '';
+                $forename = isset($author['forename']) ? $author['forename'] : '';
                 $stringAuthors[] = trim($name . ', ' . $forename);
             }
 
@@ -1096,7 +1098,43 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
-     * Get sub title
+     * Get entries for related personal and corporate entries
+     *
+     * @return array
+     */
+    public function getRelatedEntries()
+    {
+        $related = explode(',', $this->mainConfig->RelatedEntries->related);
+
+        $related_persons = array_filter(
+            $this->getMarcSubFieldMaps('700', $this->personFieldMap),
+            function($field) use ($related) {
+                return isset($field['relator_code'])
+                    && in_array($field['relator_code'], $related);
+            }
+        );
+
+        $related_corporations = array_filter(
+            $this->getMarcSubFieldMaps('710', $this->corporationFieldMap),
+            function($field) use ($related) {
+                return isset($field['relator_code'])
+                    && in_array($field['relator_code'], $related);
+            }
+        );
+
+        if ($related_persons || $related_corporations) {
+            return [
+                'persons' => $related_persons,
+                'corporations' => $related_corporations,
+            ];
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
+     * Get subtitle
      *
      * @param Boolean $full Get full field data. Else only field c is fetched
      *
