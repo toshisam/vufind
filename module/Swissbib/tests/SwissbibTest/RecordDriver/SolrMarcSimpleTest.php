@@ -62,7 +62,7 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
 
         $this->assertInternalType('array', $primaryAuthor);
         $this->assertEquals('Telemann', $primaryAuthor['name']);
-        $this->assertEquals('Georg Philipp', $primaryAuthor['forname']);
+        $this->assertEquals('Georg Philipp', $primaryAuthor['forename']);
 
     }
 
@@ -106,7 +106,7 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $this->assertEquals(2, sizeof($authors));
 
         $this->assertEquals('Kölbel', $authors[0]['name']);
-        $this->assertEquals('Herbert', $authors[0]['forname']);
+        $this->assertEquals('Herbert', $authors[0]['forename']);
     }
 
     /**
@@ -118,7 +118,7 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
     {
         $edition = $this->driver->getEdition();
 
-        $this->assertNull($edition);
+        $this->assertFalse($edition);
     }
 
     /**

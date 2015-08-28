@@ -184,7 +184,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * @return String
      */
-    public function getOpenURL()
+    public function getOpenURL($overrideSupportsOpenUrl = false)
     {
         // get the coinsID from config.ini or default to swissbib.ch
         $coinsID = $this->mainConfig->OpenURL->rfr_id;
@@ -405,7 +405,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         ];
 
         foreach ($fieldsToCheck as $field => $subfields) {
-            $urls = $this->marcRecord->getFields($field);
+            $urls = $this->getMarcRecord()->getFields($field);
             if ($urls) {
                 foreach ($urls as $url) {
                     // Is there an address in the current field?
@@ -485,7 +485,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         }
 
         foreach ($fieldsToCheck as $field => $subfields) {
-            $urls = $this->marcRecord->getFields($field);
+            $urls = $this->getMarcRecord()->getFields($field);
             if ($urls) {
                 foreach ($urls as $url) {
                     // Is there an address in the current field?
@@ -546,7 +546,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     ) {
         $retValues = [];
 
-        $localValues = $this->marcRecord->getFields('950');
+        $localValues = $this->getMarcRecord()->getFields('950');
         if ($localValues) {
             foreach ($localValues as $localValue) {
                 // what are tags and source code?
@@ -981,7 +981,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getPublicationDates()
     {
         // Get field 008 fixed field code
-        $code = $this->marcRecord->getField('008')->getData();
+        $code = $this->getMarcRecord()->getField('008')->getData();
 
         // Get parts
         $dateType = substr($code, 6, 1);
@@ -1840,7 +1840,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         $index = sprintf('%03d', $index);
 
-        return $this->marcRecord->getField($index);
+        return $this->getMarcRecord()->getField($index);
     }
 
     /**
@@ -1855,7 +1855,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         $index = sprintf('%03d', $index);
 
-        return $this->marcRecord->getFields($index);
+        return $this->getMarcRecord()->getFields($index);
     }
 
     /**
@@ -1871,7 +1871,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         $index = sprintf('%03d', $index);
         $subFieldValues = [];
-        $field = $this->marcRecord->getField($index);
+        $field = $this->getMarcRecord()->getField($index);
 
         if ($field) {
             $subFieldValues = $this->getMappedFieldData($field, $fieldMap);
@@ -1894,7 +1894,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         $includeIndicators = true
     ) {
         $subFieldsValues = [];
-        $fields = $this->marcRecord->getFields($index);
+        $fields = $this->getMarcRecord()->getFields($index);
 
         foreach ($fields as $field) {
             $subFieldsValues[] = $this->getMappedFieldData(
@@ -1969,7 +1969,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
          *
          * @var \File_MARC_Data_Field[] $fields
          */
-        $fields = $this->marcRecord->getFields($index);
+        $fields = $this->getMarcRecord()->getFields($index);
         $fieldsData = [];
 
         foreach ($fields as $field) {
