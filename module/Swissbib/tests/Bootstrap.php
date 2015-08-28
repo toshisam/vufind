@@ -77,11 +77,9 @@ class Bootstrap
      */
     public static function init()
     {
-        echo PHP_EOL;
         // Load the user-defined test configuration file, if it exists;
         // otherwise, load
         if (is_readable(__DIR__ . '/TestConfig.php')) {
-            echo "is_readable " . PHP_EOL;
             $testConfig = include __DIR__ . '/TestConfig.php';
         } else {
             $testConfig = include __DIR__ . '/TestConfig.php.dist';
@@ -94,7 +92,6 @@ class Bootstrap
             foreach ($modulePaths as $modulePath) {
                 if (($path = static::findParentPath($modulePath))) {
                     $zf2ModulePaths[] = $path;
-                    echo "module paths: " . $path . PHP_EOL;
                 }
             }
         }
@@ -118,8 +115,6 @@ class Bootstrap
         $serviceManager = new ServiceManager(new ServiceManagerConfig());
         $serviceManager->setService('ApplicationConfig', $config);
         $serviceManager->get('ModuleManager')->loadModules();
-
-        echo "servicemanager ready: " . PHP_EOL;
 
         static::$serviceManager = $serviceManager;
         static::$config         = $config;
@@ -175,8 +170,6 @@ class Bootstrap
             $loader->add('VuFindTest', __DIR__ . '/../../VuFind/src/VuFindTest');
 
             $loader->register();
-
-            echo "initautoloader is_readable: " . PHP_EOL;
         } else {
             throw new RuntimeException('Unable initialize autoloading.');
         }
@@ -202,9 +195,6 @@ class Bootstrap
 
             $previousDir = $dir;
         }
-
-
-        echo "findParentPath: " . $dir . '/' . $path . PHP_EOL;
 
         return $dir . '/' . $path;
     }
