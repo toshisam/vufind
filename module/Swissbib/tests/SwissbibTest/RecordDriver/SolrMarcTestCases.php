@@ -77,6 +77,10 @@ class SolrMarcTestCase extends VuFindTestCase
      */
     protected function getFixtureData($file)
     {
-        return json_decode(file_get_contents(realpath(SWISSBIB_TEST_FIXTURES . '/' . $file)), true);
+        return json_decode(
+            file_get_contents(realpath(SWISSBIB_TEST_FIXTURES . '/' . $file)),
+            true
+        );
     }
+
 }
