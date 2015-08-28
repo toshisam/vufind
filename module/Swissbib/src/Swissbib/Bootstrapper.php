@@ -226,8 +226,8 @@ class Bootstrapper
                 ) {
                     $request = $event->getRequest();
 
-                    if (($languageChange = $request->getPost()->get('mylang', false))
-                        || ($languageChange = $request->getQuery()->get('lng', false))
+                    if ($languageChange = $request->getPost()->get('mylang', false)
+                        || $languageChange = $request->getQuery()->get('lng', false)
                     ) {
                         if (in_array(
                             $languageChange,

@@ -91,7 +91,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         '4' => 'relator_code',
         '_8' => 'extras',
         '9' => 'unknownNumber',
-        'P' => 'originField', // swissbib specific subfield, indicates original tag of park field. Only in use for field 950
+        'P' => 'originField', //swissbib specific subfield, indicates
+                              //original tag of park field. Only in use for field 950
     ];
 
     /**
@@ -123,7 +124,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         '4' => 'relator_code',
         '5' => 'institution',
         '_8' => 'label',
-        'P' => 'originField', // swissbib specific subfield, indicates original tag of park field. Only in use for field 950
+        'P' => 'originField', // swissbib specific subfield, indicates
+                              //original tag of park field. Only in use for field 950
     ];
 
     /**
@@ -147,11 +149,13 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      * @var Array
      */
     protected $partsOfDescription = [
-        'ISBNs', 'ISSNs', 'ISMNs', 'DOIs', 'URNs', 'AllSubjectVocabularies', 'Series', 'AltTitle', 'NewerTitles',
-        'PreviousTitles', 'GeneralNotes', 'DissertationNotes', 'BibliographyNotes', 'PublicationFrequency',
-        'AccessRestrictions', 'ProductionCredits', 'OriginalTitle', 'PerformerNote', 'Awards', 'CitationNotes',
-        'ContResourceDates', 'OriginalVersionNotes', 'CopyNotes', 'SystemDetails', 'RelationshipNotes',
-        'HierarchicalPlaceNames', 'RelatedEntries',
+        'ISBNs', 'ISSNs', 'ISMNs', 'DOIs', 'URNs', 'AllSubjectVocabularies',
+        'Series', 'AltTitle', 'NewerTitles', 'PreviousTitles', 'GeneralNotes',
+        'DissertationNotes', 'BibliographyNotes', 'PublicationFrequency',
+        'AccessRestrictions', 'ProductionCredits', 'OriginalTitle', 'PerformerNote',
+        'Awards', 'CitationNotes', 'ContResourceDates', 'OriginalVersionNotes',
+        'CopyNotes', 'SystemDetails', 'RelationshipNotes', 'HierarchicalPlaceNames',
+        'RelatedEntries',
     ];
 
     /**
@@ -1105,7 +1109,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
         $related_persons = array_filter(
             $this->getMarcSubFieldMaps('700', $this->personFieldMap),
-            function($field) use ($related) {
+            function ($field) use ($related) {
                 return isset($field['relator_code'])
                     && in_array($field['relator_code'], $related);
             }
@@ -1113,7 +1117,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
         $related_corporations = array_filter(
             $this->getMarcSubFieldMaps('710', $this->corporationFieldMap),
-            function($field) use ($related) {
+            function ($field) use ($related) {
                 return isset($field['relator_code'])
                     && in_array($field['relator_code'], $related);
             }
@@ -1529,8 +1533,9 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                         }
                     }
 
+                    $indexFieldIndicator2 = $indexField->getIndicator(2);
                     if (isset($vocabConfig['ind'])
-                        && $indexField->getIndicator(2) == (string)$vocabConfig['ind']
+                        && $indexFieldIndicator2 == (string)$vocabConfig['ind']
                     ) {
                         // is there a field check required?
                         if (isset($vocabConfig['field'])) {
