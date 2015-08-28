@@ -1,7 +1,0 @@
-<phpunit bootstrap="Bootstrap.php" backupGlobals="false">
-	<testsuites>
-		<testsuite name="SwissbibTest">
-			<directory>.</directory>
-		</testsuite>
-	</testsuites>
-</phpunit>

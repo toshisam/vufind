@@ -16,6 +16,6 @@ before_script:
 
 script:
   - phpunit --stderr --configuration module/VuFind/tests/phpunit.xml
-  - phpunit --stderr --debug --verbose --configuration module/Swissbib/tests/phpunit.xml.dist
+  - phpunit --stderr --debug --verbose --configuration module/Swissbib/tests/phpunit.xml
 #  - phpcs --standard=PEAR --ignore=*/config/*,*/tests/* --extensions=php $PWD/module
 #  - phing php-cs-fixer-dryrun
