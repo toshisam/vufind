@@ -201,8 +201,4 @@ class Bootstrap
     }
 }
 
-echo PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL . "init" . PHP_EOL . PHP_EOL . PHP_EOL;
-
 Bootstrap::init();
-
-echo PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL . "init" . PHP_EOL . PHP_EOL . PHP_EOL;
