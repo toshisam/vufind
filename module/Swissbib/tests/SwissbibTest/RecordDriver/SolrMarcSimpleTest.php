@@ -148,22 +148,6 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
     }
 
     /**
-     * TestGetLocalTopicTerms
-     *
-     * @return void
-     */
-    public function testGetLocalTopicTerms()
-    {
-        $terms = $this->driver->getLocalTopicalTerms();
-
-        $this->assertInternalType('array', $terms);
-        $this->assertEquals(2, sizeof($terms));
-
-        $this->assertEquals('Konzerte', $terms[0]['term']);
-        $this->assertArrayHasKey('label', $terms[0]);
-    }
-
-    /**
      * TestGetHostItemEntry
      *
      * @return void
@@ -187,12 +171,7 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
 
         $this->assertInternalType('array', $publishers);
         $this->assertEquals(1, sizeof($publishers));
-
-        $this->assertArrayHasKey('place', $publishers[0]);
-        $this->assertArrayHasKey('name', $publishers[0]);
-        $this->assertArrayHasKey('date', $publishers[0]);
-
-        $this->assertEquals('Kassel', $publishers[0]['place']);
+        $this->assertEquals('Bärenreiter', $publishers[0]);
     }
 
     /**
@@ -206,8 +185,8 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
 
         $this->assertInternalType('array', $physicalDescriptions);
         $this->assertEquals(1, sizeof($physicalDescriptions));
-        $this->assertArrayHasKey('extent', $physicalDescriptions[0]);
-        $this->assertEquals('1 Partitur', $physicalDescriptions[0]['extent'][0]);
+        $this->assertArrayHasKey('1extent', $physicalDescriptions[0]);
+        $this->assertEquals('1 Partitur', $physicalDescriptions[0]['1extent']);
     }
 
     /**
@@ -293,23 +272,5 @@ class SolrMarcSimpleTest extends SolrMarcTestCase
         $corporateName = $this->driver->getAddedCorporateNames();
 
         $this->assertInternalType('array', $corporateName);
-    }
-
-    /**
-     * TestIndicators
-     *
-     * @return void
-     */
-    public function testIndicators()
-    {
-        $terms = $this->driver->getLocalTopicalTerms();
-        $first = $terms[0];
-
-        $this->assertInternalType('array', $first);
-        $this->assertArrayHasKey('@ind1', $first);
-        $this->assertArrayHasKey('@ind2', $first);
-
-        $this->assertEquals('L', $first['@ind1']);
-        $this->assertEquals('A', $first['@ind2']);
     }
 }

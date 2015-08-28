@@ -81,6 +81,6 @@ class PhysicalDescriptionsTest extends \PHPUnit_Framework_TestCase
         $result = $desc($data);
 
         $this->assertInternalType('string', $result);
-        $this->assertEquals('a; b; c', $result);
+        $this->assertEquals('a ; b ; c ; x', $result);
     }
 }
