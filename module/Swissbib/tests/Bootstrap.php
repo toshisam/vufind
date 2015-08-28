@@ -100,10 +100,6 @@ class Bootstrap
         $zf2ModulePaths = implode(PATH_SEPARATOR, $zf2ModulePaths) . PATH_SEPARATOR;
         $zf2ModulePaths .= getenv('ZF2_MODULES_TEST_PATHS') ?: (defined('ZF2_MODULES_TEST_PATHS') ? ZF2_MODULES_TEST_PATHS : '');
 
-
-        echo PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL;
-        echo "init" . PHP_EOL;
-
         static::initAutoloader();
 
         // use ModuleManager to load this module and it's dependencies
@@ -113,7 +109,7 @@ class Bootstrap
             ],
         ];
 
-        self::initVuFind();
+        self::initEnvironment();
 
         $config = ArrayUtils::merge($baseConfig, $testConfig);
 
@@ -123,8 +119,6 @@ class Bootstrap
 
         static::$serviceManager = $serviceManager;
         static::$config         = $config;
-
-        echo PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL;
     }
 
     /**
@@ -132,23 +126,10 @@ class Bootstrap
      *
      * @return void
      */
-    public static function initVuFind()
+    public static function initEnvironment()
     {
         define('APPLICATION_ENV', 'development');
         define('SWISSBIB_TEST_FIXTURES', realpath(__DIR__ . '/fixtures'));
-
-
-        echo "SWISSBIB_TEST_FIXTURES: " . realpath(__DIR__ . '/fixtures') . PHP_EOL;
-
-        // Setup autoloader for VuFindTest classes
-        /*
-        $loader = \Zend\Loader\AutoloaderFactory::getRegisteredAutoloader(
-            \Zend\Loader\AutoloaderFactory::STANDARD_AUTOLOADER
-        );
-*/
-      //  $loader->registerNamespace('VuFindTest', __DIR__ . '/../../VuFind/src/VuFindTest');
-
-        echo "VuFindTest: " . __DIR__ . '/../../VuFind/src/VuFindTest' . PHP_EOL;
     }
 
     /**
@@ -180,45 +161,19 @@ class Bootstrap
     {
         $vendorPath = static::findParentPath('vendor');
 
-        echo "vendorPath: {$vendorPath}" . PHP_EOL;
-
         if (is_readable($vendorPath . '/autoload.php')) {
+            include $vendorPath . '/autoload.php';
 
-            echo "is_readable: true" . PHP_EOL;
-
-            $loader = include $vendorPath . '/autoload.php';
             $loader = new \Composer\Autoload\ClassLoader();
             $loader->add('VuFindTest', __DIR__ . '/../../VuFind/tests/unit-tests/src');
             $loader->add('VuFindTest', __DIR__ . '/../../VuFind/src');
             $loader->add('SwissbibTest', __DIR__ . '/');
             $loader->add('VuFindTest', __DIR__ . '/../../VuFind/src/VuFindTest');
+
             $loader->register();
         } else {
-            $zf2Path = getenv('ZF2_PATH') ?: (defined('ZF2_PATH') ? ZF2_PATH : (is_dir($vendorPath . '/ZF2/library') ? $vendorPath . '/ZF2/library' : false));
-
-            echo "zf2Path: {$zf2Path}" . PHP_EOL;
-
-
-            if (!$zf2Path) {
-                throw new RuntimeException('Unable to load ZF2. Run `php composer.phar install` or define a ZF2_PATH environment variable.');
-            }
-
-            include $zf2Path . '/Zend/Loader/AutoloaderFactory.php';
+            throw new RuntimeException('Unable initialize autoloading.');
         }
-
-
-        echo "dir namespace: " . __DIR__ . '/' . __NAMESPACE__ . PHP_EOL;
-/*
-        AutoloaderFactory::factory(
-            [
-                'Zend\Loader\StandardAutoloader' => [
-                    'autoregister_zf' => true,
-                    'namespaces'      => [
-                        __NAMESPACE__ => __DIR__ . '/' . __NAMESPACE__,
-                    ],
-                ],
-            ]
-        );*/
     }
 
     /**
