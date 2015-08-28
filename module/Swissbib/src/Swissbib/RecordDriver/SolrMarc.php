@@ -184,6 +184,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      * Wrapper for getOpenURL()
      * Set flag to get special values from getFormats()
      *
+     * @param boolean $overrideSupportsOpenUrl OverrideSupportsOpenUrl
+     *
      * @see getFormats()
      *
      * @return String

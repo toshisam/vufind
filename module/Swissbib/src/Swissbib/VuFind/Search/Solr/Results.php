@@ -155,9 +155,9 @@ class Results extends VuFindSolrResults
 
                     $currentSettings['isApplied'] = $this->getParams()
                         ->hasFilter($facetGroupName . ":" . $queryFacet['value'])
-                                || $this->getParams()->hasFilter(
-                                    "~" . $facetGroupName . ":" . $queryFacet['value']
-                                );
+                            || $this->getParams()->hasFilter(
+                                "~" . $facetGroupName . ":" . $queryFacet['value']
+                            );
 
                     $currentSettings['count'] = $queryFacet['count'];
                     $currentSettings['value'] = $queryFacet['value'];
@@ -313,10 +313,10 @@ class Results extends VuFindSolrResults
         if ($translateInfo['translate']) {
             $translateInfo['field_domain']
                 = strstr($fieldToTranslate, ':') === false ?
-                    [$field] :
-                    [$field,substr(
-                        $fieldToTranslate, strpos($fieldToTranslate, ':') + 1
-                    )];
+            [$field] :
+            [$field,substr(
+                $fieldToTranslate, strpos($fieldToTranslate, ':') + 1
+            )];
 
             //normalizedFieldName contains only the fieldname without any colons as
             // seperator for the domain name (it's handy)

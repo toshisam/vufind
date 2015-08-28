@@ -187,12 +187,16 @@ class Factory
     }
 
     /**
+     * GetFormatRelatedEntries
+     *
      * @param ServiceManager $sm Service manager.
      *
      * @return FormatRelatedEntries
      */
     public static function getFormatRelatedEntries(ServiceManager $sm)
     {
-        return new FormatRelatedEntries($sm->getServiceLocator()->get('VuFind\Translator'));
+        return new FormatRelatedEntries(
+            $sm->getServiceLocator()->get('VuFind\Translator')
+        );
     }
 }

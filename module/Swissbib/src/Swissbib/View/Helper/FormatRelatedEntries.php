@@ -42,7 +42,8 @@ use Zend\View\Helper\AbstractHelper;
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-class FormatRelatedEntries extends AbstractHelper {
+class FormatRelatedEntries extends AbstractHelper
+{
     /**
      * Translator
      *
