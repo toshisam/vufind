@@ -100,6 +100,10 @@ class Bootstrap
         $zf2ModulePaths = implode(PATH_SEPARATOR, $zf2ModulePaths) . PATH_SEPARATOR;
         $zf2ModulePaths .= getenv('ZF2_MODULES_TEST_PATHS') ?: (defined('ZF2_MODULES_TEST_PATHS') ? ZF2_MODULES_TEST_PATHS : '');
 
+
+        echo PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL;
+        echo "init" . PHP_EOL;
+
         static::initAutoloader();
 
         // use ModuleManager to load this module and it's dependencies
@@ -131,13 +135,17 @@ class Bootstrap
         define('APPLICATION_ENV', 'development');
         define('SWISSBIB_TEST_FIXTURES', realpath(__DIR__ . '/fixtures'));
 
+
+        echo "SWISSBIB_TEST_FIXTURES: " . realpath(__DIR__ . '/fixtures') . PHP_EOL;
+
         // Setup autoloader for VuFindTest classes
         $loader = \Zend\Loader\AutoloaderFactory::getRegisteredAutoloader(
             \Zend\Loader\AutoloaderFactory::STANDARD_AUTOLOADER
         );
 
         $loader->registerNamespace('VuFindTest', __DIR__ . '/../../VuFind/src/VuFindTest');
-        $loader->registerNamespace('SwissbibTest', __DIR__ . '/SwissbibTest');
+
+        echo "VuFindTest: " . __DIR__ . '/../../VuFind/src/VuFindTest' . PHP_EOL;
     }
 
     /**
@@ -169,20 +177,28 @@ class Bootstrap
     {
         $vendorPath = static::findParentPath('vendor');
 
+        echo "vendorPath: {$vendorPath}" . PHP_EOL;
+
         if (is_readable($vendorPath . '/autoload.php')) {
+
+            echo "is_readable: true" . PHP_EOL;
+
             $loader = include $vendorPath . '/autoload.php';
         } else {
             $zf2Path = getenv('ZF2_PATH') ?: (defined('ZF2_PATH') ? ZF2_PATH : (is_dir($vendorPath . '/ZF2/library') ? $vendorPath . '/ZF2/library' : false));
+
+            echo "zf2Path: {$zf2Path}" . PHP_EOL;
+
 
             if (!$zf2Path) {
                 throw new RuntimeException('Unable to load ZF2. Run `php composer.phar install` or define a ZF2_PATH environment variable.');
             }
 
             include $zf2Path . '/Zend/Loader/AutoloaderFactory.php';
-
         }
 
-        echo "dir: " . __DIR__ . '/' . __NAMESPACE__;
+
+        echo "dir namespace: " . __DIR__ . '/' . __NAMESPACE__ . PHP_EOL;
 
         AutoloaderFactory::factory(
             [
