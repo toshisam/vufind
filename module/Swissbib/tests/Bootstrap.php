@@ -137,6 +137,7 @@ class Bootstrap
         );
 
         $loader->registerNamespace('VuFindTest', __DIR__ . '/../../VuFind/src/VuFindTest');
+        $loader->registerNamespace('SwissbibTest', __DIR__ . '/SwissbibTest');
     }
 
     /**
