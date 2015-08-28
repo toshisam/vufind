@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\RecordDriver\Helper;
 
 use Zend\Config\Config;
@@ -75,15 +74,15 @@ abstract class CustomizedMethods
      *
      * @return mixed
      */
-    protected function callMethod($methodName, $key, array $arguments = array())
+    protected function callMethod($methodName, $key, array $arguments = [])
     {
         $customMethod    = $methodName . strtoupper($key);
         $baseMethod      = $methodName . 'Base';
 
         if (method_exists($this, $customMethod)) {
-            return call_user_func_array(array($this, $customMethod), $arguments);
+            return call_user_func_array([$this, $customMethod], $arguments);
         } elseif (method_exists($this, $baseMethod)) {
-            return call_user_func_array(array($this, $baseMethod), $arguments);
+            return call_user_func_array([$this, $baseMethod], $arguments);
         } else {
             return $this->missingMethod($methodName, $key, $arguments);
         }
@@ -117,7 +116,7 @@ abstract class CustomizedMethods
     protected function templateString($string, array $data, $addBraces = true)
     {
         if ($addBraces) {
-            $newData    = array();
+            $newData    = [];
             foreach ($data as $key => $value) {
                 $newData['{' . $key . '}'] = $value;
             }
@@ -177,7 +176,7 @@ abstract class CustomizedMethods
      */
     protected function getConfigList($configKey, $trim = true, $delimiter = ',')
     {
-        $data = array();
+        $data = [];
 
         if ($this->config->offsetExists($configKey)) {
             $configValue = $this->config->get($configKey);

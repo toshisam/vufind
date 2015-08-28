@@ -133,7 +133,7 @@ class SpellingProcessor
         //at the moment not used by swissbib (maybe the blacklist - not used terms
         // like and / or / not .. but should be handled by the search engine
 
-        return array();
+        return [];
     }
 
     /**
@@ -200,7 +200,7 @@ class SpellingProcessor
             );
         }
         $limit = $this->getSpellingLimit();
-        $suggestions = array();
+        $suggestions = [];
         foreach ($info['suggestion'] as $suggestion) {
             if (count($suggestions) >= $limit) {
                 break;
@@ -245,7 +245,7 @@ class SpellingProcessor
      */
     public function processSuggestions($suggestions, $query, Params $params)
     {
-        $returnArray = array();
+        $returnArray = [];
         foreach ($suggestions as $term => $details) {
             // Find out if our suggestion is part of a token
             $inToken = false;
@@ -309,10 +309,10 @@ class SpellingProcessor
                 $label = $replacement;
             }
             // Basic spelling suggestion data
-            $returnArray[$targetTerm]['suggestions'][$label] = array(
+            $returnArray[$targetTerm]['suggestions'][$label] = [
                 'freq' => $freq,
                 'new_term' => $replacement
-            );
+            ];
 
             // Only generate expansions if enabled in config
             if ($this->expand) {

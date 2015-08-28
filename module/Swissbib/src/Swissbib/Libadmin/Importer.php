@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Libadmin;
 
 use Zend\Cache\Storage\StorageInterface;
@@ -220,7 +219,6 @@ class Importer implements ServiceLocatorAwareInterface
             return $this->result->addError($e->getMessage());
         }
 
-
         if ($this->result->isSuccess()) {
             $this->result->addSuccess(
                 'Import for MapPortal successfully completed at ' . date('r')
@@ -322,7 +320,7 @@ class Importer implements ServiceLocatorAwareInterface
      */
     protected function storeGroupLabels(array $data)
     {
-        $translations = array();
+        $translations = [];
         $writer       = new LibadminWriter();
         $status       = true;
 
@@ -366,11 +364,11 @@ class Importer implements ServiceLocatorAwareInterface
     protected function storeGroupInstitutionRelations(array $data)
     {
         $writer    = new LibadminWriter(LOCAL_OVERRIDE_DIR . '/config/vufind');
-        $relations = array(
-            'institutions' => array(),
-            'groups'       => array()
-        );
-        $institutionRaw    = array();
+        $relations = [
+            'institutions' => [],
+            'groups'       => []
+        ];
+        $institutionRaw    = [];
         $status    = true;
 
         foreach ($data as $group) {
@@ -382,10 +380,10 @@ class Importer implements ServiceLocatorAwareInterface
                     //Build a sort key but prevent duplications when
                     // invalid position values are provided
                 $sortKey = $institution['position'] . '_' . $institution['id'];
-                $institutionRaw[$sortKey] = array(
+                $institutionRaw[$sortKey] = [
                     'institution' => $institution['bib_code'],
                     'group'       => $group['group']['code']
-                );
+                ];
             }
         }
 
@@ -417,8 +415,6 @@ class Importer implements ServiceLocatorAwareInterface
         return $status;
     }
 
-
-
     /**
      * Store favorite institutions as config file
      *
@@ -430,7 +426,7 @@ class Importer implements ServiceLocatorAwareInterface
     {
         $writer = new LibadminWriter(LOCAL_OVERRIDE_DIR . '/config/vufind');
         $status = true;
-        $favorites = array();
+        $favorites = [];
 
         foreach ($data as $group) {
             foreach ($group['institutions'] as $institution) {
@@ -481,7 +477,7 @@ class Importer implements ServiceLocatorAwareInterface
     protected function storeInstitutionField(
         array $data, $type, $fieldName, $fieldKey = 'bib_code'
     ) {
-        $translations = array();
+        $translations = [];
         $writer       = new LibadminWriter();
         $status       = true;
 
@@ -522,7 +518,7 @@ class Importer implements ServiceLocatorAwareInterface
      *
      * @return void
      */
-    protected function downloadAndStoreAllInstitutionData() 
+    protected function downloadAndStoreAllInstitutionData()
     {
         $this->downloadAllInstitutions = true;
         $this->getData();
@@ -550,7 +546,7 @@ class Importer implements ServiceLocatorAwareInterface
         }
 
         $client = new HttpClient($url);
-        $client->setOptions(array('sslverifypeer' => false));
+        $client->setOptions(['sslverifypeer' => false]);
 
         if (!empty($this->config->user) && !empty($this->config->password)) {
             $client->setAuth($this->config->user, $this->config->password);

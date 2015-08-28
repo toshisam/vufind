@@ -28,11 +28,9 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\VuFind\View\Helper\Root;
 
 use VuFind\View\Helper\Root\Citation as VuFindCitation;
-use VuFind\Exception\Date as DateException;
 
 /**
  * Summon Search Options
@@ -73,11 +71,11 @@ class Citation extends VuFindCitation
      */
     public function getCitationCustom()
     {
-        $custom = array(
+        $custom = [
             'title' => $this->getAPATitle(),
             'authors' => $this->getAPAAuthors(),
             'edition' => $this->getEdition()
-        );
+        ];
 
         // Behave differently for books vs. journals:
         $partial = $this->getView()->plugin('partial');

@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\VuFind\Search\Helper;
 
 use VuFind\Auth\Manager;
@@ -102,14 +101,12 @@ trait PersonalSettingsHelper
             return;
         }
 
-
         if ($view == 'rss' && $defaultLimit < 50) {
             $defaultLimit = 50;
         }
 
         // If we got this far, setting was missing or invalid; load the default
         $this->limit = $defaultLimit;
-
 
     }
 

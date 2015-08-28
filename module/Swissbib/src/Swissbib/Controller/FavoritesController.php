@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Controller;
 
 use Zend\View\Model\ViewModel;
@@ -65,10 +64,10 @@ class FavoritesController extends BaseController
             $favoriteManager->setInstitutionsDownloaded();
         }
 
-        $data = array(
+        $data = [
             'autocompleterData'     => $autocompleterData,
             'userInstitutionsList'    => $this->getUserInstitutionsList()
-        );
+        ];
 
         //facetquery   ->>> facet.query=institution:z01
 
@@ -85,7 +84,7 @@ class FavoritesController extends BaseController
      */
     public function addAction()
     {
-        $institutionCode= $this->params()->fromPost('institution');
+        $institutionCode = $this->params()->fromPost('institution');
         $sendList        = !!$this->params()->fromPost('list');
 
         if ($institutionCode) {
@@ -128,7 +127,7 @@ class FavoritesController extends BaseController
     public function getSelectionList()
     {
         return $this->getAjaxViewModel(
-            array('userInstitutionsList' => $this->getUserInstitutionsList()),
+            ['userInstitutionsList' => $this->getUserInstitutionsList()],
             'favorites/selectionList'
         );
     }
@@ -189,7 +188,7 @@ class FavoritesController extends BaseController
     protected function getAutocompleterData()
     {
         $availableInstitutions = $this->getAvailableInstitutions();
-        $data = array();
+        $data = [];
         $translator = $this->getServiceLocator()->get('VuFind\Translator');
 
         foreach ($availableInstitutions as $institutionCode => $additionalInfo) {

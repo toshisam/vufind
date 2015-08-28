@@ -26,11 +26,9 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\I18n\View\Helper\AbstractTranslatorHelper;
-use QRCode\Service\QRCode as QRCodeService;
 
 /**
  * Build holding qr code url
@@ -64,7 +62,7 @@ class QrCodeHolding extends AbstractTranslatorHelper
             $this->qrCodeHelper = $this->getView()->plugin('qrCode');
         }
 
-        $data = array();
+        $data = [];
 
         if (!empty($recordTitle)) {
             $data[] = $recordTitle;
@@ -86,11 +84,11 @@ class QrCodeHolding extends AbstractTranslatorHelper
 
         return $this->getView()->render(
             'Holdings/qr-code',
-            array(
+            [
                  'item' => $item,
                  'url'  => $qrCodeUrl,
                  'text' => $text
-            )
+            ]
         );
     }
 }

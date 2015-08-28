@@ -31,7 +31,6 @@
 namespace Swissbib\VuFind\Search\Solr;
 
 use VuFind\Search\Solr\InjectSpellingListener as VFSpellingListener;
-use VuFindSearch\Service;
 use Zend\EventManager\EventInterface;
 use VuFindSearch\ParamBag;
 use VuFindSearch\Backend\Solr\Response\Json\Spellcheck;
@@ -102,7 +101,7 @@ class InjectSwissbibSpellingListener  extends VFSpellingListener
      */
     protected function aggregateSpellcheck(Spellcheck $spellcheck, $query)
     {
-        foreach ( $this->dictionaries as $dictionary) {
+        foreach ($this->dictionaries as $dictionary) {
             $params = new ParamBag();
 
             $params->set('spellcheck', 'true');

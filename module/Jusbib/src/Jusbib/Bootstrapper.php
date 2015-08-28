@@ -27,11 +27,9 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Jusbib;
 
 use Zend\Mvc\MvcEvent;
-use VuFind\Config\Reader as ConfigReader;
 
 /**
  * Jusbib Bootstrapper
@@ -90,9 +88,9 @@ class Bootstrapper
         $config         = $app->getConfig();
 
         // Use naming conventions to set up a bunch of services based on namespace:
-        $namespaces = array(
+        $namespaces = [
             'VuFind\Search\Results','VuFind\Search\Options', 'VuFind\Search\Params'
-        );
+        ];
 
         foreach ($namespaces as $namespace) {
             $plainNamespace    = str_replace('\\', '', $namespace);

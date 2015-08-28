@@ -28,18 +28,15 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace SwissbibTest\VuFindSearch\Backend\Summon;
 
-use \PHPUnit_Framework_TestCase;
+use PHPUnit_Framework_TestCase;
 
-use \SerialsSolutions\Summon\Zend2 as Connector;
-use \SerialsSolutions_Summon_Query as Query;
+use SerialsSolutions\Summon\Zend2 as Connector;
+use SerialsSolutions_Summon_Query as Query;
 
-use \Zend\Config\Config;
-use \Zend\Config\Reader\Ini;
-
-use \VuFindSearch\Backend\Summon\Backend;
+use Zend\Config\Config;
+use Zend\Config\Reader\Ini;
 
 /**
  * BackendTest
@@ -99,4 +96,4 @@ class BackendTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue(count($result['documents']) > 0, "More than zero documents found.");
     }
-} 
+}

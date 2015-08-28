@@ -28,10 +28,8 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Controller;
 
-use Zend\Mvc\Exception;
 use Zend\View\Model\ViewModel;
 
 use Swissbib\RecordDriver\SolrMarc;
@@ -72,7 +70,7 @@ class HoldingsController extends BaseController
         try {
             $holdingsData = $record->getInstitutionHoldings($institution);
         } catch (\Exception $e) {
-            $holdingsData = array();
+            $holdingsData = [];
         }
 
         $holdingsData['record'] = $idRecord;
@@ -130,9 +128,9 @@ class HoldingsController extends BaseController
         $admCode = $dummyHoldingItem['adm_code'];
         $bib = $dummyHoldingItem['bib_library'];
         $resourceFilters = $catalog->getResourceFilters($resourceId);
-        $extendingOptions = array(
+        $extendingOptions = [
             'availability' => false
-        );
+        ];
 
         // Add missing data to holding items
         foreach ($holdingItems as $index => $holdingItem) {
@@ -147,7 +145,7 @@ class HoldingsController extends BaseController
             );
         }
 
-        $data = array(
+        $data = [
             'items'         => $holdingItems,
             'record'        => $idRecord,
             'recordTitle'   => $record->getTitle(),
@@ -157,12 +155,12 @@ class HoldingsController extends BaseController
             'volume'        => $volume,
             'filters'       => $resourceFilters,
             'total'         => $totalItems, // for paging
-            'baseUrlParams' => array(
+            'baseUrlParams' => [
                 'institution' => $institution,
                 'record'      => $idRecord,
                 'resource'    => $resourceId
-            )
-        );
+            ]
+        ];
 
         return $this->getAjaxViewModel($data, 'Holdings/holding-holding-items');
     }

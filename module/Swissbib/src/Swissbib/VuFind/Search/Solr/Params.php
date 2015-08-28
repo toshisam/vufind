@@ -25,7 +25,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org  Main Page
  */
-
 namespace Swissbib\VuFind\Search\Solr;
 
 use VuFind\Search\Solr\Params as VuFindSolrParams;
@@ -50,9 +49,9 @@ class Params extends VuFindSolrParams
      *
      * @var array
      */
-    protected $dateRange = array(
+    protected $dateRange = [
         'isActive' => false
-    );
+    ];
 
     /**
      * Override to prevent problems with namespace

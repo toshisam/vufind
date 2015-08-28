@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Favorites;
 
 use Zend\Cache\Storage\StorageInterface;
@@ -73,7 +72,7 @@ class DataSource
         StorageInterface $cache, ConfigManager $configManager
     ) {
         $this->cache        = $cache;
-        $this->configManager= $configManager;
+        $this->configManager = $configManager;
     }
 
     /**

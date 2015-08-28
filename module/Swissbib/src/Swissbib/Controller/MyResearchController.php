@@ -28,19 +28,14 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Controller;
 
 use VuFind\Search\RecommendListener;
 use VuFind\Exception\ILS;
 use VuFind\ILS\Driver\AlephRestfulException;
 use VuFindSearch\Service;
-use Zend\Form\Annotation\AnnotationBuilder;
-use Zend\Form\Element;
 use Zend\Form\Form;
 use Zend\ServiceManager\ServiceManager;
-use Zend\Session\Storage\SessionStorage;
-use Zend\Validator\EmailAddress;
 use Zend\View\Model\ViewModel,
     Zend\Http\Response as HttpResponse,
     VuFind\Controller\MyResearchController as VuFindMyResearchController,
@@ -64,7 +59,6 @@ use Zend\Uri\UriFactory;
  */
 class MyResearchController extends VuFindMyResearchController
 {
-
     /**
      * Show photo copy requests
      *
@@ -89,7 +83,6 @@ class MyResearchController extends VuFindMyResearchController
 
         return $this->createViewModel(['photoCopies' => $photoCopies]);
     }
-
 
     /**
      * Get bookings
@@ -116,7 +109,6 @@ class MyResearchController extends VuFindMyResearchController
         return $this->createViewModel(['bookings' => $bookings]);
     }
 
-
     /**
      * Get location parameter from route
      *
@@ -126,7 +118,6 @@ class MyResearchController extends VuFindMyResearchController
     {
         return $this->params()->fromRoute('location', false);
     }
-
 
     /**
      * Inject location from route
@@ -142,7 +133,6 @@ class MyResearchController extends VuFindMyResearchController
 
         return $viewModel;
     }
-
 
     /**
      * (local) Search User Settings
@@ -190,10 +180,8 @@ class MyResearchController extends VuFindMyResearchController
 
         $serviceManager = $this->event->getApplication()->getServiceManager();
 
-
         $defaultSort = unserialize($user->default_sort);
         $sortOptions = $this->getSortOptions($serviceManager, $defaultSort);
-
 
         $language = $user->language;
         $maxHits = $user->max_hits;
@@ -226,7 +214,6 @@ class MyResearchController extends VuFindMyResearchController
     {
         return $this->createViewModel();
     }
-
 
     /**
      * Catch error for not allowed list view
@@ -312,7 +299,6 @@ class MyResearchController extends VuFindMyResearchController
             return $this->redirect()->toUrl($target);
         }
     }
-
 
     /**
      * Convenience method to get a session initiator URL. Returns false if not
@@ -432,7 +418,6 @@ class MyResearchController extends VuFindMyResearchController
             $logoutTarget = rtrim($logoutTarget, '?');
         }
 
-
         if (count(preg_grep('/Search\/Results|Summon\/Search/', [$logoutTarget])) > 0
         ) {
             //GH: It might happen (depends on context) that limit and sort query
@@ -456,7 +441,6 @@ class MyResearchController extends VuFindMyResearchController
         return $this->redirect()
             ->toUrl($this->getAuthManager()->logout($logoutTarget));
     }
-
 
     /**
      * User login action -- clear any previous follow-up information prior to
@@ -535,10 +519,8 @@ class MyResearchController extends VuFindMyResearchController
         }
 
         // If we got this far, we want to store the referer:
-        $this->followup()->store(array(), $referer);
+        $this->followup()->store([], $referer);
     }
-
-
 
     /**
      * Sort Options

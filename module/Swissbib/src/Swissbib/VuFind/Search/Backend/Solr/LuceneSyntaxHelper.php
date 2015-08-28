@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\VuFind\Search\Backend\Solr;
 
 use VuFindSearch\Backend\Solr\LuceneSyntaxHelper as VFCoreLuceneSyntaxHelper;
@@ -58,7 +57,7 @@ class LuceneSyntaxHelper extends VFCoreLuceneSyntaxHelper
         // wasn't found because of the special character copied from Wikipedia
         //will be converted to:
         //"Das medizinische Berlin Ein Stadtführer durch 300 Jahre Geschichte"
-        $patterns = array("/\xE2\x80\x93/");
+        $patterns = ["/\xE2\x80\x93/"];
         //in case you want more patterns to remove
         //$patterns = array("/\xE2\x80\x93/", "/Das/");
 

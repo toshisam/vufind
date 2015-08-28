@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Services;
 
 /**
@@ -54,7 +53,7 @@ class RedirectProtocolWrapper
      *
      * @param Config $config VuFindConfig
      */
-    public function __construct($config) 
+    public function __construct($config)
     {
         $this->vfConfig = $config;
     }
@@ -67,7 +66,7 @@ class RedirectProtocolWrapper
      *
      * @return String
      */
-    public function getWrappedURL($url) 
+    public function getWrappedURL($url)
     {
         $wrapper = $this->vfConfig->Content->redirectProtocolWrapper;
 
@@ -76,9 +75,9 @@ class RedirectProtocolWrapper
             // group parts of the QUERY_STRING correctly
             $url = preg_replace("/&/", "ESCAPED_AND_PERCENT", $url);
             $url = $this->vfConfig->Content->redirectProtocolWrapper . "?" .
-                "targetURL=" . $url ;
+                "targetURL=" . $url;
         }
 
         return $url;
     }
-} 
+}

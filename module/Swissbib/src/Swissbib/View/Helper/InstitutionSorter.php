@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
@@ -47,7 +46,7 @@ class InstitutionSorter extends AbstractHelper
      *
      * @var Array List of institutions. BibCode is the key, position the value
      */
-    protected $institutions = array();
+    protected $institutions = [];
 
     /**
      * Initialize with institution list
@@ -69,7 +68,7 @@ class InstitutionSorter extends AbstractHelper
      */
     public function sortInstitutions(array $institutions, $extended = false)
     {
-        $sorted         = array();
+        $sorted         = [];
         $missingCounter = 2000;
 
             // No sorting for single institution

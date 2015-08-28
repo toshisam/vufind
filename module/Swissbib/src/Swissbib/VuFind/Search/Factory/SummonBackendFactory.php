@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\VuFind\Search\Factory;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -35,8 +34,6 @@ use Zend\Http\Client as HttpClient;
 
 use VuFind\Search\Factory\SummonBackendFactory as SummonBackendFactoryBase;
 use SerialsSolutions\Summon\Zend2 as Connector;
-
-use Swissbib\TargetsProxy\TargetsProxy;
 
 /**
  * Factory for Summon backends.
@@ -106,9 +103,9 @@ class SummonBackendFactory extends SummonBackendFactoryBase
         $client  = $this->serviceLocator->get('VuFind\Http')->createClient();
         $timeout = isset($this->summonConfig->General->timeout) ?
             $this->summonConfig->General->timeout : 30;
-        $client->setOptions(array('timeout' => $timeout));
+        $client->setOptions(['timeout' => $timeout]);
 
-        $connector = new Connector($id, $key, array(), $client);
+        $connector = new Connector($id, $key, [], $client);
         $connector->setLogger($this->logger);
 
         return $connector;
@@ -127,10 +124,10 @@ class SummonBackendFactory extends SummonBackendFactoryBase
         $targetsProxy->setSearchClass('Summon');
         $proxyDetected = $targetsProxy->detectTarget();
         if ($proxyDetected !== false) {
-            return array(
+            return [
                 'apiId'  => $targetsProxy->getTargetApiId(),
                 'apiKey' => $targetsProxy->getTargetApiKey()
-            );
+            ];
         }
         return false;
     }

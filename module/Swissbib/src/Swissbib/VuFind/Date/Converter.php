@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\VuFind\Date;
 
 use VuFind\Date\Converter as VFConverter;
@@ -56,20 +55,20 @@ class Converter extends VFConverter
     public function convert($inputFormat, $outputFormat, $dateString)
     {
         // default return format of DateTime::getLastErrors()
-        $getErrors = array(
+        $getErrors = [
             'warning_count' => 0,
-            'warnings' => array(),
+            'warnings' => [],
             'error_count' => 0,
-            'errors' => array()
-        );
+            'errors' => []
+        ];
 
         // For compatibility with PHP 5.2.x, we have to restrict the input formats
         // to a fixed list...  but we'll check to see if we have access to PHP 5.3.x
         // before failing if we encounter an input format that isn't whitelisted.
-        $validFormats = array(
+        $validFormats = [
             "m-d-Y", "m-d-y", "m/d/Y", "m/d/y", "U", "m-d-y H:i", "Y-m-d",
             "Y-m-d H:i"
-        );
+        ];
         $isValid = in_array($inputFormat, $validFormats);
         if ($isValid) {
             if ($inputFormat == 'U') {

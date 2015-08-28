@@ -27,7 +27,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\RecordDriver\Helper;
 
 use Zend\Config\Config;
@@ -156,7 +155,6 @@ class LocationMap extends LocationMapBase
         } else {
             $b500_param = $item['signature'];
         }
-
 
         return $this->buildSimpleLocationMapLink($mapLinkPattern, $b500_param);
     }

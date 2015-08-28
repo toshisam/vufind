@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\RecordDriver\Helper;
 
 use Zend\Config\Config;
@@ -149,11 +148,11 @@ class Availability
     protected function fetch($url)
     {
         $client = new HttpClient(
-            $url, array(
+            $url, [
             'timeout'      => 3
-            )
+            ]
         );
-        $client->setOptions(array('sslverifypeer' => false));
+        $client->setOptions(['sslverifypeer' => false]);
 
         /**
          * HttpResponse

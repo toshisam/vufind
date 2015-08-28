@@ -61,4 +61,4 @@ class TypeLabelMappingHelper
 
         return 'All_Fields';
     }
-} 
+}

@@ -25,7 +25,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:hierarchy_components Wiki
  */
-
 namespace Swissbib\VuFind\Search\Results;
 
 use Swissbib\VuFind\Search\Favorites\Results;

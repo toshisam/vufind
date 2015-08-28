@@ -28,11 +28,7 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace SwissbibTest\RecordDriver;
-
-use Swissbib\RecordDriver\SolrMarc;
-use SwissbibTest\RecordDriver\SolrMarcTestCase;
 
 /**
  * SolrMarcSubjectVocabulariesTest

@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
@@ -83,7 +82,7 @@ class HierarchyCacheController extends AbstractActionController
          */
         $solrResults = $this->getServiceLocator()
             ->get('VuFind\SearchResultsPluginManager')->get('Solr');
-        $hierarchies = $solrResults->getFullFieldFacets(array('hierarchy_top_id'));
+        $hierarchies = $solrResults->getFullFieldFacets(['hierarchy_top_id']);
 
         foreach ($hierarchies['hierarchy_top_id']['data']['list'] as $hierarchy) {
             if ($verbose) {
@@ -107,12 +106,12 @@ class HierarchyCacheController extends AbstractActionController
 
                 $treeDataSource->getXML(
                     $hierarchy['value'],
-                    array('refresh' => true)
+                    ['refresh' => true]
                 );
             }
         }
 
         return "Building of hierarchy cache finished. Created " .
-            ($counter-1) . " cache files\n";
+            ($counter - 1) . " cache files\n";
     }
 }

@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\Form\View\Helper\AbstractHelper;
@@ -122,7 +121,7 @@ class AvailabilityInfo extends AbstractHelper
          */
         if (is_array($availability)) {
             $statusfield = self::LOOK_ON_SITE;
-            $borrowinginformation = array();
+            $borrowinginformation = [];
 
             foreach ($availability as $barcode => $availinfo) {
                 $statusfield = $availinfo["statusfield"];

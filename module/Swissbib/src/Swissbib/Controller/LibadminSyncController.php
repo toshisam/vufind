@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
@@ -82,7 +81,7 @@ class LibadminSyncController extends AbstractActionController
             $importer = $this->getServiceLocator()
                 ->get('Swissbib\Libadmin\Importer');
             $result   = $importer->import($dryRun);
-            $hasErrors= $result->hasErrors();
+            $hasErrors = $result->hasErrors();
         } catch (ServiceNotCreatedException $e) {
                 // handle service exception
             echo "- Fatal error\n";
@@ -141,7 +140,7 @@ class LibadminSyncController extends AbstractActionController
             $importer = $this->getServiceLocator()
                 ->get('Swissbib\Libadmin\Importer');
             $result   = $importer->importMapPortalData($path);
-            $hasErrors= $result->hasErrors();
+            $hasErrors = $result->hasErrors();
         } catch (ServiceNotCreatedException $e) {
             // handle service exception
             echo "- Fatal error\n";

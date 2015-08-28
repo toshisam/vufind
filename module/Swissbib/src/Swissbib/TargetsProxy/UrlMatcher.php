@@ -26,10 +26,7 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\TargetsProxy;
-
-use Swissbib\Libadmin\Exception\Exception;
 
 /**
  * UrlMatcher - detect whether (hostname of) URL matches patterns
@@ -58,10 +55,10 @@ class UrlMatcher
      *
      * @return Boolean
      */
-    public function isMatching($host, array $hostPatterns = array())
+    public function isMatching($host, array $hostPatterns = [])
     {
         foreach ($hostPatterns as $hostPattern) {
-            if (!empty($hostPattern) && strstr($hostPattern, $host)!== false ) {
+            if (!empty($hostPattern) && strstr($hostPattern, $host) !== false) {
                 return true;
             }
         }
@@ -69,5 +66,3 @@ class UrlMatcher
         return false;
     }
 }
-
-?>

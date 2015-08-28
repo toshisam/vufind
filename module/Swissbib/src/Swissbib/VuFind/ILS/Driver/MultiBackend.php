@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\VuFind\ILS\Driver;
 
 use VuFind\ILS\Driver\MultiBackend as VFMultiBackend,
@@ -53,14 +52,14 @@ class MultiBackend extends VFMultiBackend
      *
      * @return array
      */
-    public function getBookings($id) 
+    public function getBookings($id)
     {
         $source = $this->getSource($id);
         $driver = $this->getDriver($source);
         if ($driver) {
             return $driver->getBookings($this->getLocalId($id));
         }
-        return array();
+        return [];
     }
 
     /**
@@ -70,14 +69,14 @@ class MultiBackend extends VFMultiBackend
      *
      * @return array
      */
-    public function getPhotoCopies($id) 
+    public function getPhotoCopies($id)
     {
         $source = $this->getSource($id);
         $driver = $this->getDriver($source);
         if ($driver) {
             return $driver->getPhotoCopies($this->getLocalId($id));
         }
-        return array();
+        return [];
     }
 
     /**
@@ -90,7 +89,7 @@ class MultiBackend extends VFMultiBackend
      *
      * @return array
      */
-    public function getAllowedActionsForItem($patronId, $id, $group, $bib) 
+    public function getAllowedActionsForItem($patronId, $id, $group, $bib)
     {
         $source = $this->getSource($patronId);
         $driver = $this->getDriver($source);
@@ -100,7 +99,7 @@ class MultiBackend extends VFMultiBackend
                 $this->getLocalId($patronId), $id, $group, $bib
             );
         }
-        return array();
+        return [];
     }
 
     /**
@@ -111,7 +110,7 @@ class MultiBackend extends VFMultiBackend
      *
      * @return array
      */
-    public function getRequiredDate($patron, $holdInfo=null) 
+    public function getRequiredDate($patron, $holdInfo = null)
     {
         $id = $patron['id'];
         $source = $this->getSource($id);
@@ -121,7 +120,7 @@ class MultiBackend extends VFMultiBackend
             return $driver->getRequiredDate($patron, $holdInfo);
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -194,7 +193,7 @@ class MultiBackend extends VFMultiBackend
         $year = 0,
         $volume = 0,
         $numItems = 10,
-        array $extraRestParams = array() 
+        array $extraRestParams = []
     ) {
         $source = $this->getSource($resourceId);
         $driver = $this->getDriver($source);
@@ -206,7 +205,7 @@ class MultiBackend extends VFMultiBackend
                 $year,
                 $volume,
                 $numItems,
-                $extraRestParams 
+                $extraRestParams
             );
         }
     }
@@ -246,7 +245,7 @@ class MultiBackend extends VFMultiBackend
      *
      * @return mixed
      */
-    public function getResourceFilters($resourceId) 
+    public function getResourceFilters($resourceId)
     {
         $source = $this->getSource($resourceId);
         $driver = $this->getDriver($source);
@@ -264,7 +263,7 @@ class MultiBackend extends VFMultiBackend
      *
      * @return string Source
      */
-    public function getSource($id, $delimiter = '') 
+    public function getSource($id, $delimiter = '')
     {
         return parent::getSource($id, $delimiter = '');
     }
@@ -281,7 +280,7 @@ class MultiBackend extends VFMultiBackend
      *
      * Circumvent the private declaration in parent class
      */
-    public function getDriverConfig($source) 
+    public function getDriverConfig($source)
     {
         return parent::getDriverConfig($source);
     }
@@ -360,7 +359,7 @@ class MultiBackend extends VFMultiBackend
      *
      * @return array
      */
-    public function putCopy(array $patron, $id, $group, array $copyRequest) 
+    public function putCopy(array $patron, $id, $group, array $copyRequest)
     {
         $source = $this->getSource($patron['cat_username'], 'login');
         $driver = $this->getDriver($source);

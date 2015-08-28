@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib;
 
 use Zend\Config\Config;
@@ -39,7 +38,6 @@ use Zend\Console\Request as ConsoleRequest;
 use Zend\I18n\Translator\Translator as TranslatorImpl;
 use Zend\ServiceManager\ServiceManager;
 
-use VuFind\Config\Reader as ConfigReader;
 use VuFind\Auth\Manager;
 
 use Swissbib\Filter\TemplateFilenameFilter;
@@ -170,7 +168,7 @@ class Bootstrapper
             $callback = function ($event) use ($user) {
                 $request = $event->getRequest();
 
-                if (($locale = $request->getPost()->get('mylang', false)) 
+                if (($locale = $request->getPost()->get('mylang', false))
                     || ($locale = $request->getQuery()->get('lng', false))
                 ) {
                     $user->language = $locale;
@@ -229,7 +227,7 @@ class Bootstrapper
                     $request = $event->getRequest();
 
                     if (($languageChange = $request->getPost()->get('mylang', false))
-                        ||($languageChange = $request->getQuery()->get('lng', false))
+                        || ($languageChange = $request->getQuery()->get('lng', false))
                     ) {
                         if (in_array(
                             $languageChange,
@@ -262,7 +260,7 @@ class Bootstrapper
         if (Console::isConsole()) {
             return;
         }
-        $config =& $this->config;
+        $config = & $this->config;
 
         if (isset($config->Site->header_no_cache) &&  $config->Site->header_no_cache
         ) {
@@ -270,22 +268,18 @@ class Bootstrapper
                 $response = $event->getApplication()->getResponse();
                 //for expires use date in the past
                 $response->getHeaders()->addHeaders(
-                    array(
+                    [
                     'Cache-Control' => 'no-cache, no-store, must-revalidate',
                     'Pragma' => 'no-cache',
                     'Expires' => 'Thu, 1 Jan 2015 00:00:00 GMT'
-                    )
+                    ]
                 );
-
 
             };
 
             $this->events->attach('dispatch', $callback, -500);
         }
     }
-
-
-
 
     /**
      * Add log listener for missing institution translations

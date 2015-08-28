@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Hierarchy;
 
 use Zend\Config\Config;
@@ -49,7 +48,7 @@ class MultiTreeGenerator
      *
      * @var array
      */
-    protected $treeConfig = array();
+    protected $treeConfig = [];
 
     /**
      * SimpleTreeGenerator
@@ -78,12 +77,12 @@ class MultiTreeGenerator
      *
      * @return array
      */
-    public function getTrees(array $facetList) 
+    public function getTrees(array $facetList)
     {
         $treesToGenerate = array_intersect(
             array_keys($facetList), $this->treeConfig
         );
-        $generatedTrees = array();
+        $generatedTrees = [];
 
         foreach ($treesToGenerate as $tree) {
             $generatedTrees[$tree] = $this->simpleTreeGenerator->getTree(
@@ -101,12 +100,12 @@ class MultiTreeGenerator
      *
      * @return void
      */
-    protected function setTreeConfig(Config $config) 
+    protected function setTreeConfig(Config $config)
     {
         if ($config->Site->classificationTrees instanceof Config) {
             $this->treeConfig = $config->Site->classificationTrees->toArray();
         } else {
-            $this->treeConfig = array();
+            $this->treeConfig = [];
         }
     }
-} 
+}

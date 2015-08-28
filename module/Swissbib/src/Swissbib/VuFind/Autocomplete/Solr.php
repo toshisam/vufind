@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\VuFind\Autocomplete;
 
 use VuFind\Autocomplete\Solr as VFAutocompleteSolr;
@@ -53,7 +52,7 @@ class Solr extends VFAutocompleteSolr
      */
     protected function getSuggestionsFromSearch($searchResults, $query, $exact)
     {
-        $results = array();
+        $results = [];
 
         foreach ($searchResults as $object) {
             $current = $object->getRawData();
@@ -63,9 +62,9 @@ class Solr extends VFAutocompleteSolr
                         $current[$field], $query, $exact
                     );
                     if ($bestMatch) {
-                        $forbidden = array(
+                        $forbidden = [
                             ':', '&', '?', '*', '[',']', '"', '/','\\',';','.','='
-                        );
+                        ];
                         $bestMatch = str_replace($forbidden, " ", $bestMatch);
 
                         $results[] = $bestMatch;
@@ -77,4 +76,4 @@ class Solr extends VFAutocompleteSolr
 
         return $results;
     }
-} 
+}

@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
@@ -50,9 +49,9 @@ class SubjectHeadings extends AbstractHelper
      *
      * @return string
      */
-    public function __invoke(array $subjectHeadings = array()) 
+    public function __invoke(array $subjectHeadings = [])
     {
-        $title= '';
+        $title = '';
         $lcsh = '';
         foreach ($subjectHeadings as $heading) {
             if (array_key_exists('@ind2', $heading) && $heading['@ind2'] === '0') {

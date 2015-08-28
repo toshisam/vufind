@@ -28,21 +28,20 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace SwissbibTest\VuFindSearch\Backend\Solr;
 
-use \PHPUnit_Framework_TestCase;
+use PHPUnit_Framework_TestCase;
 
-use \VuFindSearch\Backend\Solr\Connector;
-use \VuFindSearch\Backend\Solr\HandlerMap;
-use \VuFindSearch\ParamBag;
-use \VuFindSearch\Query\Query;
-use \VuFindSearch\Backend\Solr\Response\Json\RecordCollection;
+use VuFindSearch\Backend\Solr\Connector;
+use VuFindSearch\Backend\Solr\HandlerMap;
+use VuFindSearch\ParamBag;
+use VuFindSearch\Query\Query;
+use VuFindSearch\Backend\Solr\Response\Json\RecordCollection;
 
-use \Zend\Config\Config;
-use \Zend\Config\Reader\Ini;
+use Zend\Config\Config;
+use Zend\Config\Reader\Ini;
 
-use \Swissbib\VuFindSearch\Backend\Solr\Backend;
+use Swissbib\VuFindSearch\Backend\Solr\Backend;
 
 /**
  * BackendTest
@@ -92,8 +91,8 @@ class BackendTest extends PHPUnit_Framework_TestCase
     {
         $connector  = $this->getConnector('admin');
         $paramBag   = new ParamBag();
-        $paramBag->set('action', array('status'));
-        $paramBag->set('wt', array('json'));
+        $paramBag->set('action', ['status']);
+        $paramBag->set('wt', ['json']);
 
         $response       = $connector->search($paramBag);
         $responseArray  = json_decode($response, true);
@@ -150,12 +149,12 @@ class BackendTest extends PHPUnit_Framework_TestCase
      */
     protected function getConnector($name = 'select')
     {
-        if ($name==='admin') {
+        if ($name === 'admin') {
             $url        = $this->urlAdmin;
-            $handlerMap = new HandlerMap(array('cores' => array('fallback' => true)));
+            $handlerMap = new HandlerMap(['cores' => ['fallback' => true]]);
         } else {
             $url        = $this->url;
-            $handlerMap = new HandlerMap(array('select' => array('fallback' => true)));
+            $handlerMap = new HandlerMap(['select' => ['fallback' => true]]);
         }
 
         return new Connector($url, $handlerMap);
@@ -170,10 +169,10 @@ class BackendTest extends PHPUnit_Framework_TestCase
     {
         $paramBag     = new ParamBag();
 
-        $paramBag->set('q', array('a'));
-        $paramBag->set('qf', array('title_short title_sub author series journals topic fulltext'));
-        $paramBag->set('qt', array('edismax'));
+        $paramBag->set('q', ['a']);
+        $paramBag->set('qf', ['title_short title_sub author series journals topic fulltext']);
+        $paramBag->set('qt', ['edismax']);
 
         return $paramBag;
     }
-} 
+}

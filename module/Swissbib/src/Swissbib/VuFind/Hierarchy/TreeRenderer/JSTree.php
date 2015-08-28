@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\VuFind\Hierarchy\TreeRenderer;
 
 use VuFind\Hierarchy\TreeRenderer\JSTree as VfJsTree;
@@ -60,7 +59,6 @@ class JSTree extends VfJsTree implements ServiceLocatorAwareInterface
      */
     protected $searchService;
 
-
     /**
      * Set service locator
      *
@@ -70,7 +68,7 @@ class JSTree extends VfJsTree implements ServiceLocatorAwareInterface
      */
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
-        $this->serviceLocator= $serviceLocator;
+        $this->serviceLocator = $serviceLocator;
         $this->searchService = $serviceLocator->getServiceLocator()
             ->get('VuFind\Search');
     }
@@ -104,16 +102,16 @@ class JSTree extends VfJsTree implements ServiceLocatorAwareInterface
             if (in_array($hierarchyID, $inHierarchies)
                 && $this->getDataSource()->supports($hierarchyID)
             ) {
-                return array(
+                return [
                     $hierarchyID => $this->getHierarchyName(
                         $hierarchyID, $inHierarchies, $inHierarchiesTitle
                     )
-                );
+                ];
             }
         } else {
             // Return All Hierarchies
             $i           = 0;
-            $hierarchies = array();
+            $hierarchies = [];
             foreach ($inHierarchies as $hierarchyTopID) {
                 if ($this->getDataSource()->supports($hierarchyTopID)) {
                     $hierarchies[$hierarchyTopID] = isset($inHierarchiesTitle[$i]) ?
@@ -128,9 +126,9 @@ class JSTree extends VfJsTree implements ServiceLocatorAwareInterface
 
             // Return dummy tree list (for top most records)
         if ($id && $this->hasChildren($id)) {
-            return array(
+            return [
                 $id => 'Unknown hierarchie title'
-            );
+            ];
         }
 
         // If we got this far, we couldn't find valid match(es).

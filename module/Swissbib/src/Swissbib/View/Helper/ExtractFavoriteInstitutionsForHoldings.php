@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\I18n\View\Helper\AbstractTranslatorHelper;
@@ -68,7 +67,7 @@ class ExtractFavoriteInstitutionsForHoldings extends AbstractTranslatorHelper
      */
     public function __invoke(array $holdings)
     {
-        $favoriteInstitutions = array();
+        $favoriteInstitutions = [];
 
         foreach ($holdings as $group => $groupData) {
             foreach ($groupData['institutions'] as
@@ -85,12 +84,12 @@ class ExtractFavoriteInstitutionsForHoldings extends AbstractTranslatorHelper
         }
 
         if ($favoriteInstitutions) {
-            $favoriteHoldings = array(
+            $favoriteHoldings = [
                 'label'            => 'mylibraries',
                 'institutions'    => $favoriteInstitutions
-            );
+            ];
 
-            $holdings = array('favorite' => $favoriteHoldings) + $holdings;
+            $holdings = ['favorite' => $favoriteHoldings] + $holdings;
         }
 
         return $holdings;

@@ -63,7 +63,7 @@ class Solr extends VuFindTreeDataSourceSolr
      *
      * @var array
      */
-    protected $filters = array();
+    protected $filters = [];
 
     /**
      * Get Solr Children for JSON
@@ -83,12 +83,12 @@ class Solr extends VuFindTreeDataSourceSolr
         $results = $this->searchService->search(
             'Solr', $query, 0, 10000,
             new ParamBag(
-                array(
+                [
                     'fq' => $this->filters,
                     'hl' => 'false',
                     'fl' => 'id, title_in_hierarchy, hierarchy_parent_id, ' .
                         'hierarchy_sequence, hierarchy_top_title, title'
-                )
+                ]
             )
         );
 
@@ -96,7 +96,7 @@ class Solr extends VuFindTreeDataSourceSolr
             return '';
         }
 
-        $json = array();
+        $json = [];
         $sorting = $this->getHierarchyDriver()->treeSorting();
 
         foreach ($results->getRecords() as $current) {
@@ -107,13 +107,13 @@ class Solr extends VuFindTreeDataSourceSolr
                 ? $titles[$parentID] : $current->getTitle();
 
             $this->debug("$parentID: " . $current->getUniqueID());
-            $childNode = array(
+            $childNode = [
                 'id' => $current->getUniqueID(),
                 'type' => $current->isCollection()
                     ? 'collection'
                     : 'record',
                 'title' => htmlspecialchars($title)
-            );
+            ];
             // here, the logic seems to have changed with respect to ::getChildren
             // (creating xml caches). Beforehand, the
             // building of subchildren were not dependent on the type
@@ -134,7 +134,7 @@ class Solr extends VuFindTreeDataSourceSolr
             if ($sorting) {
                 $positions = $current->getHierarchyPositionsInParents();
                 $sequence = isset($positions[$parentID]) ? $positions[$parentID] : 0;
-                $json[] = array($sequence, $childNode);
+                $json[] = [$sequence, $childNode];
             } else {
                 $json[] = $childNode;
             }
@@ -150,7 +150,7 @@ class Solr extends VuFindTreeDataSourceSolr
      *
      * @return array
      */
-    protected function sortNodes($array) 
+    protected function sortNodes($array)
     {
          $sorter = function ($a, $b) {
              // consider first element for the sort: $a[0]

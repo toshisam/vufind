@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Swissbib\VuFind\View\Helper\Root\Translate as SwissbibTranslate;
@@ -48,14 +47,14 @@ class TranslateFacets extends SwissbibTranslate
      *
      * @var array
      */
-    protected $translatedFacets = array();
+    protected $translatedFacets = [];
 
     /**
      * TranslatedFacets
      *
      * @param array $translatedFacets Array of translated facets
      */
-    public function __construct($translatedFacets = array())
+    public function __construct($translatedFacets = [])
     {
         $this->translatedFacets = $translatedFacets;
     }
@@ -71,7 +70,7 @@ class TranslateFacets extends SwissbibTranslate
      *
      * @return string
      */
-    public function __invoke($str, $tokens = array(), $default = null)
+    public function __invoke($str, $tokens = [], $default = null)
     {
         if (!is_array($str)) {
             return '';
@@ -84,7 +83,7 @@ class TranslateFacets extends SwissbibTranslate
             $this->translatedFacets, function ($passedValue) use ($facetName) {
                 return $passedValue === $facetName
                     || count(
-                        preg_grep("/" .$facetName . ":" . "/", array ($passedValue))
+                        preg_grep("/" . $facetName . ":" . "/", [$passedValue])
                     ) > 0;
             }
         );

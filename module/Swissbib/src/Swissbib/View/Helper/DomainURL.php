@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
@@ -65,7 +64,7 @@ class DomainURL extends AbstractHelper
      *
      * @return mixed
      */
-    public function normalize() 
+    public function normalize()
     {
         return $this->request->getUri()->normalize();
     }
@@ -75,7 +74,7 @@ class DomainURL extends AbstractHelper
      *
      * @return mixed
      */
-    public function basePath() 
+    public function basePath()
     {
 
         return $this->request->getBasePath();
@@ -86,10 +85,9 @@ class DomainURL extends AbstractHelper
      *
      * @return mixed
      */
-    public function getRefererURL() 
+    public function getRefererURL()
     {
         return  $this->request->getServer('HTTP_REFERER');
     }
 }
-
 

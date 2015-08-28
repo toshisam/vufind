@@ -25,7 +25,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org  Main Page
  */
-
 namespace Swissbib\VuFind\Search\Solr;
 
 use Zend\ServiceManager\ServiceManager;
@@ -48,7 +47,7 @@ class Factory
      *
      * @return SpellingProcessor
      */
-    public static function getSpellchecker(ServiceManager $sm) 
+    public static function getSpellchecker(ServiceManager $sm)
     {
         return new SpellingProcessor($sm->get("sbSpellingResults"));
     }
@@ -60,7 +59,7 @@ class Factory
      *
      * @return SpellingResults
      */
-    public static function getSpellingResults(ServiceManager $sm) 
+    public static function getSpellingResults(ServiceManager $sm)
     {
         return new SpellingResults();
     }

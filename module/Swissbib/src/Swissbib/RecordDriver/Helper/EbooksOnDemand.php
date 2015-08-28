@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\RecordDriver\Helper;
 
 use Swissbib\RecordDriver\SolrMarc;
@@ -69,7 +68,6 @@ class EbooksOnDemand extends EbooksOnDemandBase
                 ) === false;
     }
 
-
     /**
      * Build EOD link for A100 item
      *
@@ -83,13 +81,13 @@ class EbooksOnDemand extends EbooksOnDemandBase
         Holdings $holdingsHelper
     ) {
         $linkPattern = $this->getLinkPattern($item['institution_chb']);
-        $data = array(
+        $data = [
             'SYSID' => $item['bibsysnumber'],
             'INSTITUTION' => urlencode(
                 $item['institution_chb'] . $item['signature']
             ),
             'LANGUAGE' => $this->getConvertedLanguage()
-        );
+        ];
 
         return $this->templateString($linkPattern, $data);
     }
@@ -154,10 +152,10 @@ class EbooksOnDemand extends EbooksOnDemandBase
         Holdings $holdingsHelper
     ) {
         $linkPattern    = $this->getLinkPattern($item['institution_chb']);
-        $data    = array(
+        $data    = [
             'SYSID'        => $item['bibsysnumber'],
             'CALLNUM'    => urlencode($item['signature'])
-        );
+        ];
 
         return $this->templateString($linkPattern, $data);
     }
@@ -190,10 +188,10 @@ class EbooksOnDemand extends EbooksOnDemandBase
         Holdings $holdingsHelper
     ) {
         $linkPattern = $this->getLinkPattern($item['institution_chb']);
-        $data = array(
+        $data = [
             'SYSID' => $item['bibsysnumber'],
             'CALLNUM' => urlencode($item['signature'])
-        );
+        ];
 
         return $this->templateString($linkPattern, $data);
     }
@@ -235,10 +233,10 @@ class EbooksOnDemand extends EbooksOnDemandBase
         Holdings $holdingsHelper
     ) {
         $linkPattern = $this->getLinkPattern($item['institution_chb']);
-        $data = array(
+        $data = [
             'SYSID' => str_replace('vtls', '', $item['bibsysnumber']),
             'CALLNUM' => urlencode($item['signature']),
-        );
+        ];
 
         return $this->templateString($linkPattern, $data);
     }

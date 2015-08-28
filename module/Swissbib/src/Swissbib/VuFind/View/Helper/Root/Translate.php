@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\VuFind\View\Helper\Root;
 
 use Zend\I18n\Exception\RuntimeException,
@@ -56,13 +55,13 @@ class Translate extends VFTranslate
      *
      * @return string
      */
-    public function __invoke($str, $tokens = array(), $default = null)
+    public function __invoke($str, $tokens = [], $default = null)
     {
         $msg = $this->processTranslation($str, $default);
 
         // Do we need to perform substitutions?
         if (!empty($tokens)) {
-            $in = $out = array();
+            $in = $out = [];
             foreach ($tokens as $key => $value) {
                 $in[] = $key;
                 $out[] = $value;
@@ -90,7 +89,7 @@ class Translate extends VFTranslate
             return $parts;
         }
 
-        return array('default', $str);
+        return ['default', $str];
     }
 
     /**
@@ -108,7 +107,7 @@ class Translate extends VFTranslate
                 $this->translatedFacets, function ($passedValue) use ($facetName) {
                     return $passedValue === $facetName
                     || count(
-                        preg_grep("/" .$facetName . ":" . "/", array ($passedValue))
+                        preg_grep("/" . $facetName . ":" . "/", [$passedValue])
                     ) > 0;
                 }
             );

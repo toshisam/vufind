@@ -25,7 +25,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org   Main Site
  */
-
 namespace Swissbib\VuFind\Search\Favorites;
 
 use VuFind\Search\Favorites\Params as VFFavoritesParams;
@@ -41,5 +40,4 @@ use VuFind\Search\Favorites\Params as VFFavoritesParams;
  */
 class Params extends VFFavoritesParams
 {
-
 }

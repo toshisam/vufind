@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\I18n\Translator\TranslatorInterface;
@@ -44,7 +43,6 @@ use Zend\View\Helper\AbstractHelper;
  * @link     http://www.swissbib.org
  */
 class FormatRelatedEntries extends AbstractHelper {
-
     /**
      * Translator
      *

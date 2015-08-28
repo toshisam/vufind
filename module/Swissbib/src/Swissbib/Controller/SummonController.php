@@ -28,13 +28,10 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Controller;
 
-use Zend\Session\Container as SessionContainer;
 use Zend\Http\PhpEnvironment\Response;
 
-use VuFind\Solr\Utils as SolrUtils;
 use VuFind\Controller\SummonController as VuFindSummonController;
 use Zend\Stdlib\Parameters;
 
@@ -168,8 +165,6 @@ class SummonController extends VuFindSummonController
         return $external;
     }
 
-
-
     /**
      * Render advanced search
      *
@@ -204,7 +199,7 @@ class SummonController extends VuFindSummonController
      *
      * @return \Zend\View\Model\ViewModel
      */
-    public function resultsAction() 
+    public function resultsAction()
     {
         $viewModel = parent::resultsAction();
 

@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Libadmin;
 
 use Zend\Config\Writer\Ini as IniWriter;
@@ -95,7 +94,7 @@ class Writer
     {
         $pathFile = $this->basePath . '/' . $type . '/' . $locale . '.ini';
         $pathDir  = dirname($pathFile);
-        $dirStatus= is_dir($pathDir) || mkdir($pathDir, 0777, true);
+        $dirStatus = is_dir($pathDir) || mkdir($pathDir, 0777, true);
 
         if (!$dirStatus) {
             throw new \Exception('Cannot create language folder ' . $type);
@@ -125,7 +124,7 @@ class Writer
     {
         $pathFile = $this->basePath . '/' . $filename . '.ini';
         $pathDir  = dirname($pathFile);
-        $dirStatus= is_dir($pathDir) || mkdir($pathDir, 0777, true);
+        $dirStatus = is_dir($pathDir) || mkdir($pathDir, 0777, true);
 
         if (!$dirStatus) {
             throw new \Exception('Cannot create config folder ' . $filename);

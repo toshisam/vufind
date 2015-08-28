@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Controller;
 
 use Zend\View\Model\ViewModel;
@@ -54,7 +53,7 @@ class BaseController extends VuFindController
      *
      * @return ViewModel
      */
-    protected function getAjaxViewModel(array $variables = array(), $template = null,
+    protected function getAjaxViewModel(array $variables = [], $template = null,
         $terminal = true
     ) {
         $viewModel = new ViewModel($variables);

@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Jusbib\Theme;
 
 use Zend\ServiceManager\ServiceManager;
@@ -53,4 +52,4 @@ class Factory
     {
         return new Theme();
     }
-} 
+}

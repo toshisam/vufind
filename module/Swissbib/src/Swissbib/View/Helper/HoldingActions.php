@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\I18n\View\Helper\AbstractTranslatorHelper;
@@ -59,16 +58,16 @@ class HoldingActions extends AbstractTranslatorHelper
          * @var RecordLink $recordLink
          */
         $recordLink = $this->getView()->plugin('recordLink');
-        $actions    = array();
+        $actions    = [];
         $loginURL   = $this->getView()->url('myresearch-home');
 
         if (isset($item['backlink'])) {
-            $actions['backlink'] = array(
+            $actions['backlink'] = [
                 'label' => $this->translate('hold_backlink'),
                 'href'  =>   $this->getView()->redirectProtocolWrapper()
                     ->getWrappedURL($item['backlink']),
-                'target'=> '_blank'
-            );
+                'target' => '_blank'
+            ];
         }
 
         if (isset($item['userActions'])) {
@@ -76,16 +75,16 @@ class HoldingActions extends AbstractTranslatorHelper
                 && $item['userActions']['login']
             ) {
                 // show different label and sign in
-                $actions['sign_in'] = array(
+                $actions['sign_in'] = [
                     'label'  => $this->translate('Login'),
                     'href'   => $loginURL,
-                );
+                ];
             }
             if (isset($item['userActions']['hold'])
                 && $item['userActions']['hold']
             ) {
                 if (is_array($item['availability'])) {
-                    $actions['hold'] = array(
+                    $actions['hold'] = [
                         $itemkey = key($item['availability']),
                         'label' => array_search(
                             'lendable_borrowed',
@@ -93,51 +92,51 @@ class HoldingActions extends AbstractTranslatorHelper
                         ) ? $this->translate('Recall This')
                             : $this->translate('hold_place'),
                         'href' => $recordLink->getHoldUrl($item['holdLink'])
-                    );
+                    ];
                 } elseif ($item['availability'] === false) {
-                    $actions['hold'] = array(
+                    $actions['hold'] = [
                         'label' => $this->translate('hold_place'),
                         'href' => $recordLink->getHoldUrl($item['holdLink'])
-                    );
+                    ];
                 }
             }
             if (isset($item['userActions']['shortLoan'])
                 && $item['userActions']['shortLoan']
             ) {
-                $actions['shortloan'] = array(
+                $actions['shortloan'] = [
                     'label' => $this->translate('hold_shortloan'),
                     'href'  => 'javascript:alert(\'Not implemented yet\')'
-                );
+                ];
             }
             if (isset($item['userActions']['photorequest'])
                 && $item['userActions']['photorequest']
             ) {
-                $actions['photocopy'] = array(
+                $actions['photocopy'] = [
                     'label' => $this->translate('hold_copy'),
                     'href'  => $recordLink->getCopyUrl($item, $recordId),
-                );
+                ];
             }
             if (isset($item['userActions']['bookingrequest'])
                 && $item['userActions']['bookingrequest']
             ) {
-                $actions['booking'] = array(
+                $actions['booking'] = [
                     'label'  => $this->translate('hold_booking'),
                     'href'   => $item['userActions']['bookingRequestLink'],
                     'target' => '_blank',
-                );
+                ];
             }
         } elseif (isset($item['holdLink'])) {
-            $actions['hold'] = array(
+            $actions['hold'] = [
                 'label' => $this->translate('hold_place'),
                 'href'  => $recordLink->getHoldUrl($item['holdLink'])
-            );
+            ];
         }
 
         if (isset($item['eodlink']) && $item['eodlink']) {
-            $actions['eod'] = array(
+            $actions['eod'] = [
                 'label' => $this->translate('Order_EBook_tooltip'),
                 'href'  => $item['eodlink']
-            );
+            ];
         }
 
         foreach ($actions as $key => $action) {
@@ -145,10 +144,10 @@ class HoldingActions extends AbstractTranslatorHelper
                 $action['class'] . ' ' . $key : $key;
         }
 
-        $data = array(
+        $data = [
             'actions'     => $actions,
             'listClass'    => $listClass
-        );
+        ];
 
         return $this->getView()->render('Holdings/holding-actions', $data);
     }

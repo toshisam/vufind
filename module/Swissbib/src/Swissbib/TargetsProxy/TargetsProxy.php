@@ -26,19 +26,15 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\TargetsProxy;
 
 use Zend\Config\Config;
 use Zend\Di\ServiceLocator;
-use Zend\Http\Client as HttpClient;
-use Zend\Http\Response;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Http\PhpEnvironment\RemoteAddress;
 use Zend\Http\PhpEnvironment\Request;
 
-use Swissbib\TargetsProxy\IpMatcher;
 use Zend\Log\Logger as ZendLogger;
 
 /**
@@ -133,9 +129,9 @@ class TargetsProxy implements ServiceLocatorAwareInterface
         $RemoteAddress->setTrustedProxies($trustedProxies);
 
         $ipAddress = $RemoteAddress->getIpAddress();
-        $this->clientIp = array(
+        $this->clientIp = [
             'IPv4' => $ipAddress, // i.e.: aaa.bbb.ccc.ddd - standard dotted format
-        );
+        ];
 
         $Request = new Request();
         $this->clientUri = $Request->getUri();

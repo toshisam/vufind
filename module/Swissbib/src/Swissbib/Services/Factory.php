@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\Services;
 
 use Zend\ServiceManager\ServiceManager;
@@ -128,9 +127,9 @@ class Factory
     {
         $logger = new  \Swissbib\Log\Logger();
         $logger->addWriter(
-            'stream', 1, array(
+            'stream', 1, [
                 'stream' => 'log/swissbib.log'
-            )
+            ]
         );
 
         return $logger;
@@ -150,7 +149,7 @@ class Factory
 
         // Set up the ExtendedIni plugin:
         $config = $sm->get('VuFind\Config')->get('config');
-        $pathStack = array(
+        $pathStack = [
             APPLICATION_PATH  . '/languages',
             LOCAL_OVERRIDE_DIR . '/languages',
             LOCAL_OVERRIDE_DIR . '/languages/bibinfo',
@@ -158,11 +157,11 @@ class Factory
             LOCAL_OVERRIDE_DIR . '/languages/institution',
             LOCAL_OVERRIDE_DIR . '/languages/location',
             LOCAL_OVERRIDE_DIR . '/languages/union',
-        );
+        ];
 
         $fallbackLocales = $config->Site->language == 'en'
             ? 'en'
-            : array($config->Site->language, 'en');
+            : [$config->Site->language, 'en'];
         try {
             /**
              * LoaderPluginManager

@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Services;
 
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -93,12 +92,12 @@ class Theme implements ServiceLocatorAwareInterface
     public function getThemeTabsConfig()
     {
         $theme = $this->getTheme();
-        $tabs = array();
+        $tabs = [];
         $moduleConfig = $this->getServiceLocator()->get('Config');
         $tabsConfig = $moduleConfig['swissbib']['resultTabs'];
         $allTabs = $tabsConfig['tabs'];
         $themeTabs = isset($tabsConfig['themes'][$theme]) ?
-            $tabsConfig['themes'][$theme] : array();
+            $tabsConfig['themes'][$theme] : [];
 
         foreach ($themeTabs as $themeTab) {
             if (isset($allTabs[$themeTab])) {

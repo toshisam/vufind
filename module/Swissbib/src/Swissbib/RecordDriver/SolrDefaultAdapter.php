@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\RecordDriver;
 
 use Zend\Config\Config;
@@ -56,7 +55,7 @@ class SolrDefaultAdapter
      *
      * @param Config $config Config
      */
-    public function __construct(Config $config) 
+    public function __construct(Config $config)
     {
         $this->mainConfig = $config;
     }
@@ -73,7 +72,7 @@ class SolrDefaultAdapter
         ) {
             return explode(",", $this->mainConfig->Record->citation_formats);
         } else {
-            return array();
+            return [];
         }
     }
-} 
+}

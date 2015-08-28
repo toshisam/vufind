@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
@@ -148,11 +147,11 @@ class QrCode extends AbstractHelper
     public function image($text, $size, $encode = true)
     {
         return $this->img(
-            array(
+            [
                 'data'       => $text,
                 'encodeData' => !!$encode,
-                'dimensions' => array($size, $size)
-            )
+                'dimensions' => [$size, $size]
+            ]
         );
     }
 
@@ -168,11 +167,11 @@ class QrCode extends AbstractHelper
     public function source($text, $size, $encode = true)
     {
         return $this->url(
-            array(
+            [
                 'data'       => $text,
                 'encodeData' => !!$encode,
-                'dimensions' => array($size, $size)
-            )
+                'dimensions' => [$size, $size]
+            ]
         );
     }
 }

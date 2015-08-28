@@ -26,10 +26,9 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\RecordDriver;
 
-use \VuFind\RecordDriver\Missing as VFMissing;
+use VuFind\RecordDriver\Missing as VFMissing;
 
 /**
  * Missing
@@ -52,7 +51,7 @@ class Missing extends VFMissing implements SwissbibRecordDriver
     {
         try {
             $title = parent::getTitle();
-        } catch (\Exception $e ) {
+        } catch (\Exception $e) {
             $title = $this->translate('Title not available');
         }
 
@@ -137,7 +136,7 @@ class Missing extends VFMissing implements SwissbibRecordDriver
      */
     public function getHostItemEntry()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -167,7 +166,7 @@ class Missing extends VFMissing implements SwissbibRecordDriver
      */
     public function getUnions()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -263,7 +262,7 @@ class Missing extends VFMissing implements SwissbibRecordDriver
      *
      * @return string
      */
-    public function getUniqueID() 
+    public function getUniqueID()
     {
         $uniqueID = parent::getUniqueID();
 

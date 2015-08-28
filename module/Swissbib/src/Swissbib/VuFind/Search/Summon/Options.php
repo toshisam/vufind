@@ -27,7 +27,6 @@
  * @link     http://www.swissbib.org
  * @link     http://www.vufind.org  Main Page
  */
-
 namespace Swissbib\Vufind\Search\Summon;
 
 use VuFind\Search\Summon\Options as VFSummonOptions;

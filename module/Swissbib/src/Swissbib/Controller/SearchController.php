@@ -28,12 +28,10 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Controller;
 
 use Zend\Config\Config;
 use Zend\Http\PhpEnvironment\Response;
-use Zend\Session\Container as SessionContainer;
 use Zend\View\Model\ViewModel;
 
 use VuFind\Controller\SearchController as VuFindSearchController;

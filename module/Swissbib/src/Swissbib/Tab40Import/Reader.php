@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\Tab40Import;
 
 /**
@@ -53,14 +52,14 @@ class Reader
     {
         $rawLines = $this->readLines($sourceFile);
         $lines = $this->filterLines($rawLines);
-        $data = array();
+        $data = [];
 
         foreach ($lines as $line) {
-            $data[] = array(
+            $data[] = [
                 'code'            => trim(substr($line, 0, 5)),
                 'sublibrary'    => trim(substr($line, 5, 5)),
                 'label'            => trim(substr($line, 14))
-            );
+            ];
         }
 
         return $data;

@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Favorites;
 
 use Zend\Config\Config;
@@ -153,8 +152,8 @@ class Manager
      */
     public function getUserInstitutionsListingData()
     {
-        $institutions= $this->getUserInstitutions();
-        $listing    = array();
+        $institutions = $this->getUserInstitutions();
+        $listing    = [];
 
         foreach ($institutions as $institutionCode) {
             $groupCode    = isset($this->groupMapping[$institutionCode]) ?
@@ -201,7 +200,7 @@ class Manager
     protected function getFromSession()
     {
         if (!isset($this->session[$this->SESSION_DATA])) {
-            $this->session[$this->SESSION_DATA] = array();
+            $this->session[$this->SESSION_DATA] = [];
         }
 
         return $this->session[$this->SESSION_DATA];
@@ -216,6 +215,6 @@ class Manager
     {
         $favoriteList    = $this->authManager->isLoggedIn()->favorite_institutions;
 
-        return $favoriteList ? explode(',', $favoriteList) : array();
+        return $favoriteList ? explode(',', $favoriteList) : [];
     }
 }

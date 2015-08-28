@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace QRCode\Service;
 
 /**
@@ -45,7 +44,7 @@ class QRCode
      *
      * @var Array
      */
-    protected $properties = array();
+    protected $properties = [];
     
     /**
      * The Final Endpoint
@@ -64,7 +63,7 @@ class QRCode
     /**
      * Constructor
      */
-    function __construct() 
+    public function __construct()
     {
         $this->setCharset();
         $this->setCorrectionLevel();
@@ -78,7 +77,7 @@ class QRCode
      */
     public function isHttp()
     {
-        $this->endpoint = 'http://'.self::END_POINT;
+        $this->endpoint = 'http://' . self::END_POINT;
 
         return $this;
     }
@@ -90,7 +89,7 @@ class QRCode
      */
     public function isHttps()
     {
-        $this->endpoint = 'https://'.self::END_POINT;
+        $this->endpoint = 'https://' . self::END_POINT;
 
         return $this;
     }
@@ -102,7 +101,7 @@ class QRCode
      *
      * @return QRCode
      */
-    public function setTypeChart($chart = 'qr') 
+    public function setTypeChart($chart = 'qr')
     {
         $this->properties['cht'] = $chart;
         return $this;
@@ -113,7 +112,7 @@ class QRCode
      *
      * @return String 
      */
-    public function getTypeChart() 
+    public function getTypeChart()
     {
         return $this->properties['cht'];
     }
@@ -123,9 +122,9 @@ class QRCode
      *
      * @return String
      */
-    public function getResult() 
+    public function getResult()
     {
-        return $this->endpoint.http_build_query($this->properties);
+        return $this->endpoint . http_build_query($this->properties);
     }
 
     /**
@@ -138,7 +137,7 @@ class QRCode
      *
      * @return QRCode
      */
-    public function setDimensions($w, $h) 
+    public function setDimensions($w, $h)
     {
         if (is_int($w) && is_int($h)) {
             $this->properties['chs'] = "{$w}x{$h}";
@@ -156,7 +155,7 @@ class QRCode
      *
      * @return String
      */
-    public function getDimensions() 
+    public function getDimensions()
     {
         return $this->properties['chs'];
     }
@@ -168,7 +167,7 @@ class QRCode
      *
      * @return QRCode
      */
-    public function setCharset($charset = 'UTF-8') 
+    public function setCharset($charset = 'UTF-8')
     {
         $this->properties['choe'] = $charset;
         return $this;
@@ -179,7 +178,7 @@ class QRCode
      *
      * @return String
      */
-    public function getCharset() 
+    public function getCharset()
     {
         return $this->properties['choe'];
     }
@@ -205,7 +204,7 @@ class QRCode
      */
     public function getCorrectionLevel()
     {
-        return $this->properties['chld'] ;
+        return $this->properties['chld'];
     }
     
     /**

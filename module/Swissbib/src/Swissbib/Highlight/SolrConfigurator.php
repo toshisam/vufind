@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Highlight;
 
 use Zend\Config\Config;
@@ -104,7 +103,7 @@ class SolrConfigurator
         $this->backend = $backend;
 
         $this->eventsManager->attach(
-            'VuFind\Search', 'pre', array($this, 'onSearchPre'), -100
+            'VuFind\Search', 'pre', [$this, 'onSearchPre'], -100
         );
     }
 

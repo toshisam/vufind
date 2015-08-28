@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib;
 
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface as Autoloadable;
@@ -82,8 +81,8 @@ class Module implements Autoloadable, Configurable, Initializable, Consolable
         if (strcmp(APPLICATION_ENV, 'development') != 0) {
             preg_match('/(.*?)module/', __DIR__, $matches);
 
-            return array(
-                'Zend\Loader\ClassMapAutoloader' => array(
+            return [
+                'Zend\Loader\ClassMapAutoloader' => [
                     __NAMESPACE__ => __DIR__ . '/src/autoload_classmap.php',
                     'VuFind' => $matches[0] . '/VuFind/src/autoload_classmap.php',
                     'VuFindSearch' => $matches[0] .
@@ -93,21 +92,21 @@ class Module implements Autoloadable, Configurable, Initializable, Consolable
                     'Zend' => $matches[1] .
                         'vendor/zendframework/zendframework/library/Zend/' .
                         'autoload_classmap.php'
-                ),
-                'Zend\Loader\StandardAutoloader' => array(
-                    'namespaces' => array(
+                ],
+                'Zend\Loader\StandardAutoloader' => [
+                    'namespaces' => [
                         __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                    ),
-                ),
-            );
+                    ],
+                ],
+            ];
         } else {
-            return array(
-                'Zend\Loader\StandardAutoloader' => array(
-                    'namespaces' => array(
+            return [
+                'Zend\Loader\StandardAutoloader' => [
+                    'namespaces' => [
                         __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                    ),
-                ),
-            );
+                    ],
+                ],
+            ];
         }
     }
 
@@ -120,33 +119,33 @@ class Module implements Autoloadable, Configurable, Initializable, Consolable
      */
     public function getConsoleUsage(Console $console)
     {
-        return array(
+        return [
             '# Libadmin VuFind Synchronisation',
             '# Import library and group data from libadmin API and save as' .
                 ' local files',
             'libadmin sync [--verbose|-v] [--dry|-d] [--result|-r]',
-            array(
+            [
                 '--verbose|-v', 'Print informations about actions on console output'
-            ),
-            array(
+            ],
+            [
                 '--dry|-d', 'Don\'t replace local files with new data ' .
                     '(check if new data is available/reachable)'
-            ),
-            array(
+            ],
+            [
                 '--result|-r', 'Print out a single result info at the end.' .
                     ' This is included in the verbose flag'
-            ),
+            ],
             '# Tab40 Location Import',
             '# Extract label information from a tab40 file and convert to vufind' .
                 ' language format',
             'tab40import <network> <locale> <source>',
-            array(
+            [
                 'network',
                 'Network key the file contains informatino about. Ex: idsbb'
-            ),
-            array('locale', 'Locale key: de, en, fr, etc'),
-            array('source', 'Path to input file. Ex: ~/myalephdata/tab40.ger')
-        );
+            ],
+            ['locale', 'Locale key: de, en, fr, etc'],
+            ['source', 'Path to input file. Ex: ~/myalephdata/tab40.ger']
+        ];
     }
 
     /**

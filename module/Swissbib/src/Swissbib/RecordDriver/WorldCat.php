@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\RecordDriver;
 
 use VuFind\RecordDriver\WorldCat as VFWorldCat;
@@ -44,5 +43,4 @@ use VuFind\RecordDriver\WorldCat as VFWorldCat;
  */
 class WorldCat extends VFWorldCat
 {
-
 }

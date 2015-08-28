@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Log;
 
 use Zend\Log\Logger as ZendLogger;
@@ -49,14 +48,14 @@ class Logger extends ZendLogger
      *
      * @var String[]
      */
-    protected $untranslatedInstitutions = array();
+    protected $untranslatedInstitutions = [];
 
     /**
      * UngroupedInstitutions
      *
      * @var String[]
      */
-    protected $ungroupedInstitutinos = array();
+    protected $ungroupedInstitutinos = [];
 
     /**
      * Log an untranslated institution

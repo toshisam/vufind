@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\RecordDriver\Helper;
 
 use Zend\Config\Config;
@@ -102,7 +101,7 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
         return $this->callMethod(
             'isValidForLink',
             $item['institution_chb'],
-            array($item, $recordDriver, $holdingsHelper)
+            [$item, $recordDriver, $holdingsHelper]
         );
     }
 
@@ -121,7 +120,7 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
         return $this->callMethod(
             'buildLink',
             $item['institution_chb'],
-            array($item, $recordDriver, $holdingsHelper)
+            [$item, $recordDriver, $holdingsHelper]
         );
     }
 
@@ -173,17 +172,17 @@ abstract class EbooksOnDemandBase extends CustomizedMethods
         $year2                        = intval($yearArray[1]);
         $noSecondYear = 'se';
 
-        if (stripos($noSecondYear, $dateType) !== false ) {
+        if (stripos($noSecondYear, $dateType) !== false) {
             $year = $year1;
-        } elseif ($year1 > $year2 ) {
+        } elseif ($year1 > $year2) {
             $year = $year1;
-        } elseif ($year2 > $year1 ) {
+        } elseif ($year2 > $year1) {
             $year = $year2;
         } else {
             $year = $year1;
         }
 
-        $customConfigKey= $institutionCode . '_range';
+        $customConfigKey = $institutionCode . '_range';
 
         if ($this->hasConfigValue($customConfigKey)) {
             $range = $this->config->get($customConfigKey);

@@ -28,12 +28,11 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\XSLT;
 
-use \VuFind\XSLT\Processor as VFProcessor;
-use \DOMDocument;
-use \XSLTProcessor;
+use VuFind\XSLT\Processor as VFProcessor;
+use DOMDocument;
+use XSLTProcessor;
 
 /**
  * Processor
@@ -55,7 +54,7 @@ class Processor extends VFProcessor
      *
      * @return string      Transformed XML
      */
-    public static function process($xslt, $xml, $params = array())
+    public static function process($xslt, $xml, $params = [])
     {
         if ($xslt != 'record-marc.xsl') {
             return parent::process($xslt, $xml, $params);

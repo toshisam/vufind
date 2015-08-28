@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\VuFind\View\Helper\Root;
 
 use VuFind\View\Helper\Root\SearchTabs as VuFindSearchTabs;
@@ -81,10 +80,10 @@ class SearchTabs extends VuFindSearchTabs
         switch ($view) {
         case 'advanced':
             return array_key_exists('AdvancedSearchTabs', $this->config) ?
-                $this->config['AdvancedSearchTabs'] : array();
+                $this->config['AdvancedSearchTabs'] : [];
         default:
             return array_key_exists('SearchTabs', $this->config) ?
-                $this->config['SearchTabs'] : array();
+                $this->config['SearchTabs'] : [];
         }
     }
-} 
+}

@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
@@ -47,7 +46,7 @@ class InstitutionDefinedAsFavorite extends AbstractHelper
      *
      * @var array
      */
-    protected $allFavoriteInstitutions = array();
+    protected $allFavoriteInstitutions = [];
 
     /**
      * Constructor
@@ -66,7 +65,7 @@ class InstitutionDefinedAsFavorite extends AbstractHelper
      *
      * @return bool
      */
-    public function isInstitutionDefinedAsFavorite($institutionCode) 
+    public function isInstitutionDefinedAsFavorite($institutionCode)
     {
         return array_key_exists($institutionCode, $this->allFavoriteInstitutions);
     }

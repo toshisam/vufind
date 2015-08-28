@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\RecordDriver\Helper;
 
 use Zend\Config\Config;
@@ -50,14 +49,14 @@ class BibCode
      *
      * @var Array
      */
-    protected $network2bib = array();
+    protected $network2bib = [];
 
     /**
      * Bib2Network mapping
      *
      * @var Array
      */
-    protected $bib2network = array();
+    protected $bib2network = [];
 
     /**
      * Constructor

@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\Tab40Import;
 
 use Zend\Config\Config;
@@ -91,7 +90,7 @@ class Writer
      */
     protected function convertData(array $data)
     {
-        $labelData = array();
+        $labelData = [];
 
         foreach ($data as $item) {
             $key = strtolower($item['sublibrary'] . '_' . $item['code']);
@@ -118,6 +117,6 @@ class Writer
 
         $path = $this->basePath . '/' . $network . '-' . $locale . '.ini';
 
-        return str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+        return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
     }
 }

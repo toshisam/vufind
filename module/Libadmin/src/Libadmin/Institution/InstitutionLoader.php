@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Libadmin\Institution;
 
 use Zend\Json\Server\Exception\ErrorException;
@@ -84,4 +83,4 @@ class InstitutionLoader
 
         return $jsonData['data'];
     }
-} 
+}

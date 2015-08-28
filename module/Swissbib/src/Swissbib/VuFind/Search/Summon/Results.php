@@ -27,7 +27,6 @@
  * @link     http://www.swissbib.org
  * @link     http://www.vufind.org  Main Page
  */
-
 namespace Swissbib\Vufind\Search\Summon;
 
 use SerialsSolutions_Summon_Query as SummonQuery,
@@ -64,18 +63,18 @@ class Results extends VFSummonResults
      */
     public function getSpellingSuggestions()
     {
-        $retVal = array();
+        $retVal = [];
         foreach ($this->getRawSuggestions() as $term => $details) {
             foreach ($details['suggestions'] as $word) {
                 // Strip escaped characters in the search term (for example, "\:")
                 $term = stripcslashes($term);
                 $word = stripcslashes($word);
                 // strip enclosing parentheses
-                $from = array( '/^\(/', '/\)$/');
-                $to = array('','');
+                $from = [ '/^\(/', '/\)$/'];
+                $to = ['',''];
                 $term = preg_replace($from, $to, $term);
                 $word = preg_replace($from, $to, $word);
-                $retVal[$term]['suggestions'][$word] = array('new_term' => $word);
+                $retVal[$term]['suggestions'][$word] = ['new_term' => $word];
             }
         }
         return $retVal;
@@ -98,7 +97,7 @@ class Results extends VFSummonResults
      */
     public function getMyLibrariesFacets()
     {
-        return array();
+        return [];
     }
 
 }

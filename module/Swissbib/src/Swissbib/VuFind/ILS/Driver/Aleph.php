@@ -26,11 +26,10 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\VuFind\ILS\Driver;
 
 use VuFind\ILS\Driver\Aleph as VuFindDriver;
-use \SimpleXMLElement;
+use SimpleXMLElement;
 use VuFind\ILS\Driver\AlephRestfulException;
 use VuFind\Exception\ILS as ILSException;
 use DateTime;
@@ -64,7 +63,7 @@ class Aleph extends VuFindDriver
     {
         $photoCopyRequests = $this->getPhotoCopyRequests($idPatron);
 
-        $dataMap = array(
+        $dataMap = [
             'title'          => 'z13-title',
             'title2'         => 'z38-title',
             'dateOpen'       => 'z38-open-date',
@@ -87,9 +86,9 @@ class Aleph extends VuFindDriver
             'id'             => 'z38-id',
             'number'         => 'z38-number',
             'alpha'          => 'z38-alpha'
-        );
+        ];
 
-        $photoCopiesData = array();
+        $photoCopiesData = [];
 
         foreach ($photoCopyRequests as $photoCopyRequest) {
             $photoCopyData = $this->extractResponseData($photoCopyRequest, $dataMap);
@@ -119,7 +118,7 @@ class Aleph extends VuFindDriver
     public function getBookings($idPatron)
     {
         $bookingRequests = $this->getBookingRequests($idPatron);
-        $dataMap         = array(
+        $dataMap         = [
             'sequence'          => 'z37-sequence',
             'title'             => 'z13-title',
             'author'            => 'z13-author',
@@ -135,9 +134,9 @@ class Aleph extends VuFindDriver
             'barcode'           => 'z30-barcode',
             'collection'        => 'z30-collection',
             'description'       => 'z30-description'
-        );
+        ];
 
-        $bookingsData = array();
+        $bookingsData = [];
 
         foreach ($bookingRequests as $bookingRequest) {
             $bookingData = $this->extractResponseData($bookingRequest, $dataMap);
@@ -172,16 +171,16 @@ class Aleph extends VuFindDriver
     {
         $resource = $bib . $id;
         $xml      = $this->doRestDLFRequest(
-            array('patron', $patronId, 'record', $resource, 'items', $group)
+            ['patron', $patronId, 'record', $resource, 'items', $group]
         );
 
-        $result    = array();
-        $functions = array(
+        $result    = [];
+        $functions = [
             'hold'             => 'HoldRequest',
             'shortLoan'        => 'ShortLoan',
             'photorequest'     => 'PhotoRequest',
             'bookingrequest'   => 'BookingRequest'
-        );
+        ];
 
         // Check flags for each info node
         foreach ($functions as $key => $type) {
@@ -203,17 +202,17 @@ class Aleph extends VuFindDriver
     public function getCirculationStatus($sysNumber, $library = 'DSV01')
     {
         $xml = $this->doXRequest(
-            'circ-status', array(
+            'circ-status', [
                 'sys_no'  => $sysNumber,
                 'library' => $library
-            )
+            ]
         );
 
         $itemDataNodes = $xml->xpath('item-data');
-        $data          = array();
+        $data          = [];
 
         foreach ($itemDataNodes as $itemDataNode) {
-            $itemData = array();
+            $itemData = [];
 
             foreach ($itemDataNode as $fieldName => $fieldValue) {
                 $itemData[$fieldName] = (string)$fieldValue;
@@ -243,10 +242,10 @@ class Aleph extends VuFindDriver
         $offset = 0,
         $year = 0,
         $volume = 0,
-        array $extraRestParams = array()
+        array $extraRestParams = []
     ) {
         if (!is_array($this->itemLinks) || true) {
-            $pathElements    = array('record', $resourceId, 'items');
+            $pathElements    = ['record', $resourceId, 'items'];
             $parameters        = $extraRestParams;
 
             if ($institutionCode) {
@@ -270,7 +269,7 @@ class Aleph extends VuFindDriver
              * @var SimpleXMLElement[] $items
              */
             $items = $xmlResponse->xpath('//item');
-            $links = array();
+            $links = [];
 
             foreach ($items as $item) {
                 $links[] = (string)$item->attributes()->href;
@@ -302,13 +301,13 @@ class Aleph extends VuFindDriver
         $year = 0,
         $volume = 0,
         $numItems = 10,
-        array $extraRestParams = array() 
+        array $extraRestParams = []
     ) {
         $links   = $this->getHoldingHoldingsLinkList(
             $resourceId, $institutionCode, $offset, $year, $volume, $extraRestParams
         );
-        $items   = array();
-        $dataMap = array(
+        $items   = [];
+        $dataMap = [
             'title'                 => 'z13-title',
             'author'                => 'z13-author',
             'itemStatus'            => 'z30-item-status',
@@ -321,7 +320,7 @@ class Aleph extends VuFindDriver
             'raw-sequence-number'   => 'z30-item-sequence',
             'localid'               => 'z30-doc-number',
             'opac_note'             => 'z30-note-opac',
-        );
+        ];
 
         $linksToExtend = array_slice($links, 0, $numItems);
 
@@ -351,7 +350,7 @@ class Aleph extends VuFindDriver
      */
     public function getResourceFilters($resourceId)
     {
-        $pathElements = array('record', $resourceId, 'filters');
+        $pathElements = ['record', $resourceId, 'filters'];
         $xmlResponse  = $this->doRestDLFRequest($pathElements);
 
         $yearNodes    = $xmlResponse->{'record-filters'}->xpath('//year');
@@ -362,10 +361,10 @@ class Aleph extends VuFindDriver
         $volumes      = array_map('trim', $volumeNodes);
         sort($volumes);
 
-        return array(
+        return [
             'years'   => $years,
             'volumes' => $volumes
-        );
+        ];
     }
 
     /**
@@ -419,8 +418,8 @@ class Aleph extends VuFindDriver
     protected function getBookingRequests($idPatron)
     {
         $xmlResponse = $this->doRestDLFRequest(
-            array('patron', $idPatron, 'circulationActions', 'requests', 'bookings'),
-            array('view' => 'full')
+            ['patron', $idPatron, 'circulationActions', 'requests', 'bookings'],
+            ['view' => 'full']
         );
 
         return $xmlResponse->xpath('//booking-request');
@@ -436,10 +435,10 @@ class Aleph extends VuFindDriver
     protected function getPhotoCopyRequests($idPatron)
     {
         $xmlResponse = $this->doRestDLFRequest(
-            array(
+            [
                 'patron', $idPatron, 'circulationActions', 'requests', 'photocopies'
-            ),
-            array('view' => 'full')
+            ],
+            ['view' => 'full']
         );
 
         return $xmlResponse->xpath('//photocopy-request');
@@ -455,7 +454,7 @@ class Aleph extends VuFindDriver
      */
     protected function extractResponseData(SimpleXMLElement $xmlResponse, array $map)
     {
-        $data = array();
+        $data = [];
 
         foreach ($map as $resultField => $path) {
             if (isset($xmlResponse->$path)) {
@@ -481,14 +480,14 @@ class Aleph extends VuFindDriver
     protected function getMyTransactionsResponse(array $user, $history = false)
     {
         $userId = $user['id'];
-        $params = array("view" => "full");
+        $params = ["view" => "full"];
 
         if ($history) {
             $params["type"] = "history";
         }
 
         $xml = $this->doRestDLFRequest(
-            array('patron', $userId, 'circulationActions', 'loans'), $params
+            ['patron', $userId, 'circulationActions', 'loans'], $params
         );
 
         return $xml->xpath('//loan');
@@ -525,7 +524,7 @@ class Aleph extends VuFindDriver
      */
     public function getMyProfileX($user)
     {
-        $recordList=array();
+        $recordList = [];
         if (!isset($user['college'])) {
             $user['college'] = $this->useradm;
         }
@@ -538,10 +537,10 @@ class Aleph extends VuFindDriver
             //array(
             //    'loans' => 'N', 'cash' => 'N', 'hold' => 'N',
             //    'library' => $user['college'], 'bor_id' => $user['id']
-            array(
+            [
                 'library' => $user['college'], 'bor_id' => $user['id'],
                 'verification' => $user['cat_password']
-            ), true
+            ], true
         );
         $id = (string) $xml->z303->{'z303-id'};
         $delinq_1 = (string) $xml->z303->{'z303-delinq-1'};
@@ -612,7 +611,7 @@ class Aleph extends VuFindDriver
     public function getMyProfileDLF($user)
     {
         $xml = $this->doRestDLFRequest(
-            array('patron', $user['id'], 'patronInformation', 'address')
+            ['patron', $user['id'], 'patronInformation', 'address']
         );
         $address = $xml->xpath('//address-information');
         $address = $address[0];
@@ -645,7 +644,7 @@ class Aleph extends VuFindDriver
         $recordList['dateTo'] = $dateTo;
         $recordList['id'] = $user['id'];
         $xml = $this->doRestDLFRequest(
-            array('patron', $user['id'], 'patronStatus', 'registration')
+            ['patron', $user['id'], 'patronStatus', 'registration']
         );
         $status = $xml->xpath("//institution/z305-bor-status");
         $expiry = $xml->xpath("//institution/z305-expiry-date");
@@ -653,7 +652,6 @@ class Aleph extends VuFindDriver
         $recordList['group'] = $status[0];
         return $recordList;
     }
-
 
     /**
      * Get Patron Transactions
@@ -675,7 +673,7 @@ class Aleph extends VuFindDriver
         $transactionsResponseItems = $this->getMyTransactionsResponse(
             $user, $history
         );
-        $dataMap = array(
+        $dataMap = [
             'barcode'        => 'z30-barcode',
             'title'            => 'z13-title',
             'doc-number'    => 'z36-doc-number',
@@ -690,8 +688,8 @@ class Aleph extends VuFindDriver
             'librarycode'    => 'z36-sub-library-code',
             'callnum'        => 'z30-call-no',
             'renew_info'    => 'renew-info'
-        );
-        $transactionsData    = array();
+        ];
+        $transactionsData    = [];
 
         foreach ($transactionsResponseItems as $transactionsResponseItem) {
             $itemData = $this->extractResponseData(
@@ -728,12 +726,12 @@ class Aleph extends VuFindDriver
                 $transactionsData[] = $itemData;
             } catch (\Exception $ex) {
                 $this->logger->err(
-                    "error while trying to fetch loaned item from ILS system", array(
+                    "error while trying to fetch loaned item from ILS system", [
                         'barcode' => $itemData['barcode'],
                         'doc-number' => $itemData['doc-number'],
                         'item-sequence' => $itemData['item-sequence'],
                         'callnum' => $itemData['callnum']
-                    )
+                    ]
                 );
             }
         }
@@ -749,7 +747,7 @@ class Aleph extends VuFindDriver
      *
      * @return string
      */
-    public function getRequiredDate($patron, $holdInfo=null)
+    public function getRequiredDate($patron, $holdInfo = null)
     {
         if ($holdInfo != null) {
             $details = $this->getHoldingInfoForItem(
@@ -771,12 +769,12 @@ class Aleph extends VuFindDriver
     public function getMyHolds($user)
     {
         $userId = $user['id'];
-        $holdList = array();
+        $holdList = [];
         $xml = $this->doRestDLFRequest(
-            array('patron', $userId, 'circulationActions', 'requests', 'holds'),
-            array('view' => 'full')
+            ['patron', $userId, 'circulationActions', 'requests', 'holds'],
+            ['view' => 'full']
         );
-        $dataMap         = array(
+        $dataMap         = [
             'location'        => 'z37-pickup-location',
             'title'            => 'z13-title',
             'author'        => 'z13-author',
@@ -791,7 +789,7 @@ class Aleph extends VuFindDriver
             'institution'    => 'z30-sub-library-code',
             'signature'        => 'z30-call-no',
             'description'    => 'z30-description'
-        );
+        ];
 
         foreach ($xml->xpath('//hold-request') as $item) {
             $itemData    = $this->extractResponseData($item, $dataMap);
@@ -851,8 +849,8 @@ class Aleph extends VuFindDriver
     protected function getMyFinesResponse($userId)
     {
         $xml = $this->doRestDLFRequest(
-            array('patron', $userId, 'circulationActions', 'cash'),
-            array("view" => "full")
+            ['patron', $userId, 'circulationActions', 'cash'],
+            ["view" => "full"]
         );
 
         return $xml->xpath('//cash');
@@ -870,8 +868,8 @@ class Aleph extends VuFindDriver
     public function getMyFines($user)
     {
         $fineResponseItems    = $this->getMyFinesResponse($user['id']);
-        $fines                = array();
-        $dataMap         = array(
+        $fines                = [];
+        $dataMap         = [
             'sum'            => 'z31-sum',
             'date'            => 'z31-date',
             'type'            => 'z31-type',
@@ -881,7 +879,7 @@ class Aleph extends VuFindDriver
             'sequence'        => 'z31-sequence',
             'status'        => 'z31-status',
             'signature'        => 'z30-call-no'
-        );
+        ];
 
         foreach ($fineResponseItems as $fineResponseItem) {
             $itemData    = $this->extractResponseData($fineResponseItem, $dataMap);

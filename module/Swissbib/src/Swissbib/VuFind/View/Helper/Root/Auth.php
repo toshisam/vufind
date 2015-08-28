@@ -28,10 +28,8 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\VuFind\View\Helper\Root;
 
-use Zend\View\Exception\RuntimeException;
 use VuFind\View\Helper\Root\Auth as VFAuthHelper;
 
 /**

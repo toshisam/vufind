@@ -25,7 +25,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org  Main Page
  */
-
 namespace Swissbib\VuFind\Search\Solr;
 
 use VuFindSearch\Query\AbstractQuery;
@@ -50,7 +49,7 @@ class SpellingResults
      *
      * @var array
      */
-    protected $collocations = array();
+    protected $collocations = [];
 
     /**
      * Holds the suggested term values related to their key with number
@@ -58,7 +57,7 @@ class SpellingResults
      *
      * @var array
      */
-    protected $terms = array();
+    protected $terms = [];
 
     /**
      * SpellingQuery
@@ -79,7 +78,7 @@ class SpellingResults
      */
     public function addCollocation($collocation, $frequency)
     {
-        $this->collocations[] = array($collocation, $frequency);
+        $this->collocations[] = [$collocation, $frequency];
     }
 
     /**
@@ -91,7 +90,7 @@ class SpellingResults
      */
     public function addCollocationSOLRStructure(array $solrInfoStructure)
     {
-        $collationSuggestion = array();
+        $collationSuggestion = [];
         //if term indicates a collation the info variable (again an array)
         // consists of three parts
         //[0][0]    => "collationQuery" string as key
@@ -127,7 +126,7 @@ class SpellingResults
      */
     public function addTerm($key, $value, $frequency)
     {
-        $this->terms[$key][] = array('query' => $value, 'hits' => $frequency);
+        $this->terms[$key][] = ['query' => $value, 'hits' => $frequency];
     }
 
     /**

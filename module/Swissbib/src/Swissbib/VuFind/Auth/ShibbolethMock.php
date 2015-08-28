@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\VuFind\Auth;
 
 use VuFind\Auth\AbstractBase;
@@ -171,6 +170,6 @@ class ShibbolethMock extends AbstractBase
     public function getLoginTargets()
     {
         return is_callable($this->getCatalog(), 'getLoginDrivers') ?
-            $this->getCatalog()->getLoginDrivers() : array();
+            $this->getCatalog()->getLoginDrivers() : [];
     }
 }

@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
@@ -51,7 +50,7 @@ class URLDisplay extends AbstractHelper
      */
     public function __invoke($driver)
     {
-        $retval           = array();
+        $retval           = [];
         $retval['online'] = $driver->getOnlineStatus();
         $retval['unions'] = $driver->getUnions();
         $retval['institutions'] = $driver->getInstitutions();

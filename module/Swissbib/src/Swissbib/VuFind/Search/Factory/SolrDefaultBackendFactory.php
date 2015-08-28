@@ -29,7 +29,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\VuFind\Search\Factory;
 
 use Swissbib\VuFind\Search\Backend\Solr\LuceneSyntaxHelper;
@@ -71,9 +70,9 @@ class SolrDefaultBackendFactory extends VuFindSolrDefaultBackendFactory
         $config  = $this->config->get('config');
 
         if (isset($config->Spelling->simple) && $config->Spelling->simple) {
-            $dictionaries = array('basicSpell');
+            $dictionaries = ['basicSpell'];
         } else {
-            $dictionaries = array('default', 'basicSpell');
+            $dictionaries = ['default', 'basicSpell'];
         }
         $spellingListener = new InjectSwissbibSpellingListener(
             $backend, $dictionaries
@@ -124,7 +123,7 @@ class SolrDefaultBackendFactory extends VuFindSolrDefaultBackendFactory
         }
 
         $manager = $this->serviceLocator->get('VuFind\RecordDriverPluginManager');
-        $factory = new RecordCollectionFactory(array($manager, 'getSolrRecord'));
+        $factory = new RecordCollectionFactory([$manager, 'getSolrRecord']);
         $backend->setRecordCollectionFactory($factory);
 
         return $backend;

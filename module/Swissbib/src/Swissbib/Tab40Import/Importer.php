@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\Tab40Import;
 
 use Zend\Config\Config;
@@ -76,13 +75,13 @@ class Importer
         $languageFile    = $this->write($network, $locale, $importedData);
 
         return new Result(
-            array(
+            [
             'file'        => $languageFile,
             'count'        => sizeof($importedData),
             'network'    => $network,
             'locale'    => $locale,
             'source'    => $sourceFile
-            )
+            ]
         );
     }
 

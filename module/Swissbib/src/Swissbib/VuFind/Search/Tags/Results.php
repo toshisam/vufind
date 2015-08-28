@@ -25,7 +25,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org   Main Site
  */
-
 namespace Swissbib\VuFind\Search\Tags;
 
 /**
@@ -39,5 +38,4 @@ namespace Swissbib\VuFind\Search\Tags;
  */
 class Results extends \VuFind\Search\Tags\Results
 {
-
 }

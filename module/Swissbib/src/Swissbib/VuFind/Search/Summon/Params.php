@@ -27,7 +27,6 @@
  * @link     http://www.swissbib.org
  * @link     http://www.vufind.org  Main Page
  */
-
 namespace Swissbib\VuFind\Search\Summon;
 
 use VuFind\Search\Summon\Params as VFSummonParams;
@@ -46,7 +45,6 @@ use SerialsSolutions_Summon_Query as SummonQuery,
  */
 class Params extends VFSummonParams
 {
-
     use \Swissbib\VuFind\Search\Helper\PersonalSettingsHelper;
 
     /**
@@ -54,9 +52,9 @@ class Params extends VFSummonParams
      *
      * @var array
      */
-    protected $dateRange = array(
+    protected $dateRange = [
         'isActive' => false
-    );
+    ];
 
     /**
      * Pull the page size parameter or set to default
@@ -183,12 +181,12 @@ class Params extends VFSummonParams
         }
         // special cases (apply also when filter list is empty)
         // newspaper articles
-        if (! $foundIncludeNewspapers ) {
+        if (! $foundIncludeNewspapers) {
             // this actually means: do *not* show newspaper articles
             $params->add('filters', "ContentType,Newspaper Article,true");
         }
         // combined facet "with holdings/with fulltext"
-        if (!$foundIncludeWithoutFulltext ) {
+        if (!$foundIncludeWithoutFulltext) {
             $params->set('holdings', true);
             $params->add('filters',  'IsFullText,true');
 

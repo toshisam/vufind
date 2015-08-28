@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\RecordDriver;
 
 use VuFind\RecordDriver\Summon as VuFindSummon;
@@ -103,7 +102,7 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
      */
     public function getAllSubjectHeadingsAsString()
     {
-        $ret = array();
+        $ret = [];
         $subj = $this->getAllSubjectHeadings();
         if (is_array($subj) and count($subj) > 0) {
             foreach ($subj as $sub) {
@@ -191,7 +190,7 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
      */
     public function getAllSubjectVocabularies($ignoreControlFields = false)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -220,7 +219,7 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
      *
      * @return String
      */
-    public function getHighlightedFulltext() 
+    public function getHighlightedFulltext()
     {
         return null;
     }
@@ -274,7 +273,7 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
      */
     public function getCorporationNames($asString = true)
     {
-        return $asString ? '' : array();
+        return $asString ? '' : [];
     }
 
     /**
@@ -304,7 +303,7 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
      *
      * @return array|bool|string
      */
-    public function getThumbnail($size = 'small') 
+    public function getThumbnail($size = 'small')
     {
         return parent::getThumbnail('small');
     }

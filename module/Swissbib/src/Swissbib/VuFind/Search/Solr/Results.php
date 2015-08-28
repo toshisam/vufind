@@ -25,15 +25,10 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org  Main Page
  */
-
 namespace Swissbib\VuFind\Search\Solr;
 
 use VuFind\Search\Solr\Results as VuFindSolrResults;
-use VuFindSearch\Query\AbstractQuery;
-use VuFindSearch\Query\QueryGroup;
-use VuFindSearch\ParamBag;
 
-use Swissbib\Favorites\Manager;
 use VuFind\Search\Solr\SpellingProcessor;
 
 /**
@@ -78,18 +73,18 @@ class Results extends VuFindSolrResults
          * @var \ArrayObject $queryFacets
          */
         $queryFacets = $this->responseFacets->getQueryFacets();
-        $facets        = array();
+        $facets        = [];
 
         foreach ($queryFacets as $facetName => $queryCount) {
             list($fieldName,$filterValue) = explode(':', $facetName, 2);
 
             if (!$onlyNonZero || $queryCount > 0) {
-                $facets[] = array(
+                $facets[] = [
                     'field'    => $fieldName,
                     'value'    => $filterValue,
                     'count'    => $queryCount,
                     'name'    => $facetName
-                );
+                ];
             }
         }
 
@@ -105,7 +100,7 @@ class Results extends VuFindSolrResults
     public function getMyLibrariesFacets()
     {
         $queryFacets    = $this->getResultQueryFacets(true);
-        $list = array();
+        $list = [];
 
         $configQuerySettings = $this->getServiceLocator()->get('VuFind\Config')
             ->get($this->getOptions()->getFacetsIni())->QueryFacets;
@@ -113,15 +108,13 @@ class Results extends VuFindSolrResults
             $configResultSettings = $this->getServiceLocator()->get('VuFind\Config')
                 ->get($this->getOptions()->getFacetsIni())->Results_Settings;
 
-
             foreach ($queryFacets as $queryFacet) {
 
                 if (isset($configQuerySettings[$queryFacet['field']])) {
                     $facetGroupName = $queryFacet['field'];
 
-
                     if (!isset($list[$facetGroupName])) {
-                        $list[$facetGroupName] = array();
+                        $list[$facetGroupName] = [];
                     }
                     if (!isset($list[$facetGroupName]['label'])) {
                         $list[$facetGroupName]['label']
@@ -144,26 +137,26 @@ class Results extends VuFindSolrResults
                     }
 
                     if (!isset($list[$facetGroupName]['list'])) {
-                        $list[$facetGroupName]['list'] = array();
+                        $list[$facetGroupName]['list'] = [];
                     }
 
-                    $currentSettings = array();
+                    $currentSettings = [];
 
                     $currentSettings['displayText']
                         = $translateInfo['translate'] ?
                         count($translateInfo['field_domain']) == 1 ?
                             $this->translate($queryFacet['value']) :
                         $this->translate(
-                            array(
+                            [
                                 $queryFacet['value'] ,
                                 $translateInfo['field_domain'][1]
-                            )
+                            ]
                         )  : $queryFacet['value'];
 
                     $currentSettings['isApplied'] = $this->getParams()
-                        ->hasFilter($facetGroupName .":".$queryFacet['value'])
+                        ->hasFilter($facetGroupName . ":" . $queryFacet['value'])
                                 || $this->getParams()->hasFilter(
-                                    "~" . $facetGroupName . ":".$queryFacet['value']
+                                    "~" . $facetGroupName . ":" . $queryFacet['value']
                                 );
 
                     $currentSettings['count'] = $queryFacet['count'];
@@ -176,7 +169,6 @@ class Results extends VuFindSolrResults
 
         return $list;
     }
-
 
     /**
      * GetTarget
@@ -281,7 +273,7 @@ class Results extends VuFindSolrResults
      */
     protected function isFieldToTranslate($field)
     {
-        $translateInfo = array();
+        $translateInfo = [];
 
         //getTranslatedFacets returns the entries in
         // Advanced_Settings -> translated_facets
@@ -300,7 +292,7 @@ class Results extends VuFindSolrResults
 
                 return $passedValue === $field
                     || count(
-                        preg_grep("/" .$field . ":" . "/", array ($passedValue))
+                        preg_grep("/" . $field . ":" . "/", [$passedValue])
                     ) > 0;
             }
         );
@@ -313,7 +305,7 @@ class Results extends VuFindSolrResults
         // further processing
 
         $translateInfo['normalizedFieldName'] = $field;
-        $translateInfo['field_domain'] = array();
+        $translateInfo['field_domain'] = [];
 
         $fieldToTranslate = $translateInfo['translate'] ?
             current($fieldToTranslateInArray) : null;
@@ -321,10 +313,10 @@ class Results extends VuFindSolrResults
         if ($translateInfo['translate']) {
             $translateInfo['field_domain']
                 = strstr($fieldToTranslate, ':') === false ?
-                    array($field) :
-                    array($field,substr(
+                    [$field] :
+                    [$field,substr(
                         $fieldToTranslate, strpos($fieldToTranslate, ':') + 1
-                    ));
+                    )];
 
             //normalizedFieldName contains only the fieldname without any colons as
             // seperator for the domain name (it's handy)

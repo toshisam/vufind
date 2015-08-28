@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\VuFind;
 
 use VuFindTheme\ResourceContainer as VfResourceContainer;
@@ -138,7 +137,7 @@ class ResourceContainer extends VfResourceContainer
         if (!is_array($resourcesToInspect)
             && !is_a($resourcesToInspect, 'Traversable')
         ) {
-            $resourcesToInspect = array($resourcesToInspect);
+            $resourcesToInspect = [$resourcesToInspect];
         }
 
         foreach ($resourcesToIgnore as $ignorePattern) {

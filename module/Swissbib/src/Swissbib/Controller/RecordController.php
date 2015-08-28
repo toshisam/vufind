@@ -28,11 +28,9 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Controller;
 
 use VuFind\Exception\ILS;
-use VuFind\ILS\Driver\AlephRestfulException;
 use Zend\Form\Form;
 use Zend\View\Model\ViewModel,
     VuFind\Controller\RecordController as VuFindRecordController,
@@ -131,7 +129,7 @@ class RecordController extends VuFindRecordController
         $driver = $this->loadRecord();
 
         // Find out if the item is already part of any lists; save list info/IDs
-        $listIds = array();
+        $listIds = [];
         $resources = $user->getSavedData(
             $driver->getUniqueId(), null, $driver->getResourceSource()
         );
@@ -140,26 +138,26 @@ class RecordController extends VuFindRecordController
         }
 
         // Loop through all user lists and sort out containing/non-containing lists
-        $containingLists = $nonContainingLists = array();
+        $containingLists = $nonContainingLists = [];
         foreach ($user->getLists() as $list) {
             // Assign list to appropriate array based on whether or not we found
             // it earlier in the list of lists containing the selected record.
             if (in_array($list->id, $listIds)) {
-                $containingLists[] = array(
+                $containingLists[] = [
                     'id' => $list->id, 'title' => $list->title
-                );
+                ];
             } else {
-                $nonContainingLists[] = array(
+                $nonContainingLists[] = [
                     'id' => $list->id, 'title' => $list->title
-                );
+                ];
             }
         }
 
         $view = $this->createViewModel(
-            array(
+            [
                 'containingLists' => $containingLists,
                 'nonContainingLists' => $nonContainingLists
-            )
+            ]
         );
         $view->setTemplate('record/save');
         return $view;
@@ -183,10 +181,10 @@ class RecordController extends VuFindRecordController
         $catalog = $this->getILS();
         $checkHolds = $catalog->checkFunction(
             'Holds',
-            array(
+            [
                 'id' => $driver->getUniqueID(),
                 'patron' => $patron
-            )
+            ]
         );
         if (!$checkHolds) {
             return $this->forwardTo('Record', 'Home');
@@ -210,9 +208,9 @@ class RecordController extends VuFindRecordController
         $pickup = $catalog->getPickUpLocations($patron, $gatheredDetails);
         $requestGroups = $catalog->checkCapability('getRequestGroups')
             ? $catalog->getRequestGroups($driver->getUniqueID(), $patron)
-            : array();
+            : [];
         $extraHoldFields = isset($checkHolds['extraHoldFields'])
-            ? explode(":", $checkHolds['extraHoldFields']) : array();
+            ? explode(":", $checkHolds['extraHoldFields']) : [];
 
         // Process form submissions if necessary:
         if (!is_null($this->params()->fromPost('placeHold'))) {
@@ -234,7 +232,7 @@ class RecordController extends VuFindRecordController
                 // if successful, we will redirect and can stop here.
 
                 // Add Patron Data to Submitted Data
-                $holdDetails = $gatheredDetails + array('patron' => $patron);
+                $holdDetails = $gatheredDetails + ['patron' => $patron];
 
                 // Attempt to place the hold:
                 $function = (string)$checkHolds['function'];
@@ -291,7 +289,7 @@ class RecordController extends VuFindRecordController
                 || $gatheredDetails['level'] != 'copy');
 
         return $this->createViewModel(
-            array(
+            [
                 'gatheredDetails' => $gatheredDetails,
                 'pickup' => $pickup,
                 'defaultPickup' => $defaultPickup,
@@ -303,7 +301,7 @@ class RecordController extends VuFindRecordController
                 'requestGroupNeeded' => $requestGroupNeeded,
                 'helpText' => isset($checkHolds['helpText'])
                     ? $checkHolds['helpText'] : null
-            )
+            ]
         );
     }
 

@@ -28,9 +28,7 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\VuFindSearch\Backend\Solr;
-
 
 use VuFindSearch\Backend\Solr\QueryBuilder as VFBuilder;
 
@@ -50,14 +48,14 @@ class QueryBuilder extends VFBuilder
      *
      * @var array
      */
-    protected $disMaxSearchFields = array();
+    protected $disMaxSearchFields = [];
 
     /**
      * Constructor
      *
      * @param array $specs Specs
      */
-    public function __construct(array $specs = array())
+    public function __construct(array $specs = [])
     {
         parent::__construct($specs);
 
@@ -80,8 +78,7 @@ class QueryBuilder extends VFBuilder
                     return $item;
                 }
 
-
-            }, $this->disMaxSearchFields 
+            }, $this->disMaxSearchFields
         );
 
         //this search field isn't defined in searchspec
@@ -96,14 +93,14 @@ class QueryBuilder extends VFBuilder
      *
      * @return mixed
      */
-    protected function prepareForLuceneSyntax($input) 
+    protected function prepareForLuceneSyntax($input)
     {
 
         $alreadyPrepared = parent::prepareForLuceneSyntax($input);
 
         preg_match_all("/(?P<name>\w+?:|[ ]:)/", $input, $matches);
 
-        if (count($matches["name"] > 0) ) {
+        if (count($matches["name"] > 0)) {
 
             foreach ($matches["name"] as $fieldNameWithColon) {
 
@@ -123,7 +120,7 @@ class QueryBuilder extends VFBuilder
 
         //$alreadyPrepared = str_replace('-', ' ', $alreadyPrepared);
         //$alreadyPrepared = str_replace(array("-","="), ' ', $alreadyPrepared);
-        $alreadyPrepared = str_replace(array("="), ' ', $alreadyPrepared);
+        $alreadyPrepared = str_replace(["="], ' ', $alreadyPrepared);
 
         return $alreadyPrepared;
     }

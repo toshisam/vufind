@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Controller;
 
 /**
@@ -47,7 +46,7 @@ class ShibtestController extends BaseController
      *
      * @return \Zend\View\Model\ViewModel
      */
-    public function shibAction() 
+    public function shibAction()
     {
         $serverArray = [];
 
@@ -56,7 +55,7 @@ class ShibtestController extends BaseController
         }
 
         return $this->createViewModel(
-            array ('serverVariables' =>  $serverArray)
+            ['serverVariables' =>  $serverArray]
         );
     }
 }

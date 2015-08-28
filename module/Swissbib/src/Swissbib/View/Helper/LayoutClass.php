@@ -26,10 +26,7 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
-
-use Swissbib\Libadmin\Exception\Exception;
 
 /**
  * Class LayoutClass
@@ -49,18 +46,18 @@ class LayoutClass extends \VuFind\View\Helper\Bootstrap3\LayoutClass
      *
      * @return String
      */
-    public function __invoke($class) 
+    public function __invoke($class)
     {
         $classString = '';
 
         switch ($class) {
         case 'mainbody':
-            $classString.= $this->left ?
+            $classString .= $this->left ?
                 'col-md-9 col-md-push-3 col-table-fix-md' :
                 'col-md-9 col-table-fix-md';
             break;
         case 'sidebar':
-            $classString.= $this->left
+            $classString .= $this->left
                 ? 'sidebar col-md-3 col-md-pull-9 col-table-fix-md hidden-print'
                 : 'sidebar col-md-3 col-table-fix-md hidden-print';
         }

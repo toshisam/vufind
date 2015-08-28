@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\VuFind\Recommend;
 
 use VuFind\Recommend\FavoriteFacets as VFFavoriteFacets;
@@ -63,6 +62,6 @@ class FavoriteFacets extends VFFavoriteFacets
      */
     public function setConfig($settings)
     {
-        $this->mainFacets = array('lists' => 'Your Lists', 'tags' => 'Your Tags');
+        $this->mainFacets = ['lists' => 'Your Lists', 'tags' => 'Your Tags'];
     }
 }

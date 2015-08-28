@@ -26,13 +26,11 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\I18n\View\Helper\Translate;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\EscapeHtml;
-use Swissbib\View\Helper\Number;
 
 /**
  * Renders a facet item label
@@ -72,10 +70,10 @@ class FacetItemLabel extends AbstractHelper
      *
      * @var Array
      */
-    protected $customTranslations = array(
+    protected $customTranslations = [
         'institution' => 'institution',
         'union'       => 'union',
-    );
+    ];
 
     /**
      * Invoke FacetItemLabel

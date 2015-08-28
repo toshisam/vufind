@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
@@ -55,7 +54,7 @@ class RedirectProtocolWrapper extends AbstractHelper
      *
      * @param ServiceRedirectProtocolWrapper $spW ServiceRedirectProtocolWrapper
      */
-    public function __construct(ServiceRedirectProtocolWrapper $spW) 
+    public function __construct(ServiceRedirectProtocolWrapper $spW)
     {
         $this->serviceProtolWrapper = $spW;
     }
@@ -69,8 +68,8 @@ class RedirectProtocolWrapper extends AbstractHelper
      *
      * @return String
      */
-    public function getWrappedURL($url) 
+    public function getWrappedURL($url)
     {
         return $this->serviceProtolWrapper->getWrappedURL($url);
     }
-} 
+}

@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\VuFind\Auth;
 
 use VuFind\Auth\Shibboleth as VuFindShib;
@@ -90,7 +89,6 @@ class Shibboleth extends  VuFindShib
             throw new AuthException('authentication_error_admin');
         }
 
-
         // Check if required attributes match up (so far not used in swissbib:
         foreach ($this->getRequiredAttributes() as $key => $value) {
 
@@ -98,7 +96,7 @@ class Shibboleth extends  VuFindShib
             $found = false;
             foreach ($valueAlternatives as $valuetest) {
                 if (preg_match(
-                    '/'. $valuetest .'/', $request->getServer()->get($key)
+                    '/' . $valuetest . '/', $request->getServer()->get($key)
                 )
                 ) {
                     $found = true;
@@ -118,10 +116,10 @@ class Shibboleth extends  VuFindShib
         $catPassword = null;
 
         // Has the user configured attributes to use for populating the user table?
-        $attribsToCheck = array(
+        $attribsToCheck = [
             'cat_username', 'cat_password', 'email', 'lastname', 'firstname',
             'college', 'major', 'home_library'
-        );
+        ];
         foreach ($attribsToCheck as $attribute) {
             if (isset($shib->$attribute)) {
 

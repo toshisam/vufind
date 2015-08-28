@@ -30,10 +30,8 @@
  * @link     http://vufind.org/wiki/vufind2:record_drivers Wiki
  * @link     http://www.swissbib.org Project Wiki
  */
-
 namespace Swissbib\View\Helper;
 
-use VuFind\RecordDriver\SolrMarc;
 use VuFind\View\Helper\Root\Record as VuFindRecord;
 
 /**
@@ -164,7 +162,7 @@ class Record extends VuFindRecord
      */
     public function getExtendedLinkDetails()
     {
-        if (!isset($this->urlFilter[$this->config->Site->theme]) 
+        if (!isset($this->urlFilter[$this->config->Site->theme])
             || !($this->driver instanceof \VuFind\RecordDriver\SolrMarc)
         ) {
             return null;
@@ -353,10 +351,10 @@ class Record extends VuFindRecord
 
         $matchesOr = false;
         $orConditionsCount = count($conditions);
-        $i=0;
+        $i = 0;
 
         while (!$matchesOr && $i < $orConditionsCount) {
-            $j=0;
+            $j = 0;
             $matchesAnd = true;
             $andConditions = explode('&&', $conditions[$i]);
             $andConditionsCount = count($andConditions);
@@ -380,7 +378,6 @@ class Record extends VuFindRecord
 
         return $matchesOr;
     }
-
 
     /**
      * GetFormatClass
@@ -504,7 +501,7 @@ class Record extends VuFindRecord
     public function getThumbnail($size = 'small')
     {
         // Try to build thumbnail:
-        $thumb = $this->driver->tryMethod('getThumbnail', array($size));
+        $thumb = $this->driver->tryMethod('getThumbnail', [$size]);
 
         // Array?  It's parameters to send to the cover generator:
         if (is_array($thumb)) {
@@ -547,7 +544,6 @@ class Record extends VuFindRecord
 
         return '';
     }
-
 
     /**
      * GetTabVisibility
@@ -594,7 +590,7 @@ class Record extends VuFindRecord
      */
     public function getLinkSFX()
     {
-        if (!($this->driver instanceof \VuFind\RecordDriver\Summon) ) {
+        if (!($this->driver instanceof \VuFind\RecordDriver\Summon)) {
             return null;
         }
 

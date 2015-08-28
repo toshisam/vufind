@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Filter;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -87,8 +86,8 @@ class TemplateFilenameFilter extends AbstractFilter
         $templateFilename = $fileProperty->getValue($phpRenderer);
 
         // Don't wrap export stuff
-        if ((stristr($templateFilename, 'export-') !== false) 
-            || (stristr($templateFilename, '/email/') !== false) 
+        if ((stristr($templateFilename, 'export-') !== false)
+            || (stristr($templateFilename, '/email/') !== false)
             || (stristr($templateFilename, '/link') !== false)
         ) {
             return $content;
@@ -97,7 +96,7 @@ class TemplateFilenameFilter extends AbstractFilter
         // Remove possibly confidential server details from path
         $directoryDelimiter = 'themes' . DIRECTORY_SEPARATOR;
         $templateFilename   = substr(
-            $templateFilename, strpos($templateFilename, $directoryDelimiter)+7
+            $templateFilename, strpos($templateFilename, $directoryDelimiter) + 7
         );
 
         return $this->_wrapContentWithComment($content, $templateFilename);

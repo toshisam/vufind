@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Hierarchy;
 
 use Zend\Cache\Storage\Adapter\Filesystem as ObjectCache;
@@ -56,7 +55,7 @@ class SimpleTreeGenerator
      *
      * @param ObjectCache $objectCache ObjectCache
      */
-    public function __construct(ObjectCache $objectCache) 
+    public function __construct(ObjectCache $objectCache)
     {
         $this->objectCache = $objectCache;
     }
@@ -73,7 +72,7 @@ class SimpleTreeGenerator
     protected function generatePageTree(array &$datas, $currentNode = "",
         $nestingLevel = 0
     ) {
-        $tree = array();
+        $tree = [];
 
         $currentNodeHead = explode(".", $currentNode);
         $currentNodeHead = $currentNodeHead[0];
@@ -92,12 +91,12 @@ class SimpleTreeGenerator
             if ($parent === $currentNode) {
                 $data['nestingLevel'] = $nestingLevel;
                 unset($datas[$key]);
-                $tree[] = array(
+                $tree[] = [
                     "entry" => $data,
                     "children" => $this->generatePageTree(
                         $datas, $data['value'], $nestingLevel + 1
                     )
-                );
+                ];
             }
         }
 
@@ -112,16 +111,16 @@ class SimpleTreeGenerator
      *
      * @return array
      */
-    protected function orderAndFilter(array $arrayList = array())
+    protected function orderAndFilter(array $arrayList = [])
     {
-        $sorted = array();
+        $sorted = [];
 
         foreach ($arrayList as $classification) {
             preg_match_all(
                 "/[0-9]/", $classification['value'], $out, PREG_OFFSET_CAPTURE
             );
             $lastMatch = end($out[0]);
-            $key = substr($classification['value'], 0, $lastMatch[1]+1);
+            $key = substr($classification['value'], 0, $lastMatch[1] + 1);
 
             if (!isset($sorted[$key])) {
                 $sorted[$key] = $classification;
@@ -145,7 +144,7 @@ class SimpleTreeGenerator
      *
      * @return array
      */
-    public function getTree(array $facets = array(), $treeKey = '') 
+    public function getTree(array $facets = [], $treeKey = '')
     {
         $cacheTreeId    = 'simpleTree-' . $treeKey;
         $cachedTree     = $this->objectCache->getItem($cacheTreeId);
@@ -162,4 +161,4 @@ class SimpleTreeGenerator
 
         return $tree;
     }
-} 
+}

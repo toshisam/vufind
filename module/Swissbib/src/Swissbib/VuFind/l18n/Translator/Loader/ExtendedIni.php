@@ -25,7 +25,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org   Main Site
  */
-
 namespace Swissbib\VuFind\l18n\Translator\Loader;
 
 use Zend\I18n\Exception\InvalidArgumentException,
@@ -44,7 +43,6 @@ use Zend\I18n\Exception\InvalidArgumentException,
  */
 class ExtendedIni extends VFExtendedIni
 {
-
     /**
      * Constructor
      *
@@ -53,7 +51,7 @@ class ExtendedIni extends VFExtendedIni
      * @param string $fallbackLocale Fallback locale to use for language strings
      *                               missing from selected file.
      */
-    public function __construct($pathStack = array(), $fallbackLocale = null)
+    public function __construct($pathStack = [], $fallbackLocale = null)
     {
         parent::__construct($pathStack, $fallbackLocale);
     }

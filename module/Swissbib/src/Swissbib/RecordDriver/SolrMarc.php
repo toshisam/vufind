@@ -30,7 +30,6 @@
  * @link     http://vufind.org/wiki/vufind2:record_drivers Wiki
  * @link     http://www.swissbib.org Project Wiki
  */
-
 namespace Swissbib\RecordDriver;
 
 use Zend\Filter\Null;
@@ -197,13 +196,13 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         $pubDate = $this->getHumanReadablePublicationDates();
 
         // Start an array of OpenURL parameters:
-        $params = array(
+        $params = [
             'ctx_ver' => 'Z39.88-2004',
             'ctx_enc' => 'info:ofi/enc:UTF-8',
             'rfr_id' => "info:sid/{$coinsID}:generator",
             'rft.title' => $this->getTitle(),
             'rft.date' => isset($pubDate[0]) ? $pubDate[0] : null,
-        );
+        ];
 
         $this->useOpenUrlFormats = true;
         $format = $this->getOpenURLFormat();
@@ -249,7 +248,6 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                     $params['rft.pub'] = preg_replace('/^.* : /', '', $pubName);
                 }
             }
-
 
             $params['rft.edition'] = $this->getEdition();
             $params['rft.isbn'] = $this->getCleanISBN();
@@ -351,7 +349,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         }
 
         // Assemble the URL:
-        $parts = array();
+        $parts = [];
         foreach ($params as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $content) {
@@ -397,14 +395,14 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getURLs()
     {
-        $retVal = array();
+        $retVal = [];
 
         // Which fields/subfields should we check for URLs?
-        $fieldsToCheck = array(
-            '856' => array('u', '3', 'z'), // Standard URL
-            '956' => array('u', 'y'), // Standard URL
+        $fieldsToCheck = [
+            '856' => ['u', '3', 'z'], // Standard URL
+            '956' => ['u', 'y'], // Standard URL
             //'555' => array('a')         // Cumulative index/finding aids
-        );
+        ];
 
         foreach ($fieldsToCheck as $field => $subfields) {
             $urls = $this->marcRecord->getFields($field);
@@ -430,7 +428,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                         }
                         // Is there a description?  If not, just use the URL itself.
 
-                        $retVal[] = array('url' => $address, 'desc' => $desc);
+                        $retVal[] = ['url' => $address, 'desc' => $desc];
                     }
                 }
             }
@@ -458,26 +456,26 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * @return array
      */
-    public function getExtendedURLs($globalunions = array(),
-        $tags = array()
+    public function getExtendedURLs($globalunions = [],
+        $tags = []
     ) {
 
-        $retVal = array();
+        $retVal = [];
 
         // Which fields/subfields should we check for URLs?
-        $fieldsToCheck = array(
-            '856' => array('u', '3'), // Standard URL
-            '956' => array('u', 'y','B'), // Standard URL
+        $fieldsToCheck = [
+            '856' => ['u', '3'], // Standard URL
+            '956' => ['u', 'y','B'], // Standard URL
             //'555' => array('a')         // Cumulative index/finding aids
-        );
+        ];
 
-        $tFieldsToCheck = array();
+        $tFieldsToCheck = [];
         if (!empty($tags)) {
             foreach ($tags as $tag) {
                 if (strcmp($tag, '856') == 0) {
-                    $tFieldsToCheck['856'] = array('u','3');
+                    $tFieldsToCheck['856'] = ['u','3'];
                 } elseif (strcmp($tag, '956') == 0) {
-                    $tFieldsToCheck['956'] = array('u','y','B');
+                    $tFieldsToCheck['956'] = ['u','y','B'];
                 }
             }
         }
@@ -522,7 +520,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                         }
                         // Is there a description?  If not, just use the URL itself.
 
-                        $retVal[] = array('url' => $address, 'desc' => $desc);
+                        $retVal[] = ['url' => $address, 'desc' => $desc];
                     }
                 }
             }
@@ -541,12 +539,12 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * @return array
      */
-    public function getLocalValues($localunions = array(),
-        $localtags = array(),
-        $indicators = array(),
-        $subfields = array()
+    public function getLocalValues($localunions = [],
+        $localtags = [],
+        $indicators = [],
+        $subfields = []
     ) {
-        $retValues = array();
+        $retValues = [];
 
         $localValues = $this->marcRecord->getFields('950');
         if ($localValues) {
@@ -563,7 +561,6 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 if (sizeof($localunions) > 0 && !in_array($union, $localunions)) {
                     continue;
                 }
-
 
                 $ts = $localValue->getSubfield('P');
                 if (empty($ts)) {
@@ -597,8 +594,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                     }
                 }
 
-                $tlocalTagReturn = array();
-                $tSubfields = array();
+                $tlocalTagReturn = [];
+                $tSubfields = [];
                 $tlocalTagReturn['localtag'] = $tLocalTagValue;
                 $tlocalTagReturn['localunion'] = $union;
 
@@ -644,7 +641,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getThumbnail($size = 'small')
     {
         if ($isbn = $this->getCleanISBN()) {
-            return array('isn' => $isbn, 'size' => $size);
+            return ['isn' => $isbn, 'size' => $size];
         } elseif ($path = $this->getThumbnail_956_1()) {
             return $path;
         } elseif ($path = $this->getThumbnail_856_1()) {
@@ -668,7 +665,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         $thumbnailURL = null;
 
         $fields = $this->getMarcSubFieldMaps(
-            956, array(
+            956, [
                 'B' => 'union',
                 'C' => 'ADM',
                 'D' => 'library',
@@ -679,10 +676,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 'q' => 'type',
                 'x' => 'usage',
                 'y' => 'description',
-            )
+            ]
         );
         if (!$fields) {
-            return array();
+            return [];
         }
 
         foreach ($fields as $field) {
@@ -753,7 +750,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         // @codingStandardsIgnoreEnd
         $fields = $this->get950();
         if (!$fields) {
-            return array();
+            return [];
         }
         foreach ($fields as $field) {
             if (!isset($field['union'])) {
@@ -822,7 +819,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     protected function get956()
     {
         return $this->getMarcSubFieldMap(
-            956, array(
+            956, [
             'B' => 'union',
             'C' => 'ADM',
             'D' => 'library',
@@ -833,7 +830,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             'q' => 'type',
             'x' => 'usage',
             'y' => 'description',
-            )
+            ]
         );
     }
 
@@ -845,14 +842,14 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     protected function get950()
     {
         return $this->getMarcSubFieldMaps(
-            950, array(
+            950, [
             'B' => 'union',
             'P' => 'tag',
             'a' => 'sf_a',
             'u' => 'sf_u',
             'z' => 'sf_z',
             '3' => "sf_3",
-            )
+            ]
         );
     }
 
@@ -882,7 +879,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         return isset($this->fields['ismn_isn_mv'])
             && is_array($this->fields['ismn_isn_mv']) ?
-            $this->fields['ismn_isn_mv'] : array();
+            $this->fields['ismn_isn_mv'] : [];
     }
 
     /**
@@ -894,7 +891,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         return isset($this->fields['doi_isn_mv'])
             && is_array($this->fields['doi_isn_mv']) ?
-            $this->fields['doi_isn_mv'] : array();
+            $this->fields['doi_isn_mv'] : [];
     }
 
     /**
@@ -906,7 +903,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         return isset($this->fields['urn_isn_mv'])
             && is_array($this->fields['urn_isn_mv']) ?
-            $this->fields['urn_isn_mv'] : array();
+            $this->fields['urn_isn_mv'] : [];
     }
 
     /**
@@ -919,11 +916,11 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         $formats = $this->getFormatsRaw();
         $found = false;
-        $mapping = array(
+        $mapping = [
             'XK01' => 'Article',
             'XK02' => 'Book',
             'XR0300' => 'Journal',
-        );
+        ];
 
         // Check each format for all patterns
         foreach ($formats as $rawFormat) {
@@ -967,7 +964,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             natsort($formatsRaw);
             $formatsRaw = array_values(array_reverse($formatsRaw));
 
-            return array($formatsRaw[0]);
+            return [$formatsRaw[0]];
 
         } else {
             return [];
@@ -991,7 +988,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         $year1 = substr($code, 7, 4);
         $year2 = substr($code, 11, 4);
 
-        return array($dateType, $year1, $year2);
+        return [$dateType, $year1, $year2];
     }
 
     /**
@@ -1027,7 +1024,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         $authors = $this->getMarcSubFieldMaps(700, $this->personFieldMap);
 
         if ($asString) {
-            $stringAuthors = array();
+            $stringAuthors = [];
 
             foreach ($authors as $author) {
                 $name = isset($author['name']) ? $author['name'] : '';
@@ -1132,7 +1129,6 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         }
     }
 
-
     /**
      * Get subtitle
      *
@@ -1144,7 +1140,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         if ($full) {
             return $this->getMarcSubFieldMap(
-                245, array(
+                245, [
                 'a' => 'title',
                 'b' => 'title_remainder',
                 'c' => 'statement_responsibility',
@@ -1155,7 +1151,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 '_n' => 'parts_amount',
                 '_p' => 'parts_name',
                 's' => 'version'
-                )
+                ]
             );
         } else {
             return parent::getTitleStatement();
@@ -1170,10 +1166,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getEdition()
     {
         $data = $this->getMarcSubFieldMaps(
-            250, array(
+            250, [
                 'a' => 'statement',
                 'b' => 'remainder',
-            )
+            ]
         );
 
         if (!empty($data)) {
@@ -1208,13 +1204,13 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getCartMathData()
     {
         $data = $this->getMarcSubFieldMaps(
-            255, array(
+            255, [
                 'a' => 'scale',
                 'b' => 'projection',
                 'c' => 'coordinates',
                 'd' => 'zone',
                 'e' => 'equinox',
-            )
+            ]
         );
 
         if (!empty($data)) {
@@ -1257,16 +1253,16 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getOriginalTitle($asStrings = true)
     {
         $data = $this->getMarcSubFieldMaps(
-            509, array(
+            509, [
             'a' => 'title',
             'n' => 'count',
             'p' => 'worktitle',
             'r' => 'author',
             'i' => 'addtext',
-            )
+            ]
         );
         if ($asStrings) {
-            $strings = array();
+            $strings = [];
 
             foreach ($data as $origtitle) {
                 $string = '';
@@ -1329,7 +1325,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getOriginalVersionNotes()
     {
-        return $this->getFieldArray('534', array('p', 't', 'c'));
+        return $this->getFieldArray('534', ['p', 't', 'c']);
     }
 
     /**
@@ -1339,7 +1335,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getCopyIdentificationNote()
     {
-        return $this->getFieldArray('562', array('c'));
+        return $this->getFieldArray('562', ['c']);
     }
 
     /**
@@ -1350,7 +1346,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getCopyNotes()
     {
-        $f562 = $this->getFieldArray('562', array('c'));
+        $f562 = $this->getFieldArray('562', ['c']);
         $f590 = $this->getFieldArray('590');
 
         $copynotes = array_merge_recursive($f562, $f590);
@@ -1379,7 +1375,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getInstitutions($extended = false)
     {
-        $institutions = array();
+        $institutions = [];
 
         if (isset($this->fields['institution'])
             && is_array($this->fields['institution'])
@@ -1388,10 +1384,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
             if ($extended) {
                 foreach ($institutions as $key => $institution) {
-                    $institutions[$key] = array(
+                    $institutions[$key] = [
                         'institution' => $institution,
                         'group' => $this->getHoldingsHelper()->getGroup($institution)
-                    );
+                    ];
                 }
             }
         }
@@ -1436,34 +1432,34 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getAllSubjectVocabularies($ignoreControlFields = false)
     {
-        $subjectVocabularies = array();
-        $fieldIndexes = array(600, 610, 611, 630, 648, 650, 651, 655, 656, 690, 691);
-        $vocabConfigs = array(
-            'lcsh' => array(
+        $subjectVocabularies = [];
+        $fieldIndexes = [600, 610, 611, 630, 648, 650, 651, 655, 656, 690, 691];
+        $vocabConfigs = [
+            'lcsh' => [
                 'ind' => 0
-            ),
-            'mesh' => array(
+            ],
+            'mesh' => [
                 'ind' => 2
-            ),
-            'unspecified' => array(
+            ],
+            'unspecified' => [
                 'ind' => 4
-            ),
-            'gnd' => array(
+            ],
+            'gnd' => [
                 'ind' => 7,
                 'field' => 'gnd'
-            ),
-            'rero' => array(
+            ],
+            'rero' => [
                 'ind' => 7,
                 'field' => 'rero'
-            ),
-            'idsbb' => array(
+            ],
+            'idsbb' => [
                 'ind' => 7,
                 'field' => 'idsbb'
-            ),
-            'idszbz' => array(
+            ],
+            'idszbz' => [
                 'ind' => 7,
                 'field' => 'idszbz'
-            ),
+            ],
             /*'idslu'       => array(
                 'ind'   => 7,
                 'field' => 'idslu'
@@ -1472,24 +1468,24 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 'ind'   => 7,
                 'field' => 'bgr'
             ),*/
-            'sbt' => array(
+            'sbt' => [
                 'ind' => 7,
                 'field' => 'sbt'
-            ),
-            'jurivoc' => array(
+            ],
+            'jurivoc' => [
                 'ind' => 7,
                 'field' => 'jurivoc'
-            ),
+            ],
             /* only works for one indicator (test case)
                implement with new CBS-data (standardised MARC, not IDSMARC)
             */
-            'local' => array(
+            'local' => [
                 'ind' => 7,
-                'fieldsOnly' => array(690),
+                'fieldsOnly' => [690],
                 'detect' => false // extract vocabulary from sub field 2
-            ),
-        );
-        $fieldMapping = array(
+            ],
+        ];
+        $fieldMapping = [
             'a' => 'a',
             '_b' => 'b',
             'c' => 'c',
@@ -1503,14 +1499,14 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             '_x' => 'x',
             '_y' => 'y',
             '_z' => 'z'
-        );
+        ];
 
         // Add control fields to mapping list
         if (!$ignoreControlFields) {
-            $fieldMapping += array(
+            $fieldMapping += [
                 '0' => '0',
                 '2' => '2'
-            );
+            ];
         }
 
         // Iterate over all indexes to check the available fields
@@ -1534,7 +1530,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                     }
 
                     if (isset($vocabConfig['ind'])
-                        && $indexField->getIndicator(2)==(string)$vocabConfig['ind']
+                        && $indexField->getIndicator(2) == (string)$vocabConfig['ind']
                     ) {
                         // is there a field check required?
                         if (isset($vocabConfig['field'])) {
@@ -1587,11 +1583,11 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getHostItemEntry()
     {
         return $this->getMarcSubFieldMaps(
-            773, array(
+            773, [
             'd' => 'place',
             't' => 'title',
             'g' => 'related',
-            )
+            ]
         );
     }
 
@@ -1602,7 +1598,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getPublishers()
     {
-        return $this->getFieldArray('260', array('b'));
+        return $this->getFieldArray('260', ['b']);
     }
 
     /**
@@ -1614,7 +1610,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getHumanReadablePublicationDates()
     {
-        $codeddata = array();
+        $codeddata = [];
         $codeddata = $this->getPublicationDates();
 
         if (!is_array($codeddata) || sizeof($codeddata) == 0) {
@@ -1625,7 +1621,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             return $codeddata[0];
         }
 
-        $retVal = array();
+        $retVal = [];
 
         $dateType = $codeddata[0];
         $year1    = $codeddata[1];
@@ -1696,7 +1692,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getPhysicalDescriptions($asStrings = true)
     {
         $descriptions = $this->getMarcSubFieldMaps(
-            300, array(
+            300, [
             '_a' => 'extent',
             'b' => 'details',
             '_c' => 'dimensions',
@@ -1705,11 +1701,11 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             '_f' => 'type',
             '_g' => 'size',
             '3' => 'appliesTo'
-            )
+            ]
         );
 
         if ($asStrings) {
-            $strings = array();
+            $strings = [];
             foreach ($descriptions as $description) {
                 if (isset($description['extent'])
                     && isset($description['extent'][0])
@@ -1740,7 +1736,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getUnions()
     {
-        return isset($this->fields['union']) ? $this->fields['union'] : array();
+        return isset($this->fields['union']) ? $this->fields['union'] : [];
     }
 
     /**
@@ -1751,7 +1747,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getOnlineStatus()
     {
         $filter = array_key_exists('filter_str_mv', $this->fields) ?
-            $this->fields['filter_str_mv'] : array();
+            $this->fields['filter_str_mv'] : [];
         return in_array('ONL', $filter)  ? true : false;
     }
 
@@ -1788,7 +1784,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      * @return string
      */
     // @codingStandardsIgnoreStart
-    public function getIs_hierarchy_title() 
+    public function getIs_hierarchy_title()
     {
         // @codingStandardsIgnoreEnd
         return isset($this->fields['is_hierarchy_title']) ?
@@ -1874,7 +1870,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     protected function getMarcSubFieldMap($index, array $fieldMap)
     {
         $index = sprintf('%03d', $index);
-        $subFieldValues = array();
+        $subFieldValues = [];
         $field = $this->marcRecord->getField($index);
 
         if ($field) {
@@ -1897,7 +1893,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     protected function getMarcSubFieldMaps($index, array $fieldMap,
         $includeIndicators = true
     ) {
-        $subFieldsValues = array();
+        $subFieldsValues = [];
         $fields = $this->marcRecord->getFields($index);
 
         foreach ($fields as $field) {
@@ -1922,7 +1918,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     protected function getMappedFieldData($field, array $fieldMap,
         $includeIndicators = true
     ) {
-        $subFieldValues = array();
+        $subFieldValues = [];
 
         if ($includeIndicators) {
             $subFieldValues['@ind1'] = $field->getIndicator(1);
@@ -1974,10 +1970,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
          * @var \File_MARC_Data_Field[] $fields
          */
         $fields = $this->marcRecord->getFields($index);
-        $fieldsData = array();
+        $fieldsData = [];
 
         foreach ($fields as $field) {
-            $tempFieldData = array();
+            $tempFieldData = [];
 
             /**
              * Subfields
@@ -1987,10 +1983,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             $subfields = $field->getSubfields();
 
             foreach ($subfields as $subfield) {
-                $tempFieldData[] = array(
+                $tempFieldData[] = [
                     'tag' => $subfield->getCode(),
                     'data' => $subfield->getData()
-                );
+                ];
             }
 
             $fieldsData[] = $tempFieldData;
@@ -1998,7 +1994,6 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
         return $fieldsData;
     }
-
 
     /**
      * Get value of a sub field
@@ -2109,9 +2104,9 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getLocalCodes()
     {
-        $localCodes = array();
+        $localCodes = [];
         $fieldsValues = $this->getMarcSubFieldMaps(
-            909, array(
+            909, [
             'a' => 'a',
             'b' => 'b',
             'c' => 'c',
@@ -2120,7 +2115,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             'f' => 'f',
             'g' => 'g',
             'h' => 'h',
-            )
+            ]
         );
 
         foreach ($fieldsValues as $fieldValues) {
@@ -2181,9 +2176,9 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getTableOfContent()
     {
-        $lines = array();
+        $lines = [];
         $fieldsData = $this->getMarcSubfieldsRaw(505);
-        $debugLog = array();
+        $debugLog = [];
 
         foreach ($fieldsData as $fieldIndex => $field) {
             $maxIndex = sizeof($field) - 1;
@@ -2265,12 +2260,12 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getContentSummary()
     {
-        $lines = array();
+        $lines = [];
         $summary = $this->getMarcSubFieldMaps(
-            520, array(
+            520, [
             'a' => 'summary',
             'b' => 'expansion',
-            ), false
+            ], false
         );
 
         // Copy into simple list
@@ -2325,28 +2320,28 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             if ($linkSubfield
                 && $bibLink = $this->getIdFromLinkingField($linkSubfield)
             ) {
-                $link = array('type' => 'bib', 'value' => $bibLink);
+                $link = ['type' => 'bib', 'value' => $bibLink];
             }
         } elseif (in_array('ctrlnum', $linkTypes)) {
             // Extract ctrlnum from field w, ignore the prefix
             $linkFields = $linkFields = $field->getSubfields('w');
             foreach ($linkFields as $current) {
                 if (preg_match('/\(([^)]+)\)(.+)/', $current->getData(), $matches)) {
-                    $link = array(
+                    $link = [
                         'type' => 'ctrlnum',
                         'value' => $matches[1] . $matches[2]
-                    );
+                    ];
                 }
             }
         }
 
         // Found link based on special conditions, stop here
         if ($link) {
-            return array(
+            return [
                 'title' => $this->getRecordLinkNote($field),
                 'value' => $title,
                 'link' => $link
-            );
+            ];
         }
 
         // Fallback to base method if no custom field found
@@ -2388,7 +2383,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * @return Boolean
      */
-    public function getUseMostSpecificFormat() 
+    public function getUseMostSpecificFormat()
     {
         return $this->useMostSpecificFormat;
     }
@@ -2400,7 +2395,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * @return void
      */
-    public function setUseMostSpecificFormat($useMostSpecificFormat) 
+    public function setUseMostSpecificFormat($useMostSpecificFormat)
     {
         $this->useMostSpecificFormat = (boolean) $useMostSpecificFormat;
     }
@@ -2410,7 +2405,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * @return Boolean
      */
-    public function hasDescription() 
+    public function hasDescription()
     {
         foreach ($this->partsOfDescription as $descriptionElement) {
             $method = 'get' . $descriptionElement;

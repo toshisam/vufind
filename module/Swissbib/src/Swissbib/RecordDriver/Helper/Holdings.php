@@ -27,7 +27,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\RecordDriver\Helper;
 
 use Zend\Config\Config;
@@ -41,7 +40,6 @@ use VuFind\Config\PluginManager as ConfigManager;
 
 use Swissbib\VuFind\ILS\Driver\Aleph;
 use Swissbib\RecordDriver\SolrMarc;
-use Swissbib\RecordDriver\Helper\BibCode;
 use Swissbib\Log\Logger;
 
 /**
@@ -101,14 +99,14 @@ class Holdings
      *
      * @var Array
      */
-    protected $hmacKeys = array();
+    protected $hmacKeys = [];
 
     /**
      * Map of fields to named params
      *
      * @var Array
      */
-    protected $fieldMapping = array(
+    protected $fieldMapping = [
         '0' => 'local_branch_expanded',
         '1' => 'location_expanded',
         '4' => 'holding_status',
@@ -130,7 +128,7 @@ class Holdings
         'u' => 'holding_url',
         'y' => 'opac_note',
         'z' => 'public_note',
-    );
+    ];
 
     /**
      * Map fieldId => delimiter, fields listed here get
@@ -138,9 +136,9 @@ class Holdings
      *
      * @var Array
      */
-    protected $concatenationMapping = array(
+    protected $concatenationMapping = [
         'z' => ' '
-    );
+    ];
 
     /**
      * HoldingData
@@ -161,14 +159,14 @@ class Holdings
      *
      * @var Array[]
      */
-    protected $availabilities = array();
+    protected $availabilities = [];
 
     /**
      * List of network domains and libs
      *
      * @var Array[]
      */
-    protected $networks = array();
+    protected $networks = [];
 
     /**
      * HoldingsConfig
@@ -189,14 +187,14 @@ class Holdings
      *
      * @var Array
      */
-    protected $institution2group = array();
+    protected $institution2group = [];
 
     /**
      * GroupSorting
      *
      * @var Array
      */
-    protected $groupSorting = array();
+    protected $groupSorting = [];
 
     /**
      * Translator
@@ -336,7 +334,7 @@ class Holdings
         $extend = true
     ) {
         if ($this->holdingData === false) {
-            $this->holdingData = array();
+            $this->holdingData = [];
 
             if ($this->hasItems()) {
                 $this->holdingData['items'] = $this->getItemsData(
@@ -361,10 +359,9 @@ class Holdings
     public function getHoldingsStructure()
     {
         if ($this->holdingStructure === false) {
-            $structure949 = array();
-            $structure852 = array();
-            $holdingStructure = array();
-
+            $structure949 = [];
+            $structure852 = [];
+            $holdingStructure = [];
 
             if ($this->hasItems()) {
                 //$structure949 = $this->getStructuredHoldingsStructure(949);
@@ -394,7 +391,6 @@ class Holdings
         return $this->holdingStructure;
     }
 
-
     /**
      * Sort holdings by group based on position in $this->groupSorting
      * Sort institutions based on position in institution2group
@@ -405,13 +401,13 @@ class Holdings
      */
     protected function sortHoldings(array $holdings)
     {
-        $sortedHoldings = array();
+        $sortedHoldings = [];
 
         // Add holdings in sorted order
         foreach ($this->groupSorting as $groupCode) {
             if (isset($holdings[$groupCode])) {
                 if (sizeof($this->institution2group)) {
-                    $sortedInstitutions = array();
+                    $sortedInstitutions = [];
 
                     foreach ($this->institution2group as
                         $institutionCode => $groupCodeAgain
@@ -525,7 +521,7 @@ class Holdings
         } else {
             // Invalid input data. Currently just ignore it
             $this->holdings = false;
-            $this->holdingData = array();
+            $this->holdingData = [];
         }
     }
 
@@ -579,7 +575,7 @@ class Holdings
      * @return Array
      */
     public function extendItem(array $item, SolrMarc $recordDriver,
-        array $extendingOptions = array()
+        array $extendingOptions = []
     ) {
         $item = $this->extendItemBasic($item, $recordDriver, $extendingOptions);
         $item = $this->extendItemIlsActions($item, $recordDriver, $extendingOptions);
@@ -599,7 +595,7 @@ class Holdings
      * @return Array
      */
     protected function extendItemBasic(array $item, SolrMarc $recordDriver = null,
-        array $extendingOptions = array()
+        array $extendingOptions = []
     ) {
         // EOD LINK
         if (!isset($extendingOptions['eod']) || $extendingOptions['eod']) {
@@ -652,7 +648,7 @@ class Holdings
      * @return Array
      */
     protected function extendItemIlsActions(array $item,
-        SolrMarc $recordDriver = null, array $extendingOptions = array()
+        SolrMarc $recordDriver = null, array $extendingOptions = []
     ) {
         $networkCode = isset($item['network']) ? $item['network'] : '';
 
@@ -670,9 +666,9 @@ class Holdings
                     if ($this->isLoggedIn()) {
                         $item['userActions'] = $this->getAllowedUserActions($item);
                     } elseif (!$this->isLoggedIn()) {
-                        $item['userActions'] = array(
+                        $item['userActions'] = [
                             'login' => 'true',
-                        );
+                        ];
                     }
                 }
             }
@@ -764,16 +760,16 @@ class Holdings
                     $resourceId, $holding['institution']
                 );
 
-                $holding['itemsLink'] = array(
+                $holding['itemsLink'] = [
                     'count' => $itemsCount,
                     'resource' => $resourceId,
                     'institution' => $holding['institution'],
-                    'url' => array(
+                    'url' => [
                         'record' => $this->idItem,
                         'institution' => $holding['institution'],
                         'resource' => $resourceId
-                    )
-                );
+                    ]
+                ];
             }
         }
 
@@ -903,14 +899,14 @@ class Holdings
      */
     protected function getPhotoRequestLink($host, array $item)
     {
-        $queryParams = array(
+        $queryParams = [
             'func' => 'item-photo-request',
             'doc_library' => $item['adm_code'],
             'adm_doc_number' => $item['localid'],
             'item_sequence' => $item['sequencenumber'],
             'bib_doc_num' => $item['bibsysnumber'],
             'bib_library' => $item['bib_library'],
-        );
+        ];
 
         return 'http://' . $host . '/F/?' . http_build_query($queryParams);
     }
@@ -925,12 +921,12 @@ class Holdings
      */
     protected function getBookingRequestLink($host, array $item)
     {
-        $queryParams = array(
+        $queryParams = [
             'func' => 'booking-req-form-itm',
             'adm_library' => $item['adm_code'],
             'adm_doc_number' => $item['localid'],
             'adm_item_sequence' => $item['sequencenumber'],
-        );
+        ];
 
         return 'http://' . $host . '/F/?' . http_build_query($queryParams);
     }
@@ -988,14 +984,14 @@ class Holdings
         }
 
         $method = false;
-        $data = array();
+        $data = [];
 
         // Check if the network has its own backlink type
         if (isset($this->configHoldings->Backlink->{$networkCode})) {
             $method = 'getBackLink' . ucfirst($networkCode);
-            $data = array(
+            $data = [
                 'pattern' => $this->configHoldings->Backlink->{$networkCode}
-            );
+            ];
             // no custom type for network
         } else {
             // check if network is even configured
@@ -1006,9 +1002,9 @@ class Holdings
                 // Has the network type  general link by its
                 // system (only Aleph is implemented)
                 if (isset($this->configHoldings->Backlink->$networkType)) {
-                    $data = array(
+                    $data = [
                         'pattern' => $this->configHoldings->Backlink->$networkType
-                    );
+                    ];
                 }
             }
         }
@@ -1026,7 +1022,6 @@ class Holdings
         return false;
     }
 
-
     /**
      * Get backlink for aleph
      * (custom method)
@@ -1041,12 +1036,12 @@ class Holdings
     protected function getBackLinkAleph($networkCode, $institutionCode, $item,
         array $data
     ) {
-        $values = array(
+        $values = [
             'server' => $data['domain'],
             'bib-library-code' => $data['library'],
             'bib-system-number' => $item['bibsysnumber'],
             'aleph-sublibrary-code' => $institutionCode
-        );
+        ];
 
         return $this->compileString($data['pattern'], $values);
     }
@@ -1326,7 +1321,7 @@ class Holdings
      */
     protected function getItemCirculationStatuses($sysNumber)
     {
-        $data = array();
+        $data = [];
         try {
             $circulationStatuses
                 = $this->ils->getDriver()->getCirculationStatus($sysNumber);
@@ -1399,7 +1394,7 @@ class Holdings
      */
     protected function getHoldingsData($fieldName, array $mapping, $institutionCode)
     {
-        $data = array();
+        $data = [];
         $fields = $this->holdings ? $this->holdings->getFields($fieldName) : false;
 
         if (is_array($fields)) {
@@ -1424,14 +1419,14 @@ class Holdings
      *
      * @return Array[]
      */
-    protected function getStructuredHoldingsStructure($fieldName, $data = array())
+    protected function getStructuredHoldingsStructure($fieldName, $data = [])
     {
         //$data    = array();
         $fields = $this->holdings ? $this->holdings->getFields($fieldName) : false;
-        $mapping = array(
+        $mapping = [
             'B' => 'network',
             'F' => 'institution_chb'
-        );
+        ];
 
         if (is_array($fields)) {
             foreach ($fields as $index => $field) {
@@ -1453,19 +1448,19 @@ class Holdings
 
                 // Make sure group is present
                 if (!isset($data[$groupCode])) {
-                    $data[$groupCode] = array(
+                    $data[$groupCode] = [
                         'label' => $groupCode,
                         'networkCode' => $networkCode,
-                        'institutions' => array()
-                    );
+                        'institutions' => []
+                    ];
                 }
 
                 // Make sure institution is present
                 if (!isset($data[$groupCode]['institutions'][$institution])) {
-                    $data[$groupCode]['institutions'][$institution] = array(
+                    $data[$groupCode]['institutions'][$institution] = [
                         'label' => $institution,
                         'bibinfolink' => $this->getBibInfoLink($institution)
-                    );
+                    ];
                 }
             }
         }
@@ -1522,21 +1517,21 @@ class Holdings
             return null;
         }
 
-        $linkValues = array(
+        $linkValues = [
             'id' => $holdingItem['bib_library'] . '-' . $holdingItem['bibsysnumber'],
             'item_id' => $this->buildItemId($holdingItem),
-        );
+        ];
 
-        return array(
+        return [
             'action' => 'Hold',
             'record' => $this->idItem, //'id',
             'anchor' => '#tabnav',
             'query' => http_build_query(
-                $linkValues + array(
+                $linkValues + [
                     'hashKey' => $this->hmac->generate($this->hmacKeys, $linkValues)
-                )
+                ]
             ),
-        );
+        ];
     }
 
     /**
@@ -1551,8 +1546,8 @@ class Holdings
         array $fieldMapping
     ) {
         $subFields = $field->getSubfields();
-        $rawData = array();
-        $data = array();
+        $rawData = [];
+        $data = [];
 
         // Fetch data
         foreach ($subFields as $code => $subdata) {

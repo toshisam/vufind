@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper\Swissbib;
 
 use Swissbib\View\Helper\FormatRelatedEntries;
@@ -121,7 +120,7 @@ class Factory
             $sm->getServiceLocator()->get('VuFind\Config')->get('config')
                 ->Authentication->noAjaxLogin
         ) ? $sm->getServiceLocator()->get('VuFind\Config')->get('config')
-            ->Authentication->noAjaxLogin->toArray() : array();
+            ->Authentication->noAjaxLogin->toArray() : [];
 
         return new Auth(
             $sm->getServiceLocator()->get('VuFind\AuthManager'),
@@ -150,7 +149,7 @@ class Factory
      *
      * @return LayoutClass
      */
-    public static function getLayoutClass(ServiceManager $sm) 
+    public static function getLayoutClass(ServiceManager $sm)
     {
         $config = $sm->getServiceLocator()->get('VuFind\Config')->get('config');
         $left = !isset($config->Site->sidebarOnLeft)

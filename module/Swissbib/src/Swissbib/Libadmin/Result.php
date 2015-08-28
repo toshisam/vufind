@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Libadmin;
 
 /**
@@ -54,11 +53,11 @@ class Result
      *
      * @var Array
      */
-    protected $labels = array(
+    protected $labels = [
         1 => 'Success',
         2 => 'Info',
         3 => 'Error'
-    );
+    ];
 
     /**
      * Was sync successful?
@@ -72,7 +71,7 @@ class Result
      *
      * @var Array
      */
-    protected $messages = array();
+    protected $messages = [];
 
     /**
      * Reset result
@@ -81,7 +80,7 @@ class Result
      */
     public function reset()
     {
-        $this->messages = array();
+        $this->messages = [];
         $this->success  = true;
     }
 
@@ -95,10 +94,10 @@ class Result
      */
     public function addMessage($type, $message)
     {
-        $this->messages[] = array(
+        $this->messages[] = [
             'type'    => (int)$type,
             'message' => $message
-        );
+        ];
     }
 
     /**
@@ -182,7 +181,7 @@ class Result
      */
     public function getFormattedMessages()
     {
-        $messages = array();
+        $messages = [];
 
         foreach ($this->messages as $message) {
             $messages[] = $this->labels[$message['type']] . ': ' .

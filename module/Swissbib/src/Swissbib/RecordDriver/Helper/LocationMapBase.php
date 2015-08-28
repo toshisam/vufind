@@ -27,7 +27,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\RecordDriver\Helper;
 
 use Swissbib\RecordDriver\Helper\Holdings as HoldingsHelper;
@@ -76,7 +75,7 @@ abstract class LocationMapBase extends CustomizedMethods
         return $this->callMethod(
             'isItemValidForLocationMap',
             $item['institution'],
-            array($item, $holdingsHelper)
+            [$item, $holdingsHelper]
         );
     }
 
@@ -94,7 +93,7 @@ abstract class LocationMapBase extends CustomizedMethods
         return $this->callMethod(
             'buildLocationMapLink',
             $item['institution'],
-            array($item, $holdingsHelper)
+            [$item, $holdingsHelper]
         );
     }
 
@@ -109,9 +108,9 @@ abstract class LocationMapBase extends CustomizedMethods
      */
     protected function buildSimpleLocationMapLink($mapLinkPattern, $paramsValue)
     {
-        $data = array(
+        $data = [
             'PARAMS' => urlencode($paramsValue)
-        );
+        ];
 
         return $this->templateString($mapLinkPattern, $data);
     }

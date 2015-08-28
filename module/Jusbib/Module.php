@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Jusbib;
 
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface as Autoloadable;
@@ -78,8 +77,8 @@ class Module implements Autoloadable, Configurable
         if (strcmp(APPLICATION_ENV, 'development') != 0) {
             preg_match('/(.*?)module/', __DIR__, $matches);
 
-            return array(
-                'Zend\Loader\ClassMapAutoloader' => array(
+            return [
+                'Zend\Loader\ClassMapAutoloader' => [
                     __NAMESPACE__ => __DIR__ . '/src/autoload_classmap.php',
                     'VuFind' => $matches[0] . '/VuFind/src/autoload_classmap.php',
                     'VuFindSearch' =>
@@ -88,21 +87,21 @@ class Module implements Autoloadable, Configurable
                         $matches[0] . '/VuFindTheme/src/autoload_classmap.php',
                     'Zend' => $matches[1] . 'vendor/zendframework/zendframework/' .
                         'library/Zend/autoload_classmap.php'
-                ),
-                'Zend\Loader\StandardAutoloader' => array(
-                    'namespaces' => array(
+                ],
+                'Zend\Loader\StandardAutoloader' => [
+                    'namespaces' => [
                         __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                    ),
-                ),
-            );
+                    ],
+                ],
+            ];
         } else {
-            return array(
-                'Zend\Loader\StandardAutoloader' => array(
-                    'namespaces' => array(
+            return [
+                'Zend\Loader\StandardAutoloader' => [
+                    'namespaces' => [
                         __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                    ),
-                ),
-            );
+                    ],
+                ],
+            ];
         }
     }
 }

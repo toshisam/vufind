@@ -28,10 +28,7 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace SwissbibTest\TargetsProxy;
-
-use SwissbibTest\TargetsProxy\TargetsProxyTestCase;
 
 /**
  * IpMatcherTest

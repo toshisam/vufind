@@ -26,15 +26,11 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
-use Exception;
-use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver\AggregateResolver;
 use Zend\View\Resolver\TemplateMapResolver;
-use Zend\View\Resolver\TemplatePathStack;
 
 /**
  * IncludeTemplate
@@ -55,19 +51,19 @@ class IncludeTemplate extends AbstractHelper
      *
      * @return string
      */
-    public function __invoke($templateFile = '', $theme = '') 
+    public function __invoke($templateFile = '', $theme = '')
     {
         $filePath =  APPLICATION_PATH . '/themes/' . $theme .
             '/templates/' . $templateFile . '.phtml';
 
-        if (!file_exists($filePath) ) {
+        if (!file_exists($filePath)) {
             return '';
         }
 
         $phpRenderer    = $this->getView();
         $resolverBackup = $phpRenderer->resolver();
         $resolver       = new AggregateResolver();
-        $stack          = new TemplateMapResolver(array($templateFile => $filePath));
+        $stack          = new TemplateMapResolver([$templateFile => $filePath]);
 
         $phpRenderer->setResolver($resolver);
         $resolver->attach($stack)->attach($resolverBackup);
@@ -78,4 +74,4 @@ class IncludeTemplate extends AbstractHelper
 
         return $renderedTemplate;
     }
-} 
+}

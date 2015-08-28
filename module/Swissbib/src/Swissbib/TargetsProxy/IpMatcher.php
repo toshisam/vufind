@@ -26,10 +26,7 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\TargetsProxy;
-
-use Swissbib\TargetsProxy\Exception;
 
 /**
  * IpMatcher detect whether IP address matches to patterns and ranges of IP addresses
@@ -87,7 +84,7 @@ class IpMatcher
      *
      * @var array
      */
-    private $_allowedIps = array();
+    private $_allowedIps = [];
 
     /**
      * Constructor
@@ -108,7 +105,7 @@ class IpMatcher
      *
      * @return Boolean
      */
-    public function isMatching($ipAddress, array $patterns = array())
+    public function isMatching($ipAddress, array $patterns = [])
     {
         foreach ($patterns as $ipPattern) {
             $type = $this->_detectIpPatternType($ipPattern);
@@ -117,7 +114,7 @@ class IpMatcher
             }
 
             $subRst = call_user_func(
-                array($this, '_isIpMatching' . ucfirst($type)),
+                [$this, '_isIpMatching' . ucfirst($type)],
                 $ipPattern,
                 $ipAddress
             );

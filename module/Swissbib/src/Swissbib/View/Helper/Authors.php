@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
@@ -49,7 +48,7 @@ class Authors extends AbstractHelper
      *
      * @return Array[]
      */
-    public function __invoke(array $authors = array())
+    public function __invoke(array $authors = [])
     {
         $recordPlugin = $this->getView()->plugin('record');
 
@@ -62,29 +61,29 @@ class Authors extends AbstractHelper
         $secondaryAuthors = isset($authors['secondary']) ?
             $authors['secondary'] : false;
 
-        $authorsData = array();
+        $authorsData = [];
 
         if ($mainAuthor) {
-            $authorsData[] = array(
+            $authorsData[] = [
                 'author' => $mainAuthor,
                 'url'    => $recordPlugin->getLink('author', $mainAuthor),
                 'type'   => 'main'
-            );
+            ];
         }
         if ($corporateAuthor) {
-            $authorsData[] = array(
+            $authorsData[] = [
                 'author' => $corporateAuthor,
                 'url'    => $recordPlugin->getLink('author', $corporateAuthor),
                 'type'   => 'corporate'
-            );
+            ];
         }
         if ($secondaryAuthors) {
             foreach ($secondaryAuthors as $secondaryAuthor) {
-                $authorsData[] = array(
+                $authorsData[] = [
                     'author' => $corporateAuthor,
                     'url'    => $recordPlugin->getLink('author', $secondaryAuthor),
                     'type'   => 'secondary'
-                );
+                ];
             }
         }
 

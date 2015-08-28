@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\Controller;
 
 use Zend\View\Model\ViewModel;
@@ -73,11 +72,11 @@ class HelpPageController extends BaseController
         $helpContent->setTemplate($template['template']);
 
         $helpLayout = $this->createViewModel(
-            array(
+            [
                  'pages' => $this->getPages(),
                 'first' => !!$template['first'],
                 'topic' => strtolower($template['topic'])
-            )
+            ]
         );
         $helpLayout->setTemplate('HelpPage/layout');
         $helpLayout->addChild($helpContent, 'helpContent');
@@ -112,8 +111,8 @@ class HelpPageController extends BaseController
         $firstMatch  = true;
         $topic         = $topic ? strtolower($topic) : $this->getDefaultTopic();
 
-        $languages = array($language, 'en');
-        $topics    = array($topic, 'search');
+        $languages = [$language, 'en'];
+        $topics    = [$topic, 'search'];
 
         foreach ($languages as $language) {
             foreach ($topics as $topic) {
@@ -129,11 +128,11 @@ class HelpPageController extends BaseController
             }
         }
 
-        return array(
+        return [
             'template' => $template,
             'first'    => $firstMatch,
             'topic'    => $activeTopic
-        );
+        ];
     }
 
     /**
@@ -167,7 +166,7 @@ class HelpPageController extends BaseController
     protected function getPages()
     {
         $config = $this->serviceLocator->get('VuFind/Config')->get('config');
-        $pages    = array();
+        $pages    = [];
 
         if ($config) {
             if ($config->HelpPages && $config->HelpPages->pages) {

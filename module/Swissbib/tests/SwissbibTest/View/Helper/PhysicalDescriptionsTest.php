@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace SwissbibTest\View\Helper;
 
 use Swissbib\View\Helper\PhysicalDescriptions;
@@ -52,7 +51,7 @@ class PhysicalDescriptionsTest extends \PHPUnit_Framework_TestCase
     public function testEmpty()
     {
         $desc = new PhysicalDescriptions();
-        $data = array();
+        $data = [];
 
         $result = $desc($data);
 
@@ -68,16 +67,16 @@ class PhysicalDescriptionsTest extends \PHPUnit_Framework_TestCase
     public function testNormal()
     {
         $desc = new PhysicalDescriptions();
-        $data = array(
-            array(
-                'extent' => array(
+        $data = [
+            [
+                'extent' => [
                     'a',
                     'b'
-                ),
+                ],
                 'details' => 'c',
                 'unknown' => 'x'
-            )
-        );
+            ]
+        ];
 
         $result = $desc($data);
 

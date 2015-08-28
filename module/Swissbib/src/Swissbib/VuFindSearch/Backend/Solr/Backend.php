@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\VuFindSearch\Backend\Solr;
 
 use VuFindSearch\Backend\Solr\Backend as VuFindSearchBackend;

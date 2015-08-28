@@ -28,10 +28,9 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\RecordTab;
 
-use \VuFind\RecordTab\AbstractBase;
+use VuFind\RecordTab\AbstractBase;
 
 /**
  * ArticleDetails

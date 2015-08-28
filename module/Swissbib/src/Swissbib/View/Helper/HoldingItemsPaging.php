@@ -26,7 +26,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
@@ -64,14 +63,14 @@ class HoldingItemsPaging extends AbstractHelper
         $year = null, $volume = null
     ) {
         $maxPages    = 10;
-        $maxReqPages = ceil($total/$this->pageSize);
+        $maxReqPages = ceil($total / $this->pageSize);
         $activePage  = $activePage > $total ? 1 : $activePage;
-        $spread      = $maxPages/2;
-        $startPage   = $activePage > $spread ? $activePage-$spread : 1;
+        $spread      = $maxPages / 2;
+        $startPage   = $activePage > $spread ? $activePage - $spread : 1;
         $endPage     = $startPage + $maxPages > $maxReqPages ?
             $maxReqPages : $startPage + $maxPages;
 
-        $data = array(
+        $data = [
             'pages'     => $maxReqPages,
             'active'    => $activePage,
             'baseUrl'   => $baseUrl,
@@ -79,7 +78,7 @@ class HoldingItemsPaging extends AbstractHelper
             'endPage'   => $endPage,
             'year'      => $year,
             'volume'    => $volume
-        );
+        ];
 
         return $this->getView()->render('Holdings/holding-items-paging', $data);
     }

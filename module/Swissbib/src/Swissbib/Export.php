@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib;
 use VuFind\Export as VFExport;
 
@@ -50,7 +49,7 @@ class Export extends VFExport
      *
      * @return String
      */
-    public function getVisibilityClassName($format) 
+    public function getVisibilityClassName($format)
     {
         $visibilityClassName = $this->exportConfig->$format->visibilityClassName;
 
