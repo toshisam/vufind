@@ -181,7 +181,7 @@ class Bootstrap
 
         }
 
-        echo "dir: " . __DIR__;
+        echo "dir: " . __DIR__ . '/' . __NAMESPACE__;
 
         AutoloaderFactory::factory(
             [
