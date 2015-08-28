@@ -181,6 +181,8 @@ class Bootstrap
 
         }
 
+        echo "dir: " . __DIR__;
+
         AutoloaderFactory::factory(
             [
                 'Zend\Loader\StandardAutoloader' => [

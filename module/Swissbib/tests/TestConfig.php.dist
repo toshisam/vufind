@@ -1,9 +1,9 @@
 <?php
 return array(
     'modules' => array(
+        'VuFind',
         'VuFindTheme',
         'VuFindSearch',
-        'VuFind',
         'Swissbib'
     ),
     'module_listener_options' => array(
