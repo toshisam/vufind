@@ -828,7 +828,15 @@ class Holdings
             $labelKey = strtolower(
                 $item['institution'] . '_' . $item['location_code']
             );
-            $textDomain = 'location-' . strtolower($item['network']);
+            // this is going to work ones the Importer functionality has changed
+            // requirement: we have to create a subdirectory for each single network
+            // location-idsbb
+            // location-nebis
+            // as part of the local/language directory
+            // within these domain directories all the language files have to have
+            // be called in the VF2 standard form: de.ini / fr.ini and so on
+            //$textDomain = 'location-' . strtolower($item['network']);
+            $textDomain = 'location'; // only a patch until Importer is changed
             $translated = $this->translator->translate($labelKey, $textDomain);
 
             if ($translated !== $labelKey) {
