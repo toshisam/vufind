@@ -594,23 +594,23 @@ class Record extends VuFindRecord
             return null;
         }
 
-        $linkSFX = $this->view->openUrl($this->driver->getOpenURL());
+        $linkSFX = $this->view->openUrl($this->driver, 'results');
 
         $linkSFX_param = 'title = "' . $this->view->transEsc('articles.linkSFX') .
             '" target="_blank"';
 
-        $linkSFX = str_replace("<a ", "<a $linkSFX_param ", $linkSFX);
+        $renderedLink = str_replace("<a ", "<a $linkSFX_param ", $linkSFX->renderTemplate());
 
-        $linkSFX = str_replace(
+        $renderedLink = str_replace(
             $this->view->transEsc('Get full text'), "SFX Services",
-            $linkSFX
+            $linkSFX->renderTemplate()
         );
 
-        $linkSFX = str_replace(
+        $renderedLink = str_replace(
             'class="openUrl"', 'class="openUrl hidden"',
-            $linkSFX
+            $linkSFX->renderTemplate()
         );
 
-        return $linkSFX;
+        return $renderedLink;
     }
 }
