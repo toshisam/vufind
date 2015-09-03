@@ -115,7 +115,7 @@ class Writer
         $network = strtolower(trim($network));
         $locale = strtolower(trim($locale));
 
-        $path = $this->basePath . '/' . $network . '-' . $locale . '.ini';
+        $path = $this->basePath . '-' . $network . '/' . $locale . '.ini';
 
         return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
     }
