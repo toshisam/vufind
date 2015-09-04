@@ -1,6 +1,6 @@
 # Steps to setup your IDE to run unit tests
 
-1) Install phpunit from https://phpunit.de/getting-started.html
+1) Install phpunit from https://phpunit.de/getting-started.html or via Ubuntu Software Repositories (check for Version > 4.5)
 
 2) Configure either the path to the phpunit executable (phpunit_2.png) or the phpunit.phar (phpunit_1.png)
    
