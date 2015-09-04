@@ -207,8 +207,14 @@ class SummonController extends VuFindSummonController
             return $viewModel;
         }
 
+        $defaultTopRecommend = $this->getServiceLocator()->get('VuFind\Config')->get('Summon')->get('General')
+            ->get('default_top_recommend')->toArray();
+
         $viewModel->setVariable('htmlLayoutClass', 'resultView');
-        $viewModel->setVariable('external', $this->isRestrictedTarget());
+
+        if (array_search('TopIpRange', $defaultTopRecommend) !== false) {
+            $viewModel->setVariable('external', $this->isRestrictedTarget());
+        }
 
         return $viewModel;
     }

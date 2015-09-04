@@ -54,4 +54,16 @@ class Factory
             $sm->getServiceLocator()->get('VuFind\Config')
         );
     }
+
+    /**
+     * Factory for TopIpRange module.
+     *
+     * @param ServiceManager $sm Service manager.
+     *
+     * @return TopIpRange
+     */
+    public static function getTopIpRange(ServiceManager $sm)
+    {
+        return new TopIpRange();
+    }
 }

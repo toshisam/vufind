@@ -316,7 +316,8 @@ return [
             'recommend' => [
                 'factories' => [
                     'favoritefacets' => 'Swissbib\Services\Factory::getFavoriteFacets',
-                    'sidefacets' => 'Swissbib\Recommend\Factory::getSideFacets'
+                    'sidefacets' => 'Swissbib\Recommend\Factory::getSideFacets',
+                    'topiprange' => 'Swissbib\Recommend\Factory::getTopIpRange'
                 ],
             ],
             'recorddriver'             => [
