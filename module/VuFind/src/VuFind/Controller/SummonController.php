@@ -66,6 +66,8 @@ class SummonController extends AbstractSearch
      * @param MvcEvent $e Event object
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function preDispatch(MvcEvent $e)
     {

@@ -70,6 +70,8 @@ class SummonrecordController extends AbstractRecord
      * @param MvcEvent $e Event object
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function preDispatch(MvcEvent $e)
     {
