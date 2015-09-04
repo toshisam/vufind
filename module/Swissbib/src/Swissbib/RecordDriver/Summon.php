@@ -341,4 +341,15 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
     {
         return [];
     }
+
+    /**
+     * Checks the current record if it's supported for generating OpenURLs.
+     *
+     * @return bool
+     */
+    public function supportsOpenUrl()
+    {
+        // Summon never uses OpenURLs for anything other than COinS:
+        return true;
+    }
 }

@@ -603,12 +603,12 @@ class Record extends VuFindRecord
 
         $renderedLink = str_replace(
             $this->view->transEsc('Get full text'), "SFX Services",
-            $linkSFX->renderTemplate()
+            $renderedLink
         );
 
         $renderedLink = str_replace(
             'class="openUrl"', 'class="openUrl hidden"',
-            $linkSFX->renderTemplate()
+            $renderedLink
         );
 
         return $renderedLink;
