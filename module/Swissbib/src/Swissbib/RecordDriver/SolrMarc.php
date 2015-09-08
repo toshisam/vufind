@@ -167,7 +167,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *                                             (omit to use $mainConfig
      *                                             as $recordConfig)
      * @param \Zend\Config\Config $searchSettings  Search-specific configuration file
-     * @param String              $protocolWrapper ProtocalWrapper
+     * @param String              $protocolWrapper ProtocolWrapper
      */
     public function __construct($mainConfig = null, $recordConfig = null,
         $searchSettings = null, $protocolWrapper = null
@@ -317,6 +317,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             //) {
             // $params['sfx.ignore_date_threshold'] = 1;
             //};                }
+            break;
         default:
             $params['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:dc';
 
@@ -652,9 +653,9 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             return $path;
         } elseif ($path = $this->getThumbnail_856_1()) {
             return $path;
-        } elseif ($path = $this->getThumbnail_erara()) {
+        } elseif ($path = $this->getThumbnailErara()) {
             return $path;
-        } elseif ($path = $this->getThumbnail_emanuscripta()) {
+        } elseif ($path = $this->getThumbnailEmanuscripta()) {
             return $path;
         }
 
@@ -803,7 +804,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      * @return string
      */
     // @codingStandardsIgnoreStart
-    protected function getThumbnail_erara()
+    protected function getThumbnailErara()
     {
         // @codingStandardsIgnoreEnd
         $field = $this->getDOIs();
@@ -820,19 +821,19 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
-     * get thumbnail link from e-manuscripta-DOI (see wiki documentation)
+     * Get thumbnail link from e-manuscripta-DOI (see wiki documentation)
      *
      * @return string
      */
-
-    protected function getThumbnail_emanuscripta()
+    protected function getThumbnailEmanuscripta()
     {
         $field = $this->getDOIs();
         if (!empty($field) && preg_match('/^.*e-manuscripta/', $field['0'])) {
             $URL_thumb = 'http://www.e-manuscripta.ch/titlepage/doi/'
                 . $field['0']
                 . '/128';
-            return 'https://externalservices.swissbib.ch/services/ImageTransformer?imagePath='
+            return 'https://externalservices.swissbib.ch/services/'
+            . 'ImageTransformer?imagePath='
             . $URL_thumb
             . '&scale=1';
         }
@@ -2074,7 +2075,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         if (!$this->holdingsHelper) {
 
-            //core record driver in itself doesn't support implmentation of
+            //core record driver in itself doesn't support implementation of
             // ServiceLocaterAwareInterface with latest merge
             //alternative to the current solution:
             //we implement this Interface by ourselve
