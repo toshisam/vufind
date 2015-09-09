@@ -48,7 +48,7 @@ class CombinedMatcherTest extends TargetsProxyTestCase
      */
     public function setUp()
     {
-        $path = getcwd() . '/SwissbibTest/TargetsProxy';
+        $path = SWISSBIB_TESTS_PATH . '/SwissbibTest/TargetsProxy';
         $this->initialize($path . '/config_detect_combined.ini');
     }
 

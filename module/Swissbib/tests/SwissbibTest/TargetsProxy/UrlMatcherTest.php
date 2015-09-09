@@ -48,7 +48,7 @@ class UrlMatcherTest extends TargetsProxyTestCase
      */
     public function setUp()
     {
-        $path = getcwd() . '/SwissbibTest/TargetsProxy';
+        $path = SWISSBIB_TESTS_PATH . '/SwissbibTest/TargetsProxy';
         $this->initialize($path . '/config_detect_url.ini');
     }
 

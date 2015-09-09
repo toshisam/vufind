@@ -35,8 +35,9 @@ use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\ArrayUtils;
 use RuntimeException;
 
-error_reporting(E_ALL);
-chdir(__DIR__);
+define('APPLICATION_PATH', realpath(dirname(__DIR__) . '/../..'));
+define('SWISSBIB_TESTS_PATH', __DIR__);
+chdir(APPLICATION_PATH);
 
 /**
  * Bootstrap
@@ -79,10 +80,10 @@ class Bootstrap
     {
         // Load the user-defined test configuration file, if it exists;
         // otherwise, load
-        if (is_readable(__DIR__ . '/TestConfig.php')) {
-            $testConfig = include __DIR__ . '/TestConfig.php';
+        if (is_readable(SWISSBIB_TESTS_PATH . '/TestConfig.php')) {
+            $testConfig = include SWISSBIB_TESTS_PATH . '/TestConfig.php';
         } else {
-            $testConfig = include __DIR__ . '/TestConfig.php.dist';
+            $testConfig = include SWISSBIB_TESTS_PATH . '/TestConfig.php.dist';
         }
 
         $zf2ModulePaths = [];
@@ -128,7 +129,7 @@ class Bootstrap
     public static function initEnvironment()
     {
         define('APPLICATION_ENV', 'development');
-        define('SWISSBIB_TEST_FIXTURES', realpath(__DIR__ . '/fixtures'));
+        define('SWISSBIB_TEST_FIXTURES', realpath(SWISSBIB_TESTS_PATH . '/fixtures'));
     }
 
     /**
@@ -164,10 +165,10 @@ class Bootstrap
             include $vendorPath . '/autoload.php';
 
             $loader = new \Composer\Autoload\ClassLoader();
-            $loader->add('VuFindTest', __DIR__ . '/../../VuFind/tests/unit-tests/src');
-            $loader->add('VuFindTest', __DIR__ . '/../../VuFind/src');
-            $loader->add('SwissbibTest', __DIR__ . '/');
-            $loader->add('VuFindTest', __DIR__ . '/../../VuFind/src/VuFindTest');
+            $loader->add('VuFindTest', APPLICATION_PATH . '/module/VuFind/tests/unit-tests/src');
+            $loader->add('VuFindTest', APPLICATION_PATH . '/module/VuFind/src');
+            $loader->add('SwissbibTest', SWISSBIB_TESTS_PATH . '/');
+            $loader->add('VuFindTest', APPLICATION_PATH . '/module/VuFind/src/VuFindTest');
 
             $loader->register();
         } else {
@@ -184,7 +185,7 @@ class Bootstrap
      */
     protected static function findParentPath($path)
     {
-        $dir         = __DIR__;
+        $dir         = SWISSBIB_TESTS_PATH;
         $previousDir = '.';
         while (!is_dir($dir . '/' . $path)) {
             $dir = dirname($dir);

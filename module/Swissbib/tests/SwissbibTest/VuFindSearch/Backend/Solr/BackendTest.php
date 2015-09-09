@@ -76,7 +76,7 @@ class BackendTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $iniReader  = new Ini();
-        $config     = new Config($iniReader->fromFile('../../../local/config/vufind/config.ini'));
+        $config     = new Config($iniReader->fromFile(APPLICATION_PATH . '/local/config/vufind/config.ini'));
 
         $this->url      = $config->get('Index')->get('url') . '/' . $config->get('Index')->get('default_core');
         $this->urlAdmin = $config->get('Index')->get('url') . '/admin';
