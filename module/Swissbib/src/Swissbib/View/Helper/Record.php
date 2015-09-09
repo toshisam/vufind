@@ -599,7 +599,11 @@ class Record extends VuFindRecord
         $linkSFX_param = 'title = "' . $this->view->transEsc('articles.linkSFX') .
             '" target="_blank"';
 
-        $renderedLink = str_replace("<a ", "<a $linkSFX_param ", $linkSFX->renderTemplate());
+        $renderedLink = str_replace(
+            "<a ",
+            "<a $linkSFX_param ",
+            $linkSFX->renderTemplate()
+        );
 
         $renderedLink = str_replace(
             $this->view->transEsc('Get full text'), "SFX Services",
