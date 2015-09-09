@@ -64,7 +64,11 @@ class BackendTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $iniReader = new Ini();
-        $config = new Config($iniReader->fromFile(APPLICATION_PATH . '/local/config/vufind/config.ini'));
+        $config = new Config($iniReader->fromFile(SWISSBIB_TESTS_PATH . '/fixtures/config/config.ini'));
+
+        if ($config->get('Summon') === null) {
+            return $this->markTestSkipped('No Summon API config present.');
+        }
 
         $this->connector = new Connector($config->get('Summon')->get('apiId'), $config->get('Summon')->get('apiKey'));
     }
