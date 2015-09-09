@@ -118,7 +118,6 @@ class Results extends VFSummonResults
      */
     public function getFacetList($filter = null)
     {
-
         $finalResult = parent::getFacetList($filter);
         $configResultSettings = $this->getServiceLocator()->get('VuFind\Config')
             ->get('Summon')->Results_Settings;

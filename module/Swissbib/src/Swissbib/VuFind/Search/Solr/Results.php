@@ -101,7 +101,6 @@ class Results extends VuFindSolrResults
      */
     public function getFacetList($filter = null)
     {
-
         /* start of VF2 implementation - has to be re-changed once multi domain
         translations even for factes are implemented*/
 
@@ -171,7 +170,6 @@ class Results extends VuFindSolrResults
                 //$currentSettings['displayText']
                 //    = $translate ?  $this->translate($value) : $value;
 
-
                 $currentSettings['count'] = $count;
                 $currentSettings['operator']
                     = $this->getParams()->getFacetOperator($field);
@@ -185,7 +183,6 @@ class Results extends VuFindSolrResults
         }
 
         return $list;
-
     }
 
     /**
