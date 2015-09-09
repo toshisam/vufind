@@ -92,6 +92,106 @@ class Results extends VuFindSolrResults
     }
 
     /**
+     * Get facet list
+     * Add institution query facets on top of the list
+     *
+     * @param Array|Null $filter Filter
+     *
+     * @return Array[]
+     */
+    public function getFacetList($filter = null)
+    {
+
+
+        /* start of VF2 implementation - has to be re-changed once multi domain
+        translations even for factes are implemented*/
+
+        // Make sure we have processed the search before proceeding:
+        if (null === $this->responseFacets) {
+            $this->performAndProcessSearch();
+        }
+
+        // If there is no filter, we'll use all facets as the filter:
+        if (is_null($filter)) {
+            $filter = $this->getParams()->getFacetConfig();
+        }
+
+        // Start building the facet list:
+        $list = array();
+
+        // Loop through every field returned by the result set
+        $fieldFacets = $this->responseFacets->getFieldFacets();
+
+        //how Facet-Configuration is used seems to be weired for me
+        $configResultSettings = $this->getServiceLocator()->get('VuFind\Config')
+            ->get($this->getOptions()->getFacetsIni())->Results_Settings;
+
+        foreach (array_keys($filter) as $field) {
+            $data = isset($fieldFacets[$field]) ? $fieldFacets[$field] : array();
+
+            // Skip empty arrays:
+            if (count($data) < 1) {
+                continue;
+            }
+            // Initialize the settings for the current field
+            $list[$field] = array();
+            // Add the on-screen label
+            $list[$field]['label'] = $filter[$field];
+            // Build our array of values for this field
+            $list[$field]['list']  = array();
+
+
+            $translateInfo = $this->isFieldToTranslate($field);
+
+
+            $list[$field]['displayLimit'] = isset(
+                $configResultSettings
+                    ->{'facet_limit_' . $translateInfo['normalizedFieldName']}
+            ) ?
+                $configResultSettings
+                    ->{'facet_limit_' . $translateInfo['normalizedFieldName']} :
+                $configResultSettings->facet_limit_default;
+            // Loop through values:
+            foreach ($data as $value => $count) {
+                // Initialize the array of data about the current facet:
+                $currentSettings = array();
+                $currentSettings['value'] = $value;
+
+                //if translation should be done (flag -translate) we have to
+                // distinguis between
+                //a) multi domain (field contains a colon). Then the signature of
+                // the translation method differs (domain has to be indicated)
+                //b) or simple translation
+
+                $currentSettings['displayText']
+                    = $translateInfo['translate'] ?
+                    count($translateInfo['field_domain']) == 1 ?
+                        $this->translate($value) :
+                    $this->translate(
+                        array($value , $translateInfo['field_domain'][1])
+                    )  : $value;
+
+                //$currentSettings['displayText']
+                //    = $translate ?  $this->translate($value) : $value;
+
+
+                $currentSettings['count'] = $count;
+                $currentSettings['operator']
+                    = $this->getParams()->getFacetOperator($field);
+                $currentSettings['isApplied']
+                    = $this->getParams()->hasFilter("$field:".$value)
+                    || $this->getParams()->hasFilter("~$field:".$value);
+
+                // Store the collected values:
+                $list[$field]['list'][] = $currentSettings;
+            }
+        }
+
+        return $list;
+
+    }
+
+    /**
      * Get special facets
      * - User favorite institutions
      *
