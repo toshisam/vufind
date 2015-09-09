@@ -253,8 +253,9 @@ class JSTree extends VfJsTree implements ServiceLocatorAwareInterface
      *
      * @return string
      */
-    protected function getContextualUrl($node, $context, $collectionID = '', $htmlID = '')
-    {
+    protected function getContextualUrl($node, $context, $collectionID = '',
+        $htmlID = ''
+    ) {
         $params = [
             'id' => $node->id,
             'tab' => 'HierarchyTree'
