@@ -126,7 +126,7 @@ class Results extends VFSummonResults
         if ($configResultSettings) {
             $defaultLimit  = $configResultSettings->facet_limit_default ?
                 $configResultSettings->facet_limit_default : 4;
-            foreach ($finalResult as $key => $value ) {
+            foreach ($finalResult as $key => $value) {
 
                 $finalResult[$key]['displayLimit'] = isset(
                     $configResultSettings->{'facet_limit_' . $key}
@@ -136,7 +136,7 @@ class Results extends VFSummonResults
             // in case something isn't configured as expected,
             // we need to define a displayLimit for the category otherwise the
             // template using it stumbled upon it
-            foreach ($finalResult as $key => $value ) {
+            foreach ($finalResult as $key => $value) {
                 $finalResult[$key]['displayLimit'] = 5;
             }
         }

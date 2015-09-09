@@ -102,7 +102,6 @@ class Results extends VuFindSolrResults
     public function getFacetList($filter = null)
     {
 
-
         /* start of VF2 implementation - has to be re-changed once multi domain
         translations even for factes are implemented*/
 
@@ -117,7 +116,7 @@ class Results extends VuFindSolrResults
         }
 
         // Start building the facet list:
-        $list = array();
+        $list = [];
 
         // Loop through every field returned by the result set
         $fieldFacets = $this->responseFacets->getFieldFacets();
@@ -127,22 +126,20 @@ class Results extends VuFindSolrResults
             ->get($this->getOptions()->getFacetsIni())->Results_Settings;
 
         foreach (array_keys($filter) as $field) {
-            $data = isset($fieldFacets[$field]) ? $fieldFacets[$field] : array();
+            $data = isset($fieldFacets[$field]) ? $fieldFacets[$field] : [];
 
             // Skip empty arrays:
             if (count($data) < 1) {
                 continue;
             }
             // Initialize the settings for the current field
-            $list[$field] = array();
+            $list[$field] = [];
             // Add the on-screen label
             $list[$field]['label'] = $filter[$field];
             // Build our array of values for this field
-            $list[$field]['list']  = array();
-
+            $list[$field]['list']  = [];
 
             $translateInfo = $this->isFieldToTranslate($field);
-
 
             $list[$field]['displayLimit'] = isset(
                 $configResultSettings
@@ -154,7 +151,7 @@ class Results extends VuFindSolrResults
             // Loop through values:
             foreach ($data as $value => $count) {
                 // Initialize the array of data about the current facet:
-                $currentSettings = array();
+                $currentSettings = [];
                 $currentSettings['value'] = $value;
 
                 //if translation should be done (flag -translate) we have to
@@ -168,7 +165,7 @@ class Results extends VuFindSolrResults
                     count($translateInfo['field_domain']) == 1 ?
                         $this->translate($value) :
                     $this->translate(
-                        array($value , $translateInfo['field_domain'][1])
+                        [$value , $translateInfo['field_domain'][1]]
                     )  : $value;
 
                 //$currentSettings['displayText']
@@ -179,8 +176,8 @@ class Results extends VuFindSolrResults
                 $currentSettings['operator']
                     = $this->getParams()->getFacetOperator($field);
                 $currentSettings['isApplied']
-                    = $this->getParams()->hasFilter("$field:".$value)
-                    || $this->getParams()->hasFilter("~$field:".$value);
+                    = $this->getParams()->hasFilter("$field:" . $value)
+                    || $this->getParams()->hasFilter("~$field:" . $value);
 
                 // Store the collected values:
                 $list[$field]['list'][] = $currentSettings;
