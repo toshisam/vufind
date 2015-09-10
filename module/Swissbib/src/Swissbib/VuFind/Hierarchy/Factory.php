@@ -29,7 +29,6 @@
 namespace Swissbib\VuFind\Hierarchy;
 
 use Zend\ServiceManager\ServiceManager;
-use Swissbib\VuFind\Hierarchy\TreeDataSource\Solr as TreeDataSourceSolr;
 use Swissbib\VuFind\Hierarchy\TreeRenderer\JSTree as SwissbibJsTree;
 
 /**
