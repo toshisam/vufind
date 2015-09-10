@@ -344,6 +344,11 @@ return [
                     'solr' => 'Swissbib\VuFind\Hierarchy\Factory::getSolrTreeDataSource',
                 ]
             ],
+            'hierarchy_treedataformatter' => [
+                'invokables' => [
+                    'json' => 'Swissbib\VuFind\Hierarchy\TreeDataFormatter\Json',
+                ],
+            ],
             'hierarchy_treerenderer'   => [
                 'factories' => [
                     'jstree' => 'Swissbib\VuFind\Hierarchy\Factory::getJSTree'
