@@ -339,10 +339,10 @@ return [
                     'series' => 'Swissbib\VuFind\Hierarchy\Factory::getHierarchyDriverSeries',
                 ]
             ],
-            'hierarchy_treedatasource' =>  [
-                'factories' => [
-                    'solr' => 'Swissbib\VuFind\Hierarchy\Factory::getSolrTreeDataSource',
-                ]
+            'hierarchy_treedataformatter' => [
+                'invokables' => [
+                    'json' => 'Swissbib\VuFind\Hierarchy\TreeDataFormatter\Json',
+                ],
             ],
             'hierarchy_treerenderer'   => [
                 'factories' => [

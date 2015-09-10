@@ -29,7 +29,6 @@
 namespace Swissbib\VuFind\Hierarchy;
 
 use Zend\ServiceManager\ServiceManager;
-use Swissbib\VuFind\Hierarchy\TreeDataSource\Solr as TreeDataSourceSolr;
 use Swissbib\VuFind\Hierarchy\TreeRenderer\JSTree as SwissbibJsTree;
 
 /**
@@ -44,37 +43,6 @@ use Swissbib\VuFind\Hierarchy\TreeRenderer\JSTree as SwissbibJsTree;
  */
 class Factory
 {
-    /**
-     * GetSolrTreeDataSource
-     *
-     * @param ServiceManager $sm ServiceManager
-     *
-     * @return \Swissbib\VuFind\Hierarchy\TreeDataSource\Solr
-     */
-    public static function getSolrTreeDataSource(ServiceManager $sm)
-    {
-        $cacheDir = $sm->getServiceLocator()->get('VuFind\CacheManager')
-            ->getCacheDir(false);
-
-        $hierarchyFilters = $sm->getServiceLocator()->get('VuFind\Config')
-            ->get('HierarchyDefault');
-        
-        $filters = isset($hierarchyFilters->HierarchyTree->filterQueries)
-            ? $hierarchyFilters->HierarchyTree->filterQueries->toArray()
-            : [];
-        
-        $solr = $sm->getServiceLocator()->get('VuFind\Search\BackendManager')
-            ->get('Solr')->getConnector();
-        
-        $formatterManager = $sm->getServiceLocator()
-            ->get('VuFind\HierarchyTreeDataFormatterPluginManager');
-        
-        return new TreeDataSourceSolr(
-            $solr, $formatterManager, rtrim($cacheDir, '/') . '/hierarchy',
-            $filters
-        );
-    }
-
     /**
      * GetHierarchyDriverSeries
      *
