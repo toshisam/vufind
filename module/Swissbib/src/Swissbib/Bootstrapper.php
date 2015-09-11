@@ -225,9 +225,11 @@ class Bootstrapper
                     $viewModel, $config
                 ) {
                     $request = $event->getRequest();
+                    $post = $request->getPost();
+                    $query = $request->getQuery();
 
-                    if ($languageChange = $request->getPost()->get('mylang', false)
-                        || $languageChange = $request->getQuery()->get('lng', false)
+                    if (($languageChange = $post->get('mylang', false))
+                        || ($languageChange = $query->get('lng', false))
                     ) {
                         if (in_array(
                             $languageChange,
