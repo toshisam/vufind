@@ -150,7 +150,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     protected $partsOfDescription = [
         'ISBNs', 'ISSNs', 'ISMNs', 'DOIs', 'URNs', 'AllSubjectVocabularies',
-        'Series', 'AltTitle', 'NewerTitles', 'PreviousTitles', 'GeneralNotes',
+        'Series', 'CollectionTitle', 'AltTitle', 'NewerTitles', 'PreviousTitles', 'GeneralNotes',
         'DissertationNotes', 'BibliographyNotes', 'PublicationFrequency',
         'AccessRestrictions', 'ProductionCredits', 'OriginalTitle', 'PerformerNote',
         'Awards', 'CitationNotes', 'ContResourceDates', 'OriginalVersionNotes',
@@ -1155,6 +1155,15 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         } else {
             return null;
         }
+    }
+
+    /**
+     * Get collection title
+     * 
+     * @return String
+     */
+    public function getCollectionTitle() {
+        return $this->getFieldArray('499', ['a', 'v',]);
     }
 
     /**

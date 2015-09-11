@@ -14,10 +14,11 @@ $urns   = $record->getURNs();
 
 $alttitle = $record->getAltTitle();
 
-$series      = $record->getSeries();
-$recordLinks = $record->getAllRecordLinks();
-$nextTitles  = $record->getNewerTitles();
-$prevTitles  = $record->getPreviousTitles();
+$series          = $record->getSeries();
+$collectionTitle = $record->getCollectionTitle();
+$recordLinks     = $record->getAllRecordLinks();
+$nextTitles      = $record->getNewerTitles();
+$prevTitles      = $record->getPreviousTitles();
 ?>
 
 <table class="table table-striped" summary="<?=$this->transEsc('Description')?>">
@@ -115,6 +116,18 @@ $prevTitles  = $record->getPreviousTitles();
         <? endforeach; ?>
         </td>
     </tr>
+    <? endif; ?>
+
+    <? if (!empty($collectionTitle)): ?>
+        <? $contentDisplayed = true; ?>
+        <tr>
+            <th><?= $this->transEsc('Collection') ?>: </th>
+            <td>
+                <? foreach ($collectionTitle as $field): ?>
+                        <?= $this->escapeHtml($field) ?> <br/>
+                <? endforeach; ?>
+            </td>
+        </tr>
     <? endif; ?>
 
     <? /* Display and link to related items (field configured in config_base.ini -> marc_links) */ ?>
