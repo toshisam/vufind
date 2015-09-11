@@ -207,17 +207,17 @@ class JSTree extends VfJsTree implements ServiceLocatorAwareInterface
      * @param object  $node        JSON object of a node/top node
      * @param string  $context     Record or Collection
      * @param string  $hierarchyID Collection ID
-     * @param integer $level       Indicating the depth of recursion
+     * @param integer $idPath      Indicating a path of IDs to the
+     *                             root element in order to make the
+     *                             HTML ID unique
      *
      * @return array
      */
-    protected function buildNodeArray($node, $context, $hierarchyID, $level = 0)
+    protected function buildNodeArray($node, $context, $hierarchyID, $idPath = 0)
     {
         $escaper = new \Zend\Escaper\Escaper('utf-8');
-        $htmlID = $level . '_' . preg_replace('/\W/', '-', $node->id);
+        $htmlID = $idPath . '_' . preg_replace('/\W/', '-', $node->id);
         $ret = [
-            //prefix with level to allow multiple nodes with the same recordId on
-            // different levels
             'id' => $htmlID,
             'text' => $escaper->escapeHtml($node->title),
             'li_attr' => [
@@ -233,10 +233,9 @@ class JSTree extends VfJsTree implements ServiceLocatorAwareInterface
         ];
         if (isset($node->children)) {
             $ret['children'] = [];
-            $level++;
             for ($i = 0;$i < count($node->children);$i++) {
                 $ret['children'][$i] = $this->buildNodeArray(
-                    $node->children[$i], $context, $hierarchyID, $level
+                    $node->children[$i], $context, $hierarchyID, $htmlID
                 );
             }
         }
