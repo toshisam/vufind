@@ -104,7 +104,12 @@ class Record extends VuFindRecord
                         'B|^SNL$ && P|^856$',
                         'B|^RETROS$ && P|^856$',
                         'B|^BORIS && P|^856$',
-                        'B|^FREE && P|^856$'
+                        'B|^FREE && P|^856$',
+                        'B|^IDSSG$ && P|^856$ && z|^download \(pdf\)',
+                        'B|^IDSSG$ && P|^856$ && u|edis.nsf',
+                        'B|^NEBIS$ && P|^856$ && z|^Inhaltsverzeichnis',
+                        'P|^856$ && u|zora.uzh.ch',
+                        'P|^856$ && u|e-collection.ethbib.ethz.ch'
                     ]
                 ],
                 '956' => [
@@ -112,7 +117,8 @@ class Record extends VuFindRecord
                     'desc' => ['y'],
                     'conditions' => [
                         'B|^IDSBB$',
-                        'B|^SNL$'
+                        'B|^SNL$',
+                        'B|^NEBIS$ && y|Inhaltsverzeichnis'
                     ]
                 ]
             ],
@@ -121,6 +127,13 @@ class Record extends VuFindRecord
                     'x|^VIEW && y|^Porträt',
                     'x|^VIEW && y|^Vorschau zum Bild'
                 ]
+            ],
+            'mergeLinksByDescription' => [
+                '^Inhaltsverzeichnis',
+                '^Titelblatt und Inhaltsverzeichnis$',
+                '^Inhaltstext',
+                '^download \(pdf\)',
+                'opac.admin.ch'
             ]
         ],
         'sbvfrdjus' => [
