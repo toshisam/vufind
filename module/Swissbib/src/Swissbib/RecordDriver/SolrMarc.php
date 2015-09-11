@@ -650,9 +650,9 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         if ($isbn = $this->getCleanISBN()) {
             return ['isn' => $isbn, 'size' => $size];
-        } elseif ($path = $this->getThumbnail_956_1()) {
+        } elseif ($path = $this->getThumbnail956()) {
             return $path;
-        } elseif ($path = $this->getThumbnail_856_1()) {
+        } elseif ($path = $this->getThumbnail856()) {
             return $path;
         } elseif ($path = $this->getThumbnailErara()) {
             return $path;
@@ -668,10 +668,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * @return string
      */
-    // @codingStandardsIgnoreStart
-    protected function getThumbnail_956_1()
+    protected function getThumbnail956()
     {
-        // @codingStandardsIgnoreEnd
         $thumbnailURL = null;
 
         $fields = $this->getMarcSubFieldMaps(
@@ -754,10 +752,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * @return string
      */
-    // @codingStandardsIgnoreStart
-    protected function getThumbnail_856_1()
+    protected function getThumbnail856()
     {
-        // @codingStandardsIgnoreEnd
         $fields = $this->get950();
         if (!$fields) {
             return [];
@@ -804,10 +800,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * @return string
      */
-    // @codingStandardsIgnoreStart
     protected function getThumbnailErara()
     {
-        // @codingStandardsIgnoreEnd
         $field = $this->getDOIs();
         if (!empty($field) && preg_match('/^.*e-rara/', $field['0'])) {
             $URL_thumb = 'http://www.e-rara.ch/titlepage/doi/'
@@ -1816,19 +1810,6 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         $title = parent::getTitle();
 
         return is_array($title) ? reset($title) : $title;
-    }
-
-    /**
-     * Get is_hierarchy_title
-     *
-     * @return string
-     */
-    // @codingStandardsIgnoreStart
-    public function getIs_hierarchy_title()
-    {
-        // @codingStandardsIgnoreEnd
-        return isset($this->fields['is_hierarchy_title']) ?
-            $this->fields['is_hierarchy_title'] : $this->getTitle();
     }
 
     /**
