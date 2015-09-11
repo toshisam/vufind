@@ -1159,10 +1159,11 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get collection title
-     * 
+     *
      * @return String
      */
-    public function getCollectionTitle() {
+    public function getCollectionTitle()
+    {
         return $this->getFieldArray('499', ['a', 'v',]);
     }
 
