@@ -150,11 +150,12 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     protected $partsOfDescription = [
         'ISBNs', 'ISSNs', 'ISMNs', 'DOIs', 'URNs', 'AllSubjectVocabularies',
-        'Series', 'CollectionTitle', 'AltTitle', 'NewerTitles', 'PreviousTitles', 'GeneralNotes',
-        'DissertationNotes', 'BibliographyNotes', 'PublicationFrequency',
-        'AccessRestrictions', 'ProductionCredits', 'OriginalTitle', 'PerformerNote',
-        'Awards', 'CitationNotes', 'ContResourceDates', 'OriginalVersionNotes',
-        'CopyNotes', 'SystemDetails', 'RelationshipNotes', 'HierarchicalPlaceNames',
+        'Series', 'CollectionTitle', 'AltTitle', 'NewerTitles', 'PreviousTitles',
+        'GeneralNotes', 'DissertationNotes', 'BibliographyNotes',
+        'PublicationFrequency', 'AccessRestrictions', 'ProductionCredits',
+        'OriginalTitle', 'PerformerNote', 'Awards', 'CitationNotes',
+        'ContResourceDates', 'OriginalVersionNotes', 'CopyNotes',
+        'SystemDetails', 'RelationshipNotes', 'HierarchicalPlaceNames',
         'RelatedEntries',
     ];
 
