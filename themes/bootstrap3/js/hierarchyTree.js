@@ -56,8 +56,10 @@ function doTreeSearch()
   if(keyword.length == 0) {
     $('#hierarchyTree').find('.jstree-search').removeClass('jstree-search');
     var tree = $('#hierarchyTree').jstree(true);
+    var treeModel = tree._model.data;
     tree.close_all();
-    tree._open_to(htmlID);
+    var id = getNodeIdFromRecordId(treeModel,recordID);
+    tree._open_to(id);
     $('#treeSearchLoadingImg').addClass('hidden');
   } else {
     if(searchAjax) {
@@ -73,13 +75,16 @@ function doTreeSearch()
         if(data.results.length > 0) {
           $('#hierarchyTree').find('.jstree-search').removeClass('jstree-search');
           var tree = $('#hierarchyTree').jstree(true);
+          var treeModel = tree._model.data;
           tree.close_all();
           for(var i=data.results.length;i--;) {
-            var id = htmlEncodeId(data.results[i]);
+            var recordId = htmlEncodeId(data.results[i]);
+            var id = getNodeIdFromRecordId(treeModel,recordId);
             tree._open_to(id);
           }
           for(i=data.results.length;i--;) {
             var tid = htmlEncodeId(data.results[i]);
+            tid = getNodeIdFromRecordId(treeModel,tid);
             $('#hierarchyTree').find('#'+tid).addClass('jstree-search');
           }
           changeNoResultLabel(false);
@@ -91,6 +96,22 @@ function doTreeSearch()
       }
     });
   }
+}
+
+function getNodeIdFromRecordId(treeModel,recordId)
+{
+  var id = '';
+  for(var node in treeModel) {
+    if (treeModel.hasOwnProperty(node)
+        && node !== '#'
+        && treeModel[node].li_attr.recordid
+        && treeModel[node].li_attr.recordid === recordId
+    ) {
+      id = treeModel[node].li_attr.id;
+      break;
+    }
+  }
+  return id;
 }
 
 function buildJSONNodes(xml)
