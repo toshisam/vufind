@@ -149,13 +149,34 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      * @var Array
      */
     protected $partsOfDescription = [
-        'ISBNs', 'ISSNs', 'ISMNs', 'DOIs', 'URNs', 'AllSubjectVocabularies',
-        'Series', 'CollectionTitle', 'AltTitle', 'NewerTitles', 'PreviousTitles',
-        'GeneralNotes', 'DissertationNotes', 'BibliographyNotes',
-        'PublicationFrequency', 'AccessRestrictions', 'ProductionCredits',
-        'OriginalTitle', 'PerformerNote', 'Awards', 'CitationNotes',
-        'ContResourceDates', 'OriginalVersionNotes', 'CopyNotes',
-        'SystemDetails', 'RelationshipNotes', 'HierarchicalPlaceNames',
+        'ISBNs',
+        'ISSNs',
+        'ISMNs',
+        'DOIs',
+        'URNs',
+        'AllSubjectVocabularies',
+        'Series',
+        'CollectionTitle',
+        'ArchivalVolumeTitle',
+        'AltTitle',
+        'NewerTitles',
+        'PreviousTitles',
+        'GeneralNotes',
+        'DissertationNotes',
+        'BibliographyNotes',
+        'PublicationFrequency',
+        'AccessRestrictions',
+        'ProductionCredits',
+        'OriginalTitle',
+        'PerformerNote',
+        'Awards',
+        'CitationNotes',
+        'ContResourceDates',
+        'OriginalVersionNotes',
+        'CopyNotes',
+        'SystemDetails',
+        'RelationshipNotes',
+        'HierarchicalPlaceNames',
         'RelatedEntries',
     ];
 
@@ -1160,6 +1181,34 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getCollectionTitle()
     {
         return $this->getFieldArray('499', ['a', 'v',]);
+    }
+
+    /**
+     * Get title of archival volumes
+     *
+     * @return String
+     */
+    public function getArchivalVolumeTitle()
+    {
+        $data = $this->getMarcSubFieldMap(
+            779,
+            [
+            'g' => 'number',
+            't' => 'partTitle',
+            ]
+        );
+        if (empty($data)) {
+            return null;
+        } else {
+            $string = [];
+            if (isset($data['number'])) {
+                $string = $data['number'];
+            }
+            if (isset($data['partTitle'])) {
+                $string .= ': ' . $data['partTitle'];
+            }
+            return $string;
+        }
     }
 
     /**
