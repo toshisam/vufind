@@ -56,7 +56,7 @@ class Writer
      */
     public function __construct($basePath)
     {
-        $this->basePath = realpath($basePath);
+        $this->basePath = $basePath;
     }
 
     /**
@@ -117,6 +117,6 @@ class Writer
 
         $path = $this->basePath . '-' . $network . '/' . $locale . '.ini';
 
-        return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+        return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, realpath($path));
     }
 }

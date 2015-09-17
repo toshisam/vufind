@@ -164,7 +164,7 @@ class Results extends VuFindSolrResults
                     count($translateInfo['field_domain']) == 1 ?
                         $this->translate($value) :
                     $this->translate(
-                        [$value , $translateInfo['field_domain'][1]]
+                        $translateInfo['field_domain'][1] . '::' . $value
                     )  : $value;
 
                 //$currentSettings['displayText']
@@ -241,11 +241,9 @@ class Results extends VuFindSolrResults
                         count($translateInfo['field_domain']) == 1 ?
                             $this->translate($queryFacet['value']) :
                         $this->translate(
-                            [
-                                $queryFacet['value'] ,
-                                $translateInfo['field_domain'][1]
-                            ]
-                        )  : $queryFacet['value'];
+                            $translateInfo['field_domain'][1] . '::' .
+                            $queryFacet['value']
+                        ) : $queryFacet['value'];
 
                     $currentSettings['isApplied'] = $this->getParams()
                         ->hasFilter($facetGroupName . ":" . $queryFacet['value'])
