@@ -30,7 +30,6 @@
  */
 namespace Swissbib\Controller;
 
-use VuFind\Search\RecommendListener;
 use VuFind\Exception\ILS;
 use VuFind\ILS\Driver\AlephRestfulException;
 use VuFindSearch\Service;
