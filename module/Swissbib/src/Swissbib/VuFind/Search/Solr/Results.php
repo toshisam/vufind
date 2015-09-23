@@ -245,7 +245,6 @@ class Results extends VuFindSolrResults
         return $this->spellingProcessor;
     }
 
-
     /**
      * Turn the list of spelling suggestions into an array of urls
      *   for on-screen use to implement the suggestions.

@@ -29,7 +29,6 @@
 namespace Swissbib\Services;
 
 use Zend\ServiceManager\ServiceManager;
-use Zend\I18n\Translator\LoaderPluginManager;
 
 use Swissbib\VuFind\Recommend\FavoriteFacets;
 
@@ -134,7 +133,6 @@ class Factory
 
         return $logger;
     }
-
 
     /**
      * Factory for FavoriteFacets module.
