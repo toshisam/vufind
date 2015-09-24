@@ -30,7 +30,7 @@ var swissbib = {
       $removeSearchTextIcon.hide();
     });
 
-    $searchInputField.on('input',function(){
+    $searchInputField.on('input', function() {
       if ($searchInputField.val() === '') {
         $removeSearchTextIcon.hide();
       } else {
