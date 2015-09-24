@@ -10,10 +10,33 @@ var swissbib = {
    */
   initOnReady: function () {
     this.initBackgrounds();
+    this.initRemoveSearchText();
     this.initUserVoiceFeedback();
     this.initBulkExport();
     this.AdvancedSearch.init();
     this.initHierarchyTree();
+  },
+
+  /**
+   * Initializes remove search text icon on main search field
+   */
+  initRemoveSearchText: function() {
+    var $searchInputField = $('#searchForm_lookfor');
+    var $removeSearchTextIcon = $('#remove-search-text');
+
+    $removeSearchTextIcon.click(function() {
+      $searchInputField.val('');
+      $searchInputField.focus();
+      $removeSearchTextIcon.hide();
+    });
+
+    $searchInputField.on('input',function(){
+      if ($searchInputField.val() === '') {
+        $removeSearchTextIcon.hide();
+      } else {
+        $removeSearchTextIcon.show();
+      }
+    });
   },
 
   /**

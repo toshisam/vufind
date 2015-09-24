@@ -1667,8 +1667,20 @@ div.resultView form.form-inline div.btn-group input[name="print"] {
   background: lighten(#F7F7F7, 20%);
   font-weight: bold;
   background-color: #F7F7F7;
-
-
-
 }
 
+#remove-search-text {
+  position: absolute;
+  left: -40px;
+  top: 0;
+  z-index: 10;
+  padding: 9px 12px;
+  font-size: 18px;
+  color: @link-color;
+  cursor: pointer;
+  display: none;
+
+  &:hover {
+    color: @highlight-color;
+  }
+}
