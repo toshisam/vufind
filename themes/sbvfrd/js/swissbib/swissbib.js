@@ -24,6 +24,10 @@ var swissbib = {
     var $searchInputField = $('#searchForm_lookfor');
     var $removeSearchTextIcon = $('#remove-search-text');
 
+    if ($searchInputField.val() !== '') {
+      $removeSearchTextIcon.show();
+    }
+
     $removeSearchTextIcon.click(function() {
       $searchInputField.val('');
       $searchInputField.focus();
