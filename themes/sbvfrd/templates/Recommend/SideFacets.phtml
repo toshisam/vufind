@@ -17,6 +17,8 @@
 <? endif; ?>
 <? $extraFilters = isset($this->extraSideFacetFilters) ? $this->extraSideFacetFilters : array(); ?>
 <? $collapsedFacets = $this->recommend->getCollapsedFacets() ?>
+<? $hierarchicalFacetSortOptions = $this->recommend->getHierarchicalFacetSortOptions() ?>
+<? $hierarchicalFacets = $this->recommend->getHierarchicalFacets() ?>
 <? $filterList = array_merge($results->getParams()->getFilterList(true), $extraFilters); if (!empty($filterList)): ?>
   <ul class="list-group filters">
     <li class="list-group-item title"><?=$this->transEsc('Remove Filters')?></li>
@@ -125,6 +127,39 @@ JS;
             </form>
           </li>
         <? else: ?>
+          <? if (in_array($title, $hierarchicalFacets)): ?>
+          <? $this->headScript()->appendFile('vendor/jsTree/jstree.min.js'); ?>
+          <? $this->headScript()->appendFile('facets.js'); ?>
+          <? $sort = isset($hierarchicalFacetSortOptions[$title]) ? $hierarchicalFacetSortOptions[$title] : ''; ?>
+          <? if (!in_array($title, $collapsedFacets)): ?>
+              <?
+              $script = <<<JS
+$(document).ready(function() {
+  initFacetTree($('#facet_{$this->escapeHtml($title)}'), true);
+});
+JS;
+              ?>
+              <?=$this->inlineScript(\Zend\View\Helper\HeadScript::SCRIPT, $script, 'SET'); ?>
+          <? else: ?>
+              <?
+              $script = <<<JS
+$('#side-collapse-{$this->escapeHtmlAttr($title)}').on('show.bs.collapse', function() {
+  initFacetTree($('#facet_{$this->escapeHtml($title)}'), true);
+});
+JS;
+              ?>
+              <?=$this->inlineScript(\Zend\View\Helper\HeadScript::SCRIPT, $script, 'SET'); ?>
+          <? endif; ?>
+          <li id="facet_<?=$this->escapeHtml($title)?>" class="jstree-facet"
+              data-facet="<?=$this->escapeHtmlAttr($title)?>"
+              data-path="<?=$this->currentPath()?>"
+              data-exclude="<?=$allowExclude?>"
+              data-operator="<?=$this->recommend->getFacetOperator($title)?>"
+              data-exclude-title="<?=$this->transEsc('exclude_facet')?>"
+              data-sort="<?=isset($hierarchicalFacetSortOptions[$title]) ? $hierarchicalFacetSortOptions[$title] : ''?>">
+          </li>
+          <noscript>
+              <? endif; ?>
           <? foreach ($cluster['list'] as $i=>$thisFacet): ?>
             <?
               if(strlen($thisFacet['displayText']) == 0) {
@@ -183,6 +218,9 @@ JS;
           <? endif; ?>
         <? endforeach; ?>
           <? if ( $i > $tLimit): ?><a class="list-group-item <?=$moreClass ?>" href="javascript:lessFacets('narrowGroupHidden-<?=$title ?>')"><?=$this->transEsc('less')?> ...</a><? endif; ?>
+        <? endif; ?>
+        <? if (in_array($title, $hierarchicalFacets)): ?>
+          </noscript>
         <? endif; ?>
       </div>
     </ul>
