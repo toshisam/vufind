@@ -79,7 +79,7 @@ class InjectSwissbibSpellingListener  extends VFSpellingListener
                     reset($this->dictionaries);
                     //deactivate initial spell checking, to do it only
                     //if there are no results
-                    $params->set('spellcheck', 'false');
+                    $params->set('spellcheck', 'true');
                     $params->set(
                         'spellcheck.dictionary', current($this->dictionaries)
                     );
@@ -134,6 +134,7 @@ class InjectSwissbibSpellingListener  extends VFSpellingListener
      */
     protected function aggregateSpellcheck(Spellcheck $spellcheck, $query)
     {
+        /*
         foreach ($this->dictionaries as $dictionary) {
             $params = new ParamBag();
 
@@ -145,5 +146,6 @@ class InjectSwissbibSpellingListener  extends VFSpellingListener
 
             $spellcheck->mergeWith($collection->getSpellcheck());
         }
+        */
     }
 }
