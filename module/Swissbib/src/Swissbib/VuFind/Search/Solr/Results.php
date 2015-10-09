@@ -37,6 +37,7 @@ use VuFind\Search\Solr\SpellingProcessor;
  * @category Swissbib_VuFind2
  * @package  VuFind_Search_Solr
  * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @author   Markus Mächler <markus.maechler@bithost.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.vufind.org  Main Page
  */
@@ -162,75 +163,6 @@ class Results extends VuFindSolrResults
     }
 
     /**
-     * PerformSearch
-     *
-     * @throws \Exception
-     * @throws \VuFindSearch\Backend\Exception\BackendException
-     *
-     * @return void
-     */
-    protected function performSearch()
-    {
-        $query  = $this->getParams()->getQuery();
-        $limit  = $this->getParams()->getLimit();
-        $offset = $this->getStartRecord() - 1;
-        $params = $this->getParams()->getBackendParameters();
-        $searchService = $this->getSearchService();
-
-        try {
-            $collection = $searchService
-                ->search($this->backendId, $query, $offset, $limit, $params);
-        } catch (\VuFindSearch\Backend\Exception\BackendException $e) {
-            // If the query caused a parser error, see if we can clean it up:
-            if ($e->hasTag('VuFind\Search\ParserError')
-                && $newQuery = $this->fixBadQuery($query)
-            ) {
-                // We need to get a fresh set of $params, since the previous one was
-                // manipulated by the previous search() call.
-                $params = $this->getParams()->getBackendParameters();
-                $collection = $searchService
-                    ->search($this->backendId, $newQuery, $offset, $limit, $params);
-            } else {
-                throw $e;
-            }
-        }
-
-        //code aus letztem VuFind Core
-        $this->responseFacets = $collection->getFacets();
-        $this->resultTotal = $collection->getTotal();
-
-        if ($this->resultTotal == 0) {
-
-            //we use spellchecking only in case of 0 hits
-
-            $params = $this->getParams()->getSpellcheckBackendParameters();
-            try {
-                $recordCollectionSpellingQuery = $searchService
-                    ->search($this->backendId, $query, $offset, $limit, $params);
-            } catch (\VuFindSearch\Backend\Exception\BackendException $e) {
-                //todo: some kind of logging?
-                throw $e;
-
-            }
-
-            // Processing of spelling suggestions
-            $spellcheck = $recordCollectionSpellingQuery->getSpellcheck();
-            $this->spellingQuery = $spellcheck->getQuery();
-
-            //GH: I introduced a special type for suggestions provided by the SOLR
-            // index in opposition to the VF2 core implementation where a simple
-            // array structure is used a specialized type makes it much easier to
-            // use the suggestions in the view script
-            //the object variable suggestions is already used by VF2 core
-            $this->sbSuggestions = $this->getSpellingProcessor()
-                ->getSuggestions($spellcheck, $this->getParams()->getQuery());
-        }
-
-        // Construct record drivers for all the items in the response:
-        $this->results = $collection->getRecords();
-    }
-
-    /**
      * GetSpellingProcessor
      *
      * @return mixed
@@ -243,16 +175,5 @@ class Results extends VuFindSolrResults
         }
 
         return $this->spellingProcessor;
-    }
-
-    /**
-     * Turn the list of spelling suggestions into an array of urls
-     *   for on-screen use to implement the suggestions.
-     *
-     * @return array Spelling suggestion data arrays
-     */
-    public function getSpellingSuggestions()
-    {
-        return $this->sbSuggestions;
     }
 }

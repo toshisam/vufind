@@ -31,6 +31,7 @@
 namespace Swissbib\VuFind\Search\Solr;
 
 use VuFind\Search\Solr\InjectSpellingListener as VFSpellingListener;
+use VuFindSearch\Backend\Solr\Response\Json\RecordCollection;
 use Zend\EventManager\EventInterface;
 use VuFindSearch\ParamBag;
 use VuFindSearch\Backend\Solr\Response\Json\Spellcheck;
@@ -42,6 +43,7 @@ use VuFindSearch\Query\Query;
  * @category Swissbib_VuFind2
  * @package  VuFind_Search_Solr
  * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @author   Markus Mächler <markus.maechler@bithost.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.vufind.org  Main Page
  */
@@ -56,17 +58,16 @@ class InjectSwissbibSpellingListener  extends VFSpellingListener
      */
     public function onSearchPre(EventInterface $event)
     {
+        if ($event->getParam('context') != 'search') {
+            return $event;
+        }
         $backend = $event->getTarget();
         if ($backend === $this->backend) {
             $params = $event->getParam('params');
             if ($params) {
-                // Set spelling parameters unless explicitly disabled:
-                $sc = $params->get('swissbibspellcheck');
-                if (!empty($sc) && $sc[0] != 'false') {
-
-                    //remove the homegrown parameter only needed to activate
-                    // the spellchecker in case of zero hits
-                    $params->remove("swissbibspellcheck");
+                // Set spelling parameters when enabled:
+                $sc = $params->get('spellcheck');
+                if (isset($sc[0]) && $sc[0] != 'false') {
                     $this->active = true;
                     if (empty($this->dictionaries)) {
                         throw new \Exception(
@@ -76,7 +77,9 @@ class InjectSwissbibSpellingListener  extends VFSpellingListener
 
                     // Set relevant Solr parameters:
                     reset($this->dictionaries);
-                    $params->set('spellcheck', 'true');
+                    //deactivate initial spell checking, to do it only
+                    //if there are no results
+                    $params->set('spellcheck', 'false');
                     $params->set(
                         'spellcheck.dictionary', current($this->dictionaries)
                     );
@@ -87,15 +90,45 @@ class InjectSwissbibSpellingListener  extends VFSpellingListener
                 }
             }
         }
-
         return $event;
     }
 
     /**
-     * AggregateSpellcheck
+     * Inject additional spelling suggestions.
      *
-     * @param Spellcheck $spellcheck Spellcheck
-     * @param string     $query      Query
+     * @param EventInterface $event Event
+     *
+     * @return EventInterface
+     */
+    public function onSearchPost(EventInterface $event)
+    {
+        // Do nothing if spelling is disabled or context is wrong
+        if (!$this->active || $event->getParam('context') != 'search') {
+            return $event;
+        }
+
+        // Merge spelling details from extra dictionaries:
+        $backend = $event->getParam('backend');
+        if ($backend == $this->backend->getIdentifier()) {
+            /** @var RecordCollection $result */
+            $result = $event->getTarget();
+            $params = $event->getParam('params');
+            $spellcheckQuery = $params->get('spellcheck.q');
+            reset($this->dictionaries);
+            prev($this->dictionaries);
+            if (!empty($spellcheckQuery) && $result->getTotal() === 0) {
+                $this->aggregateSpellcheck(
+                    $result->getSpellcheck(), end($spellcheckQuery)
+                );
+            }
+        }
+    }
+
+    /**
+     * Submit requests for more spelling suggestions.
+     *
+     * @param Spellcheck $spellcheck Aggregating spellcheck object
+     * @param string     $query      Spellcheck query
      *
      * @return void
      */

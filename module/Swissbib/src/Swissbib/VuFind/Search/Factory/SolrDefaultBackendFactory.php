@@ -35,7 +35,11 @@ use Swissbib\VuFind\Search\Backend\Solr\LuceneSyntaxHelper;
 use Swissbib\VuFind\Search\Solr\InjectSwissbibSpellingListener;
 use VuFind\Search\Factory\SolrDefaultBackendFactory
     as VuFindSolrDefaultBackendFactory;
+use VuFind\Search\Solr\FilterFieldConversionListener;
+use VuFind\Search\Solr\MultiIndexListener;
 use VuFindSearch\Backend\Solr\Backend;
+use VuFind\Search\Solr\V3\ErrorListener as LegacyErrorListener;
+use VuFind\Search\Solr\V4\ErrorListener;
 
 use Swissbib\Highlight\SolrConfigurator as HighlightSolrConfigurator;
 use VuFindSearch\Backend\Solr\Connector;
@@ -62,20 +66,87 @@ class SolrDefaultBackendFactory extends VuFindSolrDefaultBackendFactory
      */
     protected function createListeners(Backend $backend)
     {
-        parent::createListeners($backend);
-
         $events = $this->serviceLocator->get('SharedEventManager');
 
-        // Spellcheck
-        $config  = $this->config->get('config');
+        // Load configurations:
+        $config = $this->config->get('config');
+        $search = $this->config->get($this->searchConfig);
+        $facet = $this->config->get($this->facetConfig);
 
-        if (isset($config->Spelling->simple) && $config->Spelling->simple) {
-            $dictionaries = ['basicSpell'];
-        } else {
-            $dictionaries = ['default', 'basicSpell'];
+        // Highlighting
+        $this->getInjectHighlightingListener($backend, $search)->attach($events);
+
+        // Conditional Filters
+        if (isset($search->ConditionalHiddenFilters)
+            && $search->ConditionalHiddenFilters->count() > 0
+        ) {
+            $this->getInjectConditionalFilterListener($search)->attach($events);
         }
+
+        // Spellcheck
+        /*
+        if (isset($config->Spelling->enabled) && $config->Spelling->enabled) {
+            if (isset($config->Spelling->simple) && $config->Spelling->simple) {
+                $dictionaries = ['basicSpell'];
+            } else {
+                $dictionaries = ['default', 'basicSpell'];
+            }
+            $spellingListener = new InjectSpellingListener($backend, $dictionaries);
+            $spellingListener->attach($events);
+        }
+        */
+
+        // Apply field stripping if applicable:
+        if (isset($search->StripFields) && isset($search->IndexShards)) {
+            $strip = $search->StripFields->toArray();
+            foreach ($strip as $k => $v) {
+                $strip[$k] = array_map('trim', explode(',', $v));
+            }
+            $mindexListener = new MultiIndexListener(
+                $backend,
+                $search->IndexShards->toArray(),
+                $strip,
+                $this->loadSpecs()
+            );
+            $mindexListener->attach($events);
+        }
+
+        // Apply deduplication if applicable:
+        if (isset($search->Records->deduplication)) {
+            $this->getDeduplicationListener(
+                $backend, $search->Records->deduplication
+            )->attach($events);
+        }
+
+        // Attach hierarchical facet listener:
+        $this->getHierarchicalFacetListener($backend)->attach($events);
+
+        // Apply legacy filter conversion if necessary:
+        $facets = $this->config->get($this->facetConfig);
+        if (!empty($facets->LegacyFields)) {
+            $filterFieldConversionListener = new FilterFieldConversionListener(
+                $facets->LegacyFields->toArray()
+            );
+            $filterFieldConversionListener->attach($events);
+        }
+
+        // Attach hide facet value listener:
+        if ($hfvListener = $this->getHideFacetValueListener($backend, $facet)) {
+            $hfvListener->attach($events);
+        }
+
+        // Attach error listeners for Solr 3.x and Solr 4.x (for backward
+        // compatibility with VuFind 1.x instances).
+        $legacyErrorListener = new LegacyErrorListener($backend);
+        $legacyErrorListener->attach($events);
+        $errorListener = new ErrorListener($backend);
+        $errorListener->attach($events);
+
+
+        //Swissbib custom
+
         $spellingListener = new InjectSwissbibSpellingListener(
-            $backend, $dictionaries
+            $backend, ['default']
         );
         $spellingListener->attach($events);
 
