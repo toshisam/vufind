@@ -116,7 +116,7 @@ class InjectSwissbibSpellingListener  extends VFSpellingListener
             $spellcheckQuery = $params->get('spellcheck.q');
             reset($this->dictionaries);
             prev($this->dictionaries);
-            if (!empty($spellcheckQuery) && $result->getTotal() === 0) {
+            if (!empty($spellcheckQuery)) {
                 $this->aggregateSpellcheck(
                     $result->getSpellcheck(), end($spellcheckQuery)
                 );

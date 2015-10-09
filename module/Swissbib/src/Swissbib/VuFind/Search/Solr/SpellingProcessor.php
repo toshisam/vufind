@@ -58,7 +58,7 @@ class SpellingProcessor extends VuFindSpellingProcessor
      *
      * @var int
      */
-    protected $termSpellingLimit = 1;
+    protected $termSpellingLimit = 0;
 
     /**
      * Term limit for single terms if only one word
