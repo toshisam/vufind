@@ -108,8 +108,8 @@ class Record extends VuFindRecord
                         'B|^IDSSG$ && P|^856$ && z|^download \(pdf\)',
                         'B|^IDSSG$ && P|^856$ && u|edis.nsf',
                         'B|^NEBIS$ && P|^856$ && z|^Inhaltsverzeichnis',
-                        'P|^856$ && u|zora.uzh.ch',
-                        'P|^856$ && u|e-collection.ethbib.ethz.ch'
+                        'B|^NEBIS$ && P|^856$ && u|e-collection.ethbib.ethz.ch',
+                        'P|^856$ && u|zora.uzh.ch'
                     ]
                 ],
                 '956' => [
