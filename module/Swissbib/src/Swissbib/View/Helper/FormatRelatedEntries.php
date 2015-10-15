@@ -134,7 +134,7 @@ class FormatRelatedEntries extends AbstractHelper
     {
         $formattedEntry = '';
         $translatedRelatorCode = $this->translator->translate(
-            'relator_' . $relatedCorporation['relator_code']
+            'relator_' . $relatedCorporation['relator_code'], 'relators'
         );
 
         if (isset($relatedCorporation['name'])) {
