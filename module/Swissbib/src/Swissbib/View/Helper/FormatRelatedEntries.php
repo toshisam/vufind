@@ -28,7 +28,6 @@
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-
 namespace Swissbib\View\Helper;
 
 use Zend\I18n\Translator\TranslatorInterface;
@@ -43,8 +42,8 @@ use Zend\View\Helper\AbstractHelper;
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org
  */
-class FormatRelatedEntries extends AbstractHelper {
-
+class FormatRelatedEntries extends AbstractHelper
+{
     /**
      * Translator
      *
@@ -100,7 +99,7 @@ class FormatRelatedEntries extends AbstractHelper {
     {
         $formattedEntry = '';
         $translatedRelatorCode = $this->translator->translate(
-            'relator_' . $relatedPerson['relator_code']
+            'relator_' . $relatedPerson['relator_code'], 'relators'
         );
 
         if (isset($relatedPerson['name'])) {

@@ -140,75 +140,75 @@ $(document).ready(function()
   htmlID = htmlEncodeId(recordID);
   hierarchyContext = $("#hierarchyTree").find(".hiddenContext")[0].value;
 
-  $("#hierarchyLoading").removeClass('hide');  
+  $("#hierarchyLoading").removeClass('hide');
 
   $("#hierarchyTree")
-    .bind("ready.jstree", function (event, data) {
-      $("#hierarchyLoading").addClass('hide');  
-      var tree = $("#hierarchyTree").jstree(true);
-      tree.select_node(htmlID);
-      tree._open_to(htmlID);
+      .bind("ready.jstree", function (event, data) {
+        $("#hierarchyLoading").addClass('hide');
+        var tree = $("#hierarchyTree").jstree(true);
+        tree.select_node(htmlID);
+        tree._open_to(htmlID);
 
-      if (hierarchyContext == "Collection") {
-        getRecord(recordID);
-      }
+        if (hierarchyContext == "Collection") {
+          getRecord(recordID);
+        }
 
-      $("#hierarchyTree").bind('select_node.jstree', function(e, data) {
-        if (hierarchyContext == "Record") {
-          window.location.href = data.node.a_attr.href;
+        $("#hierarchyTree").bind('select_node.jstree', function(e, data) {
+          if (hierarchyContext == "Record") {
+            window.location.href = data.node.a_attr.href;
+          } else {
+            getRecord(data.node.li_attr.recordid);
+          }
+        });
+
+        // Scroll to the current record
+        if ($('#hierarchyTree').parents('#modal').length > 0) {
+          var hTree = $('#hierarchyTree');
+          var offsetTop = hTree.offset().top;
+          var maxHeight = Math.max($(window).height() - 200, 200);
+          hTree.css('max-height', maxHeight + 'px').css('overflow', 'auto');
+          hTree.animate({
+            scrollTop: $('.jstree-clicked').offset().top - offsetTop + hTree.scrollTop() - 50
+          }, 1500);
         } else {
-          getRecord(data.node.li_attr.recordid);
+          $('html,body').animate({
+            scrollTop: $('.jstree-clicked').offset().top - 50
+          }, 1500);
+        }
+      })
+      .jstree({
+        'plugins': ['search','types'],
+        'core' : {
+          'data' : function (obj, cb) {
+            $.ajax({
+              'url': path + '/Hierarchy/GetTreeJSON',
+              'data': {
+                'hierarchyID': hierarchyID,
+                'id': recordID
+              },
+              'statusCode': {
+                200: function(json, status, request) {
+                  cb.call(this, json);
+                },
+                204: function(json, status, request) { // No Content
+                  buildTreeWithXml(cb);
+                },
+                503: function(json, status, request) { // Service Unavailable
+                  buildTreeWithXml(cb);
+                }
+              }
+            });
+          }
+        },
+        'types' : {
+          'record': {
+            'icon':'fa fa-file-o'
+          },
+          'collection': {
+            'icon':'fa fa-folder'
+          }
         }
       });
-
-      // Scroll to the current record
-      if ($('#hierarchyTree').parents('#modal').length > 0) {
-        var hTree = $('#hierarchyTree');
-        var offsetTop = hTree.offset().top;
-        var maxHeight = Math.max($(window).height() - 200, 200);
-        hTree.css('max-height', maxHeight + 'px').css('overflow', 'auto');
-        hTree.animate({
-          scrollTop: $('.jstree-clicked').offset().top - offsetTop + hTree.scrollTop() - 50
-        }, 1500);
-      } else {
-        $('html,body').animate({
-          scrollTop: $('.jstree-clicked').offset().top - 50
-        }, 1500);
-      }
-    })
-    .jstree({
-      'plugins': ['search','types'],
-      'core' : {
-        'data' : function (obj, cb) {
-          $.ajax({
-            'url': path + '/Hierarchy/GetTreeJSON',
-            'data': {
-              'hierarchyID': hierarchyID,
-              'id': recordID
-            },
-            'statusCode': {
-              200: function(json, status, request) {
-                cb.call(this, json);
-              },
-              204: function(json, status, request) { // No Content
-                buildTreeWithXml(cb);
-              },
-              503: function(json, status, request) { // Service Unavailable
-                buildTreeWithXml(cb);
-              }
-            }
-          });
-        }
-      },
-      'types' : {
-        'record': {
-          'icon':'fa fa-file-o'
-        },
-        'collection': {
-          'icon':'fa fa-folder'
-        }
-      }
-    });
 
   $('#treeSearch').removeClass('hidden');
   $('#treeSearch [type=submit]').click(doTreeSearch);

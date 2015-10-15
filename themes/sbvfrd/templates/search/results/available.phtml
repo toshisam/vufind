@@ -106,6 +106,6 @@ $borisURL        = (is_array($urldisplay['urls']) && count($urldisplay['urls']) 
           <span class="hidden-xs hidden-sm">BORIS</span>
         </a>
     <? else: ?>
-        <p class="hidden-sm hidden-xs hidden-print">There are no holdings available in the system</p>
+        <p class="hidden-sm hidden-xs hidden-print"><?= $this->transEsc('No Holdings available in the system') ?></p>
     <? endif; ?>
 <? endif; ?>

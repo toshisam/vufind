@@ -10,10 +10,65 @@ var swissbib = {
    */
   initOnReady: function () {
     this.initBackgrounds();
+    this.initFocus();
+    this.initRemoveSearchText();
     this.initUserVoiceFeedback();
     this.initBulkExport();
     this.AdvancedSearch.init();
     this.initHierarchyTree();
+  },
+
+  /**
+   * Initialize focus of search box at the end of text
+   */
+  initFocus: function() {
+    var searchField = document.getElementById('searchForm_lookfor');
+
+    if (searchField !== null) {
+      var textLength = searchField.value.length;
+      // For IE Only
+      if (document.selection) {
+        searchField.focus();
+        var oSel = document.selection.createRange();
+        // Reset position to 0 & then set at end
+        oSel.moveStart('character', -textLength);
+        oSel.moveStart('character', textLength);
+        oSel.moveEnd('character', 0);
+        oSel.select();
+      }
+      else if (searchField.selectionStart || searchField.selectionStart == '0') {
+        // Firefox/Chrome
+        searchField.selectionStart = textLength;
+        searchField.selectionEnd = textLength;
+        searchField.focus();
+      }
+    }
+  },
+
+  /**
+   * Initializes remove search text icon on main search field
+   */
+  initRemoveSearchText: function() {
+    var $searchInputField = $('#searchForm_lookfor');
+    var $removeSearchTextIcon = $('#remove-search-text');
+
+    if ($searchInputField.val() !== '') {
+      $removeSearchTextIcon.show();
+    }
+
+    $removeSearchTextIcon.click(function() {
+      $searchInputField.val('');
+      $searchInputField.focus();
+      $removeSearchTextIcon.hide();
+    });
+
+    $searchInputField.on('input', function() {
+      if ($searchInputField.val() === '') {
+        $removeSearchTextIcon.hide();
+      } else {
+        $removeSearchTextIcon.show();
+      }
+    });
   },
 
   /**
