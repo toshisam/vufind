@@ -29,6 +29,7 @@
 namespace Swissbib\View\Helper\Swissbib;
 
 use Swissbib\View\Helper\FormatRelatedEntries;
+use Swissbib\VuFind\View\Helper\Root\Piwik;
 use Zend\ServiceManager\ServiceManager;
 
 use Swissbib\VuFind\View\Helper\Root\Auth;
@@ -46,6 +47,7 @@ use Swissbib\View\Helper\TranslateFacets;
  * @category Swissbib_VuFind2
  * @package  View_Helper_Swissbib
  * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @author   Markus Mächler <markus.maechler@bithost.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
@@ -198,5 +200,23 @@ class Factory
         return new FormatRelatedEntries(
             $sm->getServiceLocator()->get('VuFind\Translator')
         );
+    }
+
+    /**
+     * Construct the Piwik helper.
+     *
+     * @param ServiceManager $sm Service manager.
+     *
+     * @return Piwik
+     */
+    public static function getPiwik(ServiceManager $sm)
+    {
+        $config = $sm->getServiceLocator()->get('VuFind\Config')->get('config');
+        $url = isset($config->Piwik->url) ? $config->Piwik->url : false;
+        $siteId = isset($config->Piwik->site_id) ? $config->Piwik->site_id : 1;
+        $customVars = isset($config->Piwik->custom_variables)
+            ? $config->Piwik->custom_variables
+            : false;
+        return new Piwik($url, $siteId, $customVars);
     }
 }
