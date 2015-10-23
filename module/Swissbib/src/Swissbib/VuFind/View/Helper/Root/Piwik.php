@@ -44,6 +44,27 @@ use VuFind\View\Helper\Root\Piwik as VuFindPiwik;
 class Piwik extends VuFindPiwik
 {
     /**
+     * Get the Initialization Part of the Tracking Code
+     *
+     * @return string JavaScript Code Fragment
+     */
+    protected function getOpeningTrackingCode()
+    {
+        return <<<EOT
+
+window.piwikAsyncInit = function() {
+    try {
+        var VuFindPiwikTracker = Piwik.getTracker();
+
+        VuFindPiwikTracker.setSiteId({$this->siteId});
+        VuFindPiwikTracker.setTrackerUrl('{$this->url}piwik.php');
+        VuFindPiwikTracker.setCustomUrl(location.protocol + '//'
+            + location.host + location.pathname);
+
+EOT;
+    }
+
+    /**
      * Get the Finalization Part of the Tracking Code
      *
      * @return string JavaScript Code Fragment
@@ -51,7 +72,9 @@ class Piwik extends VuFindPiwik
     protected function getClosingTrackingCode()
     {
         return <<<EOT
-    VuFindPiwikTracker.enableLinkTracking();
+
+        VuFindPiwikTracker.enableLinkTracking();
+    } catch (e) {}
 };
 EOT;
     }
