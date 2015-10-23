@@ -69,7 +69,7 @@ class Aleph extends VuFindDriver
             );
         }
         $url = "http://$this->host/X?op=$op";
-        $params['verification'] = mb_strtoupper($params['verification']);
+        $params['verification'] = mb_strtoupper($params['verification'], 'UTF-8');
         $url = $this->appendQueryString($url, $params);
         if ($auth) {
             $url = $this->appendQueryString(
