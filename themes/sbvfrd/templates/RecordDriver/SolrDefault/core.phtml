@@ -110,7 +110,7 @@ $linkSFX = $viewRecord->getLinkSFX();
       <span class="label"><?= $this->transEsc('note_773') ?>: </span>
       <span>
           <? foreach ($hostItems as $hostItem): ?>
-              <? $text = array_key_exists('related', $hostItem) ? $hostItem['title'] . ', ' . $hostItem['related'] : $hostItem['title'] ?>
+              <? $text = isset($hostItem['title']) ? ( array_key_exists('related', $hostItem) ? $hostItem['title'] . ', ' . $hostItem['related'] : $hostItem['title'] ) : '' ?>
               <?= $this->escapeHtml($text) ?><br />
           <? endforeach; ?>
       </span><br />

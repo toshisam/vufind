@@ -457,7 +457,7 @@ class MyResearchController extends VuFindMyResearchController
                 'options' => $searchOptionsPluginManager
                     ->get('solr')->getSortOptions(),
                 'engine' => 'solr',
-                'selected' => $defaultSort['solr']
+                'selected' => isset($defaultSort['solr']) ? $defaultSort['solr'] : ''
             ];
 
             return $sortOptions;

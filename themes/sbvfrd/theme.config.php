@@ -42,6 +42,7 @@ return array(
       'includeTemplate'           => 'Swissbib\View\Helper\Swissbib\Factory::getIncludeTemplate',
       'translateFacets'           => 'Swissbib\View\Helper\Swissbib\Factory::getFacetTranslator',
       'formatRelatedEntries'      => 'Swissbib\View\Helper\Swissbib\Factory::getFormatRelatedEntries',
+      'piwik'                     => 'Swissbib\View\Helper\Swissbib\Factory::getPiwik',
     ),
     'invokables' => array(
       //'translate' => 'Swissbib\VuFind\View\Helper\Root\Translate',
