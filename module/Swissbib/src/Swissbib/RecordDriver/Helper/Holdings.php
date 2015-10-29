@@ -1131,6 +1131,27 @@ class Holdings
     protected function getBackLinkIDSSG($networkCode, $institutionCode, array $item,
         array $data
     ) {
+        // for HFHS, add parameter &local_base=fhs to link
+        if ($institutionCode === 'HFHS') {
+            // if institutioncode==(HFHS) then url mit parameter &local_base=fhs
+            $data['pattern'] = $this->configHoldings->Backlink->{$networkCode}
+                . '&local_base=fhs';
+        } else if ($institutionCode === 'HPHS'
+            || 'HPHS' == $institutionCode
+            || 'HPHG' == $institutionCode
+            || 'HPHRS' == $institutionCode
+            || 'HPHRM' == $institutionCode
+            || 'HRDZJ' == $institutionCode
+            || 'HRDZS' == $institutionCode
+            || 'HRDZW' == $institutionCode
+            || 'HRPMA' == $institutionCode
+        ) {
+            // for HPHS/HPHG/HPHRS/HPHRM/HRDZJ/HRDZS/HRDZW/HRPMA,
+            // add parameter &local_base=ph to link
+            $data['pattern'] = $this->configHoldings->Backlink->{$networkCode}
+                    . '&local_base=ph';
+        }
+
         return $this->getBackLinkAleph($networkCode, $institutionCode, $item, $data);
     }
 
