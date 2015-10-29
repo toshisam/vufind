@@ -104,11 +104,10 @@ class SpellingProcessor extends VuFindSpellingProcessor
             $termLimit = count($this->tokenize($query->getAllTerms())) === 1 ?
                 $this->termSingleSpellingLimit : $this->termSpellingLimit;
             foreach ($spellcheck as $term => $info) {
-                if ($term === "collation") {
-                    if (is_array($info)) {
-                        $this->spellingResults->addCollocationSOLRStructure($info);
-                    }
-
+                if (is_array($info) && isset($info[0]) && isset($info[0][0])
+                    && $info[0][0] === "collationQuery"
+                ) {
+                    $this->spellingResults->addCollocationSOLRStructure($info);
                 } elseif (++$i && $i <= $this->getSpellingLimit()
                     && array_key_exists("suggestion", $info)
                 ) {
