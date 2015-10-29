@@ -1131,6 +1131,22 @@ class Holdings
     protected function getBackLinkIDSSG($networkCode, $institutionCode, array $item,
         array $data
     ) {
+        // differ between FH and PH:
+        if ($institutionCode === 'HFHS') {
+            $data['pattern'] = $this->configHoldings->Backlink->{'IDSSGFH'};
+        } else if ($institutionCode === 'HPHS'
+            || 'HPHS' == $institutionCode
+            || 'HPHG' == $institutionCode
+            || 'HPHRS' == $institutionCode
+            || 'HPHRM' == $institutionCode
+            || 'HRDZJ' == $institutionCode
+            || 'HRDZS' == $institutionCode
+            || 'HRDZW' == $institutionCode
+            || 'HRPMA' == $institutionCode
+        ) {
+            $data['pattern'] = $this->configHoldings->Backlink->{'IDSSGPH'};
+        }
+
         return $this->getBackLinkAleph($networkCode, $institutionCode, $item, $data);
     }
 
