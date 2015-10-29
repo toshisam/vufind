@@ -54,25 +54,32 @@ class SpellingProcessor extends VuFindSpellingProcessor
     protected $spellingResults;
 
     /**
-     * Term limit for single terms if multiple words
+     * Limit for single terms if there are only single terms
      *
      * @var int
      */
-    protected $termSpellingLimit = 1;
+    protected $spellingLimit = 3;
 
     /**
-     * Term limit for single terms if only one word
+     * TermSpellingLimits if there are also collations
      *
      * @var int
      */
-    protected $termSingleSpellingLimit = 2;
+    protected $termSpellingLimits = 3;
 
     /**
-     * CollationSpellingLimit
+     * Limit for single terms if there are also collations
      *
      * @var int
      */
-    protected $collationSpellingLimits = 2;
+    protected $termSpellingLimitWithCollations = 1;
+
+    /**
+     * Limit for collated suggestions (more than one word)
+     *
+     * @var int
+     */
+    protected $collationSpellingLimit = 3;
 
     /**
      * Constructor
@@ -99,33 +106,39 @@ class SpellingProcessor extends VuFindSpellingProcessor
     {
         if (!$this->spellingResults->hasSuggestions()) {
             $this->spellingResults->setSpellingQuery($query);
-            $i = 1;
+            $singleTermsCount = 0;
             $collationSpellingCount = 0;
-            $termLimit = count($this->tokenize($query->getAllTerms())) === 1 ?
-                $this->termSingleSpellingLimit : $this->termSpellingLimit;
+            $hasMultipleTerms = count($this->tokenize($query->getAllTerms())) !== 1;
+
+            if ($hasMultipleTerms) {
+                $this->termSpellingLimits = $this->termSpellingLimitWithCollations;
+            }
+
             foreach ($spellcheck as $term => $info) {
-                if (is_array($info) && isset($info[0]) && isset($info[0][0])
+                if (is_array($info) && $hasMultipleTerms &&
+                    isset($info[0]) && isset($info[0][0])
                     && $info[0][0] === "collationQuery"
+                    && $collationSpellingCount < $this->collationSpellingLimit
                 ) {
+                    $collationSpellingCount++;
                     $this->spellingResults->addCollocationSOLRStructure($info);
-                } elseif (++$i && $i <= $this->getSpellingLimit()
+                } elseif ($singleTermsCount < $this->getSpellingLimit()
                     && array_key_exists("suggestion", $info)
                 ) {
                     //no so called collation suggestions are based on the
                     // single term part of the spelling query
+                    $singleTermsCount++;
                     $numberTermSuggestions = 0;
                     foreach ($info['suggestion'] as $termSuggestion) {
                         $numberTermSuggestions++;
-                        if ($numberTermSuggestions > $termLimit) {
+                        if ($numberTermSuggestions > $this->termSpellingLimits) {
                             break;
                         }
                         $this->spellingResults->addTerm(
                             $term, $termSuggestion['word'], $termSuggestion['freq']
                         );
                     }
-
                 }
-
             }
         }
 
