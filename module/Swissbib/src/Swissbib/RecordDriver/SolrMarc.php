@@ -1222,6 +1222,11 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         return $this->getFirstFieldValue('351', ['c']);
     }
 
+    public function getHistData()
+    {
+        return $this->getFieldArray('545', ['a', 'b']);
+    }
+
     /**
      * Get subtitle
      *
