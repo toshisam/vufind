@@ -146,7 +146,7 @@ class SolrDefaultBackendFactory extends VuFindSolrDefaultBackendFactory
         //Swissbib custom
 
         $spellingListener = new InjectSwissbibSpellingListener(
-            $backend, ['default']
+            $backend, ['default'], $config
         );
         $spellingListener->attach($events);
 

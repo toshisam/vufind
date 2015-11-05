@@ -31,7 +31,9 @@
 namespace Swissbib\VuFind\Search\Solr;
 
 use VuFind\Search\Solr\InjectSpellingListener as VFSpellingListener;
+use VuFindSearch\Backend\BackendInterface;
 use VuFindSearch\Backend\Solr\Response\Json\RecordCollection;
+use Zend\Config\Config;
 use Zend\EventManager\EventInterface;
 use VuFindSearch\ParamBag;
 use VuFindSearch\Backend\Solr\Response\Json\Spellcheck;
@@ -49,6 +51,28 @@ use VuFindSearch\Query\Query;
  */
 class InjectSwissbibSpellingListener  extends VFSpellingListener
 {
+    /**
+     * Config
+     *
+     * @var Config
+     */
+    protected $config;
+
+    /**
+     * InjectSwissbibSpellingListener constructor.
+     *
+     * @param BackendInterface $backend
+     * @param array $dictionaries
+     * @param Config $config
+     */
+    public function __construct(BackendInterface $backend, array $dictionaries,
+                                Config $config
+    ) {
+        parent::__construct($backend, $dictionaries);
+
+        $this->config = $config;
+    }
+
     /**
      * Set up spelling parameters.
      *
@@ -79,7 +103,12 @@ class InjectSwissbibSpellingListener  extends VFSpellingListener
                     reset($this->dictionaries);
                     //deactivate initial spell checking, to do it only
                     //if there are no results
-                    $params->set('spellcheck', 'true');
+                    if ($this->config->Site->suggestAlways) {
+                        $params->set('spellcheck', 'true');
+                    } else {
+                        $params->set('spellcheck', 'false');
+                    }
+
                     $params->set(
                         'spellcheck.dictionary', current($this->dictionaries)
                     );
