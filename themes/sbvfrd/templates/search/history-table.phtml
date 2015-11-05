@@ -30,9 +30,10 @@ $flippedContent = '';
           echo empty($desc) ? $this->transEsc("history_empty_search") : $this->escapeHtml($desc);
 
             $flippedContent .= $this->render('search/history-table-flipped.phtml', array(
-                'info'    => $info,
-                'headers' => $headers,
-                'even'    => (0 === $iteration % 2)
+                'info'      => $info,
+                'headers'   => $headers,
+                'even'      => (0 === $iteration % 2),
+                'showSaved' => $this->showSaved
             ));
         ?></a>
         <? if (method_exists($info,'getTarget')): ?>

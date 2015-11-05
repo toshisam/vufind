@@ -53,6 +53,45 @@ class Aleph extends VuFindDriver
     protected $itemLinks;
 
     /**
+     * Perform an XServer request.
+     *
+     * @param string $op     Operation
+     * @param array  $params Parameters
+     * @param bool   $auth   Include authentication?
+     *
+     * @return SimpleXMLElement
+     */
+    protected function doXRequest($op, $params, $auth = false)
+    {
+        if (!$this->xserver_enabled) {
+            throw new \Exception(
+                'Call to doXRequest without X-Server configuration in Aleph.ini'
+            );
+        }
+        $url = "http://$this->host/X?op=$op";
+        $params['verification'] = mb_strtoupper($params['verification'], 'UTF-8');
+        $url = $this->appendQueryString($url, $params);
+        if ($auth) {
+            $url = $this->appendQueryString(
+                $url, [
+                    'user_name' => $this->wwwuser,
+                    'user_password' => $this->wwwpasswd
+                ]
+            );
+        }
+        $result = $this->doHTTPRequest($url);
+        if ($result->error) {
+            if ($this->debug_enabled) {
+                $this->debug(
+                    "XServer error, URL is $url, error message: $result->error."
+                );
+            }
+            throw new ILSException("XServer error: $result->error.");
+        }
+        return $result;
+    }
+
+    /**
      * Get data for photo copies
      *
      * @param Integer $idPatron IdPatron

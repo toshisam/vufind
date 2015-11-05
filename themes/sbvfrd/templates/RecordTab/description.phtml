@@ -197,6 +197,7 @@ $prevTitles      = $record->getPreviousTitles();
   $awards     = $record->getAwards();
   $citenotes  = $record->getCitationNotes();
   $orignotes  = $record->getOriginalVersionNotes();
+  $histData   = $record->getHistData();
   $copynotes  = $record->getCopyNotes();
   $system     = $record->getSystemDetails();
   $relatedEntries = $record->getRelatedEntries();
@@ -204,7 +205,7 @@ $prevTitles      = $record->getPreviousTitles();
 
   <? if (!empty($notes) or !empty($freq) or !empty($contDates) or !empty($diss) or
       !empty($bib) or !empty($access) or !empty($related) or !empty($credits) or !empty($awards) or
-      !empty($citenotes) or !empty($orignotes) or !empty($copynotes) or
+      !empty($citenotes) or !empty($orignotes) or !empty($copynotes) or !empty($histData) or
       !empty($origtitle) or !empty($perfomer) or !empty($system) or !empty($relatedEntries)): ?>
     <? $contentDisplayed = true; ?>
 
@@ -351,6 +352,19 @@ $prevTitles      = $record->getPreviousTitles();
           </td>
         </tr>
       <? endif; ?>
+
+      <? /* Display biographical info and administrative history */ ?>
+      <? if (!empty($histData)): ?>
+          <tr>
+              <th><?= $this->transEsc('Bio_Adm_Hist') ?>: </th>
+              <td>
+                  <? foreach ($histData as $field): ?>
+                      <?= $this->escapeHtml($field) ?><br/>
+                  <? endforeach; ?>
+              </td>
+          </tr>
+      <? endif; ?>
+
 
       <? /* Display copy and version identification note (fields 562 and 590) */ ?>
       <? if (!empty($copynotes)): ?>

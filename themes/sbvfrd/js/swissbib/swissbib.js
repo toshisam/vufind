@@ -10,11 +10,39 @@ var swissbib = {
    */
   initOnReady: function () {
     this.initBackgrounds();
+    this.initFocus();
     this.initRemoveSearchText();
     this.initUserVoiceFeedback();
     this.initBulkExport();
     this.AdvancedSearch.init();
     this.initHierarchyTree();
+  },
+
+  /**
+   * Initialize focus of search box at the end of text
+   */
+  initFocus: function() {
+    var searchField = document.getElementById('searchForm_lookfor');
+
+    if (searchField !== null) {
+      var textLength = searchField.value.length;
+      // For IE Only
+      if (document.selection) {
+        searchField.focus();
+        var oSel = document.selection.createRange();
+        // Reset position to 0 & then set at end
+        oSel.moveStart('character', -textLength);
+        oSel.moveStart('character', textLength);
+        oSel.moveEnd('character', 0);
+        oSel.select();
+      }
+      else if (searchField.selectionStart || searchField.selectionStart == '0') {
+        // Firefox/Chrome
+        searchField.selectionStart = textLength;
+        searchField.selectionEnd = textLength;
+        searchField.focus();
+      }
+    }
   },
 
   /**
