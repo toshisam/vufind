@@ -81,15 +81,26 @@ class EbooksOnDemand extends EbooksOnDemandBase
         Holdings $holdingsHelper
     ) {
         $linkPattern = $this->getLinkPattern($item['institution_chb']);
-        $data = [
-            'SYSID' => $item['bibsysnumber'],
-            'INSTITUTION' => urlencode(
-                $item['institution_chb'] . $item['signature']
-            ),
-            'LANGUAGE' => $this->getConvertedLanguage()
-        ];
-
-        return $this->templateString($linkPattern, $data);
+        if ($item['network'] === 'HAN') :
+                $data = [
+                'SID' => 'dsv05',
+                'SYSID' => str_replace('HAN', '', $item['bibsysnumber']),
+                'INSTITUTION' => urlencode(
+                    $item['institution_chb'] . $item['signature']
+                ),
+                'LANGUAGE' => $this->getConvertedLanguage()
+                ];
+            else:
+                $data = [
+                    'SID' => 'chb',
+                'SYSID' => $item['bibsysnumber'],
+                'INSTITUTION' => urlencode(
+                    $item['institution_chb'] . $item['signature']
+                ),
+                'LANGUAGE' => $this->getConvertedLanguage()
+                ];
+            endif;
+            return $this->templateString($linkPattern, $data);
     }
 
     /**
