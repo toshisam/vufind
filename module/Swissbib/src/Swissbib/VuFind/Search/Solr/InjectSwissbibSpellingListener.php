@@ -145,7 +145,9 @@ class InjectSwissbibSpellingListener  extends VFSpellingListener
             $spellcheckQuery = $params->get('spellcheck.q');
             reset($this->dictionaries);
             prev($this->dictionaries);
-            if (!empty($spellcheckQuery)) {
+            if (!empty($spellcheckQuery) && $result->getTotal() === 0
+                && !$this->config->Site->suggestAlways
+            ) {
                 $this->aggregateSpellcheck(
                     $result->getSpellcheck(), end($spellcheckQuery)
                 );
@@ -163,7 +165,6 @@ class InjectSwissbibSpellingListener  extends VFSpellingListener
      */
     protected function aggregateSpellcheck(Spellcheck $spellcheck, $query)
     {
-        /*
         foreach ($this->dictionaries as $dictionary) {
             $params = new ParamBag();
 
@@ -175,6 +176,5 @@ class InjectSwissbibSpellingListener  extends VFSpellingListener
 
             $spellcheck->mergeWith($collection->getSpellcheck());
         }
-        */
     }
 }
