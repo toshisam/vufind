@@ -105,6 +105,7 @@ class Record extends VuFindRecord
                         'B|^RETROS$ && P|^856$',
                         'B|^BORIS && P|^856$',
                         'B|^FREE && P|^856$',
+                        'B|^HAN$ && P|^856$',
                         'B|^IDSSG$ && P|^856$ && z|^download \(pdf\)',
                         'B|^IDSSG$ && P|^856$ && u|edis.nsf',
                         'B|^NEBIS$ && P|^856$ && z|^Inhaltsverzeichnis',

@@ -1214,6 +1214,24 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get Hierarchical level of record
+     * @return String
+     */
+    public function getHierachicalLevel()
+    {
+        return $this->getFirstFieldValue('351', ['c']);
+    }
+
+    /**
+     * Get biographical information or administrative history
+     * @return array
+     */
+    public function getHistData()
+    {
+        return $this->getFieldArray('545', ['a', 'b']);
+    }
+
+    /**
      * Get subtitle
      *
      * @param Boolean $full Get full field data. Else only field c is fetched

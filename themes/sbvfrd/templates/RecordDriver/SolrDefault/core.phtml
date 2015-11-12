@@ -14,6 +14,7 @@ $physicalDescriptions = $record->getPhysicalDescriptions(false);
 $edition              = $record->getEdition();
 $cartMathData         = $record->getCartMathData();
 $formats              = $viewRecord->getFormatList();
+$hierarchicalLevel    = $record->getHierachicalLevel();
 $hostItems            = $record->getHostItemEntry();
 $journalTitle         = $record->getContainerTitle();
 $ref                  = $record->getContainerReference();
@@ -129,6 +130,11 @@ $linkSFX = $viewRecord->getLinkSFX();
       <? if (!empty($formats)): ?>
         <span class="label"><?=$this->transEsc('Format')?>: </span>
         <span><?= $formats ?></span><br />
+      <? endif; ?>
+
+      <? if (!empty($hierarchicalLevel)): ?>
+          <span class="label"><?=$this->transEsc('hierarchical_level')?>: </span>
+          <span><?= $this->zendTranslate($hierarchicalLevel, 'formats') ?></span><br />
       <? endif; ?>
 
       <? if (!empty($edition)): ?>
