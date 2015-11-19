@@ -352,4 +352,13 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
         // Summon never uses OpenURLs for anything other than COinS:
         return true;
     }
+
+    /**
+     * Get Hierarchical level of record
+     * @return String
+     */
+    public function getHierachicalLevel()
+    {
+
+    }
 }

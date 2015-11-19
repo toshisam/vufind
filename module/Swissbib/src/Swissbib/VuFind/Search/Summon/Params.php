@@ -207,24 +207,6 @@ class Params extends VFSummonParams
     }
 
     /**
-     * GetDateRange
-     *
-     * @return array
-     */
-    public function getDateRange()
-    {
-        $this->dateRange['min'] = 1980;
-        $this->dateRange['max'] = intval(date('Y')) + 1;
-
-        if (!$this->dateRange['isActive']) {
-            $this->dateRange['from']    = (int) $this->dateRange['min'];
-            $this->dateRange['to']      = (int) $this->dateRange['max'];
-        }
-
-        return $this->dateRange;
-    }
-
-    /**
      * BuildDateRangeFilter
      *
      * @param string $field field to use for filtering.
