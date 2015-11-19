@@ -670,7 +670,11 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getThumbnail($size = 'small')
     {
         if ($isbn = $this->getCleanISBN()) {
-            return ['isn' => $isbn, 'size' => $size];
+
+            return  isset($this->fields['format']) &&
+                is_array($this->fields['format']) && count($this->fields['format'])
+                    >=1 ? ['isn' => $isbn, 'size' => $size, 'format' =>
+                $this->fields['format'][0]] : ['isn' => $isbn, 'size' => $size];
         } elseif ($path = $this->getThumbnail956()) {
             return $path;
         } elseif ($path = $this->getThumbnail856()) {
