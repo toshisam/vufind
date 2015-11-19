@@ -40,9 +40,9 @@
                       class="fa fa-sign-in"></i><?= $this->transEsc("Institutional Login") ?></a>
               <? else: ?>
                   <?php $useModalPopupClass = $this->auth()->isAjaxLoginAllowed() ? 'class="modal-link"' : '' ?>
-                <a href="<?= $this->url('myresearch-userlogin') ?>" <?= $useModalPopupClass ?>
-                   title="<?= $this->transEsc("Login") ?>"><i
-                      class="fa fa-sign-in"></i><?= $this->transEsc("Login") ?></a>
+                <a href="#" <?= $useModalPopupClass ?>
+                   title="<?= $this->transEsc("login_disabled") ?>"><i
+                      class="fa fa-ban"></i><?= $this->transEsc("login_disabled") ?></a>
               <? endif; ?>
             </li>
           <? endif; ?>
