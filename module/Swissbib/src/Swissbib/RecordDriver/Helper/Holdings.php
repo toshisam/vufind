@@ -1176,7 +1176,8 @@ class Holdings
     }
 
     /**
-     * Get backlink for Alexandria network
+     * Get backlink for Alexandria network (Primo on Alma)
+     * * links only to result list as we have no usable identifier
      *
      * @param String $networkCode     NetworkCode
      * @param String $institutionCode InstitionCode
@@ -1189,8 +1190,7 @@ class Holdings
         array $data
     ) {
         $values = [
-            // remove characters from number string
-            'bib-system-number' => preg_replace('[\D]', '', $item['bibsysnumber'])
+            'bib-system-number' => $item['bibsysnumber']
         ];
 
         return $this->compileString($data['pattern'], $values);
