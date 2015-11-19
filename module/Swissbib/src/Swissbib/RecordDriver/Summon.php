@@ -357,7 +357,8 @@ class Summon extends VuFindSummon implements SwissbibRecordDriver
      * Get Hierarchical level of record
      * @return String
      */
-    public function getHierachicalLevel(){
+    public function getHierachicalLevel()
+    {
 
     }
 }
