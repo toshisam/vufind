@@ -106,7 +106,7 @@ class Loader extends VFLoader
      * @param \Zend\Config\Config    $$mediatypesIconsFiles Filenames for MediaTypeIcons
      */
     public function __construct($config, ApiManager $manager,
-    \VuFindTheme\ThemeInfo $theme, \Zend\Http\Client $client, $baseDir = null,
+        \VuFindTheme\ThemeInfo $theme, \Zend\Http\Client $client, $baseDir = null,
         \Zend\Config\Config $mediatypesIconFiles
     ) {
         parent::__construct($config, $manager, $theme, $client, $baseDir);
