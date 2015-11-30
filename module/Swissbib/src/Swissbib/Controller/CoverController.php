@@ -58,8 +58,8 @@ class CoverController extends VFCoverController
                 $this->getServiceLocator()->get('VuFind\ContentCoversPluginManager'),
                 $this->getServiceLocator()->get('VuFindTheme\ThemeInfo'),
                 $this->getServiceLocator()->get('VuFind\Http')->createClient(),
-                $cacheDir,
-                $this->getConfig('mediatypesiconsfiles')
+                $this->getConfig('mediatypesiconsfiles',
+                $cacheDir)
             );
             \VuFind\ServiceManager\Initializer::initInstance(
                 $this->loader, $this->getServiceLocator()

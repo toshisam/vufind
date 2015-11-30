@@ -88,7 +88,7 @@ class Loader extends VFLoader
             $this->contentType = $this->getContentTypeFromExtension($file);
             $this->image = file_get_contents($file);
         } else {
-            // if no mediatypeicon found, call parent, which loads notavailable-image:
+            // if no mediatypeicon found, loads notavailable-image via parent:
             parent::loadUnavailable();
         }
 
@@ -101,13 +101,13 @@ class Loader extends VFLoader
      * @param ApiManager             $manager               Plugin manager for API handlers
      * @param \VuFindTheme\ThemeInfo $theme                 VuFind theme tools
      * @param \Zend\Http\Client      $client                HTTP client
+     * @param \Zend\Config\Config    $mediatypesIconsFiles  Filenames for MediaTypeIcons
      * @param string                 $baseDir               Directory to store downloaded images
      * (set to system temp dir if not otherwise specified)
-     * @param \Zend\Config\Config    $$mediatypesIconsFiles Filenames for MediaTypeIcons
      */
     public function __construct($config, ApiManager $manager,
-        \VuFindTheme\ThemeInfo $theme, \Zend\Http\Client $client, $baseDir = null,
-        \Zend\Config\Config $mediatypesIconFiles
+        \VuFindTheme\ThemeInfo $theme, \Zend\Http\Client $client,
+        \Zend\Config\Config $mediatypesIconFiles, $baseDir = null
     ) {
         parent::__construct($config, $manager, $theme, $client, $baseDir);
 
