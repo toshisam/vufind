@@ -194,7 +194,7 @@ return [
             'ajax'                 => 'Swissbib\Controller\AjaxController',
             'upgrade'              => 'Swissbib\Controller\NoProductiveSupportController',
             'install'              => 'Swissbib\Controller\NoProductiveSupportController',
-
+            'cover'                => 'Swissbib\Controller\CoverController',
         ],
         'factories' => [
             'record' => 'Swissbib\Controller\Factory::getRecordController',
