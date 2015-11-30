@@ -79,8 +79,7 @@ class Loader extends VFLoader
         $format = $_GET['format'];
         $mediaType = $this->mediatypesIconFiles->MediatypesIconsFiles->$format;
 
-        if (!(null == $mediaType))
-        {
+        if (!(null == $mediaType)) {
             // try loading a mediatype-icon:
             $file = $this->searchTheme('images/mediaicons/' . $mediaType . '.svg');
             if (!file_exists($file)) {
@@ -89,8 +88,7 @@ class Loader extends VFLoader
             $this->contentType = $this->getContentTypeFromExtension($file);
             $this->image = file_get_contents($file);
         }
-        else
-        {
+        else {
             // if no mediatypeicon found, call parent, which loads notavailable-image:
             parent::loadUnavailable();
         }
@@ -112,7 +110,7 @@ class Loader extends VFLoader
     \VuFindTheme\ThemeInfo $theme, \Zend\Http\Client $client, $baseDir = null,
     \Zend\Config\Config $mediatypesIconFiles
     ) {
-        parent::__construct($config,$manager,$theme,$client,$baseDir);
+        parent::__construct($config, $manager, $theme, $client, $baseDir);
 
         $this->mediatypesIconFiles = $mediatypesIconFiles;
 
