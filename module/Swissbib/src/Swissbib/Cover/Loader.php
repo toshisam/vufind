@@ -72,7 +72,7 @@ class Loader extends VFLoader
      * specified).
      *
      * @return void
-     * @author   Matthias Edel <matthias.edel@unibas.ch>
+     * @author Matthias Edel <matthias.edel@unibas.ch>
      */
     public function loadUnavailable()
     {
@@ -98,11 +98,11 @@ class Loader extends VFLoader
     /**
      * Constructor
      *
-     * @param \Zend\Config\Config    $config  VuFind configuration
-     * @param ApiManager             $manager Plugin manager for API handlers
-     * @param \VuFindTheme\ThemeInfo $theme   VuFind theme tools
-     * @param \Zend\Http\Client      $client  HTTP client
-     * @param string                 $baseDir Directory to store downloaded images
+     * @param \Zend\Config\Config    $config                VuFind configuration
+     * @param ApiManager             $manager               Plugin manager for API handlers
+     * @param \VuFindTheme\ThemeInfo $theme                 VuFind theme tools
+     * @param \Zend\Http\Client      $client                HTTP client
+     * @param string                 $baseDir               Directory to store downloaded images
      * @param \Zend\Config\Config    $$mediatypesIconFiles  Filenames for MediaTypeIcons
      * (set to system temp dir if not otherwise specified)
      */
