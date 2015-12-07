@@ -58,62 +58,51 @@ class Loader extends VFLoader
 
 
     /**
-     * Media-Type Config
+     * Load an image given an ISBN and/or content type.
      *
-     * @var \Zend\Config\Config
-     */
-    protected $mediatypesIconFiles;
-
-
-
-    /**
-     * Loads a MediaTypesIcon.
-     * Load the user-specified "cover unavailable" graphic (or default if none
-     * specified).
+     * @param string $isbn       ISBN
+     * @param string $size       Requested size
+     * @param string $type       Content type
+     * @param string $title      Title of book (for dynamic covers)
+     * @param string $author     Author of the book (for dynamic covers)
+     * @param string $callnumber Callnumber (unique id for dynamic covers)
+     * @param string $issn       ISSN
+     * @param string $oclc       OCLC number
+     * @param string $upc        UPC number
      *
      * @return void
-     * @author Matthias Edel <matthias.edel@unibas.ch>
      */
-    public function loadUnavailable()
-    {
-        $format = $_GET['format'];
-        $mediaType = $this->mediatypesIconFiles->MediatypesIconsFiles->$format;
-
-        if (!(null == $mediaType)) {
-            // try loading a mediatype-icon:
-            $file = $this->searchTheme('images/mediaicons/' . $mediaType . '.svg');
-            if (!file_exists($file)) {
-                throw new \Exception('Could not load default fail image.');
-            }
-            $this->contentType = $this->getContentTypeFromExtension($file);
-            $this->image = file_get_contents($file);
-        } else {
-            // if no mediatypeicon found, loads notavailable-image via parent:
-            parent::loadUnavailable();
-        }
-
-    }
-
-    /**
-     * Constructor
-     *
-     * @param \Zend\Config\Config    $config              VuFind configuration
-     * @param ApiManager             $manager             Plugin manager for API handlers
-     * @param \VuFindTheme\ThemeInfo $theme               VuFind theme tools
-     * @param \Zend\Http\Client      $client              HTTP client
-     * @param \Zend\Config\Config    $mediatypesIconFiles Filenames for MediaTypeIcons
-     * @param string                 $baseDir             Directory to store downloaded images
-     * (set to system temp dir if not otherwise specified)
-     */
-    public function __construct($config, ApiManager $manager,
-        \VuFindTheme\ThemeInfo $theme, \Zend\Http\Client $client,
-        \Zend\Config\Config $mediatypesIconFiles, $baseDir = null
+    public function loadImage($isbn = null, $size = 'small', $type = null,
+                              $title = null, $author = null, $callnumber = null,
+                              $issn = null, $oclc = null, $upc = null
     ) {
-        parent::__construct($config, $manager, $theme, $client, $baseDir);
+        // Sanitize parameters:
+        $this->isbn = new ISBN($isbn);
+        $this->issn = empty($issn)
+            ? null
+            : substr(preg_replace('/[^0-9X]/', '', strtoupper($issn)), 0, 8);
+        $this->oclc = $oclc;
+        $this->upc = $upc;
+        $this->type = $type;
+        $this->size = $size;
 
-        $this->mediatypesIconFiles = $mediatypesIconFiles;
-
+        // Display a fail image unless our parameters pass inspection and we
+        // are able to display an ISBN or content-type-based image.
+        if (!in_array($this->size, $this->validSizes)) {
+            $this->loadUnavailable();
+        } else if (!$this->fetchFromAPI()
+            && !$this->fetchFromContentType()
+        ) {
+            if (isset($this->config->Content->makeDynamicCovers)
+                && false !== $this->config->Content->makeDynamicCovers
+            ) {
+                $this->image = $this->getCoverGenerator()
+                    ->generate($title, $author, $callnumber);
+                $this->contentType = 'image/png';
+            } else {
+                $this->loadUnavailable();
+            }
+        }
     }
-
 
 }

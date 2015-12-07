@@ -654,27 +654,29 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
-     * Returns one of three things:
+     * Returns one of two things:
      * a full URL to a thumbnail preview of the record
      * if an image is available in an external system; an array of parameters to
-     * send to VuFind's internal cover generator if no fixed URL exists; or false
-     * if no thumbnail can be generated.
+     * send to VuFind's internal cover generator if no fixed URL exists
      *
      * Extended from SolrDefault
      *
      * @param string $size Size of thumbnail (small, medium or large -- small is
      *                     default).
      *
-     * @return string|array|bool
+     * @return string|array
      */
     public function getThumbnail($size = 'small')
     {
+        $useMostSpecificState = $this->getUseMostSpecificFormat();
+        $format = $this->getMostSpecificFormat();
+        $this->setUseMostSpecificFormat($useMostSpecificState);
         if ($isbn = $this->getCleanISBN()) {
-
-            return  isset($this->fields['format']) &&
-                is_array($this->fields['format']) && count($this->fields['format'])
-                    >= 1 ? ['isn' => $isbn, 'size' => $size, 'format' =>
-                $this->fields['format'][0]] : ['isn' => $isbn, 'size' => $size];
+            return  isset($format) &&
+            is_array($format) && count($format)
+            >= 1 ? ['isn' => $isbn, 'size' => $size, 'format' =>
+                $format[0], 'contenttype' => $format[0]] : ['isn' => $isbn,
+                'size' => $size];
         } elseif ($path = $this->getThumbnail956()) {
             return $path;
         } elseif ($path = $this->getThumbnail856()) {
@@ -683,9 +685,13 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             return $path;
         } elseif ($path = $this->getThumbnailEmanuscripta()) {
             return $path;
+        } elseif (isset($format) && is_array($format) && count($format) >= 1) {
+            return ['size' => $size, 'format' => $format[0],
+                'contenttype' => $format[0]];
         }
-
-        return false;
+        else {
+            return [];
+        }
     }
 
     /**
