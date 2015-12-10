@@ -1,0 +1,32 @@
+<div id="swissbib-feedback-form">
+  <h2><?= $this->transEsc("feedback.title")?></h2>
+  <p><?= $this->transEsc("feedback.intro")?></p>
+
+  <?=$this->flashmessages() ?>
+
+  <? if (isset($form)): ?>
+    <?= $this->form()->openTag($form) ?>
+
+    <?= $this->render('form/form-group.phtml', ['field' => $form->get('questionType')]) ?>
+    <?= $this->render('form/form-group.phtml', ['field' => $form->get('question')]) ?>
+    <?= $this->render('form/form-group.phtml', ['field' => $form->get('name')]) ?>
+    <?= $this->render('form/form-group.phtml', ['field' => $form->get('userNumber')]) ?>
+    <?= $this->render('form/form-group.phtml', ['field' => $form->get('email')]) ?>
+
+    <?= $this->formRow($form->get('security')) ?>
+    <input type="hidden" name="form-name" value="swissbibfeedback">
+
+    <div class="form-group">
+      <div class="col-sm-9 col-sm-offset-3">
+        <input class="btn btn-primary" name="<?= $form->get('submit')->getName() ?>" type="submit" value="<?= $this->transEsc($form->get('submit')->getValue()) ?>">
+      </div>
+    </div>
+
+    <h3><?= $this->transEsc("feedback.contact") ?></h3>
+    <h4><?= $this->transEsc("feedback.contact.phone") ?></h4>
+    <h4><?= $this->transEsc("feedback.contact.email") ?></h4>
+    <a href="<?= $this->basePath('Libraries') ?>"><?= $this->transEsc("feedback.contact.librariesLinkText") ?></a>
+
+    <?= $this->form()->closeTag() ?>
+  <? endif; ?>
+</div>
