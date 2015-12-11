@@ -1301,7 +1301,17 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getAltTitle()
     {
-        return $this->getFieldArray('246', '247');
+        return $this->getFieldArray('246', ['a', 'b']);
+    }
+
+    /**
+     * Get former title
+     *
+     * @return array
+     */
+    public function getFormerTitle()
+    {
+        return $this->getFieldArray('247', ['a', 'b']);
     }
 
     /**
@@ -1427,6 +1437,26 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get type of computer file or data note for the record.
+     *
+     * @return array
+     */
+    public function getFileNote()
+    {
+        return $this->getFieldArray('516');
+    }
+
+    /**
+     * Get date/time and place of an event note for the record.
+     *
+     * @return array
+     */
+    public function getEventNote()
+    {
+        return $this->getFieldArray('518');
+    }
+
+    /**
      * Get original version note for the record.
      *
      * @return array
@@ -1434,6 +1464,15 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getOriginalVersionNotes()
     {
         return $this->getFieldArray('534', ['p', 't', 'c']);
+    }
+
+    /**
+     * Get language information
+     * @return array
+     */
+    public function getLangData()
+    {
+        return $this->getFieldArray('546', ['a', 'b']);
     }
 
     /**
