@@ -555,7 +555,7 @@ class Holdings
     /**
      * Check whether network is supported
      *
-     * @param String $networkCode NetworkCode
+     * @param String $networkCode Code of Network
      *
      * @return Boolean
      */
@@ -970,7 +970,7 @@ class Holdings
      * (only Aleph is implemented as a custom type)
      * Fallback to network default
      *
-     * @param String $networkCode     NetworkCode
+     * @param String $networkCode     Code of Network
      * @param String $institutionCode InstitutionCode
      * @param Array  $item            Item
      *
@@ -1026,13 +1026,16 @@ class Holdings
      * Get backlink for aleph
      * (custom method)
      *
+     * @param String $networkCode     Code of Network
      * @param String $institutionCode InstitutioncCode
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return String
      */
-    protected function getBackLinkAleph($institutionCode, $item, array $data)
+    protected function getBackLinkAleph($networkCode, $institutionCode, $item,
+        array $data
+    )
     {
         $values = [
             'server' => $data['domain'],
@@ -1040,7 +1043,6 @@ class Holdings
             'bib-system-number' => $item['bibsysnumber'],
             'aleph-sublibrary-code' => $institutionCode
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
@@ -1048,20 +1050,22 @@ class Holdings
      * Get backlink for IDSBB
      * set link to orange view of swissbib
      *
-     * @param String $networkCode     NetworkCode
+     * @param String $networkCode     Code of Network
      * @param String $institutionCode InstitionCode
+     * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return String
      */
-    protected function getBackLinkIDSBB($networkCode, $institutionCode, array $data)
+    protected function getBackLinkIDSBB($networkCode, $institutionCode, $item,
+        array $data
+    )
     {
         $values = [
             'id' => $this->idItem,
             'sub-library-code' => $institutionCode,
             'network' => $networkCode,
-        ];
-
+            ];
         return $this->compileString($data['pattern'], $values);
     }
 
@@ -1069,43 +1073,50 @@ class Holdings
      * Get backlink for NEBIS
      * set link to NEBIS Primo View
      *
+     * @param String $networkCode     Code of Network
+     * @param String $institutionCode InstitionCode
      * @param Array  $item  Item
      * @param Array  $data  Data
      *
      * @return String
      */
-    protected function getBackLinkNEBIS($item, array $data)
-    {
-        $values = [
-            'bib-system-number' => $item['bibsysnumber'],
-        ];
-        return $this->compileString($data['pattern'], $values);
-    }
+     protected function getBackLinkNEBIS($networkCode, $institutionCode, $item,
+         array $data
+     )
+     {
+         $values = [
+             'bib-system-number' => $item['bibsysnumber'],
+             ];
+         return $this->compileString($data['pattern'], $values);
+     }
 
     /**
      * Get backlink for IDSLU
      * set link to iluplus Primo View
      *
+     * @param String $networkCode     Code of Network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item  Item
      * @param Array  $data  Data
      *
      * @return String
      */
-    protected function getBackLinkIDSLU($item, array $data)
-    {
-        $values = [
-            'bib-system-number' => $item['bibsysnumber'],
-        ];
-        return $this->compileString($data['pattern'], $values);
-    }
-
+     protected function getBackLinkIDSLU($networkCode, $institutionCode, $item,
+         array $data
+     )
+     {
+         $values = [
+             'bib-system-number' => $item['bibsysnumber'],
+         ];
+         return $this->compileString($data['pattern'], $values);
+     }
 
     /**
      * Get back link for IDSSG (self-developed-non-aleph-request)
      * Currently only a wrapper for Aleph
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of Network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1113,7 +1124,8 @@ class Holdings
      */
     protected function getBackLinkIDSSG($networkCode, $institutionCode, array $item,
         array $data
-    ) {
+    )
+    {
         // differ between FH and PH:
         if ($institutionCode === 'HFHS') {
             $data['pattern'] = $this->configHoldings->Backlink->{'IDSSGFH'};
@@ -1129,21 +1141,23 @@ class Holdings
         ) {
             $data['pattern'] = $this->configHoldings->Backlink->{'IDSSGPH'};
         }
-
         return $this->getBackLinkAleph($networkCode, $institutionCode, $item, $data);
     }
 
     /**
      * Get backlink for RERO
      *
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of Network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return mixed
      */
-    protected function getBackLinkRERO($institutionCode, $item, array $data
-    ) {
+    protected function getBackLinkRERO($networkCode, $institutionCode, $item,
+        array $data
+    )
+    {
         $values = [
             'language-code' => 'de', // @todo fetch from user,
             // third and fourth character
@@ -1152,7 +1166,6 @@ class Holdings
             //removes the RE-characters from the number string
             'sub-library-code' => preg_replace('[\D]', '', $institutionCode)
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
@@ -1160,12 +1173,16 @@ class Holdings
      * Get backlink for Alexandria network (Primo on Alma)
      * links only to result list as we have no usable identifier
      *
+     * @param String $networkCode     Code of Network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item  Item
      * @param Array  $data  Data
      *
      * @return String
      */
-    protected function getBackLinkAlex(array $item, array $data)
+    protected function getBackLinkAlex($networkCode, $institutionCode, array $item,
+        array $data
+    )
     {
         $values = [
             'bib-system-number' => $item['bibsysnumber']
@@ -1176,53 +1193,62 @@ class Holdings
     /**
      * Get backlink for SNL (helveticat)
      *
+     * @param String $networkCode     Code of Network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item  Item
      * @param Array  $data  Data
      *
      * @return String
      */
-    protected function getBackLinkSNL($item, array $data)
+    protected function getBackLinkSNL($networkCode, $institutionCode, $item,
+        array $data
+    )
     {
         $bibsysnumber = preg_replace('/^vtls0*/', '', $item['bibsysnumber']);
         $values = [
             'bib-system-number' => $bibsysnumber,
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
      * Get backlink for CCSA (poster collection)
      *
+     * @param String $networkCode     Code of Network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item  Item
      * @param Array  $data  Data
      *
      * @return String
      */
-    protected function getBackLinkCCSA($item, array $data)
+    protected function getBackLinkCCSA($networkCode, $institutionCode, $item,
+        array $data
+    )
     {
         $bibsysnumber = preg_replace('/^vtls0*/', '', $item['bibsysnumber']);
         $values = [
             'bib-system-number' => $bibsysnumber,
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
      * Get backlink for Helveticarchives (SNL)
      *
+     * @param String $networkCode     Code of Network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item  Item
      * @param Array  $data  Data
      *
      * @return String
      */
-    protected function getBackLinkCHARCH(array $item, array $data)
+    protected function getBackLinkCHARCH($networkCode, $institutionCode, array $item,
+        array $data
+    )
     {
         $values = [
             'bib-system-number' => $item['bibsysnumber'],
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
