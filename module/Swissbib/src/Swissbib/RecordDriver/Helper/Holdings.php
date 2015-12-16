@@ -1069,35 +1069,35 @@ class Holdings
      * Get backlink for NEBIS
      * set link to NEBIS Primo View
      *
-     * @param Array  $item            Item
-     * @param Array  $data            Data
+     * @param Array  $item  Item
+     * @param Array  $data  Data
      *
      * @return String
      */
-     protected function getBackLinkNEBIS($item, array $data
-     ) {
-          $values = [
-              'bib-system-number' => $item['bibsysnumber'],
-          ];
-          return $this->compileString($data['pattern'], $values);
-       }
+    protected function getBackLinkNEBIS($item, array $data)
+    {
+        $values = [
+            'bib-system-number' => $item['bibsysnumber'],
+        ];
+        return $this->compileString($data['pattern'], $values);
+    }
 
     /**
      * Get backlink for IDSLU
      * set link to iluplus Primo View
      *
-     * @param Array  $item            Item
-     * @param Array  $data            Data
+     * @param Array  $item  Item
+     * @param Array  $data  Data
      *
      * @return String
      */
-     protected function getBackLinkIDSLU($item, array $data)
-     {
+    protected function getBackLinkIDSLU($item, array $data)
+    {
         $values = [
             'bib-system-number' => $item['bibsysnumber'],
         ];
         return $this->compileString($data['pattern'], $values);
-     }
+    }
 
 
     /**
@@ -1160,9 +1160,8 @@ class Holdings
      * Get backlink for Alexandria network (Primo on Alma)
      * links only to result list as we have no usable identifier
      *
-
-     * @param Array  $item            Item
-     * @param Array  $data            Data
+     * @param Array  $item  Item
+     * @param Array  $data  Data
      *
      * @return String
      */
@@ -1171,15 +1170,14 @@ class Holdings
         $values = [
             'bib-system-number' => $item['bibsysnumber']
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
      * Get backlink for SNL (helveticat)
      *
-     * @param Array  $item            Item
-     * @param Array  $data            Data
+     * @param Array  $item  Item
+     * @param Array  $data  Data
      *
      * @return String
      */
@@ -1196,8 +1194,8 @@ class Holdings
     /**
      * Get backlink for CCSA (poster collection)
      *
-     * @param Array  $item            Item
-     * @param Array  $data            Data
+     * @param Array  $item  Item
+     * @param Array  $data  Data
      *
      * @return String
      */
@@ -1214,8 +1212,8 @@ class Holdings
     /**
      * Get backlink for Helveticarchives (SNL)
      *
-     * @param Array  $item            Item
-     * @param Array  $data            Data
+     * @param Array  $item  Item
+     * @param Array  $data  Data
      *
      * @return String
      */
