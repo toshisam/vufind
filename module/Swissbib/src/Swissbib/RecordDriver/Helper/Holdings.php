@@ -1026,16 +1026,14 @@ class Holdings
      * Get backlink for aleph
      * (custom method)
      *
-     * @param String $networkCode     NetworkCode
      * @param String $institutionCode InstitutioncCode
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return String
      */
-    protected function getBackLinkAleph($networkCode, $institutionCode, $item,
-        array $data
-    ) {
+    protected function getBackLinkAleph($institutionCode, $item, array $data)
+    {
         $values = [
             'server' => $data['domain'],
             'bib-library-code' => $data['library'],
@@ -1052,14 +1050,12 @@ class Holdings
      *
      * @param String $networkCode     NetworkCode
      * @param String $institutionCode InstitionCode
-     * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return String
      */
-    protected function getBackLinkIDSBB($networkCode, $institutionCode, $item,
-        array $data
-    ) {
+    protected function getBackLinkIDSBB($networkCode, $institutionCode, array $data)
+    {
         $values = [
             'id' => $this->idItem,
             'sub-library-code' => $institutionCode,
@@ -1073,49 +1069,36 @@ class Holdings
      * Get backlink for NEBIS
      * set link to NEBIS Primo View
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return String
-     *
-     * Links to Primo work, but login after permalink leads to crashes in Primo.
-     * Therefore, use Aleph until Primo allows safe login after permalink
-     *
-     * protected function getBackLinkNEBIS($networkCode, $institutionCode, $item,
-            array $data
-       ) {
-            $values = [
-                'bib-system-number' => $item['bibsysnumber'],
-            ];
-            return $this->compileString($data['pattern'], $values);
-       }
      */
+     protected function getBackLinkNEBIS($item, array $data
+     ) {
+          $values = [
+              'bib-system-number' => $item['bibsysnumber'],
+          ];
+          return $this->compileString($data['pattern'], $values);
+       }
 
     /**
      * Get backlink for IDSLU
      * set link to iluplus Primo View
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return String
-     *
-     * Links to Primo work, but login after permalink leads to crashes in Primo.
-     * Therefore, use Aleph until Primo allows safe login after permalink
-     *
-     * protected function getBackLinkIDSLU($networkCode, $institutionCode, $item,
-     * array $data
-     * ) {
-        * $values = [
-            * 'bib-system-number' => $item['bibsysnumber'],
-        * ];
-        * return $this->compileString($data['pattern'], $values);
-     * }
      */
+     protected function getBackLinkIDSLU($item, array $data)
+     {
+        $values = [
+            'bib-system-number' => $item['bibsysnumber'],
+        ];
+        return $this->compileString($data['pattern'], $values);
+     }
+
 
     /**
      * Get back link for IDSSG (self-developed-non-aleph-request)
@@ -1153,15 +1136,13 @@ class Holdings
     /**
      * Get backlink for RERO
      *
-     * @param String $networkCode     NetworkCode
      * @param String $institutionCode InstitionCode
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return mixed
      */
-    protected function getBackLinkRERO($networkCode, $institutionCode, $item,
-        array $data
+    protected function getBackLinkRERO($institutionCode, $item, array $data
     ) {
         $values = [
             'language-code' => 'de', // @todo fetch from user,
@@ -1177,18 +1158,16 @@ class Holdings
 
     /**
      * Get backlink for Alexandria network (Primo on Alma)
-     * * links only to result list as we have no usable identifier
+     * links only to result list as we have no usable identifier
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return String
      */
-    protected function getBackLinkAlex($networkCode, $institutionCode, array $item,
-        array $data
-    ) {
+    protected function getBackLinkAlex(array $item, array $data)
+    {
         $values = [
             'bib-system-number' => $item['bibsysnumber']
         ];
@@ -1199,16 +1178,13 @@ class Holdings
     /**
      * Get backlink for SNL (helveticat)
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return String
      */
-    protected function getBackLinkSNL($networkCode, $institutionCode, $item,
-        array $data
-    ) {
+    protected function getBackLinkSNL($item, array $data)
+    {
         $bibsysnumber = preg_replace('/^vtls0*/', '', $item['bibsysnumber']);
         $values = [
             'bib-system-number' => $bibsysnumber,
@@ -1220,16 +1196,13 @@ class Holdings
     /**
      * Get backlink for CCSA (poster collection)
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return String
      */
-    protected function getBackLinkCCSA($networkCode, $institutionCode, $item,
-        array $data
-    ) {
+    protected function getBackLinkCCSA($item, array $data)
+    {
         $bibsysnumber = preg_replace('/^vtls0*/', '', $item['bibsysnumber']);
         $values = [
             'bib-system-number' => $bibsysnumber,
@@ -1241,16 +1214,13 @@ class Holdings
     /**
      * Get backlink for Helveticarchives (SNL)
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return String
      */
-    protected function getBackLinkCHARCH($networkCode, $institutionCode, array $item,
-        array $data
-    ) {
+    protected function getBackLinkCHARCH(array $item, array $data)
+    {
         $values = [
             'bib-system-number' => $item['bibsysnumber'],
         ];
