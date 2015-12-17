@@ -13,6 +13,7 @@ $dois   = $record->getDOIs();
 $urns   = $record->getURNs();
 
 $alttitle = $record->getAltTitle();
+$formerTitle = $record->getFormerTitle();
 
 $series          = $record->getSeries();
 $collectionTitle = $record->getCollectionTitle();
@@ -91,6 +92,18 @@ $prevTitles      = $record->getPreviousTitles();
             <th> <?=$this->transEsc('Other_Title') ?>: </th>
             <td>
                 <? foreach ($alttitle as $field): ?>
+                    <?= $this->escapeHtml($field) ?><br/>
+                <? endforeach; ?>
+            </td>
+        </tr>
+    <? endif; ?>
+
+    <? if (!empty($formerTitle)): ?>
+        <? $contentDisplayed = true; ?>
+        <tr>
+            <th> <?=$this->transEsc('Former_Title') ?>: </th>
+            <td>
+                <? foreach ($formerTitle as $field): ?>
                     <?= $this->escapeHtml($field) ?><br/>
                 <? endforeach; ?>
             </td>
@@ -194,10 +207,14 @@ $prevTitles      = $record->getPreviousTitles();
   $credits    = $record->getProductionCredits();
   $origtitle  = $record->getOriginalTitle();
   $perfomer   = $record->getPerformerNote();
+  $fileNote   = $record->getFileNote();
+  $eventNote  = $record->getEventNote();
+  $audience   = $record->getTargetAudienceNotes();
   $awards     = $record->getAwards();
   $citenotes  = $record->getCitationNotes();
   $orignotes  = $record->getOriginalVersionNotes();
   $histData   = $record->getHistData();
+  $langData   = $record->getLangData();
   $copynotes  = $record->getCopyNotes();
   $system     = $record->getSystemDetails();
   $relatedEntries = $record->getRelatedEntries();
@@ -206,7 +223,8 @@ $prevTitles      = $record->getPreviousTitles();
   <? if (!empty($notes) or !empty($freq) or !empty($contDates) or !empty($diss) or
       !empty($bib) or !empty($access) or !empty($related) or !empty($credits) or !empty($awards) or
       !empty($citenotes) or !empty($orignotes) or !empty($copynotes) or !empty($histData) or
-      !empty($origtitle) or !empty($perfomer) or !empty($system) or !empty($relatedEntries)): ?>
+      !empty($origtitle) or !empty($perfomer) or !empty($system) or !empty($relatedEntries) or
+      !empty($langData) or !empty($audience) or !empty($eventNote) or !empty($fileNote)): ?>
     <? $contentDisplayed = true; ?>
 
       <? /* Display general notes (field 500) */ ?>
@@ -329,13 +347,49 @@ $prevTitles      = $record->getPreviousTitles();
         </tr>
       <? endif; ?>
 
-      <? /* Display participant / performers note */ ?>
+      <? /* Display participant / performers note (field 511) */ ?>
       <? if (!empty($perfomer)): ?>
         <tr>
           <th><?= $this->transEsc('Performer') ?>: </th>
           <td>
               <? foreach ($perfomer as $field): ?>
                   <?= $this->escapeHtml($field) ?><br/>
+              <? endforeach; ?>
+          </td>
+        </tr>
+      <? endif; ?>
+
+      <? /* Display type of computer file or data note (field 516) */ ?>
+      <? if (!empty($fileNote)): ?>
+          <tr>
+              <th><?= $this->transEsc('File_Note') ?>: </th>
+              <td>
+                  <? foreach ($fileNote as $field): ?>
+                      <?= $this->escapeHtml($field) ?><br/>
+                  <? endforeach; ?>
+              </td>
+          </tr>
+      <? endif; ?>
+
+      <? /* Display date/time and place of an event note (field 518) */ ?>
+      <? if (!empty($eventNote)): ?>
+          <tr>
+              <th><?= $this->transEsc('Event_Note') ?>: </th>
+              <td>
+                  <? foreach ($eventNote as $field): ?>
+                      <?= $this->escapeHtml($field) ?><br/>
+                  <? endforeach; ?>
+              </td>
+          </tr>
+      <? endif; ?>
+
+      <? /* Display target audience note (field 521) */ ?>
+      <? if (!empty($audience)): ?>
+        <tr>
+          <th><?=$this->transEsc('Audience')?>: </th>
+          <td>
+              <? foreach ($audience as $field): ?>
+                  <?=$this->escapeHtml($field)?><br/>
               <? endforeach; ?>
           </td>
         </tr>
@@ -353,7 +407,7 @@ $prevTitles      = $record->getPreviousTitles();
         </tr>
       <? endif; ?>
 
-      <? /* Display biographical info and administrative history */ ?>
+      <? /* Display biographical info and administrative history (field 545) */ ?>
       <? if (!empty($histData)): ?>
           <tr>
               <th><?= $this->transEsc('Bio_Adm_Hist') ?>: </th>
@@ -365,6 +419,17 @@ $prevTitles      = $record->getPreviousTitles();
           </tr>
       <? endif; ?>
 
+      <? /* Display language info (field 546) */ ?>
+      <? if (!empty($langData)): ?>
+          <tr>
+              <th><?= $this->transEsc('Language_Note') ?>: </th>
+              <td>
+                  <? foreach ($langData as $field): ?>
+                      <?= $this->escapeHtml($field) ?><br/>
+                  <? endforeach; ?>
+              </td>
+          </tr>
+      <? endif; ?>
 
       <? /* Display copy and version identification note (fields 562 and 590) */ ?>
       <? if (!empty($copynotes)): ?>

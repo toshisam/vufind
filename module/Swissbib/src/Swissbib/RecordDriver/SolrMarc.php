@@ -662,6 +662,9 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * Extended from SolrDefault
      *
+     * See documentation to swissbib-specific functions:
+     * http://www.swissbib.org/wiki/index.php?title=Staff:Thumbnail_locations
+     *
      * @param string $size Size of thumbnail (small, medium or large -- small is
      *                     default).
      *
@@ -725,14 +728,14 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                         'services/ImageTransformer?imagePath=' . $field['URL'] .
                         '&scale=1&reqServicename=ImageTransformer';
                 }
-            } elseif ($field['union'] === 'SGBN'
-                && mb_strtoupper($field['type']) === 'JPG'
-            ) {
-                $dirpath = preg_replace('/^.*sgb50/', '', $field['directory']);
-                $dirpath = empty($dirpath) ? $dirpath : substr($dirpath, 1) . '/';
-                $thumbnailURL = 'https://externalservices.swissbib.ch/services/' .
-                    'ImageTransformer?imagePath=http://aleph.sg.ch/adam/' .
-                    $dirpath . $field['filename'] . '&scale=1';
+//            } elseif ($field['union'] === 'SGBN'
+//                && mb_strtoupper($field['type']) === 'JPG'
+//            ) {
+//                $dirpath = preg_replace('/^.*sgb50/', '', $field['directory']);
+//                $dirpath = empty($dirpath) ? $dirpath : substr($dirpath, 1) . '/';
+//                $thumbnailURL = 'https://externalservices.swissbib.ch/services/' .
+//                    'ImageTransformer?imagePath=http://aleph.sg.ch/adam/' .
+//                    $dirpath . $field['filename'] . '&scale=1';
             } elseif ($field['union'] === 'BGR'
                 && mb_strtoupper($field['type']) === 'JPG'
             ) {
@@ -759,13 +762,19 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 $thumbnailURL = 'https://externalservices.swissbib.ch/services/' .
                     'ImageTransformer?imagePath=' . $field['URL'] .
                     '&scale=1&reqServicename=ImageTransformer';
-            } elseif (isset($field['institution'])
-                && $field['institution'] === 'ECOD'
+            } elseif (isset($field['union'])
+                && $field['union'] === 'ECOD'
                 && $field['usage'] === 'THUMBNAIL'
             ) {
                 $thumbnailURL = 'https://externalservices.swissbib.ch/services/' .
                     'ImageTransformer?imagePath=' . $field['URL'] .
                     '&scale=1&reqServicename=ImageTransformer';
+                // thumbnail from CHARCH is already https-service, therefore no wrapper
+            } elseif (isset($field['union'])
+                && $field['union'] === 'CHARCH'
+                && $field['usage'] === 'THUMBNAIL'
+            ) {
+                $thumbnailURL = $field['URL'];
             }
         }
 
@@ -810,15 +819,12 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 );
                 return 'https://externalservices.swissbib.ch/services/' .
                 'ImageTransformer?imagePath=' . $URL_thumb . '&scale=1';
+                // @todo : Kann entfernt werden nach Neuladen Januar 2016, neu #766ff
             } elseif ($field['union'] === 'CHARCH' && $field['tag'] === '856') {
                 $thumb_URL = preg_replace('/SIZE=10/', 'SIZE=30', $field['sf_u']);
                 $URL_thumb = preg_replace('/http/', 'https', $thumb_URL);
                 return $URL_thumb;
             }
-            //return 'https://externalservices.swissbib.ch/services/'
-            //. 'ImageTransformer?imagePath='
-            //. $URL_thumb
-            //. '&scale=1';
         }
     }
 
@@ -1299,7 +1305,17 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getAltTitle()
     {
-        return $this->getFieldArray('246', '247');
+        return $this->getFieldArray('246', ['a', 'b']);
+    }
+
+    /**
+     * Get former title
+     *
+     * @return array
+     */
+    public function getFormerTitle()
+    {
+        return $this->getFieldArray('247', ['a', 'b']);
     }
 
     /**
@@ -1425,6 +1441,26 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get type of computer file or data note for the record.
+     *
+     * @return array
+     */
+    public function getFileNote()
+    {
+        return $this->getFieldArray('516');
+    }
+
+    /**
+     * Get date/time and place of an event note for the record.
+     *
+     * @return array
+     */
+    public function getEventNote()
+    {
+        return $this->getFieldArray('518');
+    }
+
+    /**
      * Get original version note for the record.
      *
      * @return array
@@ -1432,6 +1468,15 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getOriginalVersionNotes()
     {
         return $this->getFieldArray('534', ['p', 't', 'c']);
+    }
+
+    /**
+     * Get language information
+     * @return array
+     */
+    public function getLangData()
+    {
+        return $this->getFieldArray('546', ['a', 'b']);
     }
 
     /**
@@ -2402,6 +2447,13 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             return false;
         }
 
+        // If set, display relationship information in i subfield
+        if ($relation = $field->getSubfield('i')) {
+            $relation = $relation->getData();
+        } else {
+            $relation = $this->getRecordLinkNote($field);
+        }
+
         $linkTypeSetting = isset($this->mainConfig->Record->marc_links_link_types)
             ? $this->mainConfig->Record->marc_links_link_types
             : 'id,oclc,dlc,isbn,issn,title';
@@ -2432,7 +2484,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         // Found link based on special conditions, stop here
         if ($link) {
             return [
-                'title' => $this->getRecordLinkNote($field),
+                'title' => $relation,
                 'value' => $title,
                 'link' => $link
             ];
