@@ -53,7 +53,11 @@ class FeedbackController extends VuFindFeedbackController
      */
     public function homeAction()
     {
-        /** @var Form $feedbackForm */
+        /**
+         * FeedbackForm
+         *
+         * @var Form $feedbackForm
+         */
         $feedbackForm = $this->serviceLocator
             ->get('Swissbib\Feedback\Form\FeedbackForm');
 
@@ -90,13 +94,18 @@ class FeedbackController extends VuFindFeedbackController
      * Resetting the values of the form passed. Unfortunately there is  no other way
      * in ZF2 to achieve this.
      *
-     * @param Form $form
+     * @param Form $form Zend form to be reset
      *
      * @return void
      */
     private function resetForm(Form $form) {
         $resetTypes = ['text', 'radio', 'email', 'textarea'];
-        /** @var Element $element */
+
+        /**
+         * Form element
+         *
+         * @var Element $element
+         */
         foreach ($form->getElements() as $element) {
             if (in_array($element->getAttribute('type'), $resetTypes)) {
                 $element->setValue('');
