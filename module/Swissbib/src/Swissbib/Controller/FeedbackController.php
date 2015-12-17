@@ -31,6 +31,7 @@
 namespace Swissbib\Controller;
 
 use VuFind\Controller\FeedbackController as VuFindFeedbackController;
+use Zend\Form\Element;
 use Zend\Form\Form;
 use Zend\Mail as Mail;
 
@@ -62,10 +63,8 @@ class FeedbackController extends VuFindFeedbackController
             $feedbackForm->setData($this->request->getPost());
 
             if ($feedbackForm->isValid()) {
-                //sendmail
                 $this->sendMail($feedbackForm->getData());
-                $feedbackForm = $this->serviceLocator
-                    ->get('Swissbib\Feedback\Form\FeedbackForm');
+                $this->resetForm($feedbackForm);
 
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage('feedback.form.success');
@@ -85,6 +84,22 @@ class FeedbackController extends VuFindFeedbackController
                 'form' => $feedbackForm
             ]
         );
+    }
+
+    /**
+     * Resetting the values of the form passed. Unfortunately there is  no other way
+     * in ZF2 to achieve this.
+     *
+     * @param Form $form
+     */
+    private function resetForm(Form $form) {
+        $resetTypes = ['text', 'radio', 'email', 'textarea'];
+        /** @var Element $element */
+        foreach ($form->getElements() as $element) {
+            if (in_array($element->getAttribute('type'), $resetTypes)) {
+                $element->setValue('');
+            }
+        }
     }
 
     /**
@@ -117,6 +132,7 @@ class FeedbackController extends VuFindFeedbackController
 
         // This sets up the email to be sent
         $mail = new Mail\Message();
+        $mail->setEncoding('UTF-8');
         $mail->setBody($emailMessage);
         $mail->setFrom($data['email'], $data['name']);
         $mail->addTo($recipientEmail, $recipientName);
