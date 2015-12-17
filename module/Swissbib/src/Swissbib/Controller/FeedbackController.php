@@ -91,6 +91,8 @@ class FeedbackController extends VuFindFeedbackController
      * in ZF2 to achieve this.
      *
      * @param Form $form
+     *
+     * @return void
      */
     private function resetForm(Form $form) {
         $resetTypes = ['text', 'radio', 'email', 'textarea'];
@@ -106,6 +108,8 @@ class FeedbackController extends VuFindFeedbackController
      * Sending mail to admin
      *
      * @param array $data User / Mail information
+     *
+     * @return void
      *
      * @throws \Exception
      */
