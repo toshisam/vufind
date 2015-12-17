@@ -98,7 +98,8 @@ class FeedbackController extends VuFindFeedbackController
      *
      * @return void
      */
-    private function resetForm(Form $form) {
+    protected function resetForm(Form $form)
+    {
         $resetTypes = ['text', 'radio', 'email', 'textarea'];
 
         /**
@@ -122,7 +123,8 @@ class FeedbackController extends VuFindFeedbackController
      *
      * @throws \Exception
      */
-    private function sendMail(array $data) {
+    protected function sendMail(array $data)
+    {
         $config = $this->getServiceLocator()->get('VuFind\Config')->get('config');
 
         // These settings are set in the feedback settion of your config.ini
