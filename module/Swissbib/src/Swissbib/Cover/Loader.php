@@ -73,8 +73,8 @@ class Loader extends VFLoader
      * @return void
      */
     public function loadImage($isbn = null, $size = 'small', $type = null,
-                              $title = null, $author = null, $callnumber = null,
-                              $issn = null, $oclc = null, $upc = null
+        $title = null, $author = null, $callnumber = null,
+        $issn = null, $oclc = null, $upc = null
     ) {
         // Sanitize parameters:
         $this->isbn = new ISBN($isbn);

@@ -688,8 +688,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         } elseif (isset($format) && is_array($format) && count($format) >= 1) {
             return ['size' => $size, 'format' => $format[0],
                 'contenttype' => $format[0]];
-        }
-        else {
+        } else {
             return [];
         }
     }
