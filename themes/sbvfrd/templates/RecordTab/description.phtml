@@ -336,7 +336,7 @@ $prevTitles      = $record->getPreviousTitles();
         </tr>
       <? endif; ?>
 
-      <? /* Display original title (field 509) */ ?>
+      <? /* Display title of work (field 240 or 130) */ ?>
       <? if (!empty($worktitle)): ?>
           <tr>
               <th><?= $this->transEsc('Work_Title') ?>: </th>
