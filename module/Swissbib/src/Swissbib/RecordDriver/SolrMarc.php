@@ -1407,6 +1407,80 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get Title of Work (field 240 or field 130)
+     *
+     * @return array
+     */
+    public function getWorkTitle($asStrings = true)
+    {
+        $fieldsToCheck = [
+        '240' ,
+        '130',
+         ];
+
+        foreach ($fieldsToCheck as $field) {
+            $data = $this->getMarcSubFieldMaps(
+                $field, [
+                'a' => 'title',
+                'm' => 'medium',
+                'n' => 'count',
+                'r' => 'key',
+                's' => 'version',
+                'p' => 'part',
+                'k' => 'form',
+                'o' => 'arranged',
+                'f' => 'date',
+                ]
+            );
+
+            if ($asStrings) {
+                $strings = [];
+
+                foreach ($data as $worktitle) {
+
+                    $string = '';
+
+                    if (isset($worktitle['title'])) {
+                        $string = $worktitle['title'];
+                    }
+                    if (isset($worktitle['medium'])) {
+                        $string .= ', ' .$worktitle['medium'];
+                    }
+                    if (isset($worktitle['count'])) {
+                        $string .= ', ' . $worktitle['count'];
+                    }
+                    if (isset($worktitle['key'])) {
+                        $string .= ', ' .$worktitle['key'];
+                    }
+                    if (isset($worktitle['version'])) {
+                        $string .= ', ' .$worktitle['version'];
+                    }
+                    if (isset($worktitle['part'])) {
+                        $string .= ', ' . $worktitle['part'];
+                    }
+                    if (isset($worktitle['form'])) {
+                        $string .= ', ' . $worktitle['form'];
+                    }
+                    if (isset($worktitle['arranged'])) {
+                        $string .= ', ' . $worktitle['arranged'];
+                    }
+                    if (isset($worktitle['date'])) {
+                        $string .= '(' . $worktitle['date'] . ')';
+                    }
+
+                    $strings[] = trim($string);
+                }
+
+                if ($strings) {
+                    $data = $strings;
+                    break;
+                }
+            }
+        }
+         return $data;
+    }
+
+    /**
      * Get Dates of Publication and/or Sequential Designation (field 362)
      *
      * @return Array
