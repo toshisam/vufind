@@ -1820,7 +1820,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getPublishers()
     {
-        return $this->getFieldArray('260', ['b']);
+        return $this->getPublicationInfo('b');
     }
 
     /**
