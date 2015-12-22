@@ -614,13 +614,13 @@ class Record extends VuFindRecord
             '" target="_blank"';
 
         $renderedLink = str_replace(
-            "<a ",
-            "<a $linkSFX_param ",
+            $this->view->transEsc('Get full text'), "SFX Services",
             $linkSFX->renderTemplate()
         );
 
         $renderedLink = str_replace(
-            $this->view->transEsc('Get full text'), "SFX Services",
+            "<a ",
+            "<a $linkSFX_param ",
             $renderedLink
         );
 
