@@ -765,7 +765,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 $thumbnailURL = 'https://externalservices.swissbib.ch/services/' .
                     'ImageTransformer?imagePath=' . $field['URL'] .
                     '&scale=1&reqServicename=ImageTransformer';
-                // thumbnail from CHARCH is already https-service, therefore no wrapper
+                //thumbnail of CHARCH is already https-service, therefore no wrapper
             } elseif (isset($field['union'])
                 && $field['union'] === 'CHARCH'
                 && $field['usage'] === 'THUMBNAIL'
