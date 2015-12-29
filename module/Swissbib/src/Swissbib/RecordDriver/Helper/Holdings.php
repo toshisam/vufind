@@ -1035,8 +1035,7 @@ class Holdings
      */
     protected function getBackLinkAleph($networkCode, $institutionCode, $item,
         array $data
-    )
-    {
+    ) {
         $values = [
             'server' => $data['domain'],
             'bib-library-code' => $data['library'],
@@ -1059,8 +1058,7 @@ class Holdings
      */
     protected function getBackLinkIDSBB($networkCode, $institutionCode, $item,
         array $data
-    )
-    {
+    ) {
         $values = [
             'id' => $this->idItem,
             'sub-library-code' => $institutionCode,
@@ -1104,8 +1102,7 @@ class Holdings
      */
     protected function getBackLinkIDSLU($networkCode, $institutionCode, $item,
         array $data
-    )
-    {
+    ) {
         $values = [
             'bib-system-number' => $item['bibsysnumber'],
         ];
@@ -1125,8 +1122,7 @@ class Holdings
      */
     protected function getBackLinkIDSSG($networkCode, $institutionCode, array $item,
         array $data
-    )
-    {
+    ) {
         // differ between FH and PH:
         if ($institutionCode === 'HFHS') {
             $data['pattern'] = $this->configHoldings->Backlink->{'IDSSGFH'};
@@ -1157,8 +1153,7 @@ class Holdings
      */
     protected function getBackLinkRERO($networkCode, $institutionCode, $item,
         array $data
-    )
-    {
+    ) {
         $values = [
             'language-code' => 'de', // @todo fetch from user,
             // third and fourth character
@@ -1183,8 +1178,7 @@ class Holdings
      */
     protected function getBackLinkAlex($networkCode, $institutionCode, array $item,
         array $data
-    )
-    {
+    ) {
         $values = [
             'bib-system-number' => $item['bibsysnumber']
         ];
@@ -1203,8 +1197,7 @@ class Holdings
      */
     protected function getBackLinkSNL($networkCode, $institutionCode, $item,
         array $data
-    )
-    {
+    ) {
         $bibsysnumber = preg_replace('/^vtls0*/', '', $item['bibsysnumber']);
         $values = [
             'bib-system-number' => $bibsysnumber,
@@ -1224,8 +1217,7 @@ class Holdings
      */
     protected function getBackLinkCCSA($networkCode, $institutionCode, $item,
         array $data
-    )
-    {
+    ) {
         $bibsysnumber = preg_replace('/^vtls0*/', '', $item['bibsysnumber']);
         $values = [
             'bib-system-number' => $bibsysnumber,
@@ -1245,8 +1237,7 @@ class Holdings
      */
     protected function getBackLinkCHARCH($networkCode, $institutionCode, array $item,
         array $data
-    )
-    {
+    ) {
         $values = [
             'bib-system-number' => $item['bibsysnumber'],
         ];
