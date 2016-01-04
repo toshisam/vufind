@@ -543,10 +543,35 @@ class Holdings
         );
 
         if ($extend) {
+            $allBarcodes = [];
             foreach ($institutionItems as $index => $item) {
-                // Add extra information for item
                 $institutionItems[$index] = $this->extendItem($item, $recordDriver);
+                $networkCode = isset($item['network']) ? $item['network'] : '';
+                if ($this->isAlephNetwork($networkCode)) {
+                    if (!isset($extendingOptions['availability'])
+                        || $extendingOptions['availability']
+                    ) {
+                        array_push($allBarcodes, $item['barcode']);
+                    }
+                }
             }
+
+            // Add availability
+            $item = $institutionItems[0];
+            $allAvailabilities = '';
+            if ( 0 < count($allBarcodes) ) {
+                $allAvailabilities = $this->getAvailabilityInfos(
+                    $item['bibsysnumber'], $allBarcodes, $item['bib_library']
+                );
+            }
+
+            // for each item: set availability from 'allAvailabilities'
+            foreach ($institutionItems as $index => $item) {
+                $availabilityArray = Array( $item['barcode'] => $allAvailabilities[$item['barcode']] );
+                $item['availability'] = $availabilityArray;
+                $institutionItems[$index] = $item;
+            }
+
         }
 
         return $institutionItems;
@@ -672,17 +697,7 @@ class Holdings
                     }
                 }
             }
-
-            // Add availability
-            if (!isset($extendingOptions['availability'])
-                || $extendingOptions['availability']
-            ) {
-                $item['availability'] = $this->getAvailabilityInfos(
-                    $item['bibsysnumber'], $item['barcode'], $item['bib_library']
-                );
-            }
         }
-
         return $item;
     }
 
@@ -1300,7 +1315,7 @@ class Holdings
      * Get availability infos for item element
      *
      * @param String $sysNumber SysNumber
-     * @param String $barcode   Barcode
+     * @param Array  $barcode   Array of BarCode Strings
      * @param String $bib       Bib
      *
      * @return Array|Boolean

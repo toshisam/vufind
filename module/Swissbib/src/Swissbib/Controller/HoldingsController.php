@@ -129,7 +129,7 @@ class HoldingsController extends BaseController
         $bib = $dummyHoldingItem['bib_library'];
         $resourceFilters = $catalog->getResourceFilters($resourceId);
         $extendingOptions = [
-            'availability' => false
+            'availability' => true
         ];
 
         // Add missing data to holding items
