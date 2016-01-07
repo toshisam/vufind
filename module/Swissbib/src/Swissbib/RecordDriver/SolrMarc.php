@@ -1358,7 +1358,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getDissertationNotes()
     {
-        return $this->getFieldArray('502');
+        return $this->getFieldArray('502', ['a', 'b', 'c', 'd', 'g']);
     }
 
     /**
