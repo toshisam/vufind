@@ -1669,6 +1669,18 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 'ind' => 7,
                 'field' => 'gnd'
             ],
+            'gndcontent' => [
+                'ind' => 7,
+                'field' => 'gnd-content'
+            ],
+            'gndcarrier' => [
+                'ind' => 7,
+                'field' => 'gnd-carrier'
+            ],
+            'gndmusic' => [
+                'ind' => 7,
+                'field' => 'gnd-music'
+            ],
             'rero' => [
                 'ind' => 7,
                 'field' => 'rero'
