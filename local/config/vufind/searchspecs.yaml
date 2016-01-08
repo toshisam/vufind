@@ -352,6 +352,160 @@ ctrlnum:
     ctrlnum:
       - [ctrlnum, ~]
 
+music:
+  DismaxFields:
+    - submusic
+  QueryFields:
+    submusic:
+        - [and, ~]
+
+SU03:
+  DismaxFields:
+    - sublocal_idsbbBB_txt_mv
+  QueryFields:
+    sublocal_idsbbBB_txt_mv:
+        - [and, ~]
+
+SU04:
+  DismaxFields:
+    - sublocal_idsbbBC_txt_mv
+  QueryFields:
+    sublocal_idsbbBC_txt_mv:
+        - [and, ~]
+
+SU05:
+  DismaxFields:
+    - sublocal_idsbbBD_txt_mv
+  QueryFields:
+    sublocal_idsbbBD_txt_mv:
+        - [and, ~]
+
+SU06:
+  DismaxFields:
+    - sublocal_idsbbBE_txt_mv
+  QueryFields:
+    sublocal_idsbbBE_txt_mv:
+        - [and, ~]
+
+SU07:
+  DismaxFields:
+    - sublocal_idsbbBF_txt_mv
+  QueryFields:
+    sublocal_idsbbBF_txt_mv:
+        - [and, ~]
+
+SU24:
+  DismaxFields:
+    - sublocal_idsbbBW_txt_mv
+  QueryFields:
+    sublocal_idsbbBW_txt_mv:
+        - [and, ~]
+
+SU36:
+  DismaxFields:
+    - sublocal_idsbbAC_txt_mv
+  QueryFields:
+    sublocal_idsbbAC_txt_mv:
+        - [and, ~]
+
+SU46:
+  DismaxFields:
+    - sublocal_idsbbAM_txt_mv
+  QueryFields:
+    sublocal_idsbbAM_txt_mv:
+        - [and, ~]
+
+SU68:
+  DismaxFields:
+    - sublocal_idsbbA2_txt_mv
+  QueryFields:
+    sublocal_idsbbA2_txt_mv:
+        - [and, ~]
+
+SU76:
+  DismaxFields:
+    - sublocal_idsbbA8_txt_mv
+  QueryFields:
+    sublocal_idsbbA8_txt_mv:
+        - [and, ~]
+
+SU81:
+  DismaxFields:
+    - sublocal_idsbbG8_txt_mv
+  QueryFields:
+    sublocal_idsbbG8_txt_mv:
+        - [and, ~]
+
+SU82:
+  DismaxFields:
+    - sublocal_idsbbFC_txt_mv
+  QueryFields:
+    sublocal_idsbbFC_txt_mv:
+        - [and, ~]
+
+SU88:
+  DismaxFields:
+    - sublocal_idsbbG9_txt_mv
+  QueryFields:
+    sublocal_idsbbG9_txt_mv:
+        - [and, ~]
+
+SU89:
+  DismaxFields:
+    - sublocal_idsbbGC_txt_mv
+  QueryFields:
+    sublocal_idsbbGC_txt_mv:
+        - [and, ~]
+
+CLA01:
+  DismaxFields:
+    - classif_idsbbFA
+  QueryFields:
+    classif_idsbbFA:
+         - [onephrase, ~]
+
+CLA02:
+  DismaxFields:
+    - classif_idsbbGA
+  QueryFields:
+    classif_idsbbGA:
+         - [onephrase, ~]
+
+CLA05:
+  DismaxFields:
+    - classif_idsbbGC
+  QueryFields:
+    classif_idsbbGC:
+         - [onephrase, ~]
+
+CLA25:
+  DismaxFields:
+    - classif_idsbbGM
+  QueryFields:
+    classif_idsbbGM:
+         - [onephrase, ~]
+
+CLA29:
+  DismaxFields:
+    - classif_idsbbGQ
+  QueryFields:
+    classif_idsbbGQ:
+         - [onephrase, ~]
+
+OCM:
+  DismaxFields:
+    - classif_ocm
+  QueryFields:
+    classif_ocm:
+         - [onephrase, ~]
+
+OWC:
+  DismaxFields:
+    - classif_ocm
+  QueryFields:
+    classif_ocm:
+         - [onephrase, ~]
+
 Autosuggest:
   DismaxHandler: dismax
   DismaxFields:
