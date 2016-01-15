@@ -44,11 +44,7 @@
     </div>
     <div class="col-sm-2 hidden-xs left no-gutter hidden-print">
         <a href="<?=$this->recordLink()->getUrl($record)?>" class="title img-responsive">
-        <? if (!($thumbnail === false)): ?>
             <img class="recordcover" src="<?= $thumbnail ?>" />
-        <? else: ?>
-            <div class="thumbico <?= $viewRecord->getThumbnailPlaceholder() ?>"></div>
-        <? endif; ?>
         </a>
     </div>
     <div class="col-sm-6 col-xs-10 middle">

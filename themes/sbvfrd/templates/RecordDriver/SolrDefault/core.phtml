@@ -35,11 +35,7 @@ $linkSFX = $viewRecord->getLinkSFX();
     <div class="thumbDetailView hidden-print">
       <? /* Display thumbnail if appropriate: */ ?>
       <? $mediumThumb = $viewRecord->getThumbnail('medium'); ?>
-      <? if ($mediumThumb): ?>
           <img alt="<?=$this->transEsc('Cover Image')?>" class="recordcover" src="<?=$this->escapeHtmlAttr($mediumThumb);?>"/>
-      <? else: ?>
-          <div class="thumbico <?= $viewRecord->getThumbnailPlaceholder() ?> bigico"></div>
-      <? endif; ?>
 
       <? /* Display qrcode if appropriate: */ ?>
       <? $QRCode = $viewRecord->getQRCode("core"); ?>

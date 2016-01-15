@@ -195,7 +195,7 @@ return [
             'upgrade'              => 'Swissbib\Controller\NoProductiveSupportController',
             'install'              => 'Swissbib\Controller\NoProductiveSupportController',
             'feedback'             => 'Swissbib\Controller\FeedbackController',
-
+            'cover'                => 'Swissbib\Controller\CoverController',
         ],
         'factories' => [
             'record' => 'Swissbib\Controller\Factory::getRecordController',
