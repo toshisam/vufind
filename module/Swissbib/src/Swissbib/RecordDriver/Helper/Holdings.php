@@ -556,8 +556,8 @@ class Holdings
                 }
             }
 
-            $institutionItems =
-                $this->getAvailabilityInfosArray($institutionItems, $allBarcodes);
+            $institutionItems
+                = $this->getAvailabilityInfosArray($institutionItems, $allBarcodes);
 
         }
 
@@ -567,8 +567,10 @@ class Holdings
     /**
      * Add availability-information of multiple items
      *
-     * @param Array $items          the (holding-/institution-)items
-     * @param Array $barcodes       barcodes to check availability for
+     * @param Array $items    the (holding-/institution-)items
+     * @param Array $barcodes barcodes to check availability for
+     *
+     * @return Array
      */
     public function getAvailabilityInfosArray($items, $barcodes)
     {

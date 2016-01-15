@@ -733,14 +733,14 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                         'services/ImageTransformer?imagePath=' . $field['URL'] .
                         '&scale=1&reqServicename=ImageTransformer';
                 }
-//            } elseif ($field['union'] === 'SGBN'
-//                && mb_strtoupper($field['type']) === 'JPG'
-//            ) {
-//                $dirpath = preg_replace('/^.*sgb50/', '', $field['directory']);
-//                $dirpath = empty($dirpath) ? $dirpath : substr($dirpath, 1) . '/';
-//                $thumbnailURL = 'https://externalservices.swissbib.ch/services/' .
-//                    'ImageTransformer?imagePath=http://aleph.sg.ch/adam/' .
-//                    $dirpath . $field['filename'] . '&scale=1';
+                //            } elseif ($field['union'] === 'SGBN'
+                //                && mb_strtoupper($field['type']) === 'JPG'
+                //            ) {
+                //                $dirpath = preg_replace('/^.*sgb50/', '', $field['directory']);
+                //                $dirpath = empty($dirpath) ? $dirpath : substr($dirpath, 1) . '/';
+                //                $thumbnailURL = 'https://externalservices.swissbib.ch/services/' .
+                //                    'ImageTransformer?imagePath=http://aleph.sg.ch/adam/' .
+                //                    $dirpath . $field['filename'] . '&scale=1';
             } elseif ($field['union'] === 'BGR'
                 && mb_strtoupper($field['type']) === 'JPG'
             ) {
