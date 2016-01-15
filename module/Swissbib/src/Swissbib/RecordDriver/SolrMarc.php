@@ -662,6 +662,9 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      *
      * Extended from SolrDefault
      *
+     * See documentation to swissbib-specific functions:
+     * http://www.swissbib.org/wiki/index.php?title=Staff:Thumbnail_locations
+     *
      * @param string $size Size of thumbnail (small, medium or large -- small is
      *                     default).
      *
@@ -721,14 +724,14 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                         'services/ImageTransformer?imagePath=' . $field['URL'] .
                         '&scale=1&reqServicename=ImageTransformer';
                 }
-            } elseif ($field['union'] === 'SGBN'
-                && mb_strtoupper($field['type']) === 'JPG'
-            ) {
-                $dirpath = preg_replace('/^.*sgb50/', '', $field['directory']);
-                $dirpath = empty($dirpath) ? $dirpath : substr($dirpath, 1) . '/';
-                $thumbnailURL = 'https://externalservices.swissbib.ch/services/' .
-                    'ImageTransformer?imagePath=http://aleph.sg.ch/adam/' .
-                    $dirpath . $field['filename'] . '&scale=1';
+//            } elseif ($field['union'] === 'SGBN'
+//                && mb_strtoupper($field['type']) === 'JPG'
+//            ) {
+//                $dirpath = preg_replace('/^.*sgb50/', '', $field['directory']);
+//                $dirpath = empty($dirpath) ? $dirpath : substr($dirpath, 1) . '/';
+//                $thumbnailURL = 'https://externalservices.swissbib.ch/services/' .
+//                    'ImageTransformer?imagePath=http://aleph.sg.ch/adam/' .
+//                    $dirpath . $field['filename'] . '&scale=1';
             } elseif ($field['union'] === 'BGR'
                 && mb_strtoupper($field['type']) === 'JPG'
             ) {
@@ -755,13 +758,19 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 $thumbnailURL = 'https://externalservices.swissbib.ch/services/' .
                     'ImageTransformer?imagePath=' . $field['URL'] .
                     '&scale=1&reqServicename=ImageTransformer';
-            } elseif (isset($field['institution'])
-                && $field['institution'] === 'ECOD'
+            } elseif (isset($field['union'])
+                && $field['union'] === 'ECOD'
                 && $field['usage'] === 'THUMBNAIL'
             ) {
                 $thumbnailURL = 'https://externalservices.swissbib.ch/services/' .
                     'ImageTransformer?imagePath=' . $field['URL'] .
                     '&scale=1&reqServicename=ImageTransformer';
+                //thumbnail of CHARCH is already https-service, therefore no wrapper
+            } elseif (isset($field['union'])
+                && $field['union'] === 'CHARCH'
+                && $field['usage'] === 'THUMBNAIL'
+            ) {
+                $thumbnailURL = $field['URL'];
             }
         }
 
@@ -806,15 +815,12 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 );
                 return 'https://externalservices.swissbib.ch/services/' .
                 'ImageTransformer?imagePath=' . $URL_thumb . '&scale=1';
+                // @todo : Kann entfernt werden nach Neuladen Januar 2016, neu #766ff
             } elseif ($field['union'] === 'CHARCH' && $field['tag'] === '856') {
                 $thumb_URL = preg_replace('/SIZE=10/', 'SIZE=30', $field['sf_u']);
                 $URL_thumb = preg_replace('/http/', 'https', $thumb_URL);
                 return $URL_thumb;
             }
-            //return 'https://externalservices.swissbib.ch/services/'
-            //. 'ImageTransformer?imagePath='
-            //. $URL_thumb
-            //. '&scale=1';
         }
     }
 
@@ -1214,6 +1220,24 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get Hierarchical level of record
+     * @return String
+     */
+    public function getHierachicalLevel()
+    {
+        return $this->getFirstFieldValue('351', ['c']);
+    }
+
+    /**
+     * Get biographical information or administrative history
+     * @return array
+     */
+    public function getHistData()
+    {
+        return $this->getFieldArray('545', ['a', 'b']);
+    }
+
+    /**
      * Get subtitle
      *
      * @param Boolean $full Get full field data. Else only field c is fetched
@@ -1277,7 +1301,17 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getAltTitle()
     {
-        return $this->getFieldArray('246', '247');
+        return $this->getFieldArray('246', ['a', 'b']);
+    }
+
+    /**
+     * Get former title
+     *
+     * @return array
+     */
+    public function getFormerTitle()
+    {
+        return $this->getFieldArray('247', ['a', 'b']);
     }
 
     /**
@@ -1324,7 +1358,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getDissertationNotes()
     {
-        return $this->getFieldArray('502');
+        return $this->getFieldArray('502', ['a', 'b', 'c', 'd', 'g']);
     }
 
     /**
@@ -1373,6 +1407,80 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get Title of Work (field 240 or field 130)
+     *
+     * @return array
+     */
+    public function getWorkTitle($asStrings = true)
+    {
+        $fieldsToCheck = [
+        '240' ,
+        '130',
+         ];
+
+        foreach ($fieldsToCheck as $field) {
+            $data = $this->getMarcSubFieldMaps(
+                $field, [
+                'a' => 'title',
+                'm' => 'medium',
+                'n' => 'count',
+                'r' => 'key',
+                's' => 'version',
+                'p' => 'part',
+                'k' => 'form',
+                'o' => 'arranged',
+                'f' => 'date',
+                ]
+            );
+
+            if ($asStrings) {
+                $strings = [];
+
+                foreach ($data as $worktitle) {
+
+                    $string = '';
+
+                    if (isset($worktitle['title'])) {
+                        $string = $worktitle['title'];
+                    }
+                    if (isset($worktitle['medium'])) {
+                        $string .= ', ' .$worktitle['medium'];
+                    }
+                    if (isset($worktitle['count'])) {
+                        $string .= ', ' . $worktitle['count'];
+                    }
+                    if (isset($worktitle['key'])) {
+                        $string .= ', ' .$worktitle['key'];
+                    }
+                    if (isset($worktitle['version'])) {
+                        $string .= ', ' .$worktitle['version'];
+                    }
+                    if (isset($worktitle['part'])) {
+                        $string .= ', ' . $worktitle['part'];
+                    }
+                    if (isset($worktitle['form'])) {
+                        $string .= ', ' . $worktitle['form'];
+                    }
+                    if (isset($worktitle['arranged'])) {
+                        $string .= ', ' . $worktitle['arranged'];
+                    }
+                    if (isset($worktitle['date'])) {
+                        $string .= '(' . $worktitle['date'] . ')';
+                    }
+
+                    $strings[] = trim($string);
+                }
+
+                if ($strings) {
+                    $data = $strings;
+                    break;
+                }
+            }
+        }
+         return $data;
+    }
+
+    /**
      * Get Dates of Publication and/or Sequential Designation (field 362)
      *
      * @return Array
@@ -1403,6 +1511,26 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get type of computer file or data note for the record.
+     *
+     * @return array
+     */
+    public function getFileNote()
+    {
+        return $this->getFieldArray('516');
+    }
+
+    /**
+     * Get date/time and place of an event note for the record.
+     *
+     * @return array
+     */
+    public function getEventNote()
+    {
+        return $this->getFieldArray('518');
+    }
+
+    /**
      * Get original version note for the record.
      *
      * @return array
@@ -1410,6 +1538,15 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getOriginalVersionNotes()
     {
         return $this->getFieldArray('534', ['p', 't', 'c']);
+    }
+
+    /**
+     * Get language information
+     * @return array
+     */
+    public function getLangData()
+    {
+        return $this->getFieldArray('546', ['a', 'b']);
     }
 
     /**
@@ -1531,6 +1668,18 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             'gnd' => [
                 'ind' => 7,
                 'field' => 'gnd'
+            ],
+            'gndcontent' => [
+                'ind' => 7,
+                'field' => 'gnd-content'
+            ],
+            'gndcarrier' => [
+                'ind' => 7,
+                'field' => 'gnd-carrier'
+            ],
+            'gndmusic' => [
+                'ind' => 7,
+                'field' => 'gnd-music'
             ],
             'rero' => [
                 'ind' => 7,
@@ -1683,7 +1832,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getPublishers()
     {
-        return $this->getFieldArray('260', ['b']);
+        return $this->getPublicationInfo('b');
     }
 
     /**
@@ -2380,6 +2529,13 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             return false;
         }
 
+        // If set, display relationship information in i subfield
+        if ($relation = $field->getSubfield('i')) {
+            $relation = $relation->getData();
+        } else {
+            $relation = $this->getRecordLinkNote($field);
+        }
+
         $linkTypeSetting = isset($this->mainConfig->Record->marc_links_link_types)
             ? $this->mainConfig->Record->marc_links_link_types
             : 'id,oclc,dlc,isbn,issn,title';
@@ -2410,7 +2566,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         // Found link based on special conditions, stop here
         if ($link) {
             return [
-                'title' => $this->getRecordLinkNote($field),
+                'title' => $relation,
                 'value' => $title,
                 'link' => $link
             ];

@@ -105,6 +105,7 @@ class Record extends VuFindRecord
                         'B|^RETROS$ && P|^856$',
                         'B|^BORIS && P|^856$',
                         'B|^FREE && P|^856$',
+                        'B|^HAN$ && P|^856$',
                         'B|^IDSSG$ && P|^856$ && z|^download \(pdf\)',
                         'B|^IDSSG$ && P|^856$ && u|edis.nsf',
                         'B|^NEBIS$ && P|^856$ && z|^Inhaltsverzeichnis',
@@ -613,13 +614,13 @@ class Record extends VuFindRecord
             '" target="_blank"';
 
         $renderedLink = str_replace(
-            "<a ",
-            "<a $linkSFX_param ",
+            $this->view->transEsc('Get full text'), "SFX Services",
             $linkSFX->renderTemplate()
         );
 
         $renderedLink = str_replace(
-            $this->view->transEsc('Get full text'), "SFX Services",
+            "<a ",
+            "<a $linkSFX_param ",
             $renderedLink
         );
 

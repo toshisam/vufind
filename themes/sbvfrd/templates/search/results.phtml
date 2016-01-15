@@ -28,13 +28,17 @@
   $originalSort = (isset($_GET['originalSort']) ? $_GET['originalSort'] : '');
   if (isset($this->overrideTitle)) {
     $this->layout()->breadcrumbs .= '<li class="active">' . $this->escapeHtml($this->overrideTitle) . '</li>';
-  } else {
-    $getFieldName = ('FRBR' === $type ? 'name' : 'lookfor');
-    $this->layout()->breadcrumbs .= '<li class="active">' .
-          $this->getLastSearchLink($this->transEsc('Search') . ': ' . $this->escapeHtml($this->lookfor), '', '</li> ');
   }
-  if ('FRBR' === $type) {
-    $this->layout()->breadcrumbs .= '<li class="active">' . sprintf($this->transEsc('search_breadcrumb_frbr'), $this->escapeHtml($this->lookfor)) . '</li>';
+  else {
+    $getFieldName = ('FRBR' === $type ? 'name' : 'lookfor');
+    if ('FRBR' === $type){
+      $this->layout()->breadcrumbs .= '<li class="active">' .
+          $this->getLastSearchLink($this->transEsc('Search'), '', '</li> ' . '<li class="active">' . sprintf($this->transEsc('search_breadcrumb_frbr'), $this->escapeHtml($this->lookfor)) . '</li>');
+    }
+    else {
+      $this->layout()->breadcrumbs .= '<li class="active">' .
+          $this->getLastSearchLink($this->transEsc('Search') . ': ' . $this->escapeHtml($this->lookfor), '', '</li> ');
+    }
   }
 
   // Enable cart if appropriate:

@@ -19,12 +19,23 @@ var swissbib = {
   },
 
   /**
-   * Initialize focus of search box at the end of text
+   * Initialize focus either
+   * - on search box at the end of text
+   * - or on login-field, if present
+   * - or on favorites-library-field, if present
    */
   initFocus: function() {
+    var favoritesLibraryField = window.location.pathname.match(/Favorites$/) !== null ? document.getElementById('query') : null;
+    var loginField = document.getElementById('login_username');
     var searchField = document.getElementById('searchForm_lookfor');
 
-    if (searchField !== null) {
+    if (favoritesLibraryField !== null) {
+      favoritesLibraryField.focus();
+    }
+    else if (loginField !== null) {
+      loginField.focus();
+    }
+    else if (searchField !== null) {
       var textLength = searchField.value.length;
       // For IE Only
       if (document.selection) {

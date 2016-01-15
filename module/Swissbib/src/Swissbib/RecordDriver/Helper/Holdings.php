@@ -555,7 +555,7 @@ class Holdings
     /**
      * Check whether network is supported
      *
-     * @param String $networkCode NetworkCode
+     * @param String $networkCode Code of network
      *
      * @return Boolean
      */
@@ -970,7 +970,7 @@ class Holdings
      * (only Aleph is implemented as a custom type)
      * Fallback to network default
      *
-     * @param String $networkCode     NetworkCode
+     * @param String $networkCode     Code of network
      * @param String $institutionCode InstitutionCode
      * @param Array  $item            Item
      *
@@ -1026,8 +1026,8 @@ class Holdings
      * Get backlink for aleph
      * (custom method)
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitutioncCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1042,7 +1042,6 @@ class Holdings
             'bib-system-number' => $item['bibsysnumber'],
             'aleph-sublibrary-code' => $institutionCode
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
@@ -1050,8 +1049,8 @@ class Holdings
      * Get backlink for IDSBB
      * set link to orange view of swissbib
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1064,8 +1063,7 @@ class Holdings
             'id' => $this->idItem,
             'sub-library-code' => $institutionCode,
             'network' => $networkCode,
-        ];
-
+            ];
         return $this->compileString($data['pattern'], $values);
     }
 
@@ -1073,56 +1071,50 @@ class Holdings
      * Get backlink for NEBIS
      * set link to NEBIS Primo View
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return String
      *
-     * Links to Primo work, but login after permalink leads to crashes in Primo.
-     * Therefore, use Aleph until Primo allows safe login after permalink
-     *
-     * protected function getBackLinkNEBIS($networkCode, $institutionCode, $item,
-            array $data
-       ) {
-            $values = [
-                'bib-system-number' => $item['bibsysnumber'],
-            ];
-            return $this->compileString($data['pattern'], $values);
-       }
-     */
+    *protected function getBackLinkNEBIS($networkCode, $institutionCode, $item,
+    *    array $data
+    *)
+    *{
+    *    $values = [
+    *        'bib-system-number' => $item['bibsysnumber'],
+    *    ];
+    *    return $this->compileString($data['pattern'], $values);
+    *}
+    */
 
     /**
      * Get backlink for IDSLU
      * set link to iluplus Primo View
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return String
-     *
-     * Links to Primo work, but login after permalink leads to crashes in Primo.
-     * Therefore, use Aleph until Primo allows safe login after permalink
-     *
-     * protected function getBackLinkIDSLU($networkCode, $institutionCode, $item,
-     * array $data
-     * ) {
-        * $values = [
-            * 'bib-system-number' => $item['bibsysnumber'],
-        * ];
-        * return $this->compileString($data['pattern'], $values);
-     * }
      */
+    protected function getBackLinkIDSLU($networkCode, $institutionCode, $item,
+        array $data
+    ) {
+        $values = [
+            'bib-system-number' => $item['bibsysnumber'],
+        ];
+        return $this->compileString($data['pattern'], $values);
+    }
 
     /**
      * Get back link for IDSSG (self-developed-non-aleph-request)
      * Currently only a wrapper for Aleph
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1146,15 +1138,14 @@ class Holdings
         ) {
             $data['pattern'] = $this->configHoldings->Backlink->{'IDSSGPH'};
         }
-
         return $this->getBackLinkAleph($networkCode, $institutionCode, $item, $data);
     }
 
     /**
      * Get backlink for RERO
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1171,15 +1162,15 @@ class Holdings
             //removes the RE-characters from the number string
             'sub-library-code' => preg_replace('[\D]', '', $institutionCode)
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
-     * Get backlink for Alexandria network
+     * Get backlink for Alexandria network (Primo on Alma)
+     * links only to result list as we have no usable identifier
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1189,18 +1180,16 @@ class Holdings
         array $data
     ) {
         $values = [
-            // remove characters from number string
-            'bib-system-number' => preg_replace('[\D]', '', $item['bibsysnumber'])
+            'bib-system-number' => $item['bibsysnumber']
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
      * Get backlink for SNL (helveticat)
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1213,15 +1202,14 @@ class Holdings
         $values = [
             'bib-system-number' => $bibsysnumber,
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
      * Get backlink for CCSA (poster collection)
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1234,15 +1222,14 @@ class Holdings
         $values = [
             'bib-system-number' => $bibsysnumber,
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
      * Get backlink for Helveticarchives (SNL)
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1254,7 +1241,6 @@ class Holdings
         $values = [
             'bib-system-number' => $item['bibsysnumber'],
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 

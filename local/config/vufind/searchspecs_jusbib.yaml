@@ -16,6 +16,9 @@ AllFields:
     - author_additional^100               # all entries additional fields
     - author_additional_dsv11_txt_mv^100  # variants from dsv11
     - title_additional_dsv11_txt_mv^100
+    - author_additional_gnd_txt_mv^100    # variants from GND
+    - title_additional_gnd_txt_mv^100
+    - publplace_additional_gnd_txt_mv^100
     - series^200
     - topic^500                   # all verbal topics, i.e. 6xx
     - addfields_txt_mv^50         # additional fields
@@ -49,6 +52,9 @@ AllFields:
       title_additional_dsv11_txt_mv:
         - [onephrase, 600]
         - [and, 500]
+      title_additional_gnd_txt_mv:
+        - [onephrase, 600]
+        - [and, 500]
       title_sub:
         - [onephrase, 400]
       title_old:
@@ -64,6 +70,8 @@ AllFields:
       - [and, 100]
     author_additional_dsv11_txt_mv:
       - [and, 100]
+    author_additional_gnd_txt_mv:
+      - [and, 100]
     series:
       - [and, 50]
     topic:
@@ -76,6 +84,9 @@ AllFields:
       - [onephrase, 150]
       - [and, 125]
     publplace_dsv11_txt_mv:
+      - [onephrase, 150]
+      - [and, 125]
+    publplace_gnd_txt_mv:
       - [onephrase, 150]
       - [and, 125]
     fulltext:
@@ -100,6 +111,10 @@ Author:
       - [and, 50]
       - [or, 20]
     author_additional_dsv11_txt_mv:
+      - [onephrase, 50]
+      - [and, 50]
+      - [or, 20]
+    author_additional_gnd_txt_mv:
       - [onephrase, 50]
       - [and, 50]
       - [or, 20]
@@ -238,6 +253,9 @@ Title:
       - [onephrase, 450]
       - [and, 400]
     title_additional_dsv11_txt_mv:
+      - [onephrase, 450]
+      - [and, 400]
+    title_additional_gnd_txt_mv:
       - [onephrase, 450]
       - [and, 400]
     title_sub:
