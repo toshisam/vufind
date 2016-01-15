@@ -556,26 +556,45 @@ class Holdings
                 }
             }
 
-            // Add availability
-            $item = $institutionItems[0];
-            $allAvailabilities = '';
-            if ( 0 < count($allBarcodes) ) {
-                $allAvailabilities = $this->getAvailabilityInfos(
-                    $item['bibsysnumber'], $allBarcodes, $item['bib_library']
-                );
-            }
-
-            // for each item: set availability from 'allAvailabilities'
-            foreach ($institutionItems as $index => $item) {
-                $availabilityArray = Array( $item['barcode'] => $allAvailabilities[$item['barcode']] );
-                $item['availability'] = $availabilityArray;
-                $institutionItems[$index] = $item;
-            }
+            $institutionItems =
+                $this->getAvailabilityInfosArray($institutionItems, $allBarcodes);
 
         }
 
         return $institutionItems;
     }
+
+
+    /**
+     * Add availability-information of multiple items
+     *
+     * @param Array $items          the (holding-/institution-)items
+     * @param Array $barcodes       barcodes to check availability for
+     */
+    public function getAvailabilityInfosArray($items, $barcodes)
+    {
+        // get availability info of items:
+        $firstItem = $items[0];
+        $allAvailabilities = '';
+        if ( 0 < count($barcodes) ) {
+            $allAvailabilities = $this->getAvailabilityInfos(
+                $firstItem['bibsysnumber'], $barcodes, $firstItem['bib_library']
+            );
+        }
+
+        // write availability-info in items array:
+        foreach ($items as $index => $item) {
+            if ( isset($allAvailabilities[$item['barcode']]) ) {
+                $availabilityArray = Array($item['barcode'] =>
+                    $allAvailabilities[$item['barcode']]);
+                $item['availability'] = $availabilityArray;
+            }
+            $items[$index] = $item;
+        }
+
+        return $items;
+    }
+
 
     /**
      * Check whether network is supported
@@ -973,7 +992,7 @@ class Holdings
      *
      * @return Boolean
      */
-    protected function isAlephNetwork($network)
+    public function isAlephNetwork($network)
     {
         return isset($this->networks[$network])
             ? $this->networks[$network]['type'] === 'Aleph' : false;
