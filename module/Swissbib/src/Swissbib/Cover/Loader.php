@@ -41,7 +41,6 @@ use VuFindCode\ISBN, VuFind\Content\Covers\PluginManager as ApiManager;
  */
 class Loader extends VFLoader
 {
-
     /**
      * Array containing map of allowed file extensions to mimetypes
      * (to be extended)
@@ -55,7 +54,6 @@ class Loader extends VFLoader
         "tiff" => "image/tiff", "tif" => "image/tiff",
         "svg" => "image/svg+xml"
     ];
-
 
     /**
      * Load an image given an ISBN and/or content type.

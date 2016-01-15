@@ -1453,16 +1453,16 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                         $string = $worktitle['title'];
                     }
                     if (isset($worktitle['medium'])) {
-                        $string .= ', ' .$worktitle['medium'];
+                        $string .= ', ' . $worktitle['medium'];
                     }
                     if (isset($worktitle['count'])) {
                         $string .= ', ' . $worktitle['count'];
                     }
                     if (isset($worktitle['key'])) {
-                        $string .= ', ' .$worktitle['key'];
+                        $string .= ', ' . $worktitle['key'];
                     }
                     if (isset($worktitle['version'])) {
-                        $string .= ', ' .$worktitle['version'];
+                        $string .= ', ' . $worktitle['version'];
                     }
                     if (isset($worktitle['part'])) {
                         $string .= ', ' . $worktitle['part'];

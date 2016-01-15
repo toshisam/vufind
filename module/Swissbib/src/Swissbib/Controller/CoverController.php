@@ -40,8 +40,6 @@ use VuFind\Controller\CoverController as VFCoverController;
  */
 class CoverController extends VFCoverController
 {
-
-
     /**
      * Get the cover loader object
      *

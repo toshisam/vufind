@@ -131,7 +131,7 @@ class Availability
     {
         $barcodeParameters = '';
 
-        foreach( $barcode as $singleBarCode ) {
+        foreach($barcode as $singleBarCode) {
             $barcodeParameters .= '&barcode=' . $singleBarCode;
         }
 

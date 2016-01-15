@@ -393,7 +393,6 @@ class Record extends VuFindRecord
         return $matchesOr;
     }
 
-
     /**
      * GetSubtitle
      *

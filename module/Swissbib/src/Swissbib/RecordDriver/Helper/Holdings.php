@@ -564,7 +564,6 @@ class Holdings
         return $institutionItems;
     }
 
-
     /**
      * Add availability-information of multiple items
      *
@@ -576,7 +575,7 @@ class Holdings
         // get availability info of items:
         $firstItem = $items[0];
         $allAvailabilities = '';
-        if ( 0 < count($barcodes) ) {
+        if (0 < count($barcodes)) {
             $allAvailabilities = $this->getAvailabilityInfos(
                 $firstItem['bibsysnumber'], $barcodes, $firstItem['bib_library']
             );
@@ -584,9 +583,9 @@ class Holdings
 
         // write availability-info in items array:
         foreach ($items as $index => $item) {
-            if ( isset($allAvailabilities[$item['barcode']]) ) {
-                $availabilityArray = Array($item['barcode'] =>
-                    $allAvailabilities[$item['barcode']]);
+            if (isset($allAvailabilities[$item['barcode']])) {
+                $availabilityArray = [$item['barcode'] =>
+                    $allAvailabilities[$item['barcode']]];
                 $item['availability'] = $availabilityArray;
             }
             $items[$index] = $item;
@@ -594,7 +593,6 @@ class Holdings
 
         return $items;
     }
-
 
     /**
      * Check whether network is supported
