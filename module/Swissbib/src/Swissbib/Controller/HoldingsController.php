@@ -129,10 +129,11 @@ class HoldingsController extends BaseController
         $bib = $dummyHoldingItem['bib_library'];
         $resourceFilters = $catalog->getResourceFilters($resourceId);
         $extendingOptions = [
-            'availability' => false
+            'availability' => true
         ];
 
         // Add missing data to holding items
+        $allBarcodes = [];
         foreach ($holdingItems as $index => $holdingItem) {
             $holdingItem['institution'] = $institution;
             $holdingItem['institution_chb'] = $institution;
@@ -143,7 +144,17 @@ class HoldingsController extends BaseController
             $holdingItems[$index] = $helper->extendItem(
                 $holdingItem, $record, $extendingOptions
             );
+            if ($helper->isAlephNetwork($networkCode)) {
+                if (!isset($extendingOptions['availability'])
+                    || $extendingOptions['availability']
+                ) {
+                    array_push($allBarcodes, $holdingItem['barcode']);
+                }
+            }
         }
+
+        $holdingItems =
+            $helper->getAvailabilityInfosArray($holdingItems, $allBarcodes);
 
         $data = [
             'items'         => $holdingItems,

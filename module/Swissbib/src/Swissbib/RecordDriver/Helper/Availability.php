@@ -78,7 +78,7 @@ class Availability
      * Get availability info
      *
      * @param String $sysNumber SysNumer
-     * @param String $barcode   BarCode
+     * @param Array  $barcode   Array of BarCode Strings
      * @param String $bib       Bib
      * @param String $locale    Locale
      *
@@ -121,7 +121,7 @@ class Availability
      * Build API url from params
      *
      * @param String $sysNumber Sysnumber
-     * @param String $barcode   Barcode
+     * @param Array  $barcode   Array of BarCode Strings
      * @param String $bib       Bib
      * @param String $locale    Locale
      *
@@ -129,11 +129,17 @@ class Availability
      */
     protected function getApiUrl($sysNumber, $barcode, $bib, $locale)
     {
+        $barcodeParameters = '';
+
+        foreach( $barcode as $singleBarCode ) {
+            $barcodeParameters .= '&barcode=' . $singleBarCode;
+        }
+
         return     $this->config->apiEndpoint
-                . '?sysnumber=' . $sysNumber
-                . '&barcode=' . $barcode
-                . '&idls=' . $bib
-                . '&language=' . $locale;
+        . '?sysnumber=' . $sysNumber
+        . $barcodeParameters
+        . '&idls=' . $bib
+        . '&language=' . $locale;
     }
 
     /**
@@ -149,7 +155,7 @@ class Availability
     {
         $client = new HttpClient(
             $url, [
-            'timeout'      => 3
+                'timeout'      => 10
             ]
         );
         $client->setOptions(['sslverifypeer' => false]);
