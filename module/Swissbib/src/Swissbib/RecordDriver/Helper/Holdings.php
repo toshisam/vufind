@@ -556,8 +556,10 @@ class Holdings
                 }
             }
 
-            $institutionItems
-                = $this->getAvailabilityInfosArray($institutionItems, $allBarcodes);
+            if ( sizeof($allBarcodes) > 0 ) {
+                $institutionItems
+                    = $this->getAvailabilityInfosArray($institutionItems, $allBarcodes);
+            }
 
         }
 
