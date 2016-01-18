@@ -556,7 +556,7 @@ class Holdings
                 }
             }
 
-            if ( sizeof($allBarcodes) > 0 ) {
+            if (sizeof($allBarcodes) > 0 ) {
                 $institutionItems
                     = $this->getAvailabilityInfosArray($institutionItems, $allBarcodes);
             }

@@ -153,7 +153,7 @@ class HoldingsController extends BaseController
             }
         }
 
-        if ( sizeof($allBarcodes) > 0 ) {
+        if (sizeof($allBarcodes) > 0 ) {
             $holdingItems
                 = $helper->getAvailabilityInfosArray($holdingItems, $allBarcodes);
         }
