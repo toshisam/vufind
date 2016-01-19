@@ -33,6 +33,7 @@ use SimpleXMLElement;
 use VuFind\ILS\Driver\AlephRestfulException;
 use VuFind\Exception\ILS as ILSException;
 use DateTime;
+use Zend\Http\Request;
 
 /**
  * Aleph
@@ -1191,4 +1192,57 @@ EOT;
     {
         return rawurlencode(htmlspecialchars($content, ENT_COMPAT, 'UTF-8'));
     }
+
+    /**
+     * Perform an HTTP request.
+     *
+     * @param string $url    URL of request
+     * @param string $method HTTP method
+     * @param string $body   HTTP body (null for none)
+     *
+     * @return SimpleXMLElement
+     */
+    protected function doHTTPRequest($url, $method = 'GET', $body = null)
+    {
+        //GHI should be removed once timeout is part of core
+        if ($this->debug_enabled) {
+            $this->debug("URL: '$url'");
+        }
+
+        $result = null;
+        try {
+            $timeout = isset($this->config['Catalog']['timeout']) ?
+                $this->config['Catalog']['timeout'] : null;
+            $client = $this->httpService->createClient(
+                $url, Request::METHOD_GET, $timeout
+            );
+            $client->setMethod($method);
+            if ($body != null) {
+                $client->setRawBody($body);
+            }
+            $result = $client->send();
+        } catch (\Exception $e) {
+            throw new ILSException($e->getMessage());
+        }
+        if (!$result->isSuccess()) {
+            throw new ILSException('HTTP error');
+        }
+        $answer = $result->getBody();
+        if ($this->debug_enabled) {
+            $this->debug("url: $url response: $answer");
+        }
+        $answer = str_replace('xmlns=', 'ns=', $answer);
+        $result = simplexml_load_string($answer);
+        if (!$result) {
+            if ($this->debug_enabled) {
+                $this->debug("XML is not valid, URL: $url");
+            }
+            throw new ILSException(
+                "XML is not valid, URL: $url method: $method answer: $answer."
+            );
+        }
+        return $result;
+    }
+
+
 }
