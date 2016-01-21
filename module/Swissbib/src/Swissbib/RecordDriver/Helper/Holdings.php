@@ -558,7 +558,10 @@ class Holdings
 
             if (sizeof($allBarcodes) > 0 ) {
                 $institutionItems
-                    = $this->getAvailabilityInfosArray($institutionItems, $allBarcodes);
+                    = $this->getAvailabilityInfosArray(
+                        $institutionItems,
+                        $allBarcodes
+                    );
             }
 
         }

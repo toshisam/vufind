@@ -314,6 +314,11 @@ return [
                     'solr'          =>  'Swissbib\VuFind\Autocomplete\Factory::getSolr',
                 ],
             ],
+            'content_covers' => [
+                'factories' => [
+                    'amazon' => 'Swissbib\Content\Covers\Factory::getAmazon',
+                ],
+            ],
             'recommend' => [
                 'factories' => [
                     'favoritefacets' => 'Swissbib\Services\Factory::getFavoriteFacets',
