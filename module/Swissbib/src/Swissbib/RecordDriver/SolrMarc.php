@@ -1418,6 +1418,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     /**
      * Get Title of Work (field 240 or field 130)
      *
+     * @param Boolean $asStrings AsStrings
+     *
      * @return array
      */
     public function getWorkTitle($asStrings = true)
