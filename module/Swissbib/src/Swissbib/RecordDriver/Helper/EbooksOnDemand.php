@@ -251,4 +251,63 @@ class EbooksOnDemand extends EbooksOnDemandBase
 
         return $this->templateString($linkPattern, $data);
     }
+
+    /**
+     * Check whether A125 item is valid for ordering
+     *
+     * @param Array    $item           Item
+     * @param SolrMarc $recordDriver   RecordDriver
+     * @param Holdings $holdingsHelper HoldingsHelper
+     *
+     * @return Boolean
+     */
+    protected function isValidForLinkA125(array $item, SolrMarc $recordDriver,
+        Holdings $holdingsHelper
+    ) {
+        $institutionCode    = $item['institution_chb'];
+        $publishYear        = $recordDriver->getPublicationDates();
+        $itemFormats        = $recordDriver->getMostSpecificFormat();
+
+        return $this->isYearInRange($institutionCode, $publishYear)
+        && $this->isSupportedInstitution($institutionCode)
+        && $this->isSupportedFormat($institutionCode, $itemFormats)
+        && $this->hasStopWords(
+            $institutionCode, $recordDriver->getLocalCodes()
+        )
+        /*&& $this->hasStopWords(
+            $institutionCode, $recordDriver->getTitleStatement(true)
+        )*/=== false;
+    }
+    /**
+     * Build order link for A125 item
+     *
+     * @param Array    $item           Item
+     * @param SolrMarc $recordDriver   RecordDriver
+     * @param Holdings $holdingsHelper HoldingsHelper
+     *
+     * @return String
+     */
+    protected function buildLinkA125(array $item, SolrMarc $recordDriver,
+        Holdings $holdingsHelper
+    ) {
+        $linkPattern    = $this->getLinkPattern($item['institution_chb']);
+        $form = $recordDriver->getLocalCodes();
+        if (in_array('doksF', $form)) {
+            $form = 'FV';
+        } elseif (in_array('doksS', $form) || in_array('doksA', $form)) {
+            $form = 'SA';
+        } else {
+            $form = 'PV';
+        }
+        $data    = [
+            'FORM'        => $form,
+            'CALLNUM'    => urlencode($item['signature']),
+            'TITLE'      => urlencode(
+                $recordDriver->getShortTitle() . '. ' .
+                $recordDriver->getTitleSection()
+            ),
+        ];
+
+        return $this->templateString($linkPattern, $data);
+    }
 }
