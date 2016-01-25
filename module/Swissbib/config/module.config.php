@@ -195,7 +195,7 @@ return [
             'upgrade'              => 'Swissbib\Controller\NoProductiveSupportController',
             'install'              => 'Swissbib\Controller\NoProductiveSupportController',
             'feedback'             => 'Swissbib\Controller\FeedbackController',
-
+            'cover'                => 'Swissbib\Controller\CoverController',
         ],
         'factories' => [
             'record' => 'Swissbib\Controller\Factory::getRecordController',
@@ -312,6 +312,11 @@ return [
             'autocomplete' => [
                 'factories' => [
                     'solr'          =>  'Swissbib\VuFind\Autocomplete\Factory::getSolr',
+                ],
+            ],
+            'content_covers' => [
+                'factories' => [
+                    'amazon' => 'Swissbib\Content\Covers\Factory::getAmazon',
                 ],
             ],
             'recommend' => [
