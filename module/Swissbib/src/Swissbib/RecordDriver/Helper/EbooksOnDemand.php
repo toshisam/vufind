@@ -273,10 +273,7 @@ class EbooksOnDemand extends EbooksOnDemandBase
         && $this->isSupportedFormat($institutionCode, $itemFormats)
         && $this->hasStopWords(
             $institutionCode, $recordDriver->getLocalCodes()
-        )
-        /*&& $this->hasStopWords(
-            $institutionCode, $recordDriver->getTitleStatement(true)
-        )*/=== false;
+        ) === false;
     }
     /**
      * Build order link for A125 item
@@ -300,7 +297,7 @@ class EbooksOnDemand extends EbooksOnDemandBase
             $form = 'PV';
         }
         $data    = [
-            'FORM'        => $form,
+            'FORM'       => $form,
             'CALLNUM'    => urlencode($item['signature']),
             'TITLE'      => urlencode(
                 $recordDriver->getShortTitle() . '. ' .
