@@ -654,11 +654,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
-     * Returns one of three things:
+     * Returns one of two things:
      * a full URL to a thumbnail preview of the record
      * if an image is available in an external system; an array of parameters to
-     * send to VuFind's internal cover generator if no fixed URL exists; or false
-     * if no thumbnail can be generated.
+     * send to VuFind's internal cover generator if no fixed URL exists
      *
      * Extended from SolrDefault
      *
@@ -668,16 +667,19 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      * @param string $size Size of thumbnail (small, medium or large -- small is
      *                     default).
      *
-     * @return string|array|bool
+     * @return string|array
      */
     public function getThumbnail($size = 'small')
     {
+        $useMostSpecificState = $this->getUseMostSpecificFormat();
+        $format = $this->getMostSpecificFormat();
+        $this->setUseMostSpecificFormat($useMostSpecificState);
         if ($isbn = $this->getCleanISBN()) {
-
-            return  isset($this->fields['format']) &&
-                is_array($this->fields['format']) && count($this->fields['format'])
-                    >= 1 ? ['isn' => $isbn, 'size' => $size, 'format' =>
-                $this->fields['format'][0]] : ['isn' => $isbn, 'size' => $size];
+            return  isset($format) &&
+            is_array($format) && count($format)
+            >= 1 ? ['isn' => $isbn, 'size' => $size, 'format' =>
+                $format[0], 'contenttype' => $format[0]] : ['isn' => $isbn,
+                'size' => $size];
         } elseif ($path = $this->getThumbnail956()) {
             return $path;
         } elseif ($path = $this->getThumbnail856()) {
@@ -686,9 +688,12 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             return $path;
         } elseif ($path = $this->getThumbnailEmanuscripta()) {
             return $path;
+        } elseif (isset($format) && is_array($format) && count($format) >= 1) {
+            return ['size' => $size, 'format' => $format[0],
+                'contenttype' => $format[0]];
+        } else {
+            return [];
         }
-
-        return false;
     }
 
     /**
@@ -728,14 +733,14 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                         'services/ImageTransformer?imagePath=' . $field['URL'] .
                         '&scale=1&reqServicename=ImageTransformer';
                 }
-//            } elseif ($field['union'] === 'SGBN'
-//                && mb_strtoupper($field['type']) === 'JPG'
-//            ) {
-//                $dirpath = preg_replace('/^.*sgb50/', '', $field['directory']);
-//                $dirpath = empty($dirpath) ? $dirpath : substr($dirpath, 1) . '/';
-//                $thumbnailURL = 'https://externalservices.swissbib.ch/services/' .
-//                    'ImageTransformer?imagePath=http://aleph.sg.ch/adam/' .
-//                    $dirpath . $field['filename'] . '&scale=1';
+                //} elseif ($field['union'] === 'SGBN'
+                //  && mb_strtoupper($field['type']) === 'JPG'
+                // ) {
+                // $dirpath = preg_replace('/^.*sgb50/', '', $field['directory']);
+                // $dirpath = empty($dirpath) ? $dirpath : substr($dirpath, 1) . '/';
+                // $thumbnailURL = 'https://externalservices.swissbib.ch/services/' .
+                // 'ImageTransformer?imagePath=http://aleph.sg.ch/adam/' .
+                // $dirpath . $field['filename'] . '&scale=1';
             } elseif ($field['union'] === 'BGR'
                 && mb_strtoupper($field['type']) === 'JPG'
             ) {
@@ -769,7 +774,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 $thumbnailURL = 'https://externalservices.swissbib.ch/services/' .
                     'ImageTransformer?imagePath=' . $field['URL'] .
                     '&scale=1&reqServicename=ImageTransformer';
-                // thumbnail from CHARCH is already https-service, therefore no wrapper
+                //thumbnail of CHARCH is already https-service, therefore no wrapper
             } elseif (isset($field['union'])
                 && $field['union'] === 'CHARCH'
                 && $field['usage'] === 'THUMBNAIL'
@@ -1362,7 +1367,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getDissertationNotes()
     {
-        return $this->getFieldArray('502');
+        return $this->getFieldArray('502', ['a', 'b', 'c', 'd', 'g']);
     }
 
     /**
@@ -1408,6 +1413,82 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             $data = $strings;
         }
         return $data;
+    }
+
+    /**
+     * Get Title of Work (field 240 or field 130)
+     *
+     * @param Boolean $asStrings AsStrings
+     *
+     * @return array
+     */
+    public function getWorkTitle($asStrings = true)
+    {
+        $fieldsToCheck = [
+        '240' ,
+        '130',
+         ];
+
+        foreach ($fieldsToCheck as $field) {
+            $data = $this->getMarcSubFieldMaps(
+                $field, [
+                'a' => 'title',
+                'm' => 'medium',
+                'n' => 'count',
+                'r' => 'key',
+                's' => 'version',
+                'p' => 'part',
+                'k' => 'form',
+                'o' => 'arranged',
+                'f' => 'date',
+                ]
+            );
+
+            if ($asStrings) {
+                $strings = [];
+
+                foreach ($data as $worktitle) {
+
+                    $string = '';
+
+                    if (isset($worktitle['title'])) {
+                        $string = $worktitle['title'];
+                    }
+                    if (isset($worktitle['medium'])) {
+                        $string .= ', ' . $worktitle['medium'];
+                    }
+                    if (isset($worktitle['count'])) {
+                        $string .= ', ' . $worktitle['count'];
+                    }
+                    if (isset($worktitle['key'])) {
+                        $string .= ', ' . $worktitle['key'];
+                    }
+                    if (isset($worktitle['version'])) {
+                        $string .= ', ' . $worktitle['version'];
+                    }
+                    if (isset($worktitle['part'])) {
+                        $string .= ', ' . $worktitle['part'];
+                    }
+                    if (isset($worktitle['form'])) {
+                        $string .= ', ' . $worktitle['form'];
+                    }
+                    if (isset($worktitle['arranged'])) {
+                        $string .= ', ' . $worktitle['arranged'];
+                    }
+                    if (isset($worktitle['date'])) {
+                        $string .= '(' . $worktitle['date'] . ')';
+                    }
+
+                    $strings[] = trim($string);
+                }
+
+                if ($strings) {
+                    $data = $strings;
+                    break;
+                }
+            }
+        }
+         return $data;
     }
 
     /**
@@ -1599,6 +1680,18 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 'ind' => 7,
                 'field' => 'gnd'
             ],
+            'gndcontent' => [
+                'ind' => 7,
+                'field' => 'gnd-content'
+            ],
+            'gndcarrier' => [
+                'ind' => 7,
+                'field' => 'gnd-carrier'
+            ],
+            'gndmusic' => [
+                'ind' => 7,
+                'field' => 'gnd-music'
+            ],
             'rero' => [
                 'ind' => 7,
                 'field' => 'rero'
@@ -1750,7 +1843,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getPublishers()
     {
-        return $this->getFieldArray('260', ['b']);
+        return $this->getPublicationInfo('b');
     }
 
     /**

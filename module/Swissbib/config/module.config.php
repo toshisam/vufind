@@ -194,7 +194,8 @@ return [
             'ajax'                 => 'Swissbib\Controller\AjaxController',
             'upgrade'              => 'Swissbib\Controller\NoProductiveSupportController',
             'install'              => 'Swissbib\Controller\NoProductiveSupportController',
-
+            'feedback'             => 'Swissbib\Controller\FeedbackController',
+            'cover'                => 'Swissbib\Controller\CoverController',
         ],
         'factories' => [
             'record' => 'Swissbib\Controller\Factory::getRecordController',
@@ -242,6 +243,7 @@ return [
 
             'Swissbib\Record\Form\CopyForm'                 =>  'Swissbib\Record\Factory::getCopyForm',
             'Swissbib\MyResearch\Form\AddressForm'          =>  'Swissbib\MyResearch\Factory::getAddressForm',
+            'Swissbib\Feedback\Form\FeedbackForm'           =>  'Swissbib\Feedback\Factory::getFeedbackForm',
         ]
     ],
     'view_helpers'    => [
@@ -310,6 +312,11 @@ return [
             'autocomplete' => [
                 'factories' => [
                     'solr'          =>  'Swissbib\VuFind\Autocomplete\Factory::getSolr',
+                ],
+            ],
+            'content_covers' => [
+                'factories' => [
+                    'amazon' => 'Swissbib\Content\Covers\Factory::getAmazon',
                 ],
             ],
             'recommend' => [

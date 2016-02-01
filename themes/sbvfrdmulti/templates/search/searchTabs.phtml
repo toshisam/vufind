@@ -18,7 +18,7 @@
     <ul class="nav nav-tabs">
         <? foreach ($searchTabs as $tab): ?>
             <li<?=$tab['selected'] ? ' class="active"' : ''?>  data-searchClass="<?=  $tab['class'] ?>"  >
-                <a <?=$tab['selected'] ? '' : 'href="' . $this->escapeHtmlAttr($tab['url']) . '"' ?>><?=$this->transEsc($tab['label']); ?></a>
+                <a <?=$tab['selected'] ? '' : 'href="' . $this->escapeHtmlAttr($tab['url']) . '"' ?> title="<?= $this->transEsc($tab['label'].'.title')?> "><?=$this->transEsc($tab['label']); ?></a>
             </li>
         <? endforeach; ?>
     </ul>

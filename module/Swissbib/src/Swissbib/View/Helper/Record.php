@@ -394,28 +394,6 @@ class Record extends VuFindRecord
     }
 
     /**
-     * GetFormatClass
-     *
-     * @param string $format Format text to convert into CSS class
-     *
-     * @return string
-     */
-    public function getFormatClass($format)
-    {
-        if (!($this->driver instanceof \Swissbib\RecordDriver\SolrMarc)
-            || !$this->driver->getUseMostSpecificFormat()
-        ) {
-            return parent::getFormatClass($format);
-        }
-
-        $mediatypesIconsConfig = $this->driver->getServiceLocator()
-            ->get('VuFind\Config')->get('mediatypesicons');
-        $mediaType = $mediatypesIconsConfig->MediatypesIcons->$format;
-
-        return pathinfo($mediaType, PATHINFO_FILENAME);
-    }
-
-    /**
      * GetSubtitle
      *
      * @param String $titleStatement TitleStatement
@@ -541,25 +519,6 @@ class Record extends VuFindRecord
     }
 
     /**
-     * Returns css class of media type icon placeholder
-     *
-     * @return string
-     */
-    public function getThumbnailPlaceholder()
-    {
-        $this->driver->setUseMostSpecificFormat(true);
-
-        $formats = $this->driver->getFormats();
-
-        //Only get Placeholder for first Media Type
-        foreach ($formats as $format) {
-            return $this->getFormatClass($format);
-        }
-
-        return '';
-    }
-
-    /**
      * GetTabVisibility
      *
      * @param string $tab Tab
@@ -614,13 +573,13 @@ class Record extends VuFindRecord
             '" target="_blank"';
 
         $renderedLink = str_replace(
-            "<a ",
-            "<a $linkSFX_param ",
+            $this->view->transEsc('Get full text'), "SFX Services",
             $linkSFX->renderTemplate()
         );
 
         $renderedLink = str_replace(
-            $this->view->transEsc('Get full text'), "SFX Services",
+            "<a ",
+            "<a $linkSFX_param ",
             $renderedLink
         );
 

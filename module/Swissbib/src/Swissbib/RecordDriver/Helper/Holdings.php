@@ -543,13 +543,62 @@ class Holdings
         );
 
         if ($extend) {
+            $allBarcodes = [];
             foreach ($institutionItems as $index => $item) {
-                // Add extra information for item
                 $institutionItems[$index] = $this->extendItem($item, $recordDriver);
+                $networkCode = isset($item['network']) ? $item['network'] : '';
+                if ($this->isAlephNetwork($networkCode)) {
+                    if (!isset($extendingOptions['availability'])
+                        || $extendingOptions['availability']
+                    ) {
+                        array_push($allBarcodes, $item['barcode']);
+                    }
+                }
             }
+
+            if (sizeof($allBarcodes) > 0 ) {
+                $institutionItems
+                    = $this->getAvailabilityInfosArray(
+                        $institutionItems,
+                        $allBarcodes
+                    );
+            }
+
         }
 
         return $institutionItems;
+    }
+
+    /**
+     * Add availability-information of multiple items
+     *
+     * @param Array $items    the (holding-/institution-)items
+     * @param Array $barcodes barcodes to check availability for
+     *
+     * @return Array
+     */
+    public function getAvailabilityInfosArray($items, $barcodes)
+    {
+        // get availability info of items:
+        $firstItem = $items[0];
+        $allAvailabilities = '';
+        if (0 < count($barcodes)) {
+            $allAvailabilities = $this->getAvailabilityInfos(
+                $firstItem['bibsysnumber'], $barcodes, $firstItem['bib_library']
+            );
+        }
+
+        // write availability-info in items array:
+        foreach ($items as $index => $item) {
+            if (isset($allAvailabilities[$item['barcode']])) {
+                $availabilityArray = [$item['barcode'] =>
+                    $allAvailabilities[$item['barcode']]];
+                $item['availability'] = $availabilityArray;
+            }
+            $items[$index] = $item;
+        }
+
+        return $items;
     }
 
     /**
@@ -672,17 +721,7 @@ class Holdings
                     }
                 }
             }
-
-            // Add availability
-            if (!isset($extendingOptions['availability'])
-                || $extendingOptions['availability']
-            ) {
-                $item['availability'] = $this->getAvailabilityInfos(
-                    $item['bibsysnumber'], $item['barcode'], $item['bib_library']
-                );
-            }
         }
-
         return $item;
     }
 
@@ -958,7 +997,7 @@ class Holdings
      *
      * @return Boolean
      */
-    protected function isAlephNetwork($network)
+    public function isAlephNetwork($network)
     {
         return isset($this->networks[$network])
             ? $this->networks[$network]['type'] === 'Aleph' : false;
@@ -1035,8 +1074,7 @@ class Holdings
      */
     protected function getBackLinkAleph($networkCode, $institutionCode, $item,
         array $data
-    )
-    {
+    ) {
         $values = [
             'server' => $data['domain'],
             'bib-library-code' => $data['library'],
@@ -1059,8 +1097,7 @@ class Holdings
      */
     protected function getBackLinkIDSBB($networkCode, $institutionCode, $item,
         array $data
-    )
-    {
+    ) {
         $values = [
             'id' => $this->idItem,
             'sub-library-code' => $institutionCode,
@@ -1104,8 +1141,7 @@ class Holdings
      */
     protected function getBackLinkIDSLU($networkCode, $institutionCode, $item,
         array $data
-    )
-    {
+    ) {
         $values = [
             'bib-system-number' => $item['bibsysnumber'],
         ];
@@ -1125,8 +1161,7 @@ class Holdings
      */
     protected function getBackLinkIDSSG($networkCode, $institutionCode, array $item,
         array $data
-    )
-    {
+    ) {
         // differ between FH and PH:
         if ($institutionCode === 'HFHS') {
             $data['pattern'] = $this->configHoldings->Backlink->{'IDSSGFH'};
@@ -1157,8 +1192,7 @@ class Holdings
      */
     protected function getBackLinkRERO($networkCode, $institutionCode, $item,
         array $data
-    )
-    {
+    ) {
         $values = [
             'language-code' => 'de', // @todo fetch from user,
             // third and fourth character
@@ -1183,8 +1217,7 @@ class Holdings
      */
     protected function getBackLinkAlex($networkCode, $institutionCode, array $item,
         array $data
-    )
-    {
+    ) {
         $values = [
             'bib-system-number' => $item['bibsysnumber']
         ];
@@ -1203,8 +1236,7 @@ class Holdings
      */
     protected function getBackLinkSNL($networkCode, $institutionCode, $item,
         array $data
-    )
-    {
+    ) {
         $bibsysnumber = preg_replace('/^vtls0*/', '', $item['bibsysnumber']);
         $values = [
             'bib-system-number' => $bibsysnumber,
@@ -1224,8 +1256,7 @@ class Holdings
      */
     protected function getBackLinkCCSA($networkCode, $institutionCode, $item,
         array $data
-    )
-    {
+    ) {
         $bibsysnumber = preg_replace('/^vtls0*/', '', $item['bibsysnumber']);
         $values = [
             'bib-system-number' => $bibsysnumber,
@@ -1245,8 +1276,7 @@ class Holdings
      */
     protected function getBackLinkCHARCH($networkCode, $institutionCode, array $item,
         array $data
-    )
-    {
+    ) {
         $values = [
             'bib-system-number' => $item['bibsysnumber'],
         ];
@@ -1309,7 +1339,7 @@ class Holdings
      * Get availability infos for item element
      *
      * @param String $sysNumber SysNumber
-     * @param String $barcode   Barcode
+     * @param Array  $barcode   Array of BarCode Strings
      * @param String $bib       Bib
      *
      * @return Array|Boolean

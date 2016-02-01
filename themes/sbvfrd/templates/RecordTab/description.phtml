@@ -206,6 +206,7 @@ $prevTitles      = $record->getPreviousTitles();
   $related    = $record->getRelationshipNotes();
   $credits    = $record->getProductionCredits();
   $origtitle  = $record->getOriginalTitle();
+  $worktitle  = $record->getWorkTitle();
   $perfomer   = $record->getPerformerNote();
   $fileNote   = $record->getFileNote();
   $eventNote  = $record->getEventNote();
@@ -224,7 +225,7 @@ $prevTitles      = $record->getPreviousTitles();
       !empty($bib) or !empty($access) or !empty($related) or !empty($credits) or !empty($awards) or
       !empty($citenotes) or !empty($orignotes) or !empty($copynotes) or !empty($histData) or
       !empty($origtitle) or !empty($perfomer) or !empty($system) or !empty($relatedEntries) or
-      !empty($langData) or !empty($audience) or !empty($eventNote) or !empty($fileNote)): ?>
+      !empty($langData) or !empty($audience) or !empty($eventNote) or !empty($fileNote) or !empty($worktitle)): ?>
     <? $contentDisplayed = true; ?>
 
       <? /* Display general notes (field 500) */ ?>
@@ -333,6 +334,18 @@ $prevTitles      = $record->getPreviousTitles();
               <? endforeach; ?>
           </td>
         </tr>
+      <? endif; ?>
+
+      <? /* Display title of work (field 240 or 130) */ ?>
+      <? if (!empty($worktitle)): ?>
+          <tr>
+              <th><?= $this->transEsc('Work_Title') ?>: </th>
+              <td>
+                  <? foreach ($worktitle as $field): ?>
+                      <?= $this->escapeHtml($field) ?><br/>
+                  <? endforeach; ?>
+              </td>
+          </tr>
       <? endif; ?>
 
       <? /* Display citation / reference note (field 510) */ ?>
