@@ -27,8 +27,6 @@
  */
 namespace Swissbib\Content\Covers;
 
-use ZendService\Amazon\Amazon as AmazonService;
-
 /**
  * Amazon cover content loader.
  *
