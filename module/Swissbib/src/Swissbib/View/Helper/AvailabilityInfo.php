@@ -180,7 +180,8 @@ class AvailabilityInfo extends AbstractHelper
                             $borrowinginformation['no_requests'] . ")";
 
                         // @codingStandardsIgnoreStart
-                    } elseif ($borrowinginformation['due_date'] === 'claimed returned') {
+                    } elseif ($borrowinginformation['due_date'] ===
+                        'claimed returned') {
                         // @codingStandardsIgnoreEnd
 
                         $info .= $escapedTranslation('Claimed Returned');
@@ -218,7 +219,8 @@ class AvailabilityInfo extends AbstractHelper
                             $borrowinginformation['no_requests'] . ")";
 
                         // @codingStandardsIgnoreStart
-                    } elseif ($borrowinginformation['due_date'] === 'claimed returned') {
+                    } elseif ($borrowinginformation['due_date'] ===
+                        'claimed returned') {
                         // @codingStandardsIgnoreEnd
 
                         $info .= $escapedTranslation('Claimed Returned');
@@ -255,7 +257,8 @@ class AvailabilityInfo extends AbstractHelper
                             $borrowinginformation['no_requests'] . ")";
 
                         // @codingStandardsIgnoreStart
-                    } elseif ($borrowinginformation['due_date'] === 'claimed returned') {
+                    } elseif ($borrowinginformation['due_date'] ===
+                        'claimed returned') {
                         // @codingStandardsIgnoreEnd
 
                         $info .= $escapedTranslation('Claimed Returned');
@@ -346,7 +349,8 @@ class AvailabilityInfo extends AbstractHelper
             case self::PHOTOCOPY:
 
                 $infotext = $escapedTranslation($statusfield);
-                $info = "<div class='availability fa-check'>" . "$infotext" . "</div>";
+                $info = "<div class='availability fa-check'>" . "$infotext" .
+                    "</div>";
                 break;
             default:
                 /**
