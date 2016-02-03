@@ -102,6 +102,11 @@ class AvailabilityInfo extends AbstractHelper
     const SUBSTITUTE = "substitute";
 
     /**
+     * Nur für Kopienbestellung verfügbar
+     */
+    const PHOTOCOPY = "photocopy";
+
+    /**
      * Convert availability info into html string
      *
      * @param Boolean|Array $availability Availability
@@ -302,9 +307,29 @@ class AvailabilityInfo extends AbstractHelper
 
                 break;
             case self::INPROCESS:
-                $infotext = $escapedTranslation($statusfield);
-                $info = "<div class='availability fa-check'><div>" .
-                    "$infotext" . "</div></div>";
+                if (!empty($borrowinginformation['due_date'])) {
+                    unset($borrowinginformation['due_hour']);
+                    $infotext = $escapedTranslation($statusfield);
+                    $info = "<div class='availability fa-ban'><div>" . "$infotext" .
+                        "</div>";
+
+                    if ($borrowinginformation['due_date'] === 'on reserve') {
+                        $info .= $escapedTranslation('On Reserve') . " (" .
+                            $borrowinginformation['no_requests'] . ")";
+                    } else {
+                        foreach ($borrowinginformation as $key => $value) {
+                            if (strcmp(trim($value), "") != 0) {
+                                $info .= "<div>" . $escapedTranslation($key) .
+                                    "&nbsp;" . $value . "</div>";
+                            }
+                        }
+                    }
+                    $info .= "</div>";
+                } elseif (empty($borrowinginformation['due_date'])) {
+                    $infotext = $escapedTranslation($statusfield);
+                    $info = "<div class='availability fa-check'><div>" .
+                        "$infotext" . "</div></div>";
+                }
                 break;
             case self::ONLINE_AVAILABLE:
 
@@ -317,6 +342,11 @@ class AvailabilityInfo extends AbstractHelper
 
                 $infotext = $escapedTranslation($statusfield);
                 $info = "<div class='availability fa-ban'>" . "$infotext" . "</div>";
+                break;
+            case self::PHOTOCOPY:
+
+                $infotext = $escapedTranslation($statusfield);
+                $info = "<div class='availability fa-check'>" . "$infotext" . "</div>";
                 break;
             default:
                 /**
