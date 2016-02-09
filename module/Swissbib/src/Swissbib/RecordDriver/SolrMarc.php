@@ -2540,13 +2540,6 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             return false;
         }
 
-        // If set, display relationship information in i subfield
-        if ($relation = $field->getSubfield('i')) {
-            $relation = $relation->getData();
-        } else {
-            $relation = $this->getRecordLinkNote($field);
-        }
-
         $linkTypeSetting = isset($this->mainConfig->Record->marc_links_link_types)
             ? $this->mainConfig->Record->marc_links_link_types
             : 'id,oclc,dlc,isbn,issn,title';
@@ -2577,7 +2570,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         // Found link based on special conditions, stop here
         if ($link) {
             return [
-                'title' => $relation,
+                'title' => $this->getRecordLinkNote($field),
                 'value' => $title,
                 'link' => $link
             ];
