@@ -132,7 +132,14 @@ class HoldingActions extends AbstractTranslatorHelper
             ];
         }
 
-        if (isset($item['eodlink']) && $item['eodlink']) {
+        if (isset($item['eodlink']) && $item['eodlink']
+            && $item['institution'] === 'A125'
+        ) {
+            $actions['eod'] = [
+                'label' => $this->translate('Order_readingroom'),
+                'href'  => $item['eodlink']
+            ];
+        } elseif (isset($item['eodlink']) && $item['eodlink']) {
             $actions['eod'] = [
                 'label' => $this->translate('Order_EBook_tooltip'),
                 'href'  => $item['eodlink']

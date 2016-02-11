@@ -78,7 +78,7 @@
         'library_callno' => $this->transEsc('Institution'),
         'checkedout'     => $this->transEsc('Checked Out'),
         'renewals'      => $this->transEsc('Renewals'),
-        'action',
+        'action'        => $this->transEsc('renew_select'),
     ];
 
     $flippedContent = '';
@@ -92,7 +92,7 @@
         <th><?=$headers['library_callno']?></th>
         <th><?=$headers['checkedout']?></th>
         <th><?=$headers['renewals']?></th>
-        <th class="hidden-print"><?=$headers['action']?></th>
+        <th class="hidden-print"><?= isset($headers['action']) ? $headers['action'] : '' ?></th>
     </tr>
     </thead>
     <tbody>
@@ -101,15 +101,14 @@
 
   <? $i = 0; foreach ($this->transactions as $resource): ?>
     <? $ilsDetails = $resource->getExtraDetail('ils_details'); ?>
-        <tr class="<?=$iteration % 2 == 1 ? 'even' : 'odd'?>row">
+        <tr>
           <?
           $flippedContent .= $this->render('myresearch/checkedout-flipped.phtml', array(
           'ilsDetails'    => $ilsDetails,
           'resource'   => $resource,
           'renewForm'  => $this->renewForm,
           'renewResult' => $this->renewResult,
-          'headers' => $headers,
-          'even'    => (0 === $iteration % 2)
+          'headers' => $headers
           ));
           ?>
          <td>
