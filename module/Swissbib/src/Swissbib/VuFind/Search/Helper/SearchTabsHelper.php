@@ -44,10 +44,14 @@ class SearchTabsHelper extends VFSearchTabsHelper
 {
     /**
      * Set the tab filter configuration
+     *
+     * @param  $config tab filter config
+     * @return SearchTabsHelper
      */
     public function setTabFilterConfig($config)
     {
         $this->filterConfig = $config;
+        return $this;
     }
 
 }

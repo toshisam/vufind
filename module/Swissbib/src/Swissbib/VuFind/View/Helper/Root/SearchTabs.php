@@ -106,7 +106,10 @@ class SearchTabs extends VuFindSearchTabs
             return array_key_exists('AdvancedSearchTabs', $this->config) ?
                 $this->helper->getTabFilterConfig()['AdvancedSearchTabs'] : [];
         default:
-            return array_key_exists('SearchTabs', $this->helper->getTabFilterConfig()) ?
+            return array_key_exists(
+                'SearchTabs',
+                $this->helper->getTabFilterConfig()
+            ) ?
                 $this->helper->getTabFilterConfig()['SearchTabs'] : [];
         }
     }
