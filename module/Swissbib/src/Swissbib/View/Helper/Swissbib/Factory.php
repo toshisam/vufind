@@ -34,6 +34,7 @@ use Zend\ServiceManager\ServiceManager;
 
 use Swissbib\VuFind\View\Helper\Root\Auth;
 use Swissbib\VuFind\View\Helper\Root\SearchTabs;
+use Swissbib\VuFind\Search\Helper\SearchTabsHelper;
 use Swissbib\View\Helper\LayoutClass;
 use Swissbib\View\Helper\IncludeTemplate;
 use Swissbib\View\Helper\TranslateFacets;
@@ -171,8 +172,30 @@ class Factory
     {
         return new SearchTabs(
             $sm->getServiceLocator()->get('VuFind\SearchResultsPluginManager'),
-            $sm->getServiceLocator()->get('VuFind\Config')->get('config')->toArray(),
-            $sm->get('url')
+            $sm->get('url'),
+            //$sm->getServiceLocator()->get('VuFind\SearchTabsHelper')
+            $sm->getServiceLocator()->get('Swissbib\SearchTabsHelper')
+        );
+    }
+
+    /**
+     * Construct the SearchTabs helper.
+     *
+     * @param ServiceManager $sm Service manager.
+     *
+     * @return SearchTabsHelper
+     */
+    public static function getSearchTabsHelper(ServiceManager $sm)
+    {
+        $config = $sm->get('VuFind\Config')->get('config');
+        $tabConfig = isset($config->SearchTabs)
+            ? $config->SearchTabs->toArray() : [];
+        $filterConfig = isset($config->SearchTabsFilters)
+            ? $config->SearchTabsFilters->toArray() : [];
+        return new SearchTabsHelper(
+            $sm->get('VuFind\SearchResultsPluginManager'),
+            $tabConfig, $filterConfig,
+            $sm->get('Application')->getRequest()
         );
     }
 
