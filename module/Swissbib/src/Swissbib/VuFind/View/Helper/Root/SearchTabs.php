@@ -79,15 +79,18 @@ class SearchTabs extends VuFindSearchTabs
      *
      * @return array
      */
-    public function __invoke($activeSearchClass, $query, $handler,
-        $type = 'basic', $hiddenFilters = [], $view = 'default'
+    //    public function __invoke($activeSearchClass, $query, $handler,
+    //        $type = 'basic', $hiddenFilters = [], $view = 'default'
+    public function getTabConfig($activeSearchClass, $query, $handler,
+        $type = 'basic', $hiddenFilters = [],
+        $view = 'default'
     ) {
-        $backupConfig = $this->helper->getTabFilterConfig();
-        $this->helper->setTabFilterConfig($this->injectViewDependentConfig($view));
+        $backupConfig = $this->helper->getTabConfig();
+        $this->helper->setTabConfig($this->injectViewDependentConfig($view));
 
         $tabs = parent::getTabConfig($activeSearchClass, $query, $handler, $type);
 
-        $this->helper->getTabFilterConfig($backupConfig);
+        $this->helper->setTabConfig($backupConfig);
         return $tabs;
     }
 
@@ -103,14 +106,14 @@ class SearchTabs extends VuFindSearchTabs
     {
         switch ($view) {
         case 'advanced':
-            return array_key_exists('AdvancedSearchTabs', $this->config) ?
-                $this->helper->getTabFilterConfig()['AdvancedSearchTabs'] : [];
+            return array_key_exists('AdvancedSearchTabs', $this->helper->getTabConfig()) ?
+                $this->helper->getTabConfig()['AdvancedSearchTabs'] : [];
         default:
             return array_key_exists(
                 'SearchTabs',
-                $this->helper->getTabFilterConfig()
+                $this->helper->getTabConfig()
             ) ?
-                $this->helper->getTabFilterConfig()['SearchTabs'] : [];
+                $this->helper->getTabConfig()['SearchTabs'] : [];
         }
     }
 }

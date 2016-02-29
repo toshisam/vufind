@@ -43,6 +43,19 @@ use VuFind\Search\SearchTabsHelper as VFSearchTabsHelper;
 class SearchTabsHelper extends VFSearchTabsHelper
 {
     /**
+     * Set the tab configuration
+     *
+     * @param array $config tab config
+     *
+     * @return SearchTabsHelper
+     */
+    public function setTabConfig($config)
+    {
+        $this->tabConfig = $config;
+        return $this;
+    }
+
+    /**
      * Set the tab filter configuration
      *
      * @param array $config tab filter config
