@@ -79,8 +79,6 @@ class SearchTabs extends VuFindSearchTabs
      *
      * @return array
      */
-    //    public function __invoke($activeSearchClass, $query, $handler,
-    //        $type = 'basic', $hiddenFilters = [], $view = 'default'
     public function getTabConfig($activeSearchClass, $query, $handler,
         $type = 'basic', $hiddenFilters = [],
         $view = 'default'
@@ -106,7 +104,8 @@ class SearchTabs extends VuFindSearchTabs
     {
         switch ($view) {
         case 'advanced':
-            return array_key_exists('AdvancedSearchTabs', $this->helper->getTabConfig()) ?
+            return array_key_exists('AdvancedSearchTabs',
+                $this->helper->getTabConfig()) ?
                 $this->helper->getTabConfig()['AdvancedSearchTabs'] : [];
         default:
             return array_key_exists(

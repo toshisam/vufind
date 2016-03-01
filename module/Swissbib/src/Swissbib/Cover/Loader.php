@@ -41,7 +41,6 @@ use VuFindCode\ISBN, VuFind\Content\Covers\PluginManager as ApiManager;
  */
 class Loader extends VFLoader
 {
-
     /**
      * Support method for loadImage() -- sanitize and store some key values.
      *
