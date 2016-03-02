@@ -312,7 +312,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 $params['rft.language'] = $langs[0];
             }
             break;
-        case 'Journal':
+        /* case 'Journal':
             /* This is probably the most technically correct way to represent
             * a journal run as an OpenURL; however, it doesn't work well with
             * Zotero, so it is currently commented out -- instead, we just add
@@ -324,7 +324,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             $params['rft.au'] = $this->getPrimaryAuthor();
             break;
             */
-            $params['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:journal';
+            /* $params['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:journal';
             $params['rft.genre'] = 'journal';
             $params['rft.issn'] = $this->getCleanISSN();
             // Including a date in a title-level Journal OpenURL may be too
@@ -339,7 +339,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             //) {
             // $params['sfx.ignore_date_threshold'] = 1;
             //};                }
-            break;
+            break;*/
         default:
             $params['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:dc';
 
