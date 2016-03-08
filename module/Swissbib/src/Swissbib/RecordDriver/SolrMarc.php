@@ -2576,11 +2576,13 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                     ];
                 }
                 break;
-            // ctrlnum : swissbib specific case of local system numbers in subfield w, remove enclosing
-            // parentheses of source code
+            // ctrlnum : swissbib specific case of local system numbers in
+            // subfield w, remove enclosing parentheses of source code
             case 'ctrlnum':
                 foreach ($linkFields as $current) {
-                    if (preg_match('/\(([^)]+)\)(.+)/', $current->getData(), $matches)) {
+                    if (preg_match('/\(([^)]+)\)(.+)/',
+                                    $current->getData(),
+                                    $matches)) {
                         $link = [
                             'type' => 'ctrlnum',
                             'value' => $matches[1] . $matches[2],
