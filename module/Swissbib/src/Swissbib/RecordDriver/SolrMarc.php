@@ -1855,7 +1855,6 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getHumanReadablePublicationDates()
     {
-        $codeddata = [];
         $codeddata = $this->getPublicationDates();
 
         if (!is_array($codeddata) || sizeof($codeddata) == 0) {
@@ -2580,9 +2579,12 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             // subfield w, remove enclosing parentheses of source code
             case 'ctrlnum':
                 foreach ($linkFields as $current) {
-                    if (preg_match('/\(([^)]+)\)(.+)/',
-                                    $current->getData(),
-                                    $matches)) {
+                    if (preg_match(
+                        '/\(([^)]+)\)(.+)/',
+                        $current->getData(),
+                        $matches
+                    )
+                    ) {
                         $link = [
                             'type' => 'ctrlnum',
                             'value' => $matches[1] . $matches[2],
