@@ -2553,60 +2553,60 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         // If no reference found, check the next link type instead
         foreach ($linkTypes as $linkType) {
             switch (trim($linkType)){
-                case 'oclc':
-                    foreach ($linkFields as $current) {
-                        if ($oclc = $this->getIdFromLinkingField($current, 'OCoLC')) {
-                            $link = ['type' => 'oclc', 'value' => $oclc];
-                        }
+            case 'oclc':
+                foreach ($linkFields as $current) {
+                    if ($oclc = $this->getIdFromLinkingField($current, 'OCoLC')) {
+                        $link = ['type' => 'oclc', 'value' => $oclc];
                     }
-                    break;
-                case 'dlc':
-                    foreach ($linkFields as $current) {
-                        if ($dlc = $this->getIdFromLinkingField($current, 'DLC', true)) {
-                            $link = ['type' => 'dlc', 'value' => $dlc];
-                        }
+                }
+                break;
+            case 'dlc':
+                foreach ($linkFields as $current) {
+                    if ($dlc = $this->getIdFromLinkingField($current, 'DLC', true)) {
+                        $link = ['type' => 'dlc', 'value' => $dlc];
                     }
-                    break;
-                // id : swissbib specific case of swissbib ID in subfield 9
-                case 'id':
-                    if ($bibID = $field->getSubfield('9')) {
+                }
+                break;
+            // id : swissbib specific case of swissbib ID in subfield 9
+            case 'id':
+                if ($bibID = $field->getSubfield('9')) {
+                    $link = [
+                        'type'  => 'bib',
+                        'value' => trim($bibID->getData()),
+                    ];
+                }
+                break;
+            // ctrlnum : swissbib specific case of local system numbers in subfield w, remove enclosing
+            // parentheses of source code
+            case 'ctrlnum':
+                foreach ($linkFields as $current) {
+                    if (preg_match('/\(([^)]+)\)(.+)/', $current->getData(), $matches)) {
                         $link = [
-                            'type'  => 'bib',
-                            'value' => trim($bibID->getData()),
-                        ];
+                            'type' => 'ctrlnum',
+                            'value' => $matches[1] . $matches[2],
+                            ];
                     }
-                    break;
-                // ctrlnum : swissbib specific case of local system numbers in subfield w, remove enclosing
-                // parentheses of source code
-                case 'ctrlnum':
-                    foreach ($linkFields as $current) {
-                        if (preg_match('/\(([^)]+)\)(.+)/', $current->getData(), $matches)) {
-                            $link = [
-                                'type' => 'ctrlnum',
-                                'value' => $matches[1] . $matches[2],
-                                ];
-                        }
-                    }
-                    break;
-                case 'isbn':
-                    if ($isbn = $field->getSubfield('z')) {
-                        $link = [
-                            'type' => 'isn', 'value' => trim($isbn->getData()),
-                            'exclude' => $this->getUniqueId()
-                        ];
-                    }
-                    break;
-                case 'issn':
-                    if ($issn = $field->getSubfield('x')) {
-                        $link = [
-                            'type' => 'isn', 'value' => trim($issn->getData()),
-                            'exclude' => $this->getUniqueId()
-                        ];
-                    }
-                    break;
-                case 'title':
-                    $link = ['type' => 'title', 'value' => $title];
-                    break;
+                }
+                break;
+            case 'isbn':
+                if ($isbn = $field->getSubfield('z')) {
+                    $link = [
+                        'type' => 'isn', 'value' => trim($isbn->getData()),
+                        'exclude' => $this->getUniqueId()
+                    ];
+                }
+                break;
+            case 'issn':
+                if ($issn = $field->getSubfield('x')) {
+                    $link = [
+                        'type' => 'isn', 'value' => trim($issn->getData()),
+                        'exclude' => $this->getUniqueId()
+                    ];
+                }
+                break;
+            case 'title':
+                $link = ['type' => 'title', 'value' => $title];
+                break;
             }
             // Exit loop if we have a link
             if (isset($link)) {
