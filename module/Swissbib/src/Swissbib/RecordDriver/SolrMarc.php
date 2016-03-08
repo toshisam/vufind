@@ -2525,11 +2525,12 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
-     * Get FieldData
+     * Returns the array element for the 'getAllRecordLinks' method
      *
-     * @param \File_MARC_Data_Field $field Field
+     * @param File_MARC_Data_Field $field Field to examine
      *
-     * @return array|Boolean
+     * @return array|bool                 Array on success, boolean false if no
+     * valid link could be found in the data.
      */
     protected function getFieldData($field)
     {
@@ -2544,40 +2545,80 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             ? $this->mainConfig->Record->marc_links_link_types
             : 'id,oclc,dlc,isbn,issn,title';
         $linkTypes = explode(',', $linkTypeSetting);
+        $linkFields = $field->getSubfields('w');
 
-        $link = false;
-
-        if (in_array('id', $linkTypes)) { // Search ID in field 9
-            $linkSubfield = $field->getSubfield('9');
-            if ($linkSubfield
-                && $bibLink = $this->getIdFromLinkingField($linkSubfield)
-            ) {
-                $link = ['type' => 'bib', 'value' => $bibLink];
+        // Run through the link types specified in the config.
+        // For each type, check field for reference
+        // If reference found, exit loop and go straight to end
+        // If no reference found, check the next link type instead
+        foreach ($linkTypes as $linkType) {
+            switch (trim($linkType)){
+                case 'oclc':
+                    foreach ($linkFields as $current) {
+                        if ($oclc = $this->getIdFromLinkingField($current, 'OCoLC')) {
+                            $link = ['type' => 'oclc', 'value' => $oclc];
+                        }
+                    }
+                    break;
+                case 'dlc':
+                    foreach ($linkFields as $current) {
+                        if ($dlc = $this->getIdFromLinkingField($current, 'DLC', true)) {
+                            $link = ['type' => 'dlc', 'value' => $dlc];
+                        }
+                    }
+                    break;
+                // id : swissbib specific case of swissbib ID in subfield 9
+                case 'id':
+                    if ($bibID = $field->getSubfield('9')) {
+                        $link = [
+                            'type'  => 'bib',
+                            'value' => trim($bibID->getData()),
+                        ];
+                    }
+                    break;
+                // ctrlnum : swissbib specific case of local system numbers in subfield w, remove enclosing
+                // parentheses of source code
+                case 'ctrlnum':
+                    foreach ($linkFields as $current) {
+                        if (preg_match('/\(([^)]+)\)(.+)/', $current->getData(), $matches)) {
+                            $link = [
+                                'type' => 'ctrlnum',
+                                'value' => $matches[1] . $matches[2],
+                                ];
+                        }
+                    }
+                    break;
+                case 'isbn':
+                    if ($isbn = $field->getSubfield('z')) {
+                        $link = [
+                            'type' => 'isn', 'value' => trim($isbn->getData()),
+                            'exclude' => $this->getUniqueId()
+                        ];
+                    }
+                    break;
+                case 'issn':
+                    if ($issn = $field->getSubfield('x')) {
+                        $link = [
+                            'type' => 'isn', 'value' => trim($issn->getData()),
+                            'exclude' => $this->getUniqueId()
+                        ];
+                    }
+                    break;
+                case 'title':
+                    $link = ['type' => 'title', 'value' => $title];
+                    break;
             }
-        } elseif (in_array('ctrlnum', $linkTypes)) {
-            // Extract ctrlnum from field w, ignore the prefix
-            $linkFields = $linkFields = $field->getSubfields('w');
-            foreach ($linkFields as $current) {
-                if (preg_match('/\(([^)]+)\)(.+)/', $current->getData(), $matches)) {
-                    $link = [
-                        'type' => 'ctrlnum',
-                        'value' => $matches[1] . $matches[2]
-                    ];
-                }
+            // Exit loop if we have a link
+            if (isset($link)) {
+                break;
             }
         }
-
-        // Found link based on special conditions, stop here
-        if ($link) {
-            return [
-                'title' => $this->getRecordLinkNote($field),
-                'value' => $title,
-                'link' => $link
-            ];
-        }
-
-        // Fallback to base method if no custom field found
-        return parent::getFieldData($field);
+        // Make sure we have something to display:
+        return !isset($link) ? false : [
+            'title' => $this->getRecordLinkNote($field),
+            'value' => $title,
+            'link'  => $link
+        ];
     }
 
     /**
