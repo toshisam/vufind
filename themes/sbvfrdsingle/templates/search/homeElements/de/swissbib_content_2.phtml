@@ -1,10 +1,10 @@
 <div class="home-content-box">
-    <h2 class="lead">Bibliotheksverbund Alexandria</h2>
+    <h2 class="lead">HelveticArchives</h2>
     <p>
-        Nach dem Umstieg auf ein neues Bibliothekssystem konnten die Daten des Verbunds Alexandria nicht mehr
-        aktualisiert werden. Seit November 2015 ist dies behoben: Die Bestände von 20 Bibliotheken inner- und ausserhalb
-        der Bundesverwaltung werden in swissbib wieder tagesaktuell nachgewiesen.
+        HelveticArchives, die Datenbank für die Archivbestände der Schweizerischen Nationalbibliothek, wurde in
+        swissbib neu geladen. Damit sind Tausende digitalisierter Fotografien der Graphischen Sammlung und des
+        Schweizerischen Literaturarchivs zugänglich und mit den jeweiligen Bestandsaufnahmen verlinkt.
     </p>
-    <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://swissbib.blogspot.com/2015/12/alexandria-wieder-tagesaktuell-in-swissbib.html') ?>"
-       target="_blank" class="btn btn-link" title="Link zum Blog">Mehr Informationen</a>
+    <a href="<?= $this->basePath('Search/Results?type=AllFields&filter[]=union%3A%22CHARCH%22') ?>"
+       target="_blank" class="btn btn-link" title="Link zu den Beständen">Alle Dokumente</a>
 </div>
