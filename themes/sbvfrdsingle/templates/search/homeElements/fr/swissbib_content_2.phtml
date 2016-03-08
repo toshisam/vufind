@@ -1,10 +1,10 @@
 <div class="home-content-box">
-    <h2 class="lead">Réseau de bibliothèques Alexandria</h2>
+    <h2 class="lead">HelveticArchives</h2>
     <p>
-        Le réseau de bibliothèques Alexandria a changé de système de gestion. Depuis lors, les données ne pouvaient plus
-        être mises à jour dans swissbib. Ceci est résolu depuis novembre 2015 : les fonds de ces 20 bibliothèques
-        internes et externes à l'administration fédérale sont à nouveau actualisés quotidiennement.
+        HelveticArchives, base de données des fonds d'archives de la Bibliothèque Nationale suisse, est mise à jour
+        dans swissbib. Des milliers de documents numérisés provenant du Cabinet des estampes et des Archives littéraires
+        suisses sont accesibles et reliés avec les notices de collections.
     </p>
-    <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://swissbib.blogspot.com/2015/12/alexandria-wieder-tagesaktuell-in-swissbib.html') ?>"
-       target="_blank" class="btn btn-link" title="Lien vers le blog">Plus d'informations</a>
+    <a href="<?= $this->basePath('Search/Results?type=AllFields&filter[]=union%3A%22CHARCH%22') ?>"
+       target="_blank" class="btn btn-link" title="Lien aux collections">Tous les documents</a>
 </div>
