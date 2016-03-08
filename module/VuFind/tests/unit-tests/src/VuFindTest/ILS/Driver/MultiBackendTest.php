@@ -20,12 +20,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * @category VuFind2
+ * @category VuFind
  * @package  Tests
  * @author   Kyle McGrogan <km7717@ship.edu>
  * @author   Ere Maijala <ere.maijala@helsinki.fi>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://www.vufind.org  Main Page
+ * @link     https://vufind.org Main Page
  */
 namespace VuFindTest\ILS\Driver;
 use VuFind\ILS\Driver\MultiBackend, VuFind\Config\Reader as ConfigReader;
@@ -34,12 +34,12 @@ use Zend\Log\Writer\Mock;
 /**
  * ILS driver test
  *
- * @category VuFind2
+ * @category VuFind
  * @package  Tests
  * @author   Kyle McGrogan <km7717@ship.edu>
  * @author   Ere Maijala <ere.maijala@helsinki.fi>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://www.vufind.org  Main Page
+ * @link     https://vufind.org Main Page
  */
 class MultiBackendTest extends \VuFindTest\Unit\TestCase
 {
@@ -2498,25 +2498,38 @@ class MultiBackendTest extends \VuFindTest\Unit\TestCase
     }
 
     /**
+     * Get a mock Demo driver
+     *
+     * @return \VuFind\ILS\Driver\Demo
+     */
+    protected function getMockDemoDriver($methods)
+    {
+        $session = $this->getMockBuilder('Zend\Session\Container')
+            ->disableOriginalConstructor()->getMock();
+        return $this->getMock(
+            "VuFind\ILS\Driver\Demo", $methods,
+            [
+                new \VuFind\Date\Converter(),
+                $this->getMock('VuFindSearch\Service'),
+                function () use ($session) { return $session; }
+            ]
+        );
+    }
+
+    /**
      * Get a mock driver
      *
      * @param string $type    Type of driver to make
      * @param array  $methods Array of methods to stub
      *
-     * @return \VuFind\ILS\Driver\$type
+     * @return \VuFind\ILS\Driver\AbstractBase
      */
     protected function getMockILS($type, $methods = null)
     {
         $mock = null;
         try {
             if ($type == 'Demo') {
-                $mock = $this->getMock(
-                    "VuFind\ILS\Driver\\$type", $methods,
-                    [
-                        new \VuFind\Date\Converter(),
-                        $this->getMock('VuFindSearch\Service')
-                    ]
-                );
+                $mock = $this->getMockDemoDriver($methods);
             } else {
                 $mock = $this->getMock(
                     "VuFind\ILS\Driver\\$type", $methods,
@@ -2541,11 +2554,11 @@ class MultiBackendTest extends \VuFindTest\Unit\TestCase
 /**
  * A dummy ILS driver used for testing a driver with unsupported features
  *
- * @category VuFind2
+ * @category VuFind
  * @package  Tests
  * @author   Ere Maijala <ere.maijala@helsinki.fi>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://www.vufind.org  Main Page
+ * @link     https://vufind.org Main Page
  */
 class DummyILS extends \VuFind\ILS\Driver\AbstractBase
 {
