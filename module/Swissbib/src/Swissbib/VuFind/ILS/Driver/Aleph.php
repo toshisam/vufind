@@ -222,7 +222,7 @@ class Aleph extends VuFindDriver
             'hold'             => 'HoldRequest',
             'shortLoan'        => 'ShortLoan',
             'photorequest'     => 'PhotoRequest',
-            'bookingrequest'   => 'BookingRequest'
+            //'bookingrequest'   => 'BookingRequest'
         ];
 
         // Check flags for each info node
@@ -749,9 +749,9 @@ class Aleph extends VuFindDriver
 
                 // Add special data
             try {
-                $itemData['id'] = ($history) ? null : $this->barcodeToID(
+                /* $itemData['id'] = ($history) ? null : $this->barcodeToID(
                     $itemData['barcode']
-                );
+                );*/
                 $itemData['item_id'] = substr(strrchr($group[0], "/"), 1);
                 $itemData['reqnum'] = $itemData['doc-number'] .
                     $itemData['item-sequence'] . $itemData['sequence'];
@@ -843,7 +843,7 @@ class Aleph extends VuFindDriver
             $itemData['type'] = 'hold';
             $itemData['item_id'] = substr($href[0], strrpos($href[0], '/') + 1);
             //$itemData['isbn']        = array($itemData['isbn-raw']);
-            $itemData['id'] = $this->barcodeToID($itemData['barcode']);
+            //$itemData['id'] = $this->barcodeToID($itemData['barcode']);
             $itemData['expire'] = DateTime::createFromFormat(
                 'Ymd', $itemData['expire']
             )->format('d.m.Y');
