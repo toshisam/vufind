@@ -175,6 +175,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         'OriginalVersionNotes',
         'CopyNotes',
         'SystemDetails',
+        'Publications',
+        'Exhibitions',
         'RelationshipNotes',
         'HierarchicalPlaceNames',
         'RelatedEntries',
@@ -1561,16 +1563,6 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
-     * Get Copy and Version Identification Note
-     *
-     * @return array
-     */
-    public function getCopyIdentificationNote()
-    {
-        return $this->getFieldArray('562', ['c']);
-    }
-
-    /**
      * Get original version note for the record (MARC21: field 562)
      * and item-specific note for the record (swissbib MARC: field 590)
      *
@@ -1584,6 +1576,26 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         $copynotes = array_merge_recursive($f562, $f590);
 
         return $copynotes;
+    }
+
+    /**
+     * Get publications about described materials note (581)
+     *
+     * @return array
+     */
+    public function getPublications()
+    {
+        return $this->getFieldArray('581');
+    }
+
+    /**
+     * Get exhibitions note (585)
+     *
+     * @return array
+     */
+    public function getExhibitions()
+    {
+        return $this->getFieldArray('585');
     }
 
     /**
