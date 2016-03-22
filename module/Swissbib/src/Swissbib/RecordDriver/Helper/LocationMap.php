@@ -96,9 +96,10 @@ class LocationMap extends LocationMapBase
         HoldingsHelper $holdingsHelper
     ) {
         $mapLinkPattern  = $this->config->get('A100');
+        $signature = preg_replace('/^UBH /', '', $item['signature']);
 
         return $this->buildSimpleLocationMapLink(
-            $mapLinkPattern, $item['signature']
+            $mapLinkPattern, $signature
         );
     }
 

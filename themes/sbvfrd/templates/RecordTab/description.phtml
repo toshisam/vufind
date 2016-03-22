@@ -218,6 +218,8 @@ $prevTitles      = $record->getPreviousTitles();
   $langData   = $record->getLangData();
   $copynotes  = $record->getCopyNotes();
   $system     = $record->getSystemDetails();
+  $publications = $record->getPublications();
+  $exhibitions = $record->getExhibitions();
   $relatedEntries = $record->getRelatedEntries();
   ?>
 
@@ -225,7 +227,8 @@ $prevTitles      = $record->getPreviousTitles();
       !empty($bib) or !empty($access) or !empty($related) or !empty($credits) or !empty($awards) or
       !empty($citenotes) or !empty($orignotes) or !empty($copynotes) or !empty($histData) or
       !empty($origtitle) or !empty($perfomer) or !empty($system) or !empty($relatedEntries) or
-      !empty($langData) or !empty($audience) or !empty($eventNote) or !empty($fileNote) or !empty($worktitle)): ?>
+      !empty($langData) or !empty($audience) or !empty($eventNote) or !empty($fileNote) or !empty($publications) or
+      !empty($exhibitions) or !empty($worktitle)): ?>
     <? $contentDisplayed = true; ?>
 
       <? /* Display general notes (field 500) */ ?>
@@ -466,6 +469,30 @@ $prevTitles      = $record->getPreviousTitles();
             <? endforeach; ?>
           </td>
         </tr>
+      <? endif; ?>
+
+      <? /* Display Publications About Described Materials Note (field 581) */ ?>
+      <? if (!empty($publications)): ?>
+          <tr>
+              <th><?= $this->transEsc('Publications') ?>: </th>
+              <td>
+                  <? foreach ($publications as $field): ?>
+                      <?= $this->escapeHtml($field) ?><br/>
+                  <? endforeach; ?>
+              </td>
+          </tr>
+      <? endif; ?>
+
+      <? /* Display Exhibitions note (field 585) */ ?>
+      <? if (!empty($exhibitions)): ?>
+          <tr>
+              <th><?= $this->transEsc('Exhibitions') ?>: </th>
+              <td>
+                  <? foreach ($exhibitions as $field): ?>
+                      <?= $this->escapeHtml($field) ?><br/>
+                  <? endforeach; ?>
+              </td>
+          </tr>
       <? endif; ?>
 
       <? /* Display award notes (field 586) */ ?>
