@@ -56,5 +56,3 @@ class Export extends VFExport
         return isset($visibilityClassName) ? $visibilityClassName : '';
     }
 }
-
- 
