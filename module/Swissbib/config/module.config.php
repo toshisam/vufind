@@ -241,7 +241,6 @@ return [
             'VuFind\SearchParamsPluginManager'              => 'Swissbib\Services\Factory::getSearchParamsPluginManager',
             'VuFind\SearchResultsPluginManager'             => 'Swissbib\Services\Factory::getSearchResultsPluginManager',
 
-
             'Swissbib\SearchTabsHelper'                     =>  'Swissbib\View\Helper\Swissbib\Factory::getSearchTabsHelper',
             //'VuFind\SearchTabsHelper'                       =>  'Swissbib\View\Helper\Root\Factory::getSearchTabsHelper',
             'Swissbib\Record\Form\CopyForm'                 =>  'Swissbib\Record\Factory::getCopyForm',
