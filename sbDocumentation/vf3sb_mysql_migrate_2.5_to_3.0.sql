@@ -1,6 +1,6 @@
------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------
 -- this script migrates the sb-mysql-db (prod green) to VF3.0 mysql-schema --
------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------
 
 alter table `resource`
 modify `record_id` varchar(255) NOT NULL DEFAULT '',
@@ -15,7 +15,7 @@ modify `username` varchar(255) NOT NULL DEFAULT '',
 modify `email` varchar(255) NOT NULL DEFAULT '',
 modify `cat_password` varchar(70) DEFAULT NULL,
 modify `cat_pass_enc` varchar(170) DEFAULT NULL,
-drop `sb_nickname`,
+-- drop `sb_nickname`,
 drop `favorite_institutions`,
 drop `language`,
 drop `max_hits`,
