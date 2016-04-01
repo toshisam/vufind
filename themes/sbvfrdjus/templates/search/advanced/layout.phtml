@@ -49,7 +49,7 @@
 
 <?=$this->flashmessages()?>
 <div class="<?=$this->layoutClass('mainbody') ?>">
-  <? $searchTabs = $this->searchtabs($this->searchClassId, $this->lookfor, $this->searchIndex, 'advanced', 'advanced'); ?>
+  <? $searchTabs = $this->searchtabs()->getTabConfig($this->searchClassId, $this->lookfor, $this->searchIndex, 'advanced', [], 'advanced'); ?>
   <? if (count($searchTabs) > 0): ?>
     <ul class="nav nav-tabs jus">
       <? foreach ($searchTabs as $tab): ?>
