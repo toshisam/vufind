@@ -173,7 +173,6 @@ class Factory
         return new SearchTabs(
             $sm->getServiceLocator()->get('VuFind\SearchResultsPluginManager'),
             $sm->get('url'),
-            //$sm->getServiceLocator()->get('VuFind\SearchTabsHelper')
             $sm->getServiceLocator()->get('Swissbib\SearchTabsHelper')
         );
     }
@@ -193,7 +192,8 @@ class Factory
             $tabConfig['SearchTabs'] = $config->SearchTabs->toArray();
         }
         if (isset($config->AdvancedSearchTabs)) {
-            $tabConfig['AdvancedSearchTabs'] = $config->AdvancedSearchTabs->toArray();
+            $tabConfig['AdvancedSearchTabs'] =
+                $config->AdvancedSearchTabs->toArray();
         }
         $filterConfig = isset($config->SearchTabsFilters)
             ? $config->SearchTabsFilters->toArray() : [];
