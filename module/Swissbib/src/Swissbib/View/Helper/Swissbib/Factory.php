@@ -188,8 +188,13 @@ class Factory
     public static function getSearchTabsHelper(ServiceManager $sm)
     {
         $config = $sm->get('VuFind\Config')->get('config');
-        $tabConfig = isset($config->SearchTabs)
-            ? $config->SearchTabs->toArray() : [];
+        $tabConfig = [];
+        if (isset($config->SearchTabs)) {
+            $tabConfig['SearchTabs'] = $config->SearchTabs->toArray();
+        }
+        if (isset($config->AdvancedSearchTabs)) {
+            $tabConfig['AdvancedSearchTabs'] = $config->AdvancedSearchTabs->toArray();
+        }
         $filterConfig = isset($config->SearchTabsFilters)
             ? $config->SearchTabsFilters->toArray() : [];
         return new SearchTabsHelper(
