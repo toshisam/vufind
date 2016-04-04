@@ -192,8 +192,8 @@ class Factory
             $tabConfig['SearchTabs'] = $config->SearchTabs->toArray();
         }
         if (isset($config->AdvancedSearchTabs)) {
-            $tabConfig['AdvancedSearchTabs'] =
-                $config->AdvancedSearchTabs->toArray();
+            $tabConfig['AdvancedSearchTabs']
+                = $config->AdvancedSearchTabs->toArray();
         }
         $filterConfig = isset($config->SearchTabsFilters)
             ? $config->SearchTabsFilters->toArray() : [];
