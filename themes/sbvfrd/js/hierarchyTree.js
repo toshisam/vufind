@@ -1,9 +1,4 @@
-/**
- * Created by matthias on 14.09.15.
- */
-
-/*global hierarchySettings, html_entity_decode, jqEscape, path, vufindString*/
-
+/*global hierarchySettings, VuFind */
 
 var hierarchyID, recordID, htmlID, hierarchyContext;
 var baseTreeSearchFullURL;
@@ -29,27 +24,23 @@ function html_entity_decode(string, quote_style) {
     return tmp_str;
 }
 
-function getRecord(recordID)
-{
+function getRecord(recordID) {
     $.ajax({
-        url: path + '/Hierarchy/GetRecord?' + $.param({id: recordID}),
-        dataType: 'html',
-        success: function(response) {
-            if (response) {
-                $('#hierarchyRecord').html(html_entity_decode(response));
-                // Remove the old path highlighting
-                $('#hierarchyTree a').removeClass("jstree-highlight");
-                // Add Current path highlighting
-                var jsTreeNode = $(":input[value='"+recordID+"']").parent();
-                jsTreeNode.children("a").addClass("jstree-highlight");
-                jsTreeNode.parents("li").children("a").addClass("jstree-highlight");
-            }
-        }
-    });
+            url: VuFind.path + '/Hierarchy/GetRecord?' + $.param({id: recordID}),
+            dataType: 'html'
+        })
+        .done(function(response) {
+            $('#hierarchyRecord').html(html_entity_decode(response));
+            // Remove the old path highlighting
+            $('#hierarchyTree a').removeClass("jstree-highlight");
+            // Add Current path highlighting
+            var jsTreeNode = $(":input[value='"+recordID+"']").parent();
+            jsTreeNode.children("a").addClass("jstree-highlight");
+            jsTreeNode.parents("li").children("a").addClass("jstree-highlight");
+        });
 }
 
-function changeNoResultLabel(display)
-{
+function changeNoResultLabel(display) {
     if (display) {
         $("#treeSearchNoResults").removeClass('hidden');
     } else {
@@ -57,8 +48,7 @@ function changeNoResultLabel(display)
     }
 }
 
-function changeLimitReachedLabel(display)
-{
+function changeLimitReachedLabel(display) {
     if (display) {
         $("#treeSearchLimitReached").removeClass('hidden');
     } else {
@@ -66,14 +56,8 @@ function changeLimitReachedLabel(display)
     }
 }
 
-function htmlEncodeId(id)
-{
-    return id.replace(/\W/g, "-"); // Also change Hierarchy/TreeRenderer/JSTree.php
-}
-
 var searchAjax = false;
-function doTreeSearch()
-{
+function doTreeSearch() {
     $('#treeSearchLoadingImg').removeClass('hidden');
     var keyword = $("#treeSearchText").val();
     var type = $("#treeSearchType").val();
@@ -90,12 +74,13 @@ function doTreeSearch()
             searchAjax.abort();
         }
         searchAjax = $.ajax({
-            "url" : path + '/Hierarchy/SearchTree?' + $.param({
-                'lookfor': keyword,
-                'hierarchyID': hierarchyID,
-                'type': $("#treeSearchType").val()
-            }) + "&format=true",
-            'success': function(data) {
+                "url" : VuFind.path + '/Hierarchy/SearchTree?' + $.param({
+                    'lookfor': keyword,
+                    'hierarchyID': hierarchyID,
+                    'type': $("#treeSearchType").val()
+                }) + "&format=true"
+            })
+            .done(function(data) {
                 if(data.results.length > 0) {
                     $('#hierarchyTree').find('.jstree-search').removeClass('jstree-search');
                     var tree = $('#hierarchyTree').jstree(true);
@@ -108,7 +93,6 @@ function doTreeSearch()
                     }
                     for(i=data.results.length;i--;) {
                         var tid = htmlEncodeId(data.results[i]);
-                        tid = getNodeIdFromRecordId(treeModel,tid);
                         $('#hierarchyTree').find('#'+tid).addClass('jstree-search');
                     }
                     changeNoResultLabel(false);
@@ -117,8 +101,7 @@ function doTreeSearch()
                     changeNoResultLabel(true);
                 }
                 $('#treeSearchLoadingImg').addClass('hidden');
-            }
-        });
+            });
     }
 }
 
@@ -162,24 +145,23 @@ function buildJSONNodes(xml)
     return jsonNode;
 }
 
-function buildTreeWithXml(cb)
-{
-    $.ajax({'url': path + '/Hierarchy/GetTree',
-        'data': {
-            'hierarchyID': hierarchyID,
-            'id': recordID,
-            'context': hierarchyContext,
-            'mode': 'Tree'
-        },
-        'success': function(xml) {
+function buildTreeWithXml(cb) {
+    $.ajax({
+            'url': VuFind.path + '/Hierarchy/GetTree',
+            'data': {
+                'hierarchyID': hierarchyID,
+                'id': recordID,
+                'context': hierarchyContext,
+                'mode': 'Tree'
+            }
+        })
+        .done(function(xml) {
             var nodes = buildJSONNodes($(xml).find('root'));
             cb.call(this, nodes);
-        }
-    });
+        });
 }
 
-$(document).ready(function()
-{
+$(document).ready(function() {
     // Code for the search button
     hierarchyID = $("#hierarchyTree").find(".hiddenHierarchyId")[0].value;
     recordID = $("#hierarchyTree").find(".hiddenRecordId")[0].value;
@@ -227,7 +209,7 @@ $(document).ready(function()
             'core' : {
                 'data' : function (obj, cb) {
                     $.ajax({
-                        'url': path + '/Hierarchy/GetTreeJSON',
+                        'url': VuFind.path + '/Hierarchy/GetTreeJSON',
                         'data': {
                             'hierarchyID': hierarchyID,
                             'id': recordID
