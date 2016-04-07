@@ -135,7 +135,7 @@ ISN:
     isbn:
       - [and, 100]
       - [or, ~]
-    isbn_variation:
+    variant_isbn_isn_mv:
       - [and, 100]
       - [or, ~]
     ismn_isn_mv:
