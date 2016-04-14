@@ -1269,7 +1269,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                     $string = $field['source'] . ', ';
                 }
                 if (isset($field['address'])) {
-                    $string .= $field['address'] .', ';
+                    $string .= $field['address'] . ', ';
                 }
                 if (isset($field['method'])) {
                     $string .=  $field['method'] . ', ';
