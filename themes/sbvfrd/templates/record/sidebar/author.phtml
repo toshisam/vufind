@@ -27,7 +27,7 @@ if (!$hasAuthors) {
     <?php if (!empty($authors['secondary'])): ?>
       <? $tauthors = array(); //de-dublication in PHP style...?>
 
-      <?php foreach ($authors['secondary'] as $secondaryAuthor): ?>
+      <?php foreach ($authors['secondary'] as $secondaryAuthor => $secondaryAuthorRoles): ?>
         <? $tauthors[$secondaryAuthor] = $secondaryAuthor ?>
       <?php endforeach; ?>
 
