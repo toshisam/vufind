@@ -291,7 +291,7 @@ class MyResearchController extends VuFindMyResearchController
             // it may cause weird behavior -- better to display an error there!
             if (!$this->params()->fromPost('processLogin', false)
                 && !$this->params()->fromPost('forcingLogin', false)
-                && !$this->inLightbox()
+                && !$this->checkInLightbox()
             ) {
                 $this->getRequest()->getPost()->set('processLogin', true);
 
@@ -356,23 +356,6 @@ class MyResearchController extends VuFindMyResearchController
             ->toUrl($this->getAuthManager()->logout($logoutTarget));
     }
 
-    /**
-     * User login action -- clear any previous follow-up information prior to
-     * triggering a login process. This is used for explicit login links within
-     * the UI to differentiate them from contextual login links that are triggered
-     * by attempting to access protected actions.
-     *
-     * @return mixed
-     */
-    public function userloginAction()
-    {
-        $forward = parent::userloginAction();
-        if ($this->inLightbox()) {
-            $this->clearFollowupUrl();
-        }
-
-        return $forward;
-    }
 
     /**
      * Store a referer (if appropriate) to keep post-login redirect pointing
@@ -535,6 +518,18 @@ class MyResearchController extends VuFindMyResearchController
             [
                 'form' => $addressForm
             ]
+        );
+    }
+
+    /**
+     * Check if we are in lightbox mode such a method was removed by the core
+     * we want to exclude Lightbox with Shibboleth authentication
+     * @return boolean
+     */
+    protected function checkInLightbox()
+    {
+        return ($this->getRequest()->getQuery('layout', 'no') === 'lightbox'
+            || 'layout/lightbox' == $this->layout()->getTemplate()
         );
     }
 }
