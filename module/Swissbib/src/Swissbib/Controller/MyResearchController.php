@@ -356,7 +356,6 @@ class MyResearchController extends VuFindMyResearchController
             ->toUrl($this->getAuthManager()->logout($logoutTarget));
     }
 
-
     /**
      * Store a referer (if appropriate) to keep post-login redirect pointing
      * to an appropriate location.
