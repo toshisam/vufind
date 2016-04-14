@@ -1241,6 +1241,9 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get Immediate Source of Acquisition Note (MARC21 field 541)
+     *
+     * @param Boolean $asStrings AsStrings
+     *                           
      * @return array
      */
     public function getAcquisitionNote($asStrings = true)
@@ -1271,7 +1274,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 if (isset($field['method'])) {
                     $string .=  $field['method'] . ', ';
                 }
-                if (isset($field['date'])){
+                if (isset($field['date'])) {
                     $string .= $field['date'] . ', ';
                 }
                 if (isset($field['owner'])) {
