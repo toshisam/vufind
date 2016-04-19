@@ -19,8 +19,9 @@ if (!$hasAuthors) {
 
     <?php if (!empty($authors['main'])): ?>
       <li class="list-group-item">
-        <a href="<? reset($authors['main']) ?><?= $viewRecord->getLink('author', key($authors['main'])) ?>"
-           title="<? reset($authors['main']) ?><?= $this->escapeHtml(key($authors['main'])) ?>"><? reset($authors['main']) ?><?= $this->escapeHtml(key($authors['main'])) ?></a>
+        <? reset($authors['main']); $authorMain = key($authors['main']); ?>
+        <a href="<? $authorMain ?><?= $viewRecord->getLink('author', $authorMain) ?>"
+           title="<? $authorMain ?><?= $this->escapeHtml($authorMain) ?>"><? reset($authors['main']) ?><?= $this->escapeHtml($authorMain) ?></a>
       </li>
     <?php endif; ?>
 
