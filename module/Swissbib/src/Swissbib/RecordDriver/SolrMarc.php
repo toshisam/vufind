@@ -1055,6 +1055,20 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get the main authors of the record.
+     *
+     * @return array
+     */
+    public function getPrimaryAuthors()
+    {
+        $primaryAuthors = $this->getPrimaryAuthor($asString = true);
+        if ( !is_array($primaryAuthors) ) {
+            $primaryAuthors = [$primaryAuthors];
+        }
+        return $primaryAuthors;
+    }
+
+    /**
      * Get primary author
      *
      * @param Boolean $asString AsString
