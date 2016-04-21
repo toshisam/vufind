@@ -1125,7 +1125,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getCorporateAuthors()
     {
-        return empty($this->getCorporateAuthor()) ?
+        $tempAuthor = $this->getCorporateAuthor();
+        return empty($tempAuthor) ?
             null : [$this->getCorporateAuthor()];
     }
 
