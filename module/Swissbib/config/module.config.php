@@ -189,7 +189,6 @@ return [
             'tab40import'          => 'Swissbib\Controller\Tab40ImportController',
             'institutionFavorites' => 'Swissbib\Controller\FavoritesController',
             'hierarchycache'       => 'Swissbib\Controller\HierarchyCacheController',
-            'cart'                 => 'Swissbib\Controller\CartController',
             'shibtest'             => 'Swissbib\Controller\ShibtestController',
             'ajax'                 => 'Swissbib\Controller\AjaxController',
             'upgrade'              => 'Swissbib\Controller\NoProductiveSupportController',
@@ -197,8 +196,9 @@ return [
             'feedback'             => 'Swissbib\Controller\FeedbackController',
             'cover'                => 'Swissbib\Controller\CoverController',
         ],
-        'factories' => [
+        'factories'  => [
             'record' => 'Swissbib\Controller\Factory::getRecordController',
+            'cart'   =>'VuFind\Controller\Factory::getCartController',
         ]
     ],
     'service_manager' => [
