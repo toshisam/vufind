@@ -2,20 +2,36 @@
 -- this script migrates the sb-mysql-db (prod green) to VF3.0 mysql-schema --
 -- ---------------------------------------------------------------------------
 
+alter table `comments`
+modify `created` datetime NOT NULL DEFAULT '2000-00-00 00:00:00';
+
+alter table `oai_resumption`
+modify `expires` datetime NOT NULL DEFAULT '2000-00-00 00:00:00';
+
 alter table `resource`
 modify `record_id` varchar(255) NOT NULL DEFAULT '',
 modify `source` varchar(50) NOT NULL DEFAULT 'Solr';
 
 alter table `search`
-modify `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+modify `created` datetime NOT NULL DEFAULT '2000-00-00 00:00:00',
 add `checksum` int(11) default NULL after `search_object`;
+
+alter table `session`
+modify `created` datetime NOT NULL DEFAULT '2000-00-00 00:00:00';
 
 alter table `user`
 modify `username` varchar(255) NOT NULL DEFAULT '',
 modify `email` varchar(255) NOT NULL DEFAULT '',
 modify `cat_password` varchar(70) DEFAULT NULL,
 modify `cat_pass_enc` varchar(170) DEFAULT NULL,
+modify `created` datetime NOT NULL DEFAULT '2000-00-00 00:00:00',
 drop `sb_nickname`;
+
+alter table `user_list`
+modify `expires` datetime NOT NULL DEFAULT '2000-00-00 00:00:00';
+
+alter table `user_card`
+modify `expires` datetime NOT NULL DEFAULT '2000-00-00 00:00:00';
 
 drop table `user_localdata`;
 
@@ -46,7 +62,7 @@ CREATE TABLE `record` (
   `source` varchar(50) DEFAULT NULL,
   `version` varchar(20) NOT NULL,
   `data` longtext DEFAULT NULL,
-  `updated` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated` datetime NOT NULL DEFAULT '2000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `record_id_source` (`record_id`, `source`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
