@@ -1110,8 +1110,15 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getCorporationNames($asString = true)
     {
         $unit = $units = $corporation = $corporations = $stringCorporations = null;
-        $corporations = $this->getAddedCorporateNames();
-        //$corporations[] = $this->getMainCorporateName();
+        $corporationsMain = $this->getMainCorporateName();
+        $corporationsAdded = $this->getAddedCorporateNames();
+
+        if (!empty($corporationsMain)) {
+            $corporations[] = $corporationsMain;
+            $corporations = array_merge($corporations, $corporationsAdded);
+        } else {
+            $corporations = $corporationsAdded;
+        }
 
         if ($asString) {
             $stringCorporations = [];
@@ -1135,9 +1142,6 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get corporate name (authors)
-     *
-     * @todo Implement or remove note
-     * @note exclude: if $l == fre|eng
      *
      * @return Array[]
      */
@@ -1165,11 +1169,27 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         $related = explode(',', $this->mainConfig->RelatedEntries->related);
 
+        $related_persons_100 = array_filter(
+            $this->getMarcSubFieldMaps('100', $this->personFieldMap),
+            function ($field) use ($related) {
+                return isset($field['relator_code'])
+                && in_array($field['relator_code'], $related);
+            }
+        );
+
         $related_persons = array_filter(
             $this->getMarcSubFieldMaps('700', $this->personFieldMap),
             function ($field) use ($related) {
                 return isset($field['relator_code'])
                     && in_array($field['relator_code'], $related);
+            }
+        );
+
+        $related_corporations_110 = array_filter(
+            $this->getMarcSubFieldMaps('110', $this->corporationFieldMap),
+            function ($field) use ($related) {
+                return isset($field['relator_code'])
+                && in_array($field['relator_code'], $related);
             }
         );
 
@@ -1181,9 +1201,11 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             }
         );
 
-        if ($related_persons || $related_corporations) {
+        if ($related_persons_100 || $related_persons || $related_corporations_110 || $related_corporations) {
             return [
+                'persons100' => $related_persons_100,
                 'persons' => $related_persons,
+                'corporations110' => $related_corporations_110,
                 'corporations' => $related_corporations,
             ];
         } else {
