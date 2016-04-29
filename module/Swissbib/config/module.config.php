@@ -198,7 +198,7 @@ return [
         ],
         'factories'  => [
             'record' => 'Swissbib\Controller\Factory::getRecordController',
-            'cart'   =>'VuFind\Controller\Factory::getCartController',
+            'cart'   => 'VuFind\Controller\Factory::getCartController',
         ]
     ],
     'service_manager' => [
