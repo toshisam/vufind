@@ -1201,7 +1201,9 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             }
         );
 
-        if ($related_persons_100 || $related_persons || $related_corporations_110 || $related_corporations) {
+        if ($related_persons_100 || $related_persons
+            || $related_corporations_110 || $related_corporations
+        ) {
             return [
                 'persons100' => $related_persons_100,
                 'persons' => $related_persons,
