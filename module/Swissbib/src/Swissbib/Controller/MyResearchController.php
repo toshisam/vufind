@@ -291,7 +291,6 @@ class MyResearchController extends VuFindMyResearchController
             // it may cause weird behavior -- better to display an error there!
             if (!$this->params()->fromPost('processLogin', false)
                 && !$this->params()->fromPost('forcingLogin', false)
-                && !$this->checkInLightbox()
             ) {
                 $this->getRequest()->getPost()->set('processLogin', true);
 
