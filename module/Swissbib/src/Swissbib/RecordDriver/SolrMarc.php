@@ -1194,11 +1194,38 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     /**
      * Get collection title
      *
-     * @return String
+     * @param Boolean $asStrings AsStrings
+     *
+     * @return array
      */
-    public function getCollectionTitle()
+    public function getCollectionTitle($asStrings = true)
     {
-        return $this->getFieldArray('499', ['a', 'v',]);
+        $data = $this->getMarcSubFieldMaps(
+            499,
+            [
+                'a' => 'collection',
+                'v' => 'part',
+            ]
+        );
+
+        if ($asStrings) {
+            $strings = [];
+
+            foreach ($data as $field) {
+                $string = '';
+
+                if (isset($field['collection'])) {
+                    $string = $field['collection'];
+                }
+                if (isset($field['part'])) {
+                    $string .= ', ' . $field['part'];
+                }
+                $strings[] = trim($string);
+            }
+            $data = $strings;
+        }
+
+        return $data;
     }
 
     /**
