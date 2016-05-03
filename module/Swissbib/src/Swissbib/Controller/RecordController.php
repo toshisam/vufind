@@ -242,7 +242,9 @@ class RecordController extends VuFindRecordController
                 if (isset($results['success']) && $results['success'] == true) {
                     $this->flashMessenger()->setNamespace('success')
                         ->addMessage('hold_place_success');
-                    if ($this->checkInLightbox()) {
+                    if ($this->getRequest()->getQuery('layout', 'no') === 'lightbox'
+                        || 'layout/lightbox' == $this->layout()->getTemplate()
+                    ) {
                         return false;
                     }
                     return $this->redirectToRecord();
