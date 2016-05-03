@@ -42,4 +42,3 @@ class minSO extends \VuFind\Search\Minified
 {
 }
 // @codingStandardsIgnoreEnd
-
