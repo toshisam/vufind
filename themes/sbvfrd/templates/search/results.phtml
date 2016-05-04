@@ -82,7 +82,7 @@
               <ul class="dropdown-menu" role="export-menu">
                 <? foreach ($exportFormats as $format): ?>
                   <li class="<?=$this->export()->getVisibilityClassName($format)?>">
-                    <a <? if ($this->export()->needsRedirect($format)): ?>target="<?=$this->escapeHtmlAttr($format)?>Main" <? endif; ?>href="<?=$this->export()->getBulkUrl($this, $format, array());?>"><?= $this->transEsc('Export to') ?> <?= $this->escapeHtml($format) ?></a>
+                    <a <? if ($this->export()->needsRedirect($format)): ?>target="<?=$this->escapeHtmlAttr($format)?>Main" <? endif; ?>href="<?=$this->export()->getBulkUrl($this, $format, array());?>"><?= $this->transEsc('Export to') ?> <?= $this->transEsc($this->export()->getLabelForFormat($format)) ?></a>
                   </li>
                 <? endforeach; ?>
               </ul>
