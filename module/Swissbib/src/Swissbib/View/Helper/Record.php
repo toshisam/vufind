@@ -466,6 +466,12 @@ class Record extends VuFindRecord
             if (isset($titleStatement['statement_responsibility'])) {
 
                 return $titleStatement['statement_responsibility'];
+            } elseif (($record->getPrimaryAuthor(true))
+                && ($record->getSecondaryAuthors(true))
+            ) {
+                $primaryAuthor = $record->getPrimaryAuthor();
+                $secondaryAuthors = implode('; ', $record->getSecondaryAuthors());
+                return $primaryAuthor . '; ' . $secondaryAuthors;
             } elseif ($record->getPrimaryAuthor(true)) {
 
                 return $record->getPrimaryAuthor();
