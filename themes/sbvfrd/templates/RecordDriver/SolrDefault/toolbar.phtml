@@ -16,7 +16,7 @@
   <? endif; ?>
   <?php $mailID = $this->auth()->isAjaxLoginAllowed() ? 'id="mail-record"' : '' ?>
     <?php $mailID =  '' ?>
-  <li><a <?= $mailID  ?>  class="s <?=$controllerClass?>" data-lightbox href="<?=$this->recordLink()->getActionUrl($this->driver, 'Email')?>" title="<?=$this->transEsc('Email this')?>"><i class="fa fa-envelope"></i></a></li>
+  <li><a <?= $mailID  ?>  class="s <?=$controllerClass?>" href="<?=$this->recordLink()->getActionUrl($this->driver, 'Email')?>" title="<?=$this->transEsc('Email this')?>"><i class="fa fa-envelope"></i></a></li>
 
   <? $exportFormats = $this->export()->getFormatsForRecord($this->driver); ?>
   <? if(count($exportFormats) > 0): ?>
