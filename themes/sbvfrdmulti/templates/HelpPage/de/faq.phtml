@@ -18,7 +18,7 @@
     <dt><a name="q2"></a>Kann ich im Bestand einer bestimmten Bibliothek suchen?</dt>
     <dd><p>Ihre Suchergebnisse lassen sich rechts unter Suche verfeinern nach der gewünschten Bibliothek eingrenzen. Alternativ können Sie die Bibliothek in der Erweiterten Suche auswählen. Bibliotheken können als sogenannte <a href="<?=$this->url('myresearch-favorite-institutions')?>"><?=$this->transEsc('mylibraries')?></a> unter My swissbib dauerhaft gespeichert werden.</p></dd>
     <dt><a name="q3"></a>Können Sie mir ein bestimmtes Medium per Post senden?</dt>
-    <dd><p>Einige Bibliotheken schicken Ihnen die Medien an Ihre Postadresse oder zum Abholen an eine von Ihnen gewünschte Bibliothek. Nach erfolgter Anmeldung klicken Sie beim gewünschten Titel unter Exemplar auf Bestellen: je nach Bibliothek werden unterschiedliche Abholstandorte angeboten. Siehe Details unter <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>"><?= $this->transEsc('helppage.delivery') ?></a>.</p></dd>
+    <dd><p>Einige Bibliotheken schicken Ihnen die Medien an Ihre Postadresse oder zum Abholen an eine von Ihnen gewünschte Bibliothek. Nach erfolgter Anmeldung klicken Sie beim gewünschten Titel unter Standorte & bestellen auf Bestellen: je nach Bibliothek werden unterschiedliche Abholstandorte angeboten. Siehe Details unter <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>"><?= $this->transEsc('helppage.delivery') ?></a>.</p></dd>
     <dt><a name="q4"></a>Warum funktioniert der Link zum Volltext bei E-Books und Artikeln nicht immer?</dt>
     <dd><p>Der Zugang zum Volltext funktioniert oft nur aus dem Netz der Universität, die den Inhalt lizenziert hat.</p></dd>
     <dd><p>Als Universitätsangehörige melden Sie sich über VPN (<a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://mobile.unibas.ch') ?>" target="_blank">Basel</a>, <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://unibe.ch/universitaet/campus__und__infrastruktur/rund_um_computer/internetzugang/zugang_auf_interne_ressourcen_mit_vpn/index_ger.html') ?>" target="_blank">Bern</a>) an, wenn Sie sich nicht auf dem Campus befinden, und schränken Sie Ihre Suchergebnisse auf der rechten Seite mit dem Filter Uni Basel online bzw. Uni Bern online ein.</p></dd>
@@ -41,10 +41,5 @@
         </ul>
     </dd>
     <dt><a name="q8"></a>Ist Ihre Frage nicht dabei?</dt>
-    <dd><p>Gerne unterstützen wir Sie bei der Recherche und beim Bestellen in unserem Katalog oder nehmen Ihre Anregungen und Kritik entgegen:</p>
-        <ul>
-            <li>Fragen zu Ihrem Konto oder zu bestimmten Medien: Wenden Sie sich bitte an Ihre Stammbibliothek bzw. die <a href="<?= $this->basePath('Libraries') ?>" title="Liste der Institutionen">Bibliothek</a>, die das Medium besitzt.</li>
-            <li>Ihre Fragen sowie Anregungen zu swissbib Basel Bern nehmen wir gerne über das <a id="feedbackLink" class="modal-link" href="<?= $this->url('feedback-home') ?>">Kontaktformular</a> oder via <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#119;&#105;&#115;&#115;&#98;&#105;&#98;&#45;&#98;&#97;&#115;&#101;&#108;&#98;&#101;&#114;&#110;&#64;&#117;&#110;&#105;&#98;&#97;&#115;&#46;&#99;&#104;">&#115;&#119;&#105;&#115;&#115;&#98;&#105;&#98;&#45;&#98;&#97;&#115;&#101;&#108;&#98;&#101;&#114;&#110; &#97;&#116; &#117;&#110;&#105;&#98;&#97;&#115;&#46;&#99;&#104;</a> entgegen.</li>
-        </ul>
-    </dd>
+    <dd><p>Gerne unterstützen wir Sie bei der Recherche und beim Bestellen in unserem Katalog oder nehmen Ihre Anregungen und Kritik entgegen: <a href="<?= $this->url('feedback-home') ?>">Kontaktformular</a></p>    </dd>
 </dl>

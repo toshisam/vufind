@@ -543,19 +543,68 @@ class Holdings
         );
 
         if ($extend) {
+            $allBarcodes = [];
             foreach ($institutionItems as $index => $item) {
-                // Add extra information for item
                 $institutionItems[$index] = $this->extendItem($item, $recordDriver);
+                $networkCode = isset($item['network']) ? $item['network'] : '';
+                if ($this->isAlephNetwork($networkCode)) {
+                    if (!isset($extendingOptions['availability'])
+                        || $extendingOptions['availability']
+                    ) {
+                        array_push($allBarcodes, $item['barcode']);
+                    }
+                }
             }
+
+            if (sizeof($allBarcodes) > 0) {
+                $institutionItems
+                    = $this->getAvailabilityInfosArray(
+                        $institutionItems,
+                        $allBarcodes
+                    );
+            }
+
         }
 
         return $institutionItems;
     }
 
     /**
+     * Add availability-information of multiple items
+     *
+     * @param Array $items    the (holding-/institution-)items
+     * @param Array $barcodes barcodes to check availability for
+     *
+     * @return Array
+     */
+    public function getAvailabilityInfosArray($items, $barcodes)
+    {
+        // get availability info of items:
+        $firstItem = $items[0];
+        $allAvailabilities = '';
+        if (0 < count($barcodes)) {
+            $allAvailabilities = $this->getAvailabilityInfos(
+                $firstItem['bibsysnumber'], $barcodes, $firstItem['bib_library']
+            );
+        }
+
+        // write availability-info in items array:
+        foreach ($items as $index => $item) {
+            if (isset($allAvailabilities[$item['barcode']])) {
+                $availabilityArray = [$item['barcode'] =>
+                    $allAvailabilities[$item['barcode']]];
+                $item['availability'] = $availabilityArray;
+            }
+            $items[$index] = $item;
+        }
+
+        return $items;
+    }
+
+    /**
      * Check whether network is supported
      *
-     * @param String $networkCode NetworkCode
+     * @param String $networkCode Code of network
      *
      * @return Boolean
      */
@@ -672,17 +721,7 @@ class Holdings
                     }
                 }
             }
-
-            // Add availability
-            if (!isset($extendingOptions['availability'])
-                || $extendingOptions['availability']
-            ) {
-                $item['availability'] = $this->getAvailabilityInfos(
-                    $item['bibsysnumber'], $item['barcode'], $item['bib_library']
-                );
-            }
         }
-
         return $item;
     }
 
@@ -958,7 +997,7 @@ class Holdings
      *
      * @return Boolean
      */
-    protected function isAlephNetwork($network)
+    public function isAlephNetwork($network)
     {
         return isset($this->networks[$network])
             ? $this->networks[$network]['type'] === 'Aleph' : false;
@@ -970,7 +1009,7 @@ class Holdings
      * (only Aleph is implemented as a custom type)
      * Fallback to network default
      *
-     * @param String $networkCode     NetworkCode
+     * @param String $networkCode     Code of network
      * @param String $institutionCode InstitutionCode
      * @param Array  $item            Item
      *
@@ -1026,8 +1065,8 @@ class Holdings
      * Get backlink for aleph
      * (custom method)
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitutioncCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1042,7 +1081,6 @@ class Holdings
             'bib-system-number' => $item['bibsysnumber'],
             'aleph-sublibrary-code' => $institutionCode
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
@@ -1050,8 +1088,8 @@ class Holdings
      * Get backlink for IDSBB
      * set link to orange view of swissbib
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1064,8 +1102,7 @@ class Holdings
             'id' => $this->idItem,
             'sub-library-code' => $institutionCode,
             'network' => $networkCode,
-        ];
-
+            ];
         return $this->compileString($data['pattern'], $values);
     }
 
@@ -1073,56 +1110,50 @@ class Holdings
      * Get backlink for NEBIS
      * set link to NEBIS Primo View
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return String
      *
-     * Links to Primo work, but login after permalink leads to crashes in Primo.
-     * Therefore, use Aleph until Primo allows safe login after permalink
-     *
-     * protected function getBackLinkNEBIS($networkCode, $institutionCode, $item,
-            array $data
-       ) {
-            $values = [
-                'bib-system-number' => $item['bibsysnumber'],
-            ];
-            return $this->compileString($data['pattern'], $values);
-       }
-     */
+    *protected function getBackLinkNEBIS($networkCode, $institutionCode, $item,
+    *    array $data
+    *)
+    *{
+    *    $values = [
+    *        'bib-system-number' => $item['bibsysnumber'],
+    *    ];
+    *    return $this->compileString($data['pattern'], $values);
+    *}
+    */
 
     /**
      * Get backlink for IDSLU
      * set link to iluplus Primo View
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
      * @return String
-     *
-     * Links to Primo work, but login after permalink leads to crashes in Primo.
-     * Therefore, use Aleph until Primo allows safe login after permalink
-     *
-     * protected function getBackLinkIDSLU($networkCode, $institutionCode, $item,
-     * array $data
-     * ) {
-        * $values = [
-            * 'bib-system-number' => $item['bibsysnumber'],
-        * ];
-        * return $this->compileString($data['pattern'], $values);
-     * }
      */
+    protected function getBackLinkIDSLU($networkCode, $institutionCode, $item,
+        array $data
+    ) {
+        $values = [
+            'bib-system-number' => $item['bibsysnumber'],
+        ];
+        return $this->compileString($data['pattern'], $values);
+    }
 
     /**
      * Get back link for IDSSG (self-developed-non-aleph-request)
      * Currently only a wrapper for Aleph
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1146,15 +1177,14 @@ class Holdings
         ) {
             $data['pattern'] = $this->configHoldings->Backlink->{'IDSSGPH'};
         }
-
         return $this->getBackLinkAleph($networkCode, $institutionCode, $item, $data);
     }
 
     /**
      * Get backlink for RERO
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1171,15 +1201,15 @@ class Holdings
             //removes the RE-characters from the number string
             'sub-library-code' => preg_replace('[\D]', '', $institutionCode)
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
-     * Get backlink for Alexandria network
+     * Get backlink for Alexandria network (Primo on Alma)
+     * links only to result list as we have no usable identifier
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1189,18 +1219,16 @@ class Holdings
         array $data
     ) {
         $values = [
-            // remove characters from number string
-            'bib-system-number' => preg_replace('[\D]', '', $item['bibsysnumber'])
+            'bib-system-number' => $item['bibsysnumber']
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
      * Get backlink for SNL (helveticat)
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1213,15 +1241,14 @@ class Holdings
         $values = [
             'bib-system-number' => $bibsysnumber,
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
      * Get backlink for CCSA (poster collection)
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1234,15 +1261,14 @@ class Holdings
         $values = [
             'bib-system-number' => $bibsysnumber,
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
     /**
      * Get backlink for Helveticarchives (SNL)
      *
-     * @param String $networkCode     NetworkCode
-     * @param String $institutionCode InstitionCode
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
      * @param Array  $item            Item
      * @param Array  $data            Data
      *
@@ -1254,7 +1280,6 @@ class Holdings
         $values = [
             'bib-system-number' => $item['bibsysnumber'],
         ];
-
         return $this->compileString($data['pattern'], $values);
     }
 
@@ -1314,7 +1339,7 @@ class Holdings
      * Get availability infos for item element
      *
      * @param String $sysNumber SysNumber
-     * @param String $barcode   Barcode
+     * @param Array  $barcode   Array of BarCode Strings
      * @param String $bib       Bib
      *
      * @return Array|Boolean
