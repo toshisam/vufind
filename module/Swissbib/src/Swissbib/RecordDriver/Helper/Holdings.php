@@ -1149,6 +1149,26 @@ class Holdings
     }
 
     /**
+     * Get backlink for SGBN
+     * set link to SGBN Primo View
+     *
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
+     * @param Array  $item            Item
+     * @param Array  $data            Data
+     *
+     * @return String
+     */
+    protected function getBackLinkSGBN($networkCode, $institutionCode, $item,
+                                        array $data
+    ) {
+        $values = [
+            'bib-system-number' => $item['bibsysnumber'],
+        ];
+        return $this->compileString($data['pattern'], $values);
+    }
+
+    /**
      * Get back link for IDSSG (self-developed-non-aleph-request)
      * Currently only a wrapper for Aleph
      *
