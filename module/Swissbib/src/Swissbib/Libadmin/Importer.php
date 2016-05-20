@@ -379,7 +379,7 @@ class Importer implements ServiceLocatorAwareInterface
             foreach ($group['institutions'] as $institution) {
                     //Build a sort key but prevent duplications when
                     // invalid position values are provided
-                $sortKey = $institution['position'] . '_' . $institution['id'];
+                $sortKey =  $institution['id'];
                 $institutionRaw[$sortKey] = [
                     'institution' => $institution['bib_code'],
                     'group'       => $group['group']['code']
