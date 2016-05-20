@@ -3,7 +3,8 @@ $record         = $this->driver;
 $viewRecord     = $this->record($record);
 
 $subjectVocabularies = $record->getAllSubjectVocabularies(true);
-$placeNames = $record->getHierarchicalPlaceNames();
+$hierarchicalPlaceNames = $record->getHierarchicalPlaceNames();
+$placeNames = $record->getPlaceNames();
 
 /* Display Standard-IDs */
 $isbns  = $record->getISBNs();
@@ -218,6 +219,9 @@ $prevTitles      = $record->getPreviousTitles();
   $langData   = $record->getLangData();
   $copynotes  = $record->getCopyNotes();
   $system     = $record->getSystemDetails();
+  $medium     = $record->getPhysicalMedium();
+  $acquisitionNote = $record->getAcquisitionNote();
+  $ownerNote  = $record->getOwnerNote();
   $publications = $record->getPublications();
   $exhibitions = $record->getExhibitions();
   $relatedEntries = $record->getRelatedEntries();
@@ -228,7 +232,7 @@ $prevTitles      = $record->getPreviousTitles();
       !empty($citenotes) or !empty($orignotes) or !empty($copynotes) or !empty($histData) or
       !empty($origtitle) or !empty($perfomer) or !empty($system) or !empty($relatedEntries) or
       !empty($langData) or !empty($audience) or !empty($eventNote) or !empty($fileNote) or !empty($publications) or
-      !empty($exhibitions) or !empty($worktitle)): ?>
+      !empty($exhibitions) or !empty($worktitle) or !empty($ownerNote) or !empty($acquisitionNote) or !empty($medium)): ?>
     <? $contentDisplayed = true; ?>
 
       <? /* Display general notes (field 500) */ ?>
@@ -471,6 +475,42 @@ $prevTitles      = $record->getPreviousTitles();
         </tr>
       <? endif; ?>
 
+      <? /* Display Physical Medium (field 340) */ ?>
+      <? if (!empty($medium)): ?>
+          <tr>
+              <th><?= $this->transEsc('PhysicalMedium') ?>: </th>
+              <td>
+                  <? foreach ($medium as $field): ?>
+                      <?= $this->escapeHtml($field) ?><br/>
+                  <? endforeach; ?>
+              </td>
+          </tr>
+      <? endif; ?>
+
+      <? /* Display Immediate Source of Acquisition Note (field 541) */ ?>
+      <? if (!empty($acquisitionNote)): ?>
+          <tr>
+              <th><?= $this->transEsc('AcquisitionNote') ?>: </th>
+              <td>
+                  <? foreach ($acquisitionNote as $field): ?>
+                      <?= $this->escapeHtml($field) ?><br/>
+                  <? endforeach; ?>
+              </td>
+          </tr>
+      <? endif; ?>
+
+      <? /* Display Ownership and Custodial History Note (field 561) */ ?>
+      <? if (!empty($ownerNote)): ?>
+          <tr>
+              <th><?= $this->transEsc('CustodialHistory') ?>: </th>
+              <td>
+                  <? foreach ($ownerNote as $field): ?>
+                      <?= $this->escapeHtml($field) ?><br/>
+                  <? endforeach; ?>
+              </td>
+          </tr>
+      <? endif; ?>
+
       <? /* Display Publications About Described Materials Note (field 581) */ ?>
       <? if (!empty($publications)): ?>
           <tr>
@@ -511,11 +551,14 @@ $prevTitles      = $record->getPreviousTitles();
     <?
     /** == Rara-Elements (place name, special entries == */
     ?>
-    <? if ($placeNames): ?>
+    <? if (!empty($placeNames)||($hierarchicalPlaceNames)): ?>
     <? $contentDisplayed = true; ?>
-        <th><?= $this->transEsc('PublicationPlace') ?></th>
+        <th><?= $this->transEsc('PublicationPlace')?>: </th>
         <td>
             <? foreach ($placeNames as $field): ?>
+                <?= $this->escapeHtml($field) ?><br />
+            <? endforeach; ?>
+            <? foreach ($hierarchicalPlaceNames as $field): ?>
                 <?= $this->escapeHtml($field) ?><br />
             <? endforeach; ?>
         </td>

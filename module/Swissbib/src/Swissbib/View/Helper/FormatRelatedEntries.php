@@ -67,6 +67,7 @@ class FormatRelatedEntries extends AbstractHelper
      * @param array $relatedEntries Related Corporations and Persons
      *                              [
      *                                  'persons' => [..],
+     *                                  'corporations110' => [...],
      *                                  'corporations' => [..]
      *                              ]
      *
@@ -76,8 +77,17 @@ class FormatRelatedEntries extends AbstractHelper
     {
         $formattedEntries = [];
 
+        foreach ($relatedEntries['persons100'] as $relatedPerson) {
+            $formattedEntries[] = $this->formatRelatedPerson($relatedPerson);
+        }
+
         foreach ($relatedEntries['persons'] as $relatedPerson) {
             $formattedEntries[] = $this->formatRelatedPerson($relatedPerson);
+        }
+
+        foreach ($relatedEntries['corporations110'] as $relatedCorporation) {
+            $formattedEntries[]
+                = $this->formatRelatedCorporation($relatedCorporation);
         }
 
         foreach ($relatedEntries['corporations'] as $relatedCorporation) {

@@ -32,7 +32,6 @@
  */
 namespace Swissbib\RecordDriver;
 
-use Zend\Filter\Null;
 use Zend\I18n\Translator\TranslatorInterface as Translator;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use VuFind\RecordDriver\SolrMarc as VuFindSolrMarc;
@@ -1111,8 +1110,15 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getCorporationNames($asString = true)
     {
         $unit = $units = $corporation = $corporations = $stringCorporations = null;
-        $corporations = $this->getAddedCorporateNames();
-        //$corporations[] = $this->getMainCorporateName();
+        $corporationsMain = $this->getMainCorporateName();
+        $corporationsAdded = $this->getAddedCorporateNames();
+
+        if (!empty($corporationsMain)) {
+            $corporations[] = $corporationsMain;
+            $corporations = array_merge($corporations, $corporationsAdded);
+        } else {
+            $corporations = $corporationsAdded;
+        }
 
         if ($asString) {
             $stringCorporations = [];
@@ -1136,9 +1142,6 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get corporate name (authors)
-     *
-     * @todo Implement or remove note
-     * @note exclude: if $l == fre|eng
      *
      * @return Array[]
      */
@@ -1166,11 +1169,27 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         $related = explode(',', $this->mainConfig->RelatedEntries->related);
 
+        $related_persons_100 = array_filter(
+            $this->getMarcSubFieldMaps('100', $this->personFieldMap),
+            function ($field) use ($related) {
+                return isset($field['relator_code'])
+                && in_array($field['relator_code'], $related);
+            }
+        );
+
         $related_persons = array_filter(
             $this->getMarcSubFieldMaps('700', $this->personFieldMap),
             function ($field) use ($related) {
                 return isset($field['relator_code'])
                     && in_array($field['relator_code'], $related);
+            }
+        );
+
+        $related_corporations_110 = array_filter(
+            $this->getMarcSubFieldMaps('110', $this->corporationFieldMap),
+            function ($field) use ($related) {
+                return isset($field['relator_code'])
+                && in_array($field['relator_code'], $related);
             }
         );
 
@@ -1182,9 +1201,13 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             }
         );
 
-        if ($related_persons || $related_corporations) {
+        if ($related_persons_100 || $related_persons
+            || $related_corporations_110 || $related_corporations
+        ) {
             return [
+                'persons100' => $related_persons_100,
                 'persons' => $related_persons,
+                'corporations110' => $related_corporations_110,
                 'corporations' => $related_corporations,
             ];
         } else {
@@ -1195,11 +1218,38 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     /**
      * Get collection title
      *
-     * @return String
+     * @param Boolean $asStrings AsStrings
+     *
+     * @return array
      */
-    public function getCollectionTitle()
+    public function getCollectionTitle($asStrings = true)
     {
-        return $this->getFieldArray('499', ['a', 'v',]);
+        $data = $this->getMarcSubFieldMaps(
+            499,
+            [
+                'a' => 'collection',
+                'v' => 'part',
+            ]
+        );
+
+        if ($asStrings) {
+            $strings = [];
+
+            foreach ($data as $field) {
+                $string = '';
+
+                if (isset($field['collection'])) {
+                    $string = $field['collection'];
+                }
+                if (isset($field['part'])) {
+                    $string .= ', ' . $field['part'];
+                }
+                $strings[] = trim($string);
+            }
+            $data = $strings;
+        }
+
+        return $data;
     }
 
     /**
@@ -1240,12 +1290,73 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get Immediate Source of Acquisition Note (MARC21 field 541)
+     *
+     * @param Boolean $asStrings AsStrings
+     *                           
+     * @return array
+     */
+    public function getAcquisitionNote($asStrings = true)
+    {
+        $data = $this->getMarcSubFieldMaps(
+            541, [
+                'a' => 'source',
+                'b' => 'address',
+                'c' => 'method',
+                'd' => 'date',
+                'e' => 'accessionNo',
+                'f' => 'owner'
+            ]
+        );
+
+        if ($asStrings) {
+            $strings = [];
+
+            foreach ($data as $field) {
+                $string = '';
+
+                if (isset($field['source'])) {
+                    $string = $field['source'] . ', ';
+                }
+                if (isset($field['address'])) {
+                    $string .= $field['address'] . ', ';
+                }
+                if (isset($field['method'])) {
+                    $string .=  $field['method'] . ', ';
+                }
+                if (isset($field['date'])) {
+                    $string .= $field['date'] . ', ';
+                }
+                if (isset($field['owner'])) {
+                    $string .=  $field['owner'];
+                }
+                if (isset($field['accessionNo'])) {
+                    $string .= ' (' . $field['accessionNo'] . ')';
+                }
+
+                $strings[] = trim($string);
+            }
+            $data = $strings;
+        }
+        return $data;
+    }
+
+    /**
      * Get biographical information or administrative history
      * @return array
      */
     public function getHistData()
     {
         return $this->getFieldArray('545', ['a', 'b']);
+    }
+
+    /**
+     * Get added entry geographic name
+     * @return array
+     */
+    public function getPlaceNames()
+    {
+        return $this->getFieldArray('751', ['a']);
     }
 
     /**
@@ -1494,6 +1605,15 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get Physical Medium (MARC21: field 340)
+     * @return array
+     */
+    public function getPhysicalMedium()
+    {
+        return $this->getFieldArray('340', ['a', 'd', 'i']);
+    }
+
+    /**
      * Get Dates of Publication and/or Sequential Designation (field 362)
      *
      * @return Array
@@ -1560,6 +1680,15 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getLangData()
     {
         return $this->getFieldArray('546', ['a', 'b']);
+    }
+
+    /**
+     * Get Ownership and Custodial History Note (MARC21: field 561)
+     * @return array
+     */
+    public function getOwnerNote()
+    {
+        return $this->getFieldArray('561');
     }
 
     /**
