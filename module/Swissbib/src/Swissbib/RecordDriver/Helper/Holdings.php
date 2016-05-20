@@ -1160,7 +1160,7 @@ class Holdings
      * @return String
      */
     protected function getBackLinkSGBN($networkCode, $institutionCode, $item,
-                                        array $data
+        array $data
     ) {
         $values = [
             'bib-system-number' => $item['bibsysnumber'],
