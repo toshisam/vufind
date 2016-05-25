@@ -1054,6 +1054,23 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get the main authors of the record.
+     *
+     * @return array
+     */
+    public function getPrimaryAuthors()
+    {
+        $primaryAuthors = $this->getPrimaryAuthor();
+        if (empty($primaryAuthors)) {
+            return null;
+        }
+        if (!is_array($primaryAuthors)) {
+            $primaryAuthors = [$primaryAuthors];
+        }
+        return $primaryAuthors;
+    }
+
+    /**
      * Get primary author
      *
      * @param Boolean $asString AsString
@@ -1098,6 +1115,33 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         }
 
         return $authors;
+    }
+
+    /**
+     * Get the main corporate author (if any) for the record.
+     *
+     * @return string
+     */
+    public function getCorporateAuthors()
+    {
+        $tempAuthor = $this->getCorporateAuthor();
+        return empty($tempAuthor) ?
+            null : [$this->getCorporateAuthor()];
+    }
+
+    /**
+     * Get the main corporate author (if any) for the record.
+     *
+     * @return string
+     */
+    public function getCorporateAuthor()
+    {
+        // Try 110 first -- if none found, try 710 next.
+        $main = $this->getFirstFieldValue('110', ['a', 'b']);
+        if (!empty($main)) {
+            return $main;
+        }
+        return $this->getFirstFieldValue('710', ['a', 'b']);
     }
 
     /**
