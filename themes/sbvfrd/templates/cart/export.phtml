@@ -12,7 +12,7 @@
 <?=$this->flashmessages()?>
 
 <? if (!empty($this->exportOptions)): ?>
-  <form class="form-horizontal" method="post" action="<?=$this->url('cart-export')?>" name="exportForm" title="<?=$this->transEsc('Export Items')?>">
+  <form class="form-horizontal" target="_blank" method="post" action="<?=$this->url('cart-export')?>" name="exportForm" title="<?=$this->transEsc('Export Items')?>" data-lightbox-onsubmit="exportFormHandler">
     <? foreach ($this->records as $current): ?>
       <input type="hidden" name="ids[]" value="<?=$this->escapeHtmlAttr($current->getSourceIdentifier() . '|' . $current->getUniqueId())?>" />
     <? endforeach; ?>
