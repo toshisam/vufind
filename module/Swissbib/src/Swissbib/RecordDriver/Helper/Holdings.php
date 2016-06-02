@@ -1174,6 +1174,7 @@ class Holdings
             || 'HRDZS' == $institutionCode
             || 'HRDZW' == $institutionCode
             || 'HRPMA' == $institutionCode
+            || 'HPHOL' == $institutionCode
         ) {
             $data['pattern'] = $this->configHoldings->Backlink->{'IDSSGPH'};
         }
