@@ -641,9 +641,11 @@ ul[aria-labelledby=dropdownLibraries] {
   }
   [data-toggle="collapse"].title:after {
     content: '\25B2';
+    float: right;
   }
   [data-toggle="collapse"].title.collapsed:after {
     content: '\25BC';
+    float: right;
   }
   [data-toggle="collapse"][href*="publishDate"].title,
   [data-toggle="collapse"][href*="PublicationDate"].title {
@@ -1166,9 +1168,10 @@ footer {
     }
 
     label {
-      font-size: 18px;
+      /* interferres with jus-advanced-search. no sideeffects seen (so far) */
+      /*font-size: 18px;*/
+      /*margin-top: 20px;*/
       margin-bottom: 10px;
-      margin-top: 20px;
 
       &.ranges {
         margin-bottom: 0;

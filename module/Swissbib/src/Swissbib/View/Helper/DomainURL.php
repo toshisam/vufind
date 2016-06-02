@@ -90,4 +90,3 @@ class DomainURL extends AbstractHelper
         return  $this->request->getServer('HTTP_REFERER');
     }
 }
-

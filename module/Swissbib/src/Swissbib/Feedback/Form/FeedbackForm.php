@@ -61,7 +61,6 @@ class FeedbackForm
      *     }
      * })
      * @Annotation\Attributes({"type":"radio"})
-     * @Annotation\Validator({"name":"NotEmpty"})
      */
     public $questionType;
 

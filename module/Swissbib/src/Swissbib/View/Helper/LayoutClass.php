@@ -68,5 +68,3 @@ class LayoutClass extends \VuFind\View\Helper\Bootstrap3\LayoutClass
             $htmlLayoutClass : $classString;
     }
 }
-
- 

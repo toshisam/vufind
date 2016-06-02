@@ -65,4 +65,3 @@ class CoverController extends VFCoverController
         return $this->loader;
     }
 }
-

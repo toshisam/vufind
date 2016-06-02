@@ -32,7 +32,6 @@
  */
 namespace Swissbib\RecordDriver;
 
-use Zend\Filter\Null;
 use Zend\I18n\Translator\TranslatorInterface as Translator;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use VuFind\RecordDriver\SolrMarc as VuFindSolrMarc;
@@ -175,6 +174,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         'OriginalVersionNotes',
         'CopyNotes',
         'SystemDetails',
+        'Publications',
+        'Exhibitions',
         'RelationshipNotes',
         'HierarchicalPlaceNames',
         'RelatedEntries',
@@ -312,7 +313,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
                 $params['rft.language'] = $langs[0];
             }
             break;
-        case 'Journal':
+        /* case 'Journal':
             /* This is probably the most technically correct way to represent
             * a journal run as an OpenURL; however, it doesn't work well with
             * Zotero, so it is currently commented out -- instead, we just add
@@ -324,7 +325,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             $params['rft.au'] = $this->getPrimaryAuthor();
             break;
             */
-            $params['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:journal';
+            /* $params['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:journal';
             $params['rft.genre'] = 'journal';
             $params['rft.issn'] = $this->getCleanISSN();
             // Including a date in a title-level Journal OpenURL may be too
@@ -339,7 +340,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             //) {
             // $params['sfx.ignore_date_threshold'] = 1;
             //};                }
-            break;
+            break;*/
         default:
             $params['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:dc';
 
@@ -1053,6 +1054,23 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get the main authors of the record.
+     *
+     * @return array
+     */
+    public function getPrimaryAuthors()
+    {
+        $primaryAuthors = $this->getPrimaryAuthor();
+        if (empty($primaryAuthors)) {
+            return null;
+        }
+        if (!is_array($primaryAuthors)) {
+            $primaryAuthors = [$primaryAuthors];
+        }
+        return $primaryAuthors;
+    }
+
+    /**
      * Get primary author
      *
      * @param Boolean $asString AsString
@@ -1100,6 +1118,33 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get the main corporate author (if any) for the record.
+     *
+     * @return string
+     */
+    public function getCorporateAuthors()
+    {
+        $tempAuthor = $this->getCorporateAuthor();
+        return empty($tempAuthor) ?
+            null : [$this->getCorporateAuthor()];
+    }
+
+    /**
+     * Get the main corporate author (if any) for the record.
+     *
+     * @return string
+     */
+    public function getCorporateAuthor()
+    {
+        // Try 110 first -- if none found, try 710 next.
+        $main = $this->getFirstFieldValue('110', ['a', 'b']);
+        if (!empty($main)) {
+            return $main;
+        }
+        return $this->getFirstFieldValue('710', ['a', 'b']);
+    }
+
+    /**
      * GetCorporationNames
      *
      * @param Boolean $asString AsString
@@ -1109,8 +1154,15 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getCorporationNames($asString = true)
     {
         $unit = $units = $corporation = $corporations = $stringCorporations = null;
-        $corporations = $this->getAddedCorporateNames();
-        //$corporations[] = $this->getMainCorporateName();
+        $corporationsMain = $this->getMainCorporateName();
+        $corporationsAdded = $this->getAddedCorporateNames();
+
+        if (!empty($corporationsMain)) {
+            $corporations[] = $corporationsMain;
+            $corporations = array_merge($corporations, $corporationsAdded);
+        } else {
+            $corporations = $corporationsAdded;
+        }
 
         if ($asString) {
             $stringCorporations = [];
@@ -1134,9 +1186,6 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get corporate name (authors)
-     *
-     * @todo Implement or remove note
-     * @note exclude: if $l == fre|eng
      *
      * @return Array[]
      */
@@ -1164,11 +1213,27 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         $related = explode(',', $this->mainConfig->RelatedEntries->related);
 
+        $related_persons_100 = array_filter(
+            $this->getMarcSubFieldMaps('100', $this->personFieldMap),
+            function ($field) use ($related) {
+                return isset($field['relator_code'])
+                && in_array($field['relator_code'], $related);
+            }
+        );
+
         $related_persons = array_filter(
             $this->getMarcSubFieldMaps('700', $this->personFieldMap),
             function ($field) use ($related) {
                 return isset($field['relator_code'])
                     && in_array($field['relator_code'], $related);
+            }
+        );
+
+        $related_corporations_110 = array_filter(
+            $this->getMarcSubFieldMaps('110', $this->corporationFieldMap),
+            function ($field) use ($related) {
+                return isset($field['relator_code'])
+                && in_array($field['relator_code'], $related);
             }
         );
 
@@ -1180,9 +1245,13 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             }
         );
 
-        if ($related_persons || $related_corporations) {
+        if ($related_persons_100 || $related_persons
+            || $related_corporations_110 || $related_corporations
+        ) {
             return [
+                'persons100' => $related_persons_100,
                 'persons' => $related_persons,
+                'corporations110' => $related_corporations_110,
                 'corporations' => $related_corporations,
             ];
         } else {
@@ -1193,11 +1262,38 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     /**
      * Get collection title
      *
-     * @return String
+     * @param Boolean $asStrings AsStrings
+     *
+     * @return array
      */
-    public function getCollectionTitle()
+    public function getCollectionTitle($asStrings = true)
     {
-        return $this->getFieldArray('499', ['a', 'v',]);
+        $data = $this->getMarcSubFieldMaps(
+            499,
+            [
+                'a' => 'collection',
+                'v' => 'part',
+            ]
+        );
+
+        if ($asStrings) {
+            $strings = [];
+
+            foreach ($data as $field) {
+                $string = '';
+
+                if (isset($field['collection'])) {
+                    $string = $field['collection'];
+                }
+                if (isset($field['part'])) {
+                    $string .= ', ' . $field['part'];
+                }
+                $strings[] = trim($string);
+            }
+            $data = $strings;
+        }
+
+        return $data;
     }
 
     /**
@@ -1238,12 +1334,73 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get Immediate Source of Acquisition Note (MARC21 field 541)
+     *
+     * @param Boolean $asStrings AsStrings
+     *                           
+     * @return array
+     */
+    public function getAcquisitionNote($asStrings = true)
+    {
+        $data = $this->getMarcSubFieldMaps(
+            541, [
+                'a' => 'source',
+                'b' => 'address',
+                'c' => 'method',
+                'd' => 'date',
+                'e' => 'accessionNo',
+                'f' => 'owner'
+            ]
+        );
+
+        if ($asStrings) {
+            $strings = [];
+
+            foreach ($data as $field) {
+                $string = '';
+
+                if (isset($field['source'])) {
+                    $string = $field['source'] . ', ';
+                }
+                if (isset($field['address'])) {
+                    $string .= $field['address'] . ', ';
+                }
+                if (isset($field['method'])) {
+                    $string .=  $field['method'] . ', ';
+                }
+                if (isset($field['date'])) {
+                    $string .= $field['date'] . ', ';
+                }
+                if (isset($field['owner'])) {
+                    $string .=  $field['owner'];
+                }
+                if (isset($field['accessionNo'])) {
+                    $string .= ' (' . $field['accessionNo'] . ')';
+                }
+
+                $strings[] = trim($string);
+            }
+            $data = $strings;
+        }
+        return $data;
+    }
+
+    /**
      * Get biographical information or administrative history
      * @return array
      */
     public function getHistData()
     {
         return $this->getFieldArray('545', ['a', 'b']);
+    }
+
+    /**
+     * Get added entry geographic name
+     * @return array
+     */
+    public function getPlaceNames()
+    {
+        return $this->getFieldArray('751', ['a']);
     }
 
     /**
@@ -1492,6 +1649,15 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get Physical Medium (MARC21: field 340)
+     * @return array
+     */
+    public function getPhysicalMedium()
+    {
+        return $this->getFieldArray('340', ['a', 'd', 'i']);
+    }
+
+    /**
      * Get Dates of Publication and/or Sequential Designation (field 362)
      *
      * @return Array
@@ -1561,13 +1727,12 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
-     * Get Copy and Version Identification Note
-     *
+     * Get Ownership and Custodial History Note (MARC21: field 561)
      * @return array
      */
-    public function getCopyIdentificationNote()
+    public function getOwnerNote()
     {
-        return $this->getFieldArray('562', ['c']);
+        return $this->getFieldArray('561');
     }
 
     /**
@@ -1584,6 +1749,26 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         $copynotes = array_merge_recursive($f562, $f590);
 
         return $copynotes;
+    }
+
+    /**
+     * Get publications about described materials note (581)
+     *
+     * @return array
+     */
+    public function getPublications()
+    {
+        return $this->getFieldArray('581');
+    }
+
+    /**
+     * Get exhibitions note (585)
+     *
+     * @return array
+     */
+    public function getExhibitions()
+    {
+        return $this->getFieldArray('585');
     }
 
     /**
@@ -1855,7 +2040,6 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getHumanReadablePublicationDates()
     {
-        $codeddata = [];
         $codeddata = $this->getPublicationDates();
 
         if (!is_array($codeddata) || sizeof($codeddata) == 0) {
@@ -2525,11 +2709,12 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
-     * Get FieldData
+     * Returns the array element for the 'getAllRecordLinks' method
      *
-     * @param \File_MARC_Data_Field $field Field
+     * @param File_MARC_Data_Field $field Field to examine
      *
-     * @return array|Boolean
+     * @return array|bool                 Array on success, boolean false if no
+     * valid link could be found in the data.
      */
     protected function getFieldData($field)
     {
@@ -2544,40 +2729,85 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             ? $this->mainConfig->Record->marc_links_link_types
             : 'id,oclc,dlc,isbn,issn,title';
         $linkTypes = explode(',', $linkTypeSetting);
+        $linkFields = $field->getSubfields('w');
 
-        $link = false;
-
-        if (in_array('id', $linkTypes)) { // Search ID in field 9
-            $linkSubfield = $field->getSubfield('9');
-            if ($linkSubfield
-                && $bibLink = $this->getIdFromLinkingField($linkSubfield)
-            ) {
-                $link = ['type' => 'bib', 'value' => $bibLink];
-            }
-        } elseif (in_array('ctrlnum', $linkTypes)) {
-            // Extract ctrlnum from field w, ignore the prefix
-            $linkFields = $linkFields = $field->getSubfields('w');
-            foreach ($linkFields as $current) {
-                if (preg_match('/\(([^)]+)\)(.+)/', $current->getData(), $matches)) {
+        // Run through the link types specified in the config.
+        // For each type, check field for reference
+        // If reference found, exit loop and go straight to end
+        // If no reference found, check the next link type instead
+        foreach ($linkTypes as $linkType) {
+            switch (trim($linkType)){
+            case 'oclc':
+                foreach ($linkFields as $current) {
+                    if ($oclc = $this->getIdFromLinkingField($current, 'OCoLC')) {
+                        $link = ['type' => 'oclc', 'value' => $oclc];
+                    }
+                }
+                break;
+            case 'dlc':
+                foreach ($linkFields as $current) {
+                    if ($dlc = $this->getIdFromLinkingField($current, 'DLC', true)) {
+                        $link = ['type' => 'dlc', 'value' => $dlc];
+                    }
+                }
+                break;
+            // id : swissbib specific case of swissbib ID in subfield 9
+            case 'id':
+                if ($bibID = $field->getSubfield('9')) {
                     $link = [
-                        'type' => 'ctrlnum',
-                        'value' => $matches[1] . $matches[2]
+                        'type'  => 'bib',
+                        'value' => trim($bibID->getData()),
                     ];
                 }
+                break;
+            // ctrlnum : swissbib specific case of local system numbers in
+            // subfield w, remove enclosing parentheses of source code
+            case 'ctrlnum':
+                foreach ($linkFields as $current) {
+                    if (preg_match(
+                        '/\(([^)]+)\)(.+)/',
+                        $current->getData(),
+                        $matches
+                    )
+                    ) {
+                        $link = [
+                            'type' => 'ctrlnum',
+                            'value' => $matches[1] . $matches[2],
+                            ];
+                    }
+                }
+                break;
+            case 'isbn':
+                if ($isbn = $field->getSubfield('z')) {
+                    $link = [
+                        'type' => 'isn', 'value' => trim($isbn->getData()),
+                        'exclude' => $this->getUniqueId()
+                    ];
+                }
+                break;
+            case 'issn':
+                if ($issn = $field->getSubfield('x')) {
+                    $link = [
+                        'type' => 'isn', 'value' => trim($issn->getData()),
+                        'exclude' => $this->getUniqueId()
+                    ];
+                }
+                break;
+            case 'title':
+                $link = ['type' => 'title', 'value' => $title];
+                break;
+            }
+            // Exit loop if we have a link
+            if (isset($link)) {
+                break;
             }
         }
-
-        // Found link based on special conditions, stop here
-        if ($link) {
-            return [
-                'title' => $this->getRecordLinkNote($field),
-                'value' => $title,
-                'link' => $link
-            ];
-        }
-
-        // Fallback to base method if no custom field found
-        return parent::getFieldData($field);
+        // Make sure we have something to display:
+        return !isset($link) ? false : [
+            'title' => $this->getRecordLinkNote($field),
+            'value' => $title,
+            'link'  => $link
+        ];
     }
 
     /**

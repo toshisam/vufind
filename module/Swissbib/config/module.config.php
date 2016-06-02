@@ -189,7 +189,6 @@ return [
             'tab40import'          => 'Swissbib\Controller\Tab40ImportController',
             'institutionFavorites' => 'Swissbib\Controller\FavoritesController',
             'hierarchycache'       => 'Swissbib\Controller\HierarchyCacheController',
-            'cart'                 => 'Swissbib\Controller\CartController',
             'shibtest'             => 'Swissbib\Controller\ShibtestController',
             'ajax'                 => 'Swissbib\Controller\AjaxController',
             'upgrade'              => 'Swissbib\Controller\NoProductiveSupportController',
@@ -197,8 +196,9 @@ return [
             'feedback'             => 'Swissbib\Controller\FeedbackController',
             'cover'                => 'Swissbib\Controller\CoverController',
         ],
-        'factories' => [
+        'factories'  => [
             'record' => 'Swissbib\Controller\Factory::getRecordController',
+            'cart'   => 'VuFind\Controller\Factory::getCartController',
         ]
     ],
     'service_manager' => [
@@ -231,16 +231,18 @@ return [
             'Swissbib\Logger'                               =>  'Swissbib\Services\Factory::getSwissbibLogger',
             'Swissbib\RecordDriver\SolrDefaultAdapter'      =>  'Swissbib\RecordDriver\Factory::getSolrDefaultAdapter',
             'VuFind\Export'                                 =>  'Swissbib\Services\Factory::getExport',
-            'sbSpellingProcessor'                            =>  'Swissbib\VuFind\Search\Solr\Factory::getSpellchecker',
-            'sbSpellingResults'                            =>  'Swissbib\VuFind\Search\Solr\Factory::getSpellingResults',
+            'sbSpellingProcessor'                           =>  'Swissbib\VuFind\Search\Solr\Factory::getSpellchecker',
+            'sbSpellingResults'                             =>  'Swissbib\VuFind\Search\Solr\Factory::getSpellingResults',
 
             'Swissbib\Hierarchy\SimpleTreeGenerator'        =>  'Swissbib\Hierarchy\Factory::getSimpleTreeGenerator',
             'Swissbib\Hierarchy\MultiTreeGenerator'         =>  'Swissbib\Hierarchy\Factory::getMultiTreeGenerator',
 
-            'VuFind\SearchOptionsPluginManager' => 'Swissbib\Services\Factory::getSearchOptionsPluginManager',
-            'VuFind\SearchParamsPluginManager' => 'Swissbib\Services\Factory::getSearchParamsPluginManager',
-            'VuFind\SearchResultsPluginManager' => 'Swissbib\Services\Factory::getSearchResultsPluginManager',
+        'VuFind\SearchOptionsPluginManager'                 => 'Swissbib\Services\Factory::getSearchOptionsPluginManager',
+            'VuFind\SearchParamsPluginManager'              => 'Swissbib\Services\Factory::getSearchParamsPluginManager',
+            'VuFind\SearchResultsPluginManager'             => 'Swissbib\Services\Factory::getSearchResultsPluginManager',
 
+            'Swissbib\SearchTabsHelper'                     =>  'Swissbib\View\Helper\Swissbib\Factory::getSearchTabsHelper',
+            //'VuFind\SearchTabsHelper'                       =>  'Swissbib\View\Helper\Root\Factory::getSearchTabsHelper',
             'Swissbib\Record\Form\CopyForm'                 =>  'Swissbib\Record\Factory::getCopyForm',
             'Swissbib\MyResearch\Form\AddressForm'          =>  'Swissbib\MyResearch\Factory::getAddressForm',
             'Swissbib\Feedback\Form\FeedbackForm'           =>  'Swissbib\Feedback\Factory::getFeedbackForm',

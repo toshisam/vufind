@@ -33,11 +33,11 @@
     $getFieldName = ('FRBR' === $type ? 'name' : 'lookfor');
     if ('FRBR' === $type){
       $this->layout()->breadcrumbs .= '<li class="active">' .
-          $this->getLastSearchLink($this->transEsc('Search'), '', '</li> ' . '<li class="active">' . sprintf($this->transEsc('search_breadcrumb_frbr'), $this->escapeHtml($this->lookfor)) . '</li>');
+          $this->searchMemory()->getLastSearchLink($this->transEsc('Search'), '', '</li> ' . '<li class="active">' . sprintf($this->transEsc('search_breadcrumb_frbr'), $this->escapeHtml($this->lookfor)) . '</li>');
     }
     else {
       $this->layout()->breadcrumbs .= '<li class="active">' .
-          $this->getLastSearchLink($this->transEsc('Search') . ': ' . $this->escapeHtml($this->lookfor), '', '</li> ');
+          $this->searchMemory()->getLastSearchLink($this->transEsc('Search') . ': ' . $this->escapeHtml($this->lookfor), '', '</li> ');
     }
   }
 
@@ -82,7 +82,7 @@
               <ul class="dropdown-menu" role="export-menu">
                 <? foreach ($exportFormats as $format): ?>
                   <li class="<?=$this->export()->getVisibilityClassName($format)?>">
-                    <a <? if ($this->export()->needsRedirect($format)): ?>target="<?=$this->escapeHtmlAttr($format)?>Main" <? endif; ?>href="<?=$this->export()->getBulkUrl($this, $format, array());?>"><?= $this->transEsc('Export to') ?> <?= $this->escapeHtml($format) ?></a>
+                    <a <? if ($this->export()->needsRedirect($format)): ?>target="<?=$this->escapeHtmlAttr($format)?>Main" <? endif; ?>href="<?=$this->export()->getBulkUrl($this, $format, array());?>"><?= $this->transEsc('Export to') ?> <?= $this->transEsc($this->export()->getLabelForFormat($format)) ?></a>
                   </li>
                 <? endforeach; ?>
               </ul>
