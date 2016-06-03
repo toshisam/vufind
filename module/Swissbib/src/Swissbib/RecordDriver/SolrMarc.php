@@ -1674,7 +1674,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getCitationNotes()
     {
-        return $this->getFieldArray('510');
+        $separator = isset($this->mainConfig->Record->marcPublicationInfoSeparator)
+            ? $this->mainConfig->Record->marcPublicationInfoSeparator : ' ';
+
+        return $this->getFieldArray('510', ['a', 'c'], true, $separator);
     }
 
     /**
