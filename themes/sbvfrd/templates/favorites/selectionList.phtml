@@ -1,0 +1,44 @@
+<?php
+/** @var Array $userInstitutions */
+/** @var Array[] $userInstitutionsList */
+
+if (count($userInstitutionsList) > 0) {
+?>
+<h4><?= $this->transEsc('mylibraries') ?></h4>
+
+<table class="table" id="favorites-table">
+
+  <?php foreach ($userInstitutionsList as $groupCode => $groupInstitutions): ?>
+
+    <tr class="favorites-group">
+        <th colspan="2">
+            <?= $this->escapeHtml($this->zendTranslate($groupCode, 'group')) ?>
+        </th>
+    </tr>
+
+    <?php foreach ($groupInstitutions as $iKey => $institutionCode): ?>
+
+    <tr class="<?= ($iKey % 2 == 0 ? 'odd' : 'even')?>">
+      <td class="nodivider">
+        <?= $this->escapeHtml($this->zendTranslate($institutionCode, 'institution')) ?>
+        <a href="<?= $this->escapeHtml($this->zendTranslate($institutionCode, 'bibinfo')) ?>"
+           class="externallink" title="<?= $this->transEsc('Library_Information') ?>" target="_blank"></a>
+      </td>
+      <td class="action">
+        <a href="#" class="btn btn-default btn-xs linkbutton icon_delete deleteFavoriteInstitution"
+           title="<?= $this->transEsc('mylibraries.remove') ?>"
+           data-institution="<?= $institutionCode ?>">
+          <span>
+            <i class="fa fa-trash">&nbsp;</i>
+          </span>
+          <span><?= $this->transEsc('Delete') ?></span>
+        </a>
+      </td>
+    </tr>
+
+    <?php endforeach; ?>
+
+  <?php endforeach; ?>
+
+</table>
+<? } ?>

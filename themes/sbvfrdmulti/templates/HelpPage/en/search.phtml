@@ -1,0 +1,97 @@
+<h1>Search</h1>
+<p>swissbib Basel Bern contains two separate databases: <strong>Books & more</strong> and <strong>Articles & more</strong> (see <a href="<?= $this->url('help-page', array('topic' => 'about')); ?>"><?= $this->transEsc('helppage.about') ?></a>). Choose your preferred database by clicking on the corresponding tab above the search box.</p>
+
+<iframe width="230" height="160" src="https://tube.switch.ch/embed/1d9fcd58" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe><br />
+<iframe width="230" height="160" src="https://tube.switch.ch/embed/4665cf1c" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+<h2>Combine search terms</h2>
+<p>With the help of Boolean operators (AND, OR, NOT) search terms can be combined. Boolean operators need to be in capitals.</p>
+<table class="table table-striped">
+    <tbody>
+    <tr>
+        <td><i>joyce ulysses</i></td>
+        <td>Result contains both terms</td>
+    </tr>
+    <tr>
+        <td><i>joyce AND ulysses</i></td>
+        <td>Result contains both terms in the same search field</td>
+    </tr>
+    <tr>
+        <td><i>joyce OR ulysses</i></td>
+        <td>Result contains one or the other term</td>
+    </tr>
+    <tr>
+        <td><i>joyce NOT ulysses</i></td>
+        <td>Result contains <i>joyce</i> excludes <i>ulysses</i></td>
+    </tr>
+    <tr>
+        <td>More advanced combinations</td>
+        <td>See <a class="help-link" href="<?=$this->url('help-home')?>?topic=search" title="<?=$this->transEsc('Help with Search Operators')?>"><?=$this->transEsc("Help with Search Operators")?></a>.
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br />
+<h2>Using quotes</h2>
+<table class="table table-striped">
+    <tbody>
+    <tr>
+        <td><i>"street art"</i></td>
+        <td>Result contains terms immediately succeeding one another.</td>
+    </tr>
+    <tr>
+        <td><i>"street art"~5</i></td>
+        <td>Result contains terms within 5 words of one another.</td>
+    </tr>
+    <tr>
+        <td><i>"PZB E 62 2:6"</i></td>
+        <td>Full shelfmark</td>
+    </tr>
+    </tbody>
+</table>
+<br />
+<h2>Placeholders</h2>
+<table class="table table-striped">
+    <tbody>
+    <tr>
+        <td rowspan="2">*</td>
+        <td rowspan="2">replaces any character</td>
+        <td><i>cultur*</i></td>
+        <td>Result can contain culture, cultura, cultural, culturally etc.</td>
+    </tr>
+    <tr>
+        <td><i>Fr*ib*urg</i></td>
+        <td>Fribourg, Freiburg etc.</td>
+    </tr>
+    <tr>
+        <td rowspan="2">?</td>
+        <td rowspan="2">replaces one particular character</td>
+        <td><i>wom?n</i></td>
+        <td>woman, women etc.</td>
+    </tr>
+    <tr>
+        <td><i>Lind??ist</i></td>
+        <td>Lindquist, Lindkvist, Lindqvist ect.</td>
+    </tr>
+    <tr>
+        <td>~</td>
+        <td>Correct spelling is unknown<br/></td>
+        <td><i>Tschaikowski~</i></td>
+        <td>Tschaikowski, Tchaïkovski, Čajkovskij etc.</td>
+    </tr>
+    </tbody>
+</table>
+<h2>Search filters</h2>
+<p>On the right hand side of your search results you can find search filters to further refine your result, like language, library, online-access, topic etc.</p>
+<p>In Articles & more you can expand your search in the right column by adding articles without access to full text or newspaper articles. Your results can be filtered to contain only peer reviewed articles.</p>
+<h2>Advanced Search</h2>
+<p>Advanced search lets you combine search terms accross fields like title field and author name.</p>
+<p>Combine search terms by using Boolean operaters AND, OR, NOT.</p>
+<p>Refine Search lets you filter your results directly by language, format, library, year of publication.</p>
+<p><strong>Example:</strong> Search books by author Begon, title must contain Oekologie or Ecology, books should be in German or English, published between 2005 and 2015, available at University library UB Basel.</p>
+<a href="<?= $this->basePath('themes/sbvfrdmulti/images/HelpPage/en/advancedsearch.jpg') ?>" class="help">
+    <img class="img-responsive" src="<?= $this->basePath('themes/sbvfrdmulti/images/HelpPage/en/advancedsearch.jpg') ?>" alt="Zoom" width="600">
+</a>
+
+<h2><?= $this->transEsc('History') ?></h2>
+<p><a href="<?= $this->url('search-history') ?>"><?= $this->transEsc('History') ?></a> can be found in the black, lower area of your screen and lets you repeat previous searches. If your're logged in you can save them permanently. You can also use the Plus icon <i class="fa fa-plus-square"></i> from your results page (upper right) to save your search.</p>

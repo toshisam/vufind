@@ -1,0 +1,109 @@
+<?
+// Set up page title:
+$this->headTitle($this->translate('Photocopies'));
+
+// Set up breadcrumbs:
+$this->layout()->breadcrumbs = '<li><a href="' . $this->url('myresearch-home') . '">' . $this->transEsc('Your Account') . '</a></li> <li class="active">' . $this->transEsc('Photocopies') . '</li>';
+?>
+
+<div class="<?=$this->layoutClass('mainbody')?>">
+    <h2><?=$this->transEsc('Photocopies') ?></h2>
+
+    <?=$this->flashmessages()?>
+
+    <?php if(sizeof($this->photoCopies)): ?>
+
+        <?
+        $headers = [
+            'title'         => $this->transEsc('Title'),
+            'library_callno' => $this->transEsc('Institution'),
+            'pick_up_location'     => $this->transEsc('pick_up_location'),
+            'created'      => $this->transEsc('Created'),
+            'status'        => $this->transEsc('Status'),
+            'note'          => $this->transEsc('Note'),
+        ];
+
+        $flippedContent = '';
+        ?>
+
+        <br />
+        <table class="table table-striped hidden-xs hidden-sm">
+            <thead>
+            <tr>
+                <th><?=$headers['title']?></th>
+                <th><?=$headers['library_callno']?></th>
+                <th><?=$headers['pick_up_location']?></th>
+                <th><?=$headers['created']?></th>
+                <th><?=$headers['status']?></th>
+                <th><?=$headers['note']?></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <?php foreach ($photoCopies as $index => $photoCopy): ?>
+
+            <tr>
+                <?
+                $flippedContent .= $this->render('myresearch/photocopies-flipped.phtml', array(
+                    'photoCopy'    => $photoCopy,
+                    'headers' => $headers
+                ));
+                ?>
+                <td>
+                    <?= $this->escapeHtml($photoCopy['title']) ?>
+                    <? if (!empty($photoCopy['description'])): ?>
+                        , <?= $this->escapeHtml($photoCopy['description']) ?>
+                    <? endif; ?>
+                </td>
+                <td>
+                    <? if (!empty($photoCopy['library'])): ?>
+                        <?=$this->escapeHtml($photoCopy['library'])?>
+                        <br />
+                    <? endif; ?>
+
+                    <? if (!empty($photoCopy['callNumber'])): ?>
+                        <?=$this->escapeHtml($photoCopy['callNumber'])?>
+                    <? endif; ?>
+                </td>
+                <td>
+                    <?=$this->transEsc($photoCopy['pickup']) ?>
+                </td>
+                <td>
+                    <?=$this->escapeHtml($photoCopy['dateOpen']) ?>
+                </td>
+                <td>
+                    <?=$this->transEsc($photoCopy['status']) ?>
+                </td>
+                <td>
+                    <? if (!empty($photoCopy['title2'])): ?>
+                        <?=$this->escapeHtml($photoCopy['title2'] . ' / ') ?>
+                    <? endif; ?>
+                    <? if (!empty($photoCopy['author'])): ?>
+                        <?=$this->escapeHtml($photoCopy['author'] . '. ') ?>
+                    <? endif; ?>
+                    <? if (!empty($photoCopy['note1'])): ?>
+                        <?=$this->escapeHtml($photoCopy['note1'] . ', ') ?>
+                    <? endif; ?>
+                    <? if (!empty($photoCopy['pages'])): ?>
+                        <?=$this->escapeHtml($photoCopy['pages']) . '. ' ?>
+                    <? endif; ?>
+                    <? if (!empty($photoCopy['note2'])): ?>
+                        <?=$this->escapeHtml($photoCopy['note2']) ?>
+                    <? endif; ?>
+                </td>
+                </tr>
+            <? endforeach; ?>
+            </tbody>
+        </table>
+
+        <?=$flippedContent;?>
+
+    <? else: ?>
+       <?=$this->transEsc('No photocopies') ?>.
+    <? endif; ?>
+</div>
+
+
+<div class="<?= $this->layoutClass('sidebar') ?>">
+        <?= $this->context($this)->renderInContext("myresearch/menu.phtml", array('active' => 'photocopies')) ?>
+</div>

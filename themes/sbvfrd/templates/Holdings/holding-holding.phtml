@@ -1,0 +1,45 @@
+<?php
+/** @var Array $holding */
+/** @var \Swissbib\RecordDriver\SolrMarc $record */
+/** @var String $recordTitle */
+
+if (isset($holding['locationMap']) && $holding['locationMap']) {
+  $mapLink = '<a href="' . $holding['locationMap'] . '" class="holdingMapLink">' . '"title="' . "$this->transEsc('Show_Location_Map')" . '<i class="fa fa-map-marker"></i></a>';
+} else {
+  $mapLink = '';
+}
+
+if (isset($holding['itemsLink']) && $holding['itemsLink']['count']) {
+  $popupDataUrl	= $this->url('holdings-holding-items', $holding['itemsLink']['url']);
+  $popupHref		= 'javascript:swissbib.Holdings.openHoldingItemsPopup(\'' . $popupDataUrl . '\', \'' . '-' . '\')';
+//	$popupLinkLabel	= 'Enthält ' . $holding['itemsLink']['count'] . ' Items';
+  $popupLinkLabel	= $this->transEsc('holdings_items_found');
+  $moreDetailsLink= '<a href="' . $popupHref . '" title="Show Holdings">' . $popupLinkLabel . '</a>';
+} else {
+  $moreDetailsLink= $this->transEsc('holdings_noitems');
+}
+
+// description (last column)
+$description = isset($holding['holding_information']) ? $holding['holding_information'] : '';
+if (!empty($holding['public_note'])) {
+  $description .= '. ' . $holding['public_note'];
+}
+if (!empty($holding['opac_note'])) {
+  $description .= '. ' . $holding['opac_note'];
+}
+
+?>
+<tr>
+  <td><?=$this->holdingActions($holding, 'holdingActionsHolding')?> </td>
+  <td><?=$moreDetailsLink?></td>
+  <td>
+    <?=$this->escapeHtml($holding['locationLabel'])?>
+    <?=$mapLink?>
+    <?php  if (isset($holding['institutionUrl']) && !empty($holding['institutionUrl'])): ?>
+        <?php $wrappedURL = $this->redirectProtocolWrapper()->getWrappedURL($holding['institutionUrl']) ?>
+        <a href="<?= $this->escapeHtml($wrappedURL) ?>" target="_blank" title="<?=$this->transEsc('Library_Information')?>"> <i class="fa fa-info-circle"></i></a>
+    <?php endif; ?>
+  </td>
+  <td><?=$this->escapeHtml($holding['signature'])?></td>
+  <td><?=$this->escapeHtml($description)?></td>
+</tr>

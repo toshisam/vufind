@@ -1,0 +1,45 @@
+<h1>FAQ</h1>
+<nav>
+    <ul>
+        <li><a href="#q1">Quel est le moyen le plus rapide pour avoir accès à mes prêts?</a></li>
+        <li><a href="#q2">Puis-je faire une recherche dans une bibliothèque particulière?</a></li>
+        <li><a href="#q3">Pouvez-vous m'envoyer certains documents par la poste?</a></li>
+        <li><a href="#q4">Pourquoi n'ai-je pas toujours accès au texte intégral de livres ou articles en ligne?</a></li>
+        <li><a href="#q5">Puis-je exporter les résultats dans un logiciel de gestion bibliographique?</a></li>
+        <li><a href="#q6">Vous n'avez pas trouvé ce que vous cherchiez?</a></li>
+        <li><a href="#q7">Où pouvez vous continuer à chercher?</a></li>
+        <li><a href="#q8">Vous ne trouvez pas votre question?</a></li>
+    </ul>
+</nav>
+<br />
+<dl>
+    <dt><a name="q1"></a>Quel est le moyen le plus rapide pour avoir accès à mes prêts?</dt>
+    <dd><p><a href="<?= $this->url('myresearch-userlogin') ?>">Identifiez-vous</a>, puis cliquez sur My swissbib (en haut à droite).</p></dd>
+    <dt><a name="q2"></a>Puis-je faire une recherche dans une bibliothèque particulière?</dt>
+    <dd><p>Les résultats de votre recherche peuvent se limiter à la bibliothèque de votre choix en cherchant sous "Recherche Affinée" à droite. L'autre alternative est de sélectionner la bibliothèque de votre choix dans "Recherche Avancée". Les bibliothèques peuvent être ainsi enregistrées à long terme en tant que <a href="<?=$this->url('myresearch-favorite-institutions')?>"><?=$this->transEsc('mylibraries')?></a> sous My swissbib.</p></dd>
+    <dt><a name="q3"></a>Pouvez-vous m'envoyer certains documents par la poste?</dt>
+    <dd><p>Certaines bibliothèques peuvent vous envoyer les documents à votre adresse postale ou bien les expédient à la bibliothèque de votre choix afin que vous puissiez les réceptionner. Après vous êtes identifié, cliquez sur "Réserver" dans l'exemplaire du titre de votre choix: selon la bibliothèque, plusieurs lieux de retrait vous seront proposés. Voir les détails sous <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>"><?= $this->transEsc('helppage.delivery') ?></a>.</p></dd>
+    <dt><a name="q4"></a>Pourquoi n'ai-je pas toujours accès au texte intégral de livres ou articles en ligne?</dt>
+    <dd><p>L'accès au texte intégral fonctionne uniquement à partir d'un poste du réseau universitaire et ce, si le contenu a fait l'objet d'une licence.</p></dd>
+    <dd><p>Si vous ne vous trouvez pas sur le campus, identifiez-vous en tant que membre de l'université par le VPN (<a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://mobile.unibas.ch') ?>" target="_blank">Bâle</a>, <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://unibe.ch/universitaet/campus__und__infrastruktur/rund_um_computer/internetzugang/zugang_auf_interne_ressourcen_mit_vpn/index_ger.html') ?>" target="_blank">Berne</a>), et affinez les résultats de votre recherche à l'aide du filtre "Uni Basel online" ou bien "Uni Bern online" (côté droit).</p></dd>
+    <dt><a name="q5"></a>Puis-je exporter les résultats dans un logiciel de gestion bibliographique?</dt>
+    <dd><p>Oui. Cliquez sur le symbole d'export <i class="fa fa-share"></i> à partir des résultats de la recherche ou bien encore à partir des titres individuels.</p></dd>
+    <dt><a name="q6"></a>Vous n'avez pas trouvé ce que vous cherchiez?</dt>
+    <dd>
+        <ul>
+            <li>Elargissez votre recherche sur <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('https://www.swissbib.ch') ?>" target="_blank" title="swissbib">swissbib.ch</a> (Catalogue national) et réservez tout à votre aise à partir du <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>">service postal des bibliothèques du réseau IDS</a>.</li>
+            <li>Envoyez nous votre demande de prêts inter-bibliothèques en remplissant le formulaire de réservations sur <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://www.ub.unibas.ch/ub-hauptbibliothek/dienstleistungen/ausleihe/kurier-und-fernleihe/fernleihformular') ?>" target="_blank">BU Bâle</a> / <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://www.unibe.ch/universitaet/dienstleistungen/universitaetsbibliothek/service/ausleihe/fernleihe___document_delivery/bestellformular/index_ger.html') ?>" target="_blank">BU Berne</a></li>
+            <li>Envoyez nous votre proposition d'acquisitions sur <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://www.ub.unibas.ch/ub-hauptbibliothek/dienstleistungen/ausleihe/anschaffungsvorschlag') ?>" target="_blank">BU Bâle</a> / <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://unibe.ch/universitaet/dienstleistungen/universitaetsbibliothek/service/ausleihe/anschaffungsvorschlaege/index_ger.html') ?>" target="_blank">BU Berne</a></li>
+        </ul>
+    </dd>
+    <dt><a name="q7"></a>Où pouvez vous continuer à chercher?</dt>
+    <dd>
+        <ul>
+            <li><a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('https://www.swissbib.ch') ?>" target="_blank" title="swissbib">swissbib</a>: fonds de toutes les bibliothèques universitaires suisses</li>
+            <li><a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://aleph.unibas.ch/ALEPH') ?>" target="_blank" title="swissbib">Catalogue du réseau IDS Bâle Berne</a>: conseillé pour la recherche de collections spécialisées (documents historiques, fonds musicaux)</li>
+            <li><a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://aleph.unibas.ch/F/?func=option-update-lng&file_name=find-b&p_con_lng=GER&local_base=dsv05') ?>" target="_blank" title="swissbib">Catalogue du réseau HAN</a>: Répertoire des manuscrits, des archives et des dons (Appenzell Rhodes-Extérieures, Bâle, Berne, Lucerne, Soleure et Saint-Gall)</li>
+        </ul>
+    </dd>
+    <dt><a name="q8"></a>Vous ne trouvez pas votre question?</dt>
+    <dd><p>Nous vous aidons volontier pour vos recherches ainsi que pour les réservations dans notre catalogue et prenons en compte vos suggestions et critiques: <a href="<?= $this->url('feedback-home') ?>">formulaire de contact</a></p></dd>
+</dl>

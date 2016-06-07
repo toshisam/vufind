@@ -1,0 +1,37 @@
+<?php
+/** @var  Swissbib\RecordDriver\Summon $resultItem */
+/** @var  Swissbib\View\Helper\Record $viewRecord */
+
+$record = $this->driver;
+$viewRecord = $this->record($record);
+
+$journalTitle         = $record->getContainerTitle();
+
+$ABSTRACT = trim(implode($record->getSummary()));
+$SUBJECTS = $record->getAllSubjectHeadingsAsString();
+$DATABASE = $record->getDatabaseTitle();
+
+?>
+<div class="details">
+
+  <?php if ($ABSTRACT): ?>
+    <label><?= $this->transEsc('Summary') ?>:</label>
+    <p><?= $this->escapeHtml($ABSTRACT) ?></p>
+  <?php endif; ?>
+
+  <?php if ($journalTitle): ?>
+    <label><?= $this->transEsc('Published in') ?>:</label>
+    <p><a href="<?= $viewRecord->getLink('journaltitle', $journalTitle)?>"><?=$this->escapeHtml($journalTitle) ?></a></p>
+  <?php endif; ?>
+
+  <?php if ($SUBJECTS): ?>
+    <label><?= $this->transEsc('Subjects') ?>:</label>
+    <p><?= $this->escapeHtml($SUBJECTS) ?></p>
+  <?php endif; ?>
+
+  <?php if ($DATABASE): ?>
+    <label><?= $this->transEsc('articles.Database') ?>:</label>
+    <p><?= $this->escapeHtml($DATABASE) ?></p>
+  <?php endif; ?>
+
+</div>

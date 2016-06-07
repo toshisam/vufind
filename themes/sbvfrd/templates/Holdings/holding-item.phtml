@@ -1,0 +1,44 @@
+<?php
+/** @var Array $item */
+/** @var String $record */
+/** @var String $recordTitle */
+
+$mapLink = '';
+
+// Description (last column)
+$description = !empty($item['description']) ? $item['description'] . '. ' : '';
+if (!empty($item['public_note'])) {
+  $description .= $item['public_note'] . '. ';
+}
+if (!empty($item['opac_note'])) {
+  $description .= $item['opac_note'];
+}
+
+if (isset($item['locationMap']) && $item['locationMap']) {
+  $mapLink = '<a href="' . $item['locationMap'] . '" title="' . $this->transEsc('Show_Location_Map') . '" class="holdingMapLink">' . '<i class="fa fa-map-marker"></i></a>';
+}
+
+?>
+<tr>
+  <td><?= $this->holdingActions($item, 'holdingActionsItem', $record) ?> </td>
+  <td> <? if ($item['network'] === 'HAN'): ?>
+      <div class='availability fa-check'><div> <?= $this->transEsc('use-on-site'); ?> </div></div>
+    <? else: ?>
+    <?= $this->availabilityInfo($item['availability']) ?>
+      <? if (($item['network'] === 'IDSBB') && (isset($item['holding_status'])) && ($item['holding_status'] === '55')): ?>
+        <? $addressURL = $this->redirectProtocolWrapper()->getWrappedURL('http://aleph.unibas.ch/F/?func=item-loan&adm_library=DSV51&doc_number='. $item['localid'] . '&item_sequence='. $item['sequencenumber']); ?>
+        <a href="<?= $this->escapeHtml($addressURL)?>" target="_blank" title="<?= $this->transEsc('Address') ?>"><?= $this->transEsc('Address') ?></a>
+      <? endif; ?>
+    <? endif; ?>
+  </td>
+  <td>
+    <?= $this->escapeHtml($item['locationLabel']) ?>
+    <?= $mapLink ?>
+    <?php if (isset($item['institutionUrl'])): ?>
+      <?php $wrappedURL = $this->redirectProtocolWrapper()->getWrappedURL($item['institutionUrl']) ?>
+      <a href="<?= $this->escapeHtml($wrappedURL) ?>" target="_blank" title="<?=$this->transEsc('Library_Information')?>"> <i class="fa fa-info-circle"></i></a>
+    <?php endif; ?>
+  </td>
+  <td><?= $this->escapeHtml($item['signature']) ?></td>
+  <td><?= $this->escapeHtml($description) ?></td>
+</tr>

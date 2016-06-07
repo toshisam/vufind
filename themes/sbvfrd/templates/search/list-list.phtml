@@ -1,0 +1,15 @@
+<? if (!isset($this->indexStart)) $this->indexStart = 0; ?>
+<? $showCheckboxes = !isset($this->hideCartControls) && $this->cart()->isActive() ?>
+<? $i = $this->indexStart; foreach ($this->results->getResults() as $current):
+    $recordNumber = $this->results->getStartRecord()+$i-$this->indexStart; ?>
+    <div id="result<?=$i++ ?>" class="row result clearfix">
+    <? if ($showCheckboxes): ?>
+      <div class="col-xs-1 hidden-print checkbox">
+          <label>
+            <?=$this->record($current)->getCheckbox()?>
+          </label>
+      </div>
+    <? endif; ?>
+    <?=$this->record($current)->getSearchResult('list')?>
+    </div>
+<? endforeach; ?>

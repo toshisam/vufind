@@ -1,0 +1,154 @@
+@favorite_dark: @link-color;
+@favorite_light: @highlight-color;
+
+.icon {
+  font-family: FontAwesome;
+  color: @link-color;
+  margin: 0 5px 0 10px;
+  display: inline-block;
+}
+
+#accordion {
+  margin-top: 20px;
+
+  i {
+    color: @favorite_dark;
+  }
+
+  .holdingsAjaxSpinner {
+    padding: 10px 0 10px 10px;
+
+    i {
+      color: @black;
+    }
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  .panel {
+    border: none;
+    border-radius: 0;
+    margin-bottom: 5px;
+
+    .panel-heading {
+      border-radius: 0;
+      background-color: #d3d3d3;
+      padding: 10px 0;
+
+      a {
+
+        text-decoration: none !important;
+
+        &:focus
+        {
+          outline: none;
+        }
+
+        &[aria-expanded=false] {
+
+            &:hover:before {
+              color: @theme-color;
+            }
+
+            &:before {
+              .icon();
+              content: '\f0da';
+            }
+
+        }
+
+        &[aria-expanded=true] {
+
+            &:hover:before {
+              color: @theme-color;
+            }
+
+            &:before {
+              .icon();
+              content: '\f0d7';
+            }
+
+        }
+      }
+
+    }
+
+    .panel-body {
+      padding: 0;
+    }
+
+    /** 2nd level specific/overwrites **/
+    .panel {
+
+      margin-bottom: 0;
+
+      .panel-heading {
+        background-color: #ffffff;
+        border-bottom: 1px solid #9b9b9b;
+
+        .miniaction_favorite_add  {
+
+          & > a {
+            &:hover:before {
+              color: @theme-color;
+            }
+
+            &:before {
+              .icon();
+              content: '\f08a';
+            }
+          }
+        }
+
+        .miniaction_favorite_remove  {
+
+          & > a {
+            &:hover:before {
+              color: @theme-color;
+            }
+
+            &:before {
+              .icon();
+              content: '\f004';
+            }
+          }
+        }
+
+      }
+
+      .panel-body {
+        .table {
+          margin-bottom: 0;
+        }
+
+        div {
+          .table-flipped {
+            margin-bottom: 10px;
+
+            &:nth-child(2) {
+              border-top-width: 0;
+
+              tr:first-child {
+                th, td {
+                  border-top-width: 0;
+                }
+              }
+            }
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+  .panel + .panel {
+    margin-top: 0;
+  }
+
+}

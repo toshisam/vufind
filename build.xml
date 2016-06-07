@@ -103,7 +103,7 @@
   <target name="phpdoc">
     <mkdir dir="${builddir}/apidocs"/>
     <phpdoc2 title="VuFind API Documentation"
-      destdir="${builddir}/apidocs">
+             destdir="${builddir}/apidocs">
       <fileset dir=".">
         <include name="module/*/src/**/*.php" />
       </fileset>
@@ -124,6 +124,12 @@
     <httpget url="https://getcomposer.org/composer.phar" sslVerifyPeer="false" dir="${srcdir}" />
     <echo message="Installing dependencies..." />
     <exec command="php ${srcdir}/composer.phar install" passthru="true" checkreturn="true" />
+  </target>
+
+  <target name="composer" description="Install dependencies with Composer">
+    <httpget url="https://getcomposer.org/composer.phar" sslVerifyPeer="false" dir="${srcdir}" />
+    <echo message="Installing dependencies..." />
+    <exec command="php ${srcdir}/composer.phar install" />
   </target>
 
   <!-- Install and Activate VuFind -->

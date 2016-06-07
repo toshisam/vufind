@@ -1,0 +1,137 @@
+<?
+  // Set up page title:
+  $this->lookfor = $this->results->getUrlQuery()->isQuerySuppressed() ? '' : $this->params->getDisplayQuery();
+  if (isset($this->overrideTitle)) {
+      $this->headTitle($this->overrideTitle);
+  } else {
+      $this->headTitle($this->translate('Search Results') . (empty($this->lookfor) ? '' : " - {$this->lookfor}"));
+  }
+
+  // Set up search box:
+  $this->layout()->searchbox = $this->context($this)->renderInContext(
+      'search/searchbox.phtml',
+      array(
+        'lookfor' => $this->lookfor,
+        'searchIndex' => $this->params->getSearchHandler(),
+        'searchType' => $this->params->getSearchType(),
+        'searchId' => $this->results->getSearchId(),
+        'searchClassId' => $this->params->getsearchClassId(),
+        'checkboxFilters' => $this->params->getCheckboxFacets(),
+        'filterList' => $this->params->getFilters(),
+        'hasDefaultsApplied' => $this->params->hasDefaultsApplied(),
+        'selectedShards' => $this->params->getSelectedShards()
+      )
+  );
+
+  // Set up breadcrumbs:
+  $type = (isset($_GET['type']) ? $_GET['type'] : '');
+  $originalSort = (isset($_GET['originalSort']) ? $_GET['originalSort'] : '');
+  if (isset($this->overrideTitle)) {
+    $this->layout()->breadcrumbs .= '<li class="active">' . $this->escapeHtml($this->overrideTitle) . '</li>';
+  }
+  else {
+    $getFieldName = ('FRBR' === $type ? 'name' : 'lookfor');
+    if ('FRBR' === $type){
+      $this->layout()->breadcrumbs .= '<li class="active">' .
+          $this->searchMemory()->getLastSearchLink($this->transEsc('Search'), '', '</li> ' . '<li class="active">' . sprintf($this->transEsc('search_breadcrumb_frbr'), $this->escapeHtml($this->lookfor)) . '</li>');
+    }
+    else {
+      $this->layout()->breadcrumbs .= '<li class="active">' .
+          $this->searchMemory()->getLastSearchLink($this->transEsc('Search') . ': ' . $this->escapeHtml($this->lookfor), '', '</li> ');
+    }
+  }
+
+  // Enable cart if appropriate:
+  $this->showCartControls = $this->params->getOptions()->supportsCart() && $this->cart()->isActive();
+  // Enable bulk options if appropriate:
+  $this->showBulkOptions = $this->params->getOptions()->supportsCart() && $this->showBulkOptions;
+
+  // Load Javascript dependencies into header:
+  $this->headScript()->appendFile("check_item_statuses.js");
+  $this->headScript()->appendFile("check_save_statuses.js");
+
+  $recordTotal = $this->recordTotal = $this->results->getResultTotal();
+
+  $exportFormats = array('EndNote', 'BibTeX');
+  // $exportFormats = $this->export()->getBulkOptions(); @todo: konfigurierbar machen, MARCXML aktivieren (funktioniert aktuell nicht)
+  /* href="<?=$this->url('cart-doexport')?>?f=<?=$format?>"*/
+?>
+
+<div class="<?=$this->layoutClass('mainbody')?>">
+  <? if ( $recordTotal > 0 ): ?>
+    <div class="results-top row">
+      <div class="col-md-9">
+        <h1><i class="fa fa-search"></i> <span><?=$this->transEsc('Search Results')?></span></h1>
+        <h2 class="visible-print-block"><?=$this->transEsc('Your_Search') . ": "?><span><?=$this->lookfor?>, <?=$recordTotal . ' ' . $this->transEsc('hits for your search')?></span></h2>
+      </div>
+      <div class="col-md-3">
+        <div class="searchtools">
+          <div class="searchtools hidden-print">
+            <a href="<?=$this->results->getUrlQuery()->setViewParam('rss')?>" title="<?=$this->transEsc('Get RSS Feed')?>"><i class="fa fa-rss"></i></a>
+            <?php $mailClass = $this->auth()->isAjaxLoginAllowed() ? 'class="mailSearch modal-link"' : '' ?>
+            <a href="<?=$this->url('search-email')?>" <?= $mailClass ?> id="mailSearch<?=$this->escapeHtmlAttr($this->results->getSearchId())?>" title="<?=$this->transEsc('Email this Search')?>"><i class="fa fa-envelope" ></i></a>
+            <? if (is_numeric($this->results->getSearchId())): ?>
+              <? if ($this->results->isSavedSearch()): ?>
+                <a href="<?=$this->url('myresearch-savesearch')?>?delete=<?=urlencode($this->results->getSearchId())?>" title="<?=$this->transEsc('save_search_remove')?>"><i class="fa fa-minus-square"></i></a>
+              <? else: ?>
+                <a href="<?=$this->url('myresearch-savesearch')?>?save=<?=urlencode($this->results->getSearchId())?>" title="<?=$this->transEsc('save_search')?>"><i class="fa fa-plus-square"></i></a>
+              <? endif; ?>
+            <? endif; ?>
+            <!-- Styling & Funktionstests -->
+              <a class="export-toggle dropdown-toggle hidden-xs hidden-sm" data-toggle="dropdown" href="<?=$this->recordLink()->getActionUrl($this->driver, 'Export')?>" title=" <?=$this->transEsc('Export Record') ?>"><i class="fa fa-share"></i></a>
+              <ul class="dropdown-menu" role="export-menu">
+                <? foreach ($exportFormats as $format): ?>
+                  <li class="<?=$this->export()->getVisibilityClassName($format)?>">
+                    <a <? if ($this->export()->needsRedirect($format)): ?>target="<?=$this->escapeHtmlAttr($format)?>Main" <? endif; ?>href="<?=$this->export()->getBulkUrl($this, $format, array());?>"><?= $this->transEsc('Export to') ?> <?= $this->transEsc($this->export()->getLabelForFormat($format)) ?></a>
+                  </li>
+                <? endforeach; ?>
+              </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <? else: ?>
+
+  <? endif; ?>
+
+  <?=$this->render('search/spellingSuggestions.phtml')?>
+
+  <? if ( $recordTotal > 0 ): // only display these at very top if we have results ?>
+    <? foreach ($this->results->getRecommendations('top') as $current): ?>
+      <?=$this->recommend($current)?>
+    <? endforeach; ?>
+  <? endif; ?>
+  <?=$this->flashmessages()?>
+  <div class="hidden-print search-controls clearfix row">
+    <div class="col-lg-6 col-md-7 col-sm-7">
+        <?= $this->paginationControl($this->results->getPaginator(), 'Sliding', 'search/pagination.phtml', array('results' => $this->results, 'recordTotal' => $recordTotal, 'params' => $this->params, 'lookfor' => $this->lookfor)) ?>
+    </div>
+
+    <? if ($recordTotal > 0): ?>
+      <div class="col-lg-6 col-md-5 col-sm-5 text-right">
+        <?=$this->render('search/controls/sort.phtml')?>
+        <?=$this->render('search/controls/limit.phtml')?>
+        <?=$this->render('search/controls/view.phtml')?>
+      </div>
+    <? endif; ?>
+  </div>
+  <? /* End Listing Options */ ?>
+
+  <? if ($recordTotal > 0): ?>
+    <form class="form-inline" method="post" name="bulkActionForm" action="<?=$this->url('cart-home')?>">
+      <?=$this->context($this)->renderInContext('search/bulk-action-buttons.phtml', array('idPrefix' => ''))?>
+      <?=$this->render('search/list-' . $this->params->getView() . '.phtml')?>
+      <?=$this->context($this)->renderInContext('search/bulk-action-buttons.phtml', array('idPrefix' => 'bottom_'))?>
+      <?= $this->paginationControl($this->results->getPaginator(), 'Sliding', 'search/pagination.phtml', array('results' => $this->results, 'recordTotal' => $recordTotal, 'params' => $this->params, 'lookfor' => $this->lookfor, 'hideHits' => true)) ?>
+    </form>
+  <? endif; ?>
+</div>
+<? /* End Main Listing */ ?>
+
+<? /* Narrow Search Options */ ?>
+<div class="<?=$this->layoutClass('sidebar')?>">
+  <? foreach ($this->results->getRecommendations('side') as $current): ?>
+    <?=$this->recommend($current)?>
+  <? endforeach; ?>
+</div>
+<? /* End Narrow Search Options */ ?>

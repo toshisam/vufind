@@ -1,0 +1,97 @@
+<h1>Ricerca</h1>
+<p>swissbib Basel Bern è suddiviso in due banche dati separate: <strong>Libri & più</strong> e <strong>Articoli & più</strong> (vedi anche <a href="<?= $this->url('help-page', array('topic' => 'about')); ?>"><?= $this->transEsc('helppage.about') ?></a>). Scegli la banca dati nella quale vuoi eseguire la tua ricerca mediante un clic sulla relativa etichetta soprastante il campo di ricerca.</p>
+
+<iframe width="230" height="160" src="https://tube.switch.ch/embed/1d9fcd58" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe><br />
+<iframe width="230" height="160" src="https://tube.switch.ch/embed/4665cf1c" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+<h2>Combinare più termini</h2>
+<p>Gli operatori booleani (AND, OR e NOT) permettono di combinare in maniera logica diversi termini di ricerca. Gli operatori devono essere scritti in caratteri maiuscoli.</p>
+<table class="table table-striped">
+    <tbody>
+    <tr>
+        <td><i>joyce ulysses</i></td>
+        <td>Entrambi i termini sono presenti nella notizia bibliografica</td>
+    </tr>
+    <tr>
+        <td><i>joyce AND ulysses</i></td>
+        <td>Entrambi i termini sono presenti nel medesimo campo descrittivo</td>
+    </tr>
+    <tr>
+        <td><i>joyce OR ulysses</i></td>
+        <td>Uno dei due termini è presente nella notizia bibliografica</td>
+    </tr>
+    <tr>
+        <td><i>joyce NOT ulysses</i></td>
+        <td>Nella notizia bibliografica è presente <i>joyce</i>, ma non <i>ulysses</i></td>
+    </tr>
+    <tr>
+        <td>Ricerche più complesse</td>
+        <td>Vedi <a class="help-link" href="<?=$this->url('help-home')?>?topic=search" title="<?=$this->transEsc('Help with Search Operators')?>"><?=$this->transEsc("Help with Search Operators")?></a>.
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br />
+<h2>Ricerca per frase o locuzione tramite virgolette</h2>
+<table class="table table-striped">
+    <tbody>
+    <tr>
+        <td><i>"street art"</i></td>
+        <td>I termini devono apparire nello stesso identico ordine.</td>
+    </tr>
+    <tr>
+        <td><i>"street art"~5</i></td>
+        <td>I due termini devono essere presenti entro un intervallo massimo di 5 parole.</td>
+    </tr>
+    <tr>
+        <td><i>"PZB E 62 2:6"</i></td>
+        <td>Segnatura</td>
+    </tr>
+    </tbody>
+</table>
+<br />
+<h2>Segni di troncamento</h2>
+<table class="table table-striped">
+    <tbody>
+    <tr>
+        <td rowspan="2">*</td>
+        <td rowspan="2">sostituisce un numero qualsiasi di caratteri</td>
+        <td><i>cultur*</i></td>
+        <td>culture, cultura, cultural, culturally, ecc.</td>
+    </tr>
+    <tr>
+        <td><i>Fr*ib*urg</i></td>
+        <td>Fribourg, Freiburg, ecc.</td>
+    </tr>
+    <tr>
+        <td rowspan="2">?</td>
+        <td rowspan="2">sostituisce un singolo carattere</td>
+        <td><i>wom?n</i></td>
+        <td>woman, women, ecc.</td>
+    </tr>
+    <tr>
+        <td><i>Lind??ist</i></td>
+        <td>Lindquist, Lindkvist, Lindqvist, ecc.</td>
+    </tr>
+    <tr>
+        <td>~</td>
+        <td>ricerca approssimativa <br/>(ortografia esatta non nota)</td>
+        <td><i>Tschaikowski~</i></td>
+        <td>Tschaikowski, Tchaïkovski, Čajkovskij, ecc.</td>
+    </tr>
+    </tbody>
+</table>
+<h2>Affinare la ricerca</h2>
+<p>Usa i filtri nella colonna a destra dell'elenco dei risultati per precisare la tua ricerca secondo vari criteri, ad es. lingua di pubblicazione, biblioteca prestante, disponibilità online, soggetto, ecc.</p>
+<p>In Articoli & più è possibile aumentare il numero dei risultati spuntando, nella colonna a destra, le caselle "anche articoli senza testo integrale", risp. "anche giornali". È altresì possibile concentrare la ricerca sui testi cosiddetti "peer reviewed", cioé sottoposti ad una valutazione esperta eseguita da specialisti del campo.</p>
+<h2>Ricerca avanzata</h2>
+<p>Nella ricerca avanzata si possono combinare termini di campi diversi, per es. una parola del titolo con il nome dell'autore.</p>
+<p>Sono anche qui a disposizione gli operatori booleani AND, OR e NOT per combinare i termini di ricerca.</p>
+<p>Sotto Affinare la tua ricerca vi è la possibilità di selezionare direttamente dei filtri (lingua, formato, biblioteca prestante, anno di pubblicazione).</p>
+<p><strong>Esempio:</strong> Cerca libri dell'autore Begon, il cui titolo contenga le parole "Oekologie" o "ecology", pubblicati o in tedesco o in francese tra gli anni 2005 e 2015, e disponibili alla UB Basel-Hauptbibliothek.</p>
+<a href="<?= $this->basePath('themes/sbvfrdmulti/images/HelpPage/it/advancedsearch.jpg') ?>" class="help">
+    <img class="img-responsive" src="<?= $this->basePath('themes/sbvfrdmulti/images/HelpPage/it/advancedsearch.jpg') ?>" alt="Zoom" width="600">
+</a>
+
+<h2><?= $this->transEsc('History') ?></h2>
+<p>Sotto <a href="<?= $this->url('search-history') ?>"><?= $this->transEsc('History') ?></a> , nella parte nera in basso alla schermata, puoi ripetere le ricerche già effettuate e, se hai fatto il login, salvarle a tempo indeterminato. Puoi inoltre salvare una ricerca direttamente nella lista dei risultati, cliccando sull'icona <i class="fa fa-plus-square"></i>.</p>

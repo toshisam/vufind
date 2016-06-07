@@ -1,0 +1,86 @@
+<?php
+$favoriteLanguages = array('ger', 'eng', 'fre', 'ita');
+?>
+
+<? if (!empty($this->facetList) || !empty($this->checkboxFacets)): ?>
+<div class="row">
+  <fieldset class="col-sm-12">
+    <legend><?=$this->transEsc('Limit To')?></legend>
+    <? if (!empty($this->checkboxFacets)): ?>
+      <?=$this->render('search/advanced/checkbox-filters.phtml')?>
+    <? endif; ?>
+    <div class="row">
+      <div class="col-sm-6">
+        <? foreach ($this->facetList as $field => $list): ?>
+            <label for="limit_<?=$this->escapeHtmlAttr(str_replace(' ', '', $field))?>"><?=$this->transEsc($list['label'])?></label>
+            <select class="form-control chosen-select" data-placeholder="<?=$this->transEsc('Select' . $list['label'] . 'Placeholder')?>" id="limit_<?=$this->escapeHtmlAttr(str_replace(' ', '', $field))?>" name="filter[]" multiple="multiple" size="10">
+              <?
+                // Sort the current facet list alphabetically; we'll use this data
+                // along with the foreach below to display facet options in the
+                // correct order.
+                $sorted = array();
+                foreach ($list['list'] as $i => $value) {
+                  if (!empty($value['displayText'])) {
+                    $sorted[$i] = $value['displayText'];
+                  }
+                }
+                natcasesort($sorted);
+              ?>
+
+              <?php if (strtolower($field)==="language") : ?>
+                <? foreach ($sorted as $index => $display): ?>
+                  <? $value = $list['list'][$index]; ?>
+                  <? if (in_array($value['value'], $favoriteLanguages)) : ?>
+                    <option value="<?=$this->escapeHtmlAttr(($value['operator'] == 'OR' ? '~' : '') . $field . ':"' . $value['value'] . '"')?>"><?=$this->escapeHtml($display)?></option>
+                  <? endif; ?>
+                <? endforeach; ?>
+
+                <optgroup label="<?= $this->transEsc('all_languages') ?>">
+              <?php endif; ?>
+
+              <?php if (strtolower($field) === "format_str_mv") : ?>
+
+                <option value='~format_str_mv:"BK01*"' title="article"><?= $this->zendTranslate('BK01*', 'formats') ?></option>
+                <option value='~format_str_mv:"BK02*"' title="book"><?= $this->zendTranslate('BK02*', 'formats') ?></option>
+                <option value='~format_str_mv:"CR03*"' title="continuing"><?= $this->zendTranslate('CR03*', 'formats') ?></option>
+                <option value='~format_str_mv:"CL0*"' title="collection"><?= $this->zendTranslate('CL0*', 'formats') ?></option>
+                <option value='~format_str_mv:"MU01*"' title="sheet_music"><?= $this->zendTranslate('MU01*', 'formats') ?></option>
+                <option value='~format_str_mv:"MU03*"' title="sound"><?= $this->zendTranslate('MU03*', 'formats') ?></option>
+                <option value='~format_str_mv:"MU04*"' title="music"><?= $this->zendTranslate('MU04*', 'formats') ?></option>
+                <option value='~format_str_mv:"MP0*"' title="map"><?= $this->zendTranslate('MP0*', 'formats') ?></option>
+                <option value='~format_str_mv:"VM01*"' title="film"><?= $this->zendTranslate('VM01*', 'formats') ?></option>
+                <option value='~format_str_mv:"VM02*"' title="picture"><?= $this->zendTranslate('VM02*', 'formats') ?></option>
+                <option value='~format_str_mv:"VM03*"' title="mx_game"><?= $this->zendTranslate('VM03*', 'formats') ?></option>
+                <option value='~format_str_mv:"VM04*"' title="object"><?= $this->zendTranslate('VM04*', 'formats') ?></option>
+                <option value='~format_str_mv:"CF0*"' title="software"><?= $this->zendTranslate('CF0*', 'formats') ?></option>
+
+                <optgroup label="<?= $this->zendTranslate('all_formats', 'formats') ?>">
+              <?php endif; ?>
+
+              <? foreach ($sorted as $index => $display): ?>
+                <? $value = $list['list'][$index]; ?>
+                <option value="<?=$this->escapeHtmlAttr(($value['operator'] == 'OR' ? '~' : '') . $field . ':"' . $value['value'] . '"')?>"<?=(isset($value['selected']) && $value['selected'])?' selected="selected"':''?>><?=$this->escapeHtml($display)?></option>
+              <? endforeach; ?>
+
+            </select>
+        <? endforeach; ?>
+      </div>
+      <? endif; ?>
+        <div class="col-sm-6">
+        <? if (isset($this->illustratedLimit)): ?>
+          <div class="row">
+              <fieldset>
+                <legend><?=$this->transEsc("Illustrated")?>:</legend>
+                  <? foreach ($this->illustratedLimit as $current): ?>
+                      <input class="form-control" id="illustrated_<?=$this->escapeHtmlAttr($current['value'])?>" type="radio" name="illustration" value="<?=$this->escapeHtmlAttr($current['value'])?>"<?=$current['selected']?' checked="checked"':''?>/>
+                      <label for="illustrated_<?=$this->escapeHtmlAttr($current['value'])?>"><?=$this->transEsc($current['text'])?></label><br/>
+                  <? endforeach; ?>
+              </fieldset>
+          </div>
+        <? endif; ?>
+        <?=$this->render('search/advanced/ranges.phtml')?>
+        <?=$this->render('search/advanced/limit.phtml')?>
+        </div>
+      </div>
+    </fieldset>
+</div>

@@ -1,0 +1,111 @@
+/* paths */
+@theme-base-path: "../../";
+@jsTree-theme-path: "@{theme-base-path}../../jsTree/themes/default/";
+
+@font-family-base: 'Open Sans', sans-serif;
+
+/* colors */
+@black: #000;
+@white: #fff;
+@border-color: #9b9b9b;
+
+@theme-color: #50BF9E;
+@link-color-transparent: rgba(13,120,91,0.9);
+@link-color: #0D785B;
+@highlight-color: #7cd0ba;
+@font-color: #555;
+
+@content-box-background-color: #f7f7f7;
+@content-box-border-color: #ccc;
+@sidebar-background-color: #D3D3D3;
+@sidebar-title-color: #F5F5F5;
+
+@footer-background-color: #323232;
+@footer-color: @white;
+
+//== Tables
+//
+//## Customizes the `.table` component with basic values, each used across all table variations.
+
+@table-bg-accent:               #ededed;
+
+//== Form states and alerts
+//
+//## Define colors for form feedback states and, by default, alerts.
+
+@state-success-text:             @font-color;
+@state-success-bg:               #dff0d8;
+@state-success-border:           darken(#dff0d8, 20%);
+
+@state-info-text:                @font-color;
+@state-info-bg:                  #fcf8e3;
+@state-info-border:              darken(#fcf8e3, 20%);
+
+@state-warning-text:             @font-color;
+@state-warning-bg:               #fcf8e3;
+@state-warning-border:           darken(#fcf8e3, 20%);
+
+@state-danger-text:              @font-color;
+@state-danger-bg:                #f2dede;
+@state-danger-border:            darken(#f2dede, 20%);
+
+
+/* Mixins */
+
+.a-before {
+  content: "\00BB";
+  margin-right: 5px;
+}
+
+.tab {
+  color: @white;
+  text-align: center;
+  background-color: @link-color;
+  min-width: 150px;
+  margin-bottom: 1px;
+  padding: 4px 8px;
+  border: solid @white;
+  border-width: 0 0 1px 1px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
+
+.tab-active {
+  color: @link-color;
+  font-weight: bold;
+  background-color: @white;
+  margin-bottom: 0;
+  border: 1px solid @content-box-border-color;
+  border-bottom-color: @white;
+}
+
+.mixin-btn-primary {
+  color: @white;
+  background-color: @link-color;
+  border-color: @link-color;
+  border-radius: 2px;
+  text-decoration: none;
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &.focus,
+    &:active,
+    &.active {
+      background-color: @theme-color;
+    }
+  }
+}
+
+.mixin-btn-primary-active {
+  background-color: @theme-color;
+  border-color: @theme-color;
+  color: @white;
+}
+
+.mixin-table-border {
+  border: none;
+  border-right: 1px solid @border-color;
+}
