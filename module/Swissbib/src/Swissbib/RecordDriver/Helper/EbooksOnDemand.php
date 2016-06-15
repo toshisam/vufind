@@ -136,6 +136,76 @@ class EbooksOnDemand extends EbooksOnDemandBase
     }
 
     /**
+     * Check whether B404 item is valid for EOD link
+     *
+     * @param Array    $item           Item
+     * @param SolrMarc $recordDriver   RecordDriver
+     * @param Holdings $holdingsHelper HoldingsHelper
+     *
+     * @return Boolean
+     */
+    protected function isValidForLinkB404(array $item, SolrMarc $recordDriver,
+        Holdings $holdingsHelper
+    ) {
+        // Works the same way, just forward to A100. But use B404 as institution code
+        return $this->isValidForLinkA100($item, $recordDriver, $holdingsHelper);
+    }
+
+    /**
+     * Build EOD link for B404 item
+     *
+     * @param Array    $item           Item
+     * @param SolrMarc $recordDriver   RecordDriver
+     * @param Holdings $holdingsHelper HoldingsHelper
+     *
+     * @return String
+     */
+    protected function buildLinkB404(array $item, SolrMarc $recordDriver,
+        Holdings $holdingsHelper
+    ) {
+        $linkPattern = $this->getLinkPattern($item['institution_chb']);
+        $data = [
+            'SID' => 'chb',
+            'SYSID' => $item['bibsysnumber'],
+            'CALLNUM' => urlencode($item['signature']),
+            'LANGUAGE' => $this->getConvertedLanguage()
+        ];
+        return $this->templateString($linkPattern, $data);
+    }
+
+    /**
+     * Check whether B415 item is valid for EOD link
+     *
+     * @param Array    $item           Item
+     * @param SolrMarc $recordDriver   RecordDriver
+     * @param Holdings $holdingsHelper HoldingsHelper
+     *
+     * @return Boolean
+     */
+    protected function isValidForLinkB415(array $item, SolrMarc $recordDriver,
+        Holdings $holdingsHelper
+    ) {
+        // Works the same way, just forward to A100. But use B415 as institution code
+        return $this->isValidForLinkA100($item, $recordDriver, $holdingsHelper);
+    }
+
+    /**
+     * Build EOD link for B415 item
+     *
+     * @param Array    $item           Item
+     * @param SolrMarc $recordDriver   RecordDriver
+     * @param Holdings $holdingsHelper HoldingsHelper
+     *
+     * @return String
+     */
+    protected function buildLinkB415(array $item, SolrMarc $recordDriver,
+        Holdings $holdingsHelper
+    ) {
+        // Works the same way, just forward to B404. But use B415 as institution code
+        return $this->buildLinkB404($item, $recordDriver, $holdingsHelper);
+    }
+
+    /**
      * Check whether Z01 item is valid for EOD link
      *
      * @param Array    $item           Item
