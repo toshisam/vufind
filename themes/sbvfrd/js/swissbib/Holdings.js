@@ -140,8 +140,8 @@ swissbib.Holdings = {
     // Clear content
     popup.html('');
 
-    Lightbox.changeContent('Loading...');
-    Lightbox.getByUrl(contentUrl);
+    popup.html('Loading... :)');
+    VuFind.lightbox.ajax({ url: contentUrl });
   },
 
 

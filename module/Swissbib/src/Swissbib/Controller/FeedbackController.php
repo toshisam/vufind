@@ -53,6 +53,17 @@ class FeedbackController extends VuFindFeedbackController
      */
     public function homeAction()
     {
+        return $this->forwardTo('Feedback', 'Email');
+    }
+
+    /**
+     * Receives input from the user and sends an email to the recipient set in
+     * the config.ini
+     *
+     * @return void
+     */
+    public function emailAction()
+    {
         /**
          * FeedbackForm
          *

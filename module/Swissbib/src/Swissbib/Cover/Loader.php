@@ -42,65 +42,26 @@ use VuFindCode\ISBN, VuFind\Content\Covers\PluginManager as ApiManager;
 class Loader extends VFLoader
 {
     /**
-     * Array containing map of allowed file extensions to mimetypes
-     * (to be extended)
+     * Support method for loadImage() -- sanitize and store some key values.
      *
-     * @var array
-     */
-    protected $allowedFileExtensions = [
-        "gif" => "image/gif",
-        "jpeg" => "image/jpeg", "jpg" => "image/jpeg",
-        "png" => "image/png",
-        "tiff" => "image/tiff", "tif" => "image/tiff",
-        "svg" => "image/svg+xml"
-    ];
-
-    /**
-     * Load an image given an ISBN and/or content type.
-     *
-     * @param string $isbn       ISBN
-     * @param string $size       Requested size
-     * @param string $type       Content type
-     * @param string $title      Title of book (for dynamic covers)
-     * @param string $author     Author of the book (for dynamic covers)
-     * @param string $callnumber Callnumber (unique id for dynamic covers)
-     * @param string $issn       ISSN
-     * @param string $oclc       OCLC number
-     * @param string $upc        UPC number
+     * @param array $settings Settings from loadImage (with missing defaults
+     * already filled in).
      *
      * @return void
      */
-    public function loadImage($isbn = null, $size = 'small', $type = null,
-        $title = null, $author = null, $callnumber = null,
-        $issn = null, $oclc = null, $upc = null
-    ) {
-        // Sanitize parameters:
-        $this->isbn = new ISBN($isbn);
-        $this->issn = empty($issn)
-            ? null
-            : substr(preg_replace('/[^0-9X]/', '', strtoupper($issn)), 0, 8);
-        $this->oclc = $oclc;
-        $this->upc = $upc;
-        $this->type = $type;
-        $this->size = $size;
-
-        // Display a fail image unless our parameters pass inspection and we
-        // are able to display an ISBN or content-type-based image.
-        if (!in_array($this->size, $this->validSizes)) {
-            $this->loadUnavailable();
-        } else if (!$this->fetchFromAPI()
-            && !$this->fetchFromContentType()
-        ) {
-            if (isset($this->config->Content->makeDynamicCovers)
-                && false !== $this->config->Content->makeDynamicCovers
-            ) {
-                $this->image = $this->getCoverGenerator()
-                    ->generate($title, $author, $callnumber);
-                $this->contentType = 'image/png';
-            } else {
-                $this->loadUnavailable();
-            }
+    protected function storeSanitizedSettings($settings)
+    {
+        $this->isbn = new ISBN($settings['isbn']);
+        if (!empty($settings['issn'])) {
+            $rawissn = preg_replace('/[^0-9X]/', '', strtoupper($settings['issn']));
+            $this->issn = substr($rawissn, 0, 8);
+        } else {
+            $this->issn = null;
         }
+        $this->oclc = $settings['oclc'];
+        $this->upc = $settings['upc'];
+        $this->type = $settings['type'];
+        $this->size = $settings['size'];
     }
 
 }
