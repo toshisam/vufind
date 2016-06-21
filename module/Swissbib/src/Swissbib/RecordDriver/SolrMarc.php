@@ -1926,6 +1926,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             'f' => 'f',
             'g' => 'g',
             'h' => 'h',
+            'p' => 'p',
             't' => 't',
             '_v' => 'v',
             '_x' => 'x',
