@@ -14,6 +14,14 @@ BASEDIR=$(dirname $0)
 INDEX="$BASEDIR/../public/index.php"
 VUFIND_LOCAL_DIR="$BASEDIR/../local"
 
+while getopts l:rfv OPTION
+do
+  case $OPTION in
+    l) VUFIND_LOCAL_DIR="$BASEDIR/${OPTARG}"
+    ;;
+  esac
+done
+
 export VUFIND_LOCAL_MODULES=Swissbib
 export VUFIND_LOCAL_DIR
 #export APPLICATION_ENV=development
