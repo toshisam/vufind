@@ -267,7 +267,7 @@
                     Kann ich die Sucheinstellungen festlegen, damit ich sie nicht immer wieder von neuem definieren muss?</a>
             </h4>
         </div>
-        <div id="collapse22" class="panel-collapse collapse" aria-expanded="false">
+        <div id="collapse22" class="panel-collapse collapse">
             <div class="panel-body"><p>Ja, unter <i>My swissbib</i> finden sie die Option <i>Einstellungen</i>. Dort können Sie die Trefferanzahl pro Seite, die Sprache und die Sortierangabe nach Ihren Wünschen festlegen. Ihre persönlichen Einstellungen sind nur wirksam, wenn Sie angemeldet sind.</p></div>
         </div>
     </div>
@@ -337,13 +337,14 @@
             </h4>
         </div>
         <div id="collapse27" class="panel-collapse collapse">
-            <div class="panel-body"><ol type="1">
+            <div class="panel-body">
+                <p><ol type="1">
                     <li>In <i>Bücher & mehr</i> klicken Sie auf den Titel des Mediums, das Sie bestellen möchten.</li>
                     <li>Wählen Sie beim gewünschten Medium unter <i>Standorte & bestellen</i> eine Bibliothek aus.</li>
                     <li>Falls Sie noch nicht angemeldet sind, klicken Sie unter dem Bibliotheksnamen auf <i>Anmelden</i>.</li>
                     <li>Wählen Sie nun <i>Bestellen</i> an. Wenn diese Option nicht angezeigt wird, kann das Medium nicht elektronisch bestellt werden. In diesem Fall klicken Sie auf das Informations-Symbol <i class="fa fa-info-circle"></i> unterhalb des Standorts. So erfahren Sie Adresse und Öffnungszeiten der Bibliothek.</li>
                     <li>Die verschiedenen Bibliotheken bieten unterschiedliche Abhol- und Liefermöglichkeiten an. Details finden Sie auf der Webseite der jeweiligen <a href="<?= $this->basePath('Libraries') ?>" title="Liste der Institutionen">Bibliothek</a>.</li>
-                </ol>
+                </ol></p>
                 <p>Eine ausführliche Anleitung finden Sie im <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('https://tube.switch.ch/videos/768768cb') ?>" target="_blank">Video</a>.</p></div>
         </div>
     </div>
@@ -355,12 +356,13 @@
             </h4>
         </div>
         <div id="collapse28" class="panel-collapse collapse">
-            <div class="panel-body"><ol type="1">
+            <div class="panel-body">
+                <p><ol type="1">
                     <li>Wählen Sie beim gewünschten Medium unter <i>Standorte & bestellen</i> eine Bibliothek aus.</li>
                     <li>Falls Sie noch nicht angemeldet sind, klicken Sie unter dem Bibliotheksnamen auf <i>Anmelden</i>.</li>
                     <li>Klicken Sie nun auf <i>Reservieren</i>. Wenn diese Option nicht angezeigt wird, kann das Medium nicht elektronisch reserviert werden.</li>
                     <li>Die verschiedenen Bibliotheken bieten unterschiedliche Abhol- und Liefermöglichkeiten an. Details finden Sie auf der Webseite der jeweiligen <a href="<?= $this->basePath('Libraries') ?>" title="Liste der Institutionen">Bibliothek</a>.</li>
-                </ol>
+                </ol></p>
             </div>
         </div>
     </div>
@@ -375,7 +377,7 @@
             <div class="panel-body"><p>Ja, sofern die beiden Bibliotheken an einem gemeinsamen Kuriersystem angebunden sind:</p>
                 <ul style="list-style-type:disc">
                     <li>Der ortsinterne Kurierdienst in <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://www.ub.unibas.ch/ub-hauptbibliothek/dienstleistungen/ausleihe/kurier-und-fernleihe/') ?>" target="_blank">Basel</a> bzw. <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://www.unibe.ch/universitaet/dienstleistungen/universitaetsbibliothek/service/ausleihe/kurier/index_ger.html') ?>" target="_blank">Bern</a> ist gratis, die Lieferfrist beträgt einen Arbeitstag.</li>
-                    <li>Der <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>"><?= $this->transEsc('IDS-Kurierdienst') ?></a> verkehrt zwischen Basel, Bern, Luzern, St.Gallen und Zürich. Die Kurierbestellung kosten 5 CHF, welche Sie beim Abholen bar bezahlen müssen. Die Lieferfrist beträgt zwei Arbeitstage. Wenn Sie Medien aus Luzern, St.Gallen oder Zürich ausleihen möchten, bestellen Sie diese über den Katalog <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('https://www.swissbib.ch/') ?>" target="_blank">swissbib CH</a>. Eine Anleitung dazu finden Sie in unserem <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://swissbib-baselbern.blogspot.ch/2016/06/uber-swissbibch-medien-bestellen.html') ?>" target="_blank">Blogbeitrag</a>.</li>
+                    <li>Der <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>"><?= $this->transEsc('IDS-Kurierdienst') ?></a> verkehrt zwischen Basel, Bern, Luzern, St.Gallen und Zürich. Die Kurierbestellung kostet 5 CHF, welche Sie beim Abholen bar bezahlen müssen. Die Lieferfrist beträgt zwei Arbeitstage. Wenn Sie Medien aus Luzern, St.Gallen oder Zürich ausleihen möchten, bestellen Sie diese über den Katalog <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('https://www.swissbib.ch/') ?>" target="_blank">swissbib CH</a>. Eine Anleitung dazu finden Sie in unserem <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://swissbib-baselbern.blogspot.ch/2016/06/uber-swissbibch-medien-bestellen.html') ?>" target="_blank">Blogbeitrag</a>.</li>
                 </ul>
             </div>
         </div>
@@ -420,13 +422,13 @@
         </div>
         <div id="collapse32" class="panel-collapse collapse">
             <div class="panel-body">
-                <ol type="1">
+                <p><ol type="1">
                     <li>In <i>Bücher & mehr</i> klicken Sie auf den Titel des Mediums, aus dem Sie Auszüge bestellen möchten.</li>
                     <li>Wählen Sie beim gewünschten Buch unter <i>Standorte & bestellen</i> eine Bibliothek aus.</li>
                     <li>Falls sie noch nicht angemeldet sind, klicken Sie unter dem Bibliotheksnamen auf <i>Anmelden</i>.</li>
                     <li>Wählen Sie nun <i>Kopie bestellen</i> an. Wenn diese Option nicht angezeigt wird, kann elektronisch keine Kopie bestellt werden. In diesem Fall klicken Sie auf das Informations-Symbol <i class="fa fa-info-circle"></i> unterhalb des Standorts. So erfahren Sie Adresse und Öffnungszeiten der Bibliothek.</li>
                     <li>Wählen Sie die Versandart (Postversand oder per E-Mail) aus und geben Sie Verfasser/Beitragende, Titel, Seitenzahl, Jahrgang/Bandnummer in den entsprechenden Feldern ein.</li>
-                </ol>
+                </ol></p>
                 <p>Pro 20 Seiten betragen die Kosten für Privatkunden 5 CHF, für Firmenkunden 25 CHF. Die Kosten werden vom IDS Basel Bern in Rechnung gestellt. Die Bestellungen werden von Montag bis Freitag innerhalb von 24 Stunden bearbeitet.</p></div>
         </div>
     </div>
@@ -441,9 +443,9 @@
             <div class="panel-body"><p>Die Kosten und Lieferfristen sind nicht bei allen Kurierdiensten dieselben:</p>
                 <ul style="list-style-type:disc">
                     <li>Der ortsinterne Kurierdienst in <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://www.ub.unibas.ch/ub-hauptbibliothek/dienstleistungen/ausleihe/kurier-und-fernleihe/') ?>" target="_blank">Basel</a> bzw. <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL('http://www.unibe.ch/universitaet/dienstleistungen/universitaetsbibliothek/service/ausleihe/kurier/index_ger.html') ?>" target="_blank">Bern</a> ist gratis, die Lieferfrist beträgt einen Arbeitstag.</li>
-                    <li>Der <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>"><?= $this->transEsc('IDS-Kurierdienst') ?></a> verkehrt zwischen Basel, Bern, Luzern, St.Gallen und Zürich. Die Kurierbestellung kosten 5 CHF, welche Sie beim Abholen bar bezahlen müssen. Die Lieferfrist beträgt zwei Arbeitstage.</li>
+                    <li>Der <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>"><?= $this->transEsc('IDS-Kurierdienst') ?></a> verkehrt zwischen Basel, Bern, Luzern, St.Gallen und Zürich. Die Kurierbestellung kostet 5 CHF, welche Sie beim Abholen bar bezahlen müssen. Die Lieferfrist beträgt zwei Arbeitstage.</li>
                     <li>Der Postversand an Ihre Heimadresse kostet 12 CHF pro Medium. Die Bearbeitung und der Versand erfolgen von Montag bis Freitag innerhalb von 24 Stunden.</li>
-                    <li>Bei Kopienbestellungen betrgen die Kosten pro 20 Seiten für Privatkunden 5 CHF, für Firmenkunden 25 CHF. Die Kosten werden vom IDS Basel Bern in Rechnung gestellt. Die Bestellungen werden von Montag bis Freitag innerhalb von 24 Stunden bearbeitet.</li>
+                    <li>Bei Kopienbestellungen betragen die Kosten pro 20 Seiten für Privatkunden 5 CHF, für Firmenkunden 25 CHF. Die Kosten werden vom IDS Basel Bern in Rechnung gestellt. Die Bestellungen werden von Montag bis Freitag innerhalb von 24 Stunden bearbeitet.</li>
                 </ul>
                 <p>Die oben genannten Gebühren gelten nur für die Bibliotheken der Universitäten Basel und Bern. Die Gebühren der anderen <a href="<?= $this->basePath('Libraries') ?>" title="Liste der Institutionen">Bibliotheken</a> erfahren Sie auf deren Webseite.</p></div>
         </div>
