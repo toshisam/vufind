@@ -21,9 +21,18 @@ $today = strtotime('now');
 $unsetPickup[] = 'POPA';
 
 // unterdrückt Pickup locations während Schliesszeiten
-if ($today > strtotime('2016-05-23') && $today < strtotime('2016-05-30')):
-    $unsetPickup[] = 'UBZB';
-    $unsetPickup[] = 'UBKRA';
+if ($today > strtotime('2016-08-19') && $today < strtotime('2016-09-17')):
+    $unsetPickup[] = 'A125';
+    $unsetPickup[] = 'UBWWZ';
+endif;
+if ($today > strtotime('2016-07-15') && $today < strtotime('2016-07-28')):
+    $unsetPickup[] = 'A296';
+endif;
+if ($today > strtotime('2016-08-12') && $today < strtotime('2016-08-28')):
+    $unsetPickup[] = 'A300';
+endif;
+if ($today > strtotime('2016-07-08') && $today < strtotime('2016-08-08')):
+    $unsetPickup[] = 'A342';
 endif;
 
 ?>
