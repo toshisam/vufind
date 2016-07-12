@@ -77,9 +77,9 @@ if (is_array($series)) {
 $authors = $this->driver->tryMethod('getDeduplicatedAuthors');
 if (is_array($authors)) {
     if (!empty($authors['main']))
-        echo "author = " . key($authors['main']) . "\n";
+        echo "author = {" . key($authors['main']) . "},\n";
     if (!empty($authors['corporate']))
-        echo "author = " . key($authors['corporate']) . "\n";
+        echo "author = {" . key($authors['corporate']) . "},\n";
     if (is_array($authors['secondary']) && !empty($authors['secondary'])) {
         foreach ($authors['secondary'] as $current => $currentVal) {
             echo "editor = {{$current}},\n";
