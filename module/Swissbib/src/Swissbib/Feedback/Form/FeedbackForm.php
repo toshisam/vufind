@@ -71,6 +71,7 @@ class FeedbackForm
      *
      * @Annotation\Name("question")
      * @Annotation\Options({"label":"feedback.form.question"})
+     * @Annotation\Required(true)
      * @Annotation\Attributes({"type":"textarea"})
      */
     public $question;
