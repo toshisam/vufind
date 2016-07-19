@@ -31,9 +31,6 @@ endif;
 if ($today > strtotime('2016-08-12') && $today < strtotime('2016-08-28')):
     $unsetPickup[] = 'A300';
 endif;
-if ($today > strtotime('2016-07-08') && $today < strtotime('2016-08-08')):
-    $unsetPickup[] = 'A342';
-endif;
 
 ?>
 <p class="lead"><?=$this->transEsc('request_place_text')?></p>

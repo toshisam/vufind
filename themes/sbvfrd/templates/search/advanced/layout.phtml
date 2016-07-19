@@ -103,4 +103,29 @@
   </div>
 </div>
 
-<?= $this->render('search/advanced/sidebar') ?>
+<div class="<?=$this->layoutClass('sidebar')?>">
+  <? if (isset($hasDefaultsApplied) && $hasDefaultsApplied): ?>
+    <input type="hidden" name="dfApplied" value="1" />
+  <? endif ?>
+  <? if (!empty($searchFilters)): ?>
+    <h4><?=$this->transEsc("adv_search_filters")?></h4>
+    <div class="list-group">
+      <label class="list-group-item checkbox"><input type="checkbox" checked="checked" class="checkbox-select-all"/><?=$this->transEsc("adv_search_select_all")?></label>
+    </div>
+    <? foreach ($searchFilters as $field => $data): ?>
+      <div class="list-group">
+        <div class="list-group-item title"><?=$this->transEsc($field)?></div>
+        <? foreach ($data as $value): ?>
+          <label class="list-group-item checkbox"><input class="checkbox-select-item" type="checkbox" checked="checked" name="filter[]" value='<?=$this->escapeHtmlAttr($value['field'])?>:"<?=$this->escapeHtmlAttr($value['value'])?>"' /> <?=$this->escapeHtml($value['displayText'])?></label>
+        <? endforeach; ?>
+      </div>
+    <? endforeach; ?>
+  <? endif; ?>
+  <div class="sidegroup">
+    <h4><?=$this->transEsc('Search Tips')?></h4>
+    <div class="list-group">
+      <a class="list-group-item help-link" href="<?=$this->url('help-home')?>?topic=advsearch" title="<?=$this->transEsc('Help with Advanced Search')?>"><?=$this->transEsc("Help with Advanced Search")?></a>
+      <a class="list-group-item help-link" href="<?=$this->url('help-home')?>?topic=search" title="<?=$this->transEsc('Help with Search Operators')?>"><?=$this->transEsc("Help with Search Operators")?></a>
+    </div>
+  </div>
+</div>
