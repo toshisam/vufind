@@ -29,7 +29,6 @@ return array(
     'swissbib/AdvancedSearch.js',
     'swissbib/Holdings.js',
     'swissbib/HoldingFavorites.js',
-    'swissbib/FavoriteInstitutions.js',
     'swissbib/Accordion.js',
     'swissbib/Settings.js',
     'swissbib/OffCanvas.js',
