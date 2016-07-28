@@ -294,7 +294,7 @@ class TargetsProxy implements ServiceLocatorAwareInterface
             }
         }
 
-        return ($this->targetKey != ""  ? true : false);
+        return ($this->targetKey != "" ? true : false);
     }
 
     /**

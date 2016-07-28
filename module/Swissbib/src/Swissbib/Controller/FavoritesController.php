@@ -60,7 +60,7 @@ class FavoritesController extends BaseController
         } else {
             $autocompleterData    = $this->getAutocompleterData();
 
-                // mark as downloaded
+            // mark as downloaded
             $favoriteManager->setInstitutionsDownloaded();
         }
 
