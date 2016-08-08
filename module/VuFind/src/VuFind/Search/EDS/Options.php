@@ -47,7 +47,7 @@ class Options extends \VuFind\Search\Base\Options
 
     /**
      * Default search mode options
-     * 
+     *
      * @var string
      */
     protected $defaultMode = 'all';
@@ -89,6 +89,7 @@ class Options extends \VuFind\Search\Base\Options
 
     /**
      * Available Search Options from the API
+     * 
      * @var array
      */
     protected $apiInfo;

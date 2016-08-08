@@ -1737,6 +1737,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get Ownership and Custodial History Note (MARC21: field 561)
+     * 
      * @return array
      */
     public function getOwnerNote()
