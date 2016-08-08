@@ -63,12 +63,14 @@ class Holdings
 
     /**
      * Check login status and info
+     *
      * @var AuthManager
      */
     protected $authManager;
 
     /**
      * IlsAuth
+     * 
      * @var IlsAuth
      */
     protected $ilsAuth;
