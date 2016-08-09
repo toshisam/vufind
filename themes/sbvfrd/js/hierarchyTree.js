@@ -93,6 +93,7 @@ function doTreeSearch() {
                     }
                     for(i=data.results.length;i--;) {
                         var tid = htmlEncodeId(data.results[i]);
+                        tid = getNodeIdFromRecordId(treeModel,tid);
                         $('#hierarchyTree').find('#'+tid).addClass('jstree-search');
                     }
                     changeNoResultLabel(false);
