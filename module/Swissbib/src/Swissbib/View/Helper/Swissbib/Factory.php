@@ -245,6 +245,8 @@ class Factory
         $customVars = isset($config->Piwik->custom_variables)
             ? $config->Piwik->custom_variables
             : false;
-        return new Piwik($url, $siteId, $customVars);
+        $router = $sm->getServiceLocator()->get('Router');
+        $request = $sm->getServiceLocator()->get('Request');
+        return new Piwik($url, $siteId, $customVars, $router, $request);
     }
 }
