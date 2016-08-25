@@ -632,10 +632,7 @@
                                         ) ?>" target="_blank">Bern</a> is free, and
                                 the item will arrive after one working day.
                             </li>
-                            <li><a
-                                    href="<?= $this->transEsc(
-                                        'IDS-Kurierdienst'
-                                    ) ?>">IDS delivery service</a> operates between
+                            <li><a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>"> IDS delivery service</a> operates between
                                 Basel, Bern, Luzern, St.Gallen and Zurich. The
                                 dispatch costs 5 CHF, which you will need to pay in
                                 cash when you pick up the item. The item will arrive
@@ -706,9 +703,7 @@
                                 href="<?= $this->redirectProtocolWrapper()
                                     ->getWrappedURL(
                                         'http://www.unibe.ch/universitaet/dienstleistungen/universitaetsbibliothek/service/ausleihe/kurier/index_ger.html'
-                                    ) ?>" target="_blank">Bern</a>, <a
-                                href="<?= $this->transEsc('IDS-Kurierdienst') ?>">IDS
-                                delivery service</a>.</p>
+                                    ) ?>" target="_blank">Bern</a>, <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>"> IDS delivery service</a>.</p>
 
                         <p>The return of items is free.</p>
                     </div>
@@ -779,9 +774,7 @@
                                         ) ?>" target="_blank">Bern</a> is free, and
                                 delivery takes one working day.
                             </li>
-                            <li>The <a href="<?= $this->transEsc(
-                                    'IDS-Kurierdienst'
-                                ) ?>">IDS delivery service</a> runs between Basel,
+                            <li>The <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>"> IDS delivery service</a> runs between Basel,
                                 Bern, Luzern, St.Gallen and Zurich. One delivery
                                 costs 5 CHF, which you will need to pay in cash when
                                 you come to pick up your order. Delivery takes two

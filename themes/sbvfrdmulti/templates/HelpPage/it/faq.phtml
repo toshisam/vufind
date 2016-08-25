@@ -3,7 +3,7 @@
 <nav>
     <ul>
         <li><a href="#faq1">User account / My swissbib</a></li>
-        <li><a href="#faq2">Searching and finding information online</a></li>
+        <li><a href="#faq2">Search / Online access</a></li>
         <li><a href="#faq3">Ordering</a></li>
         <li><a href="#faq4">Technical questions</a></li>
     </ul>
@@ -60,7 +60,7 @@
         </div>
         <div id="collapse4" class="panel-collapse collapse">
             <div class="panel-body"><p>Log into your user account, click on <i>Checked
-                        out items</i>. Now a complete list of your loans will appear.
+                        out items</i>. Now a complete list of items you have borrowed will appear.
                     Next to each item a little box will appear on the right. Mark
                     item you want to renew by clicking on the box <i>Renew selected
                         items</i> to confirm your renewal.</p></div>
@@ -83,12 +83,11 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" href="#collapse6" aria-expanded="false">
-                    Wo kann ich mein Passwort ändern?</a>
+                    How can I change my password?</a>
             </h4>
         </div>
         <div id="collapse6" class="panel-collapse collapse">
-            <div class="panel-body"><p>Wählen Sie in Ihrem Benutzungskonto <i>Passwort
-                        ändern</i> an und folgen Sie den Anweisungen.</p></div>
+            <div class="panel-body"><p>Choose <i>Change password</i> in your user account and follow the instructions.</p></div>
         </div>
     </div>
     <div class="panel panel-default">
@@ -99,7 +98,7 @@
             </h4>
         </div>
         <div id="collapse7" class="panel-collapse collapse">
-            <div class="panel-body"><p>You can sign up online or in an IDS library in
+            <div class="panel-body"><p>You can sign up online or in a IDS library in
                     <a href="<?= $this->redirectProtocolWrapper()->getWrappedURL(
                         'http://www.ub.unibas.ch/bibliotheksnetz/verbund-basel/bibliotheken-im-verbund/liste-der-bibliotheken/'
                     ) ?>" target="_blank">Basel</a> or <a
@@ -129,7 +128,7 @@
             <div class="panel-body"><p>Yes, your library user-ID is valid in all <a
                         href="<?= $this->redirectProtocolWrapper()->getWrappedURL(
                             'https://www.informationsverbund.ch/21.0.html'
-                        ) ?>" target="_blank">IDS and NEBIS libraries</a>.</p></div>
+                        ) ?>" target="_blank">IDS or NEBIS libraries</a>.</p></div>
         </div>
     </div>
     <div class="panel panel-default">
@@ -160,7 +159,7 @@
                     your library ID: use the 6-digit number on your staff card
                     (prefix for Basel MBS01, prefix for Bern BEM).</p>
 
-                <p>University staff in Bern need to have their account activated in
+                <p>University staff in Bern need to have their account activated by
                     one of the <a
                         href="<?= $this->redirectProtocolWrapper()->getWrappedURL(
                             'http://www.unibe.ch/universitaet/dienstleistungen/universitaetsbibliothek/teilbibliotheken/berner_ids_bibliotheken/liste/index_ger.html'
@@ -398,7 +397,7 @@
             <div class="panel-body"><p>Yes, click the <i
                         class="fa fa-plus-square"></i> symbol in the results
                     list. Now you can save the search for a particular
-                    subject and will be notified when new media becomes
+                    subject and will be notified when new items become
                     available in the catalogue that relates to that subject.
                 </p></div>
         </div>
@@ -509,7 +508,7 @@
                         href="<?= $this->redirectProtocolWrapper()
                             ->getWrappedURL(
                                 'http://www.ub.unibas.ch/ub-hauptbibliothek/dienstleistungen/ausleihe/kurier-und-fernleihe/fernleihformular/'
-                            ) ?>" target="_blank">Basel</a> or <a
+                            ) ?>" target="_blank">Basel</a>, <a
                         href="<?= $this->redirectProtocolWrapper()
                             ->getWrappedURL(
                                 'http://www.unibe.ch/universitaet/dienstleistungen/universitaetsbibliothek/service/ausleihe/fernleihe___document_delivery/bestellformular/index_ger.html'
@@ -522,7 +521,7 @@
                         href="<?= $this->redirectProtocolWrapper()
                             ->getWrappedURL(
                                 'http://www.ub.unibas.ch/ub-hauptbibliothek/dienstleistungen/ausleihe/anschaffungsvorschlag/'
-                            ) ?>" target="_blank">Basel</a> or <a
+                            ) ?>" target="_blank">Basel</a>, <a
                         href="<?= $this->redirectProtocolWrapper()
                             ->getWrappedURL(
                                 'http://www.unibe.ch/universitaet/dienstleistungen/universitaetsbibliothek/service/ausleihe/anschaffungsvorschlaege/index_ger.html'
@@ -593,7 +592,7 @@
                     <li>Choose a library under <i>Locations and request</i>
                         of the item you have chosen.
                     </li>
-                    <li>If you are not logged in yet, click on Log in under
+                    <li>If you are not logged in yet, click on <i>Log in</i> under
                         the name of the library.
                     </li>
                     <li>Now click on <i>Reserve</i>. If this option does not
@@ -633,16 +632,13 @@
                                 ) ?>" target="_blank">Bern</a> is free, and
                         the item will arrive after one working day.
                     </li>
-                    <li>The IDS delivery service <a
-                            href="<?= $this->transEsc(
-                                'IDS-Kurierdienst'
-                            ) ?>">IDS delivery service</a> operates between
+                    <li><a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>"> IDS delivery service</a> operates between
                         Basel, Bern, Luzern, St.Gallen and Zurich. The
                         dispatch costs 5 CHF, which you will need to pay in
                         cash when you pick up the item. The item will arrive
                         after two working days. If you want to order items
                         from Luzern, St.Gallen or Zurich, you can order them
-                        through this <a
+                        through the <a
                             href="<?= $this->redirectProtocolWrapper()
                                 ->getWrappedURL(
                                     'https://www.swissbib.ch/'
@@ -683,7 +679,7 @@
                         location name. There you will find the address and
                         opening times of the library.
                     </li>
-                    <li>Under <i>Pickup / delivery location</i>, chose <i>Home
+                    <li>Under <i>Pickup / delivery location</i>, choose <i>Home
                             address</i> and then <i>Order</i>.
                     </li>
                 </ol>
@@ -693,9 +689,8 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" href="#collapse31"
-                   aria-expanded="false">
-                    Can I return my loans to a different library?</a>
+                <a data-toggle="collapse" href="#collapse31" aria-expanded="false">
+                    Can I return items that I have taken out to a different library?</a>
             </h4>
         </div>
         <div id="collapse31" class="panel-collapse collapse">
@@ -708,9 +703,7 @@
                         href="<?= $this->redirectProtocolWrapper()
                             ->getWrappedURL(
                                 'http://www.unibe.ch/universitaet/dienstleistungen/universitaetsbibliothek/service/ausleihe/kurier/index_ger.html'
-                            ) ?>" target="_blank">Bern</a> or the <a
-                        href="<?= $this->transEsc('IDS-Kurierdienst') ?>">IDS
-                        delivery service</a>.</p>
+                            ) ?>" target="_blank">Bern</a>, <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>"> IDS delivery service</a>.</p>
 
                 <p>The return of items is free.</p>
             </div>
@@ -781,9 +774,7 @@
                                 ) ?>" target="_blank">Bern</a> is free, and
                         delivery takes one working day.
                     </li>
-                    <li>The <a href="<?= $this->transEsc(
-                            'IDS-Kurierdienst'
-                        ) ?>">IDS delivery service</a> runs between Basel,
+                    <li>The <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>"> IDS delivery service</a> runs between Basel,
                         Bern, Luzern, St.Gallen and Zurich. One delivery
                         costs 5 CHF, which you will need to pay in cash when
                         you come to pick up your order. Delivery takes two
@@ -800,7 +791,7 @@
                     </li>
                 </ul>
                 <p>The costs noted above only apply to the libraries of the
-                    University of Basel and Bern. You can find costs for
+                    University of Basel and Bern. You can find costs of
                     other <a href="<?= $this->basePath('Libraries') ?>"
                              title="Liste der Institutionen">libraries</a> on
                     their respective websites.</p></div>
