@@ -1,0 +1,57 @@
+<?
+// Set up page title:
+$this->headTitle($this->translate('swiss_national_licences'));
+
+// Set up breadcrumbs:
+$this->layout()->breadcrumbs = '<li><a href="' . $this->url('myresearch-home') . '">' . $this->transEsc('Your Account') . '</a></li> <li class="active">' . $this->transEsc('snl.nationalLicences') . '</li>';
+?>
+
+<div class="<?= $this->layoutClass('mainbody') ?>">
+    <h2><?= $this->transEsc('snl.accessNationalLicences') ?></h2>
+    <?= $this->flashmessages(); ?>
+    <?= $this->swissLibraryPersonResidence ?>
+    <?= $this->homePostalAddress ?>
+    <? if (!$this->swissLibraryPersonResidence): ?>
+        <h1>Fill homePostalAddress in thr Swiss Eduid login</h1>
+    <? endif; ?>
+
+    <? if ($this->swissLibraryPersonResidence !== 'CH'): ?>
+        <h2>This service is only for swiss residents</h2>
+    <? endif; ?>
+
+    <? if ($this->homePostalAddress !== 'verified'): ?>
+        <p>reqst a verification -> call the SWITCH API for this</p>
+    <? endif; ?>
+
+    <? if ($this->homePostalAddress === 'verified'): ?>
+
+    <? endif; ?>
+
+    <? if ($this->swissLibraryPersonResidence === 'CH'): ?>
+        <form class="form-horizontal" action="" method="post" id="settings-form">
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="terms_conditions"><?=$this->transEsc('snl.form.accept_terms_conditions') ?>:</label>
+                <div class="col-sm-3">
+                    <input id="terms_conditions" name="terms_conditions" class="form-control" type="checkbox">
+                </div>
+            </div>
+
+            <? if ($this->homePostalAddress !== 'verified'): ?>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="home_postal_address"><?=$this->transEsc('snl.form.please_fill_home_postal_address') ?>:</label>
+                    <div class="col-sm-3">
+                        <input id="home_postal_address" name="home_postal_address" class="form-control" type="text">
+                    </div>
+                    <div class="btn btn-primary">
+                        Request verification
+                    </div>
+                </div>
+            <? endif; ?>
+
+        </form>
+    <? endif; ?>
+</div>
+
+<div class="<?= $this->layoutClass('sidebar') ?>">
+    <?= $this->context($this)->renderInContext("myresearch/menu.phtml", array('active' => 'settings')) ?>
+</div>

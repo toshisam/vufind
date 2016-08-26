@@ -43,6 +43,17 @@ return [
                     ]
                 ]
             ],
+            // (local) Swiss National Licences
+            'national-licences' => [
+                'type'    => 'literal',
+                'options' => [
+                    'route'    => '/NationalLicences',
+                    'defaults' => [
+                        'controller' => 'national-licences',
+                        'action'     => 'index'
+                    ]
+                ]
+            ],
             'help-page' => [
                 'type'    => 'segment',
                 'options' => [
@@ -195,6 +206,7 @@ return [
             'install'              => 'Swissbib\Controller\NoProductiveSupportController',
             'feedback'             => 'Swissbib\Controller\FeedbackController',
             'cover'                => 'Swissbib\Controller\CoverController',
+            'national-licences'    => 'Swissbib\Controller\NationalLicencesController',
         ],
         'factories'  => [
             'record' => 'Swissbib\Controller\Factory::getRecordController',
@@ -392,5 +404,11 @@ return [
                 ],
             ]
         ],
+
+        'db_table' => [
+            'invokeables' => [
+                'nationallicence' => 'Swissbib\VuFind\Db\Table\SwissNationalLicences'
+            ]
+        ]
     ]
 ];
