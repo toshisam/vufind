@@ -1,0 +1,5 @@
+parent_yaml: ./../../../../config/vufind/searchspecs.yaml
+test: hallo
+AllFields:
+  DismaxFields:
+    - title_short^6667                    # main title, i.e. 245 $a
