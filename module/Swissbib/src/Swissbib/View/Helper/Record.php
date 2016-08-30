@@ -511,7 +511,7 @@ class Record extends VuFindRecord
                 $position =  strpos($urlSrc, '/Cover');
 
                 return  $this->config->Content->externalResourcesServer .
-                    substr($urlSrc, $position) .  '?' . http_build_query($thumb);
+                    substr($urlSrc, $position) . '?' . http_build_query($thumb);
             } else {
                 $urlHelper = $this->getView()->plugin('url');
 
