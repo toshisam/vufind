@@ -1,0 +1,132 @@
+<?php
+/**
+ * Table Definition for session
+ *
+ * PHP version 5
+ *
+ * Copyright (C) Villanova University 2010.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @category VuFind
+ * @package  Db_Row
+ * @author   Simone Cogno <scogno@snowflake.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     https://vufind.org Main Site
+ */
+namespace Swissbib\VuFind\Db\Table;
+
+use Swissbib\Libadmin\Exception\Exception;
+use VuFind\Db\Table\Gateway;
+use VuFind\Db\Table\User;
+use Zend\Db\Sql\Select;
+
+/**
+ * Table Definition for swiss_national_licence
+ *
+ * @category VuFind
+ * @package  Db_Row
+ * @author   Simone Cogno <scogno@snowflake.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     https://vufind.org Main Site
+ */
+class NationalLicenceUser extends Gateway
+{
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct('national_licence_user', 'Swissbib\VuFind\Db\Row\NationalLicenceUser');
+    }
+
+    /**
+     * Get user by id
+     * @param int $id
+     * @return \Swissbib\VuFind\Db\Row\NationalLicenceUser
+     */
+    public function getUserById($id)
+    {
+
+        return $this->select(array('id' => $id))
+            ->current();
+    }
+
+    /**
+     * Get user by persistent_id
+     * @param string $persistentId
+     * @return \Swissbib\VuFind\Db\Row\NationalLicenceUser
+     */
+    public function getUserByPersistentId($persistentId)
+    {
+        if (empty($persistentId)) {
+            throw new \Exception("Cannot fetch user with empty persistent_id");
+        }
+
+        return $this->select(array('persistent_id' => $persistentId))
+            ->current();
+    }
+
+    /**
+     * Create a new National licence user row
+     *
+     * @param string $persistentId Edu-id persistent id
+     * @param array $fieldsValue
+     * @return \Swissbib\VuFind\Db\Row\NationalLicenceUser $user
+     * @throws \Exception
+     */
+    public function createNationalLicenceUserRow($persistentId, array $fieldsValue = array())
+    {
+        if (empty($persistentId)) {
+            throw new \Exception("The persistent-id is mandatory for creating an National Licence User");
+        }
+
+        /** @var \Swissbib\VuFind\Db\Row\NationalLicenceUser $nationalUser */
+        $nationalUser = $this->createRow();
+        $nationalUser->setPersistentId($persistentId);
+        foreach ($fieldsValue as $key => $value) {
+            $nationalUser->$key = $value;
+        }
+        /** @var User $userTable */
+        $userTable = $this->getDbTable('user');
+
+        /** @var \VuFind\Db\Row\User $user */
+        $user = $userTable->getByUsername($persistentId);
+
+        // If there is already a user registered in the sistem in the use table, we link it to the
+        // national_licence_user table.
+        if ($user) {
+            // Link table User to NationalLicenceUser
+            $nationalUser->setUserId($user->id);
+        }
+        $nationalUser->save();
+        return $nationalUser;
+    }
+
+
+    /**
+     * Update user fields
+     * @param integer $id User id
+     * @param array $fieldsValues Array of fields => value to update
+     */
+    public function updateRowByPersistentId($persistentId, array $fieldsValues)
+    {
+        $user = $this->getUserByPersistentId($persistentId);
+        foreach ($fieldsValues as $key => $value) {
+            $user->$key = $value;
+        }
+        $user->save();
+    }
+}

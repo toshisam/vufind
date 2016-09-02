@@ -43,15 +43,18 @@ return [
                     ]
                 ]
             ],
-            // (local) Swiss National Licences
+            // Swiss National Licences
             'national-licences' => [
-                'type'    => 'literal',
+                'type'    => 'segment',
                 'options' => [
-                    'route'    => '/NationalLicences',
+                    'route'    => '/NationalLicences[/:action]',
                     'defaults' => [
                         'controller' => 'national-licences',
                         'action'     => 'index'
-                    ]
+                    ],
+                    'constraints' => [
+                        'action'   => '[a-zA-Z][a-zA-Z0-9_-]*'
+                    ],
                 ]
             ],
             'help-page' => [
@@ -215,9 +218,10 @@ return [
     ],
     'service_manager' => [
         'invokables' => [
-            'VuFindTheme\ResourceContainer'       => 'Swissbib\VuFind\ResourceContainer',
-            'Swissbib\QRCode'                     => 'Swissbib\CRCode\QrCodeService',
-            'MarcFormatter'                     => 'Swissbib\XSLT\MARCFormatter'
+            'VuFindTheme\ResourceContainer'                 => 'Swissbib\VuFind\ResourceContainer',
+            'Swissbib\QRCode'                               => 'Swissbib\CRCode\QrCodeService',
+            'MarcFormatter'                                 => 'Swissbib\XSLT\MARCFormatter',
+            'NationalLicenceService'                        => 'Swissbib\Services\NationalLicence'
         ],
         'factories' => [
             'Swissbib\HoldingsHelper'                       =>  'Swissbib\RecordDriver\Helper\Factory::getHoldingsHelper',
@@ -249,7 +253,7 @@ return [
             'Swissbib\Hierarchy\SimpleTreeGenerator'        =>  'Swissbib\Hierarchy\Factory::getSimpleTreeGenerator',
             'Swissbib\Hierarchy\MultiTreeGenerator'         =>  'Swissbib\Hierarchy\Factory::getMultiTreeGenerator',
 
-        'VuFind\SearchOptionsPluginManager'                 => 'Swissbib\Services\Factory::getSearchOptionsPluginManager',
+            'VuFind\SearchOptionsPluginManager'             => 'Swissbib\Services\Factory::getSearchOptionsPluginManager',
             'VuFind\SearchParamsPluginManager'              => 'Swissbib\Services\Factory::getSearchParamsPluginManager',
             'VuFind\SearchResultsPluginManager'             => 'Swissbib\Services\Factory::getSearchResultsPluginManager',
 
@@ -407,7 +411,7 @@ return [
 
         'db_table' => [
             'invokeables' => [
-                'nationallicence' => 'Swissbib\VuFind\Db\Table\SwissNationalLicences'
+                'nationallicence' => 'Swissbib\VuFind\Db\Table\NationalLicenceUser'
             ]
         ]
     ]
