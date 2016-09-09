@@ -517,6 +517,20 @@ OWC:
     classif_ocm:
          - [onephrase, ~]
 
+RVK:
+  DismaxFields:
+    - classif_rvk
+  QueryFields:
+    classif_rvk:
+         - [onephrase, ~]
+
+DDC:
+  DismaxFields:
+    - classif_ddc
+  QueryFields:
+    classif_ddc:
+         - [onephrase, ~]
+
 Autosuggest:
   DismaxHandler: dismax
   DismaxFields:
