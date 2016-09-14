@@ -1,6 +1,6 @@
 <?php
 /**
- * Row Definition for user
+ * Row Definition for national licence user.
  *
  * PHP version 5
  *
@@ -27,19 +27,8 @@
  */
 
 namespace Swissbib\VuFind\Db\Row;
-use Swissbib\Libadmin\Exception\Exception;
 use VuFind\Db\Row\RowGateway;
-use Zend\Db\Sql\Ddl\Column\Datetime;
 
-/**
- * Row Definition for swiss_national_licences
- *
- * @category VuFind
- * @package  Db_Row
- * @author   Simone Cogno <scogno@snowflake.ch>
- * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     https://vufind.org Main Site
- */
 class NationalLicenceUser extends RowGateway
 {
     /**
@@ -115,7 +104,6 @@ class NationalLicenceUser extends RowGateway
     public function setConditionsAccepted($accepted = false)
     {
         $this->condition_accepted = $accepted;
-        $this->save();
     }
 
     /**
@@ -127,6 +115,7 @@ class NationalLicenceUser extends RowGateway
 
     /**
      * Set persistent id field
+     *
      * @param string $persistentId
      */
     public function setPersistentId($persistentId)
@@ -142,9 +131,34 @@ class NationalLicenceUser extends RowGateway
         $this->user_id = $id;
     }
 
+    /**
+     * Get the last activity date on the edu-ID account
+     *
+     * @return \DateTime
+     */
     public function getLastActivityDate()
     {
-        return $this->last_edu_id_activity; // TODO: Db logic not implemented
+        return new \DateTime($this->last_edu_id_activity);
+    }
+
+    /**
+     * Set the last activity date on the edu-ID account
+     *
+     * @param \DateTime $date
+     */
+    public function setLastActivityDate(\DateTime $date)
+    {
+        $this->last_edu_id_activity = $date->format('Y-m-d H:i:s');
+    }
+
+    /**
+     * Return the creation date of the national licence user
+     *
+     * @return \DateTime
+     */
+    public function getCreatedDate()
+    {
+        return new \DateTime($this->created);
     }
 
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Table Definition for session
+ * Table Definition for national_licence_user.
  *
  * PHP version 5
  *
@@ -27,20 +27,9 @@
  */
 namespace Swissbib\VuFind\Db\Table;
 
-use Swissbib\Libadmin\Exception\Exception;
 use VuFind\Db\Table\Gateway;
 use VuFind\Db\Table\User;
-use Zend\Db\Sql\Select;
 
-/**
- * Table Definition for swiss_national_licence
- *
- * @category VuFind
- * @package  Db_Row
- * @author   Simone Cogno <scogno@snowflake.ch>
- * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     https://vufind.org Main Site
- */
 class NationalLicenceUser extends Gateway
 {
 
@@ -54,6 +43,7 @@ class NationalLicenceUser extends Gateway
 
     /**
      * Get user by id
+     *
      * @param int $id
      * @return \Swissbib\VuFind\Db\Row\NationalLicenceUser
      */
@@ -66,8 +56,10 @@ class NationalLicenceUser extends Gateway
 
     /**
      * Get user by persistent_id
+     *
      * @param string $persistentId
      * @return \Swissbib\VuFind\Db\Row\NationalLicenceUser
+     * @throws \Exception
      */
     public function getUserByPersistentId($persistentId)
     {
@@ -90,12 +82,13 @@ class NationalLicenceUser extends Gateway
     public function createNationalLicenceUserRow($persistentId, array $fieldsValue = array())
     {
         if (empty($persistentId)) {
-            throw new \Exception("The persistent-id is mandatory for creating an National Licence User");
+            throw new \Exception("The persistent-id is mandatory for creating a National Licence User");
         }
 
         /** @var \Swissbib\VuFind\Db\Row\NationalLicenceUser $nationalUser */
         $nationalUser = $this->createRow();
         $nationalUser->setPersistentId($persistentId);
+        //$nationalUser->setCreatedDate(new \DateTime());
         foreach ($fieldsValue as $key => $value) {
             $nationalUser->$key = $value;
         }
@@ -118,7 +111,8 @@ class NationalLicenceUser extends Gateway
 
     /**
      * Update user fields
-     * @param integer $id User id
+     *
+     * @param integer $persistentId User persistent id
      * @param array $fieldsValues Array of fields => value to update
      */
     public function updateRowByPersistentId($persistentId, array $fieldsValues)

@@ -1,6 +1,6 @@
 <?
 // Set up page title:
-$this->headTitle($this->translate('swiss_national_licences'));
+$this->headTitle($this->translate('snl.nationalLicences'));
 
 // Set up breadcrumbs:
 $this->layout()->breadcrumbs = '<li><a href="' . $this->url('myresearch-home') . '">' . $this->transEsc('Your Account') . '</a></li> <li class="active">' . $this->transEsc('snl.nationalLicences') . '</li>';
@@ -10,8 +10,9 @@ $this->layout()->breadcrumbs = '<li><a href="' . $this->url('myresearch-home') .
 
     <h1><?= $this->transEsc('snl.accessNationalLicences') ?></h1>
     <?= $this->flashmessages(); ?>
+
     <!-- First of all chack if use is blocked -->
-    <? if ($this->user->blocked): ?>
+    <? if ($this->user->isBlocked()): ?>
         <div class="alert alert-danger"><?= $this->transEsc('snl.youAccountHasBeenBlocked') ?></div>
     <? else: ?>
         <h3><?= $this->transEsc('snl.temporaryAccess') ?></h3>
@@ -53,6 +54,7 @@ $this->layout()->breadcrumbs = '<li><a href="' . $this->url('myresearch-home') .
                 </p>
             <? endif; ?>
         <? endif; ?>
+
         <hr>
         <h3><?= $this->transEsc('snl.permanentAccess') ?></h3>
 
@@ -71,7 +73,7 @@ $this->layout()->breadcrumbs = '<li><a href="' . $this->url('myresearch-home') .
             <? endif; ?>
         <? else:; ?>
             <? if ($this->homePostalAddress): ?>
-                <? if ($this->isHoomePostalAddressInSwitzerland): ?>
+                <? if ($this->isHomePostalAddressInSwitzerland): ?>
                     <p>
                         <span class="text-aligned-icon icon-success"><i class="fa fa-check"></i></span>
                         <?= $this->transEsc('snl.youHavePostalAddresInSwitzerland') ?>
@@ -95,6 +97,7 @@ $this->layout()->breadcrumbs = '<li><a href="' . $this->url('myresearch-home') .
         <? endif; ?>
 
         <hr>
+
         <? if (!$this->user->hasAcceptedTermsAndConditions()): ?>
             <h3><?= $this->transEsc('snl.termsAndConditions') ?></h3>
             <p>
@@ -105,11 +108,13 @@ $this->layout()->breadcrumbs = '<li><a href="' . $this->url('myresearch-home') .
 
             </p>
         <? endif; ?>
+
         <? if ($this->isNationalLicenceCompliant): ?>
             <div class="alert alert-success"><?= $this->transEsc('snl.nationalLicenceCompliant') ?></div>
         <? else:; ?>
             <div class="alert alert-warning"><?= $this->transEsc('snl.youDontHaveAccessToNationalLicencesError') ?></div>
         <? endif; ?>
+
     <? endif; ?>
 </div>
 

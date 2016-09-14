@@ -1,12 +1,34 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: nicolas
- * Date: 30.08.16
- * Time: 17:37
+ * Service for manage the National Licence users.
+ *
+ * PHP version 5
+ *
+ * Copyright (C) project swissbib, University Library Basel, Switzerland
+ * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @category Swissbib_VuFind2
+ * @package  Services
+ * @author   Simone Cogno <scogno@snowflake.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
 
 namespace Swissbib\Services;
+
 use Swissbib\Libadmin\Exception\Exception;
 use Swissbib\VuFind\Db\Row\NationalLicenceUser;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -43,7 +65,6 @@ class NationalLicence implements ServiceLocatorAwareInterface
         return $this->serviceLocator;
     }
 
-
     /**
      * Create a temporary access for the user valid for 14 days. If the user id is not provided
      * the current user in the $_SERVER variable will be used.
@@ -55,7 +76,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
     public function createTemporaryAccessForUser($persistentId = null) {
 
         /** @var NationalLicenceUser $user */
-        $user = $this->getCurrentNationalLicenceUser();
+        $user = $this->getCurrentNationalLicenceUser($persistentId);
 
         $this->checkIfUserIsBlocked($user);
 
@@ -90,9 +111,12 @@ class NationalLicence implements ServiceLocatorAwareInterface
         $user = $this->getCurrentNationalLicenceUser();
         $this->checkIfUserIsBlocked($user);
         $user->setConditionsAccepted(true);
+        $user->save();
     }
 
     /**
+     * Get the current national licence user if it exsists
+     *
      * @param null $persistentId
      * @return array|\ArrayObject|null
      * @throws \Exception
@@ -100,14 +124,15 @@ class NationalLicence implements ServiceLocatorAwareInterface
     public function getCurrentNationalLicenceUser($persistentId = null)
     {
         // If no id is passed in the parameter take de current user
-        if(empty($persistentId) AND isset($_SERVER['persistent-id'])) {
-            $persistentId = $_SERVER['persistent-id'];
+        if(empty($persistentId) AND isset($_SERVER["persistent-id"])) {
+            $persistentId = $_SERVER["persistent-id"];
         }
         if(empty($persistentId)) {
             throw new \Exception("Unable to fetch the user from the database.");
         }
         /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $userTable */
-        $userTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
+        $userTable = $this->getTable("\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser");
+
         return $userTable->getUserByPersistentId($persistentId);
     }
 
@@ -118,7 +143,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * @param array $userFields Array of national licence user fields with their values.
      * @return NationalLicenceUser
      */
-    public function getOrCreateNationalLicenceUser($persistentId, $userFields = array())
+    public function createNationalLicenceUserIfNotExsists($persistentId, $userFields = array())
     {
         /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $userTable */
         $userTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
@@ -126,6 +151,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
         if(empty($user)) {
             $user = $userTable->createNationalLicenceUserRow($persistentId, $userFields);
         }
+
         return $user;
     }
 
@@ -141,36 +167,31 @@ class NationalLicence implements ServiceLocatorAwareInterface
         if ($prefix === "+41 79") return true;
         if ($prefix === "+41 78") return true;
         if ($prefix === "+41 77") return true;
+
         return false;
     }
 
-
+    /**
+     * Check if the current user is compliant with the Swiss National Licence
+     *
+     * @return bool
+     */
     public function isNationalLicenceCompliant()
     {
         $user = $this->getCurrentNationalLicenceUser();
+
         // Has accepted temrs and conditions
         /** @var NationalLicenceUser $user */
-        if (!$user->hasAcceptedTermsAndConditions()) {
-           echo "Reason: terms conditions";
-           return false;
-        }
+        if (!$user->hasAcceptedTermsAndConditions()) return false;
         // Is not blocked by the administrators
-        if ($user->isBlocked()) {
-            echo "Reason: blocked";
-            return false;
-        }
+        if ($user->isBlocked()) return false;
         // Last activity at least in the last 12 months
-        if(!$this->hasBeenActiveInLast12Months($user)) {
-            echo "Reason: 12 month";
-            return false;
-        }
+        if(!$this->hasBeenActiveInLast12Months($user)) return false;
         // Has requested a temporary access || Has a verified home postal address
         $hasTemporaryAccess = $user->hasAldreadyRequestedTemporaryAccess() &&
                               $this->isTemporaryAccessCurrentlyValid($user);
         $hasVerifiedSwissAddress = $this->hasVerifiedSwissAddress();
 
-        if(!$hasTemporaryAccess)  echo "Reason: temporary";
-        if(!$hasVerifiedSwissAddress)  echo "Reason: verified address";
         return $hasTemporaryAccess || $hasVerifiedSwissAddress ;
     }
 
@@ -181,10 +202,12 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * @return bool
      */
     protected function hasBeenActiveInLast12Months($user) {
+        //TODO: Change this method. This will be provided as a shibbboleth attribute by SWITCH.
         $pastPoint = (new \DateTime())->modify("-12 months");
         if ($pastPoint > $user->getLastActivityDate()) {
-            //TODO: implement logic last activity return false;
+            return false;
         }
+
         return true;
     }
 
@@ -209,9 +232,15 @@ class NationalLicence implements ServiceLocatorAwareInterface
             )
                 return true;
         }
+
         return false;
     }
 
+    /**
+     * Checks if the user have a verified home postal address in their edu-ID account
+     *
+     * @return bool
+     */
     protected function isVerifiedHomePostalAddress()
     {
         // TODO: Check if user has verified his home postal address
@@ -228,6 +257,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
         if(new \DateTime() > $user->getExpirationDate()) {
             return false;
         }
+
         return true;
     }
 
@@ -255,11 +285,13 @@ class NationalLicence implements ServiceLocatorAwareInterface
     {
         $parts = explode("$", $homeAddressString);
         $state = $parts[count($parts)-1];
+
         return $state === 'Switzerland';
     }
 
     /**
      * Check if the user account is blocked
+     *
      * @param NationalLicenceUser $user
      * @throws Exception
      */
