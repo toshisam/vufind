@@ -32,14 +32,14 @@ use Swissbib\VuFind\Db\Row\NationalLicenceUser;
 use Zend\View\Model\ViewModel;
 
 
-class NationalLicencesController extends \Swissbib\Controller\BaseController
+class NationalLicencesController extends BaseController
 {
     /**
      * Show the form for became compliant with the Swiss National Licences
      *
      * @return mixed|ViewModel
      */
-    public function indexAction($errorKey = null){
+    public function indexAction(){
         $account = $this->getAuthManager();
 
         if ($account->isLoggedIn() == false) {
@@ -52,10 +52,15 @@ class NationalLicencesController extends \Swissbib\Controller\BaseController
         $this->presets($n);
 
         // Get user information from the shibboleth attributes
+        $uniqueId                       = isset($_SERVER["uniqueID"]) ? $_SERVER["uniqueID"]: null;
+        $persistentId                   = isset($_SERVER["persistent-id"]) ? $_SERVER["persistent-id"]: null;
         $homePostalAddress              = isset($_SERVER["homePostalAddress"]) ? $_SERVER["homePostalAddress"]: null;
         $mobile                         = isset($_SERVER["mobile"]) ? $_SERVER["mobile"]: null;
+        $homeOrganizationType           = isset($_SERVER["home_organization_type"]) ?
+                                                $_SERVER["home_organization_type"]: null;
+        $affiliation                    = isset($_SERVER["affiliation"]) ? $_SERVER["affiliation"]: null;
         $swissLibraryPersonResidence    = isset($_SERVER["swissLibraryPersonResidence"]) ?
-                                            $_SERVER["swissLibraryPersonResidence"] : null;
+                                                $_SERVER["swissLibraryPersonResidence"] : null;
 
         /** @var NationalLicence $nationalLicenceService */
         $nationalLicenceService = $this->getServiceLocator()->get("NationalLicenceService");
@@ -63,8 +68,16 @@ class NationalLicencesController extends \Swissbib\Controller\BaseController
         /** @var NationalLicenceUser $user */
         $user = null;
         try {
-            $user = $nationalLicenceService->getCurrentNationalLicenceUser();
-        } catch (Exception $e) {
+            // Create a national licence user liked the the current logged user
+            $user = $nationalLicenceService->getOrCreateNationalLicenceUserIfNotExists($persistentId, array(
+                "edu_id" => $uniqueId,
+                "home_organization_type"=> $homeOrganizationType,
+                "mobile"=> $mobile,
+                "home_postal_address"=> $homePostalAddress,
+                "affiliation"=> $affiliation,
+                "swiss_library_person_residence" => $swissLibraryPersonResidence
+            ));
+        }catch (\Exception $e) {
             $this->flashMessenger()->setNamespace("error")->addMessage(
                 $this->translate($e->getMessage())
             );
@@ -78,9 +91,9 @@ class NationalLicencesController extends \Swissbib\Controller\BaseController
         }
 
         // Compute the checks
-        $isHomePostalAddressInSwitzerland = $nationalLicenceService->isAddressInSwitzerland($homePostalAddress);
-        $isSwissPhoneNumber = $nationalLicenceService->isSwissPhoneNumber($mobile);
-        $isNationalLicenceCompliant = $nationalLicenceService->isNationalLicenceCompliant();
+        $isHomePostalAddressInSwitzerland = false;//$nationalLicenceService->isAddressInSwitzerland($homePostalAddress);
+        $isSwissPhoneNumber = false; //$nationalLicenceService->isSwissPhoneNumber($mobile);
+        $isNationalLicenceCompliant = false; //$nationalLicenceService->isNationalLicenceCompliant();
 
         return new ViewModel(
             [

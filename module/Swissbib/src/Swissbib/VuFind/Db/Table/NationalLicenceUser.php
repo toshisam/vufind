@@ -87,8 +87,9 @@ class NationalLicenceUser extends Gateway
 
         /** @var \Swissbib\VuFind\Db\Row\NationalLicenceUser $nationalUser */
         $nationalUser = $this->createRow();
+
         $nationalUser->setPersistentId($persistentId);
-        //$nationalUser->setCreatedDate(new \DateTime());
+
         foreach ($fieldsValue as $key => $value) {
             $nationalUser->$key = $value;
         }
@@ -97,14 +98,16 @@ class NationalLicenceUser extends Gateway
 
         /** @var \VuFind\Db\Row\User $user */
         $user = $userTable->getByUsername($persistentId);
-
-        // If there is already a user registered in the sistem in the use table, we link it to the
+        // If there is already a user registered in the system in the use table, we link it to the
         // national_licence_user table.
         if ($user) {
             // Link table User to NationalLicenceUser
             $nationalUser->setUserId($user->id);
         }
-        $nationalUser->save();
+        $savedUser = $nationalUser->save();
+        if(empty($savedUser)) {
+            throw new \Exception("Impossible to create the National Licence user.");
+        }
         return $nationalUser;
     }
 

@@ -15,9 +15,10 @@ use Zend\ServiceManager\ServiceManager;
 class NationalLicenceServiceTest extends VuFindTestCase
 {
     /**
-     * This is just a try of a test of the national licence user service
+     * This is just a try of a test of the national licence user service (not working yet)
      */
     public function testTest(){
+        //TODO: Adds swissbib configuration file in the initialization
         /** @var ServiceManager $sm */
         $sm = $this->getServiceManager();
         /** @var NationalLicence $nationalLicenceService */

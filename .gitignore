@@ -8,4 +8,3 @@ TAGS
 /vendor
 composer.lock
 import/solrmarc.log
-env.bat

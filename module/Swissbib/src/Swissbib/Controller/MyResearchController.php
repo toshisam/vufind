@@ -30,8 +30,6 @@
  */
 namespace Swissbib\Controller;
 
-use Swissbib\Services\NationalLicence;
-use Swissbib\VuFind\Db\Row\NationalLicenceUser;
 use VuFind\Exception\ILS;
 use VuFind\ILS\Driver\AlephRestfulException;
 use VuFindSearch\Service;
@@ -60,43 +58,6 @@ use Zend\Uri\UriFactory;
  */
 class MyResearchController extends VuFindMyResearchController
 {
-
-    public function homeAction()
-    {
-        // Get user information from the shibboleth attributes
-        $uniqueId                       = isset($_SERVER["uniqueID"]) ? $_SERVER["uniqueID"]: null;
-        $persistentId                   = isset($_SERVER["persistent-id"]) ? $_SERVER["persistent-id"]: null;
-        $homePostalAddress              = isset($_SERVER["homePostalAddress"]) ? $_SERVER["homePostalAddress"]: null;
-        $mobile                         = isset($_SERVER["mobile"]) ? $_SERVER["mobile"]: null;
-        $homeOrganizationType           = isset($_SERVER["home_organization_type"]) ?
-                                                $_SERVER["home_organization_type"]: null;
-        $affiliation                    = isset($_SERVER["affiliation"]) ? $_SERVER["affiliation"]: null;
-        $swissLibraryPersonResidence    = isset($_SERVER["swissLibraryPersonResidence"]) ?
-                                                $_SERVER["swissLibraryPersonResidence"] : null;
-
-        /** @var NationalLicence $nationalLicenceService */
-        $nationalLicenceService = $this->getServiceLocator()->get("NationalLicenceService");
-
-        /** @var NationalLicenceUser $user */
-        try {
-            // Create a national licence user liked the the current logged user
-            $nationalLicenceService->createNationalLicenceUserIfNotExsists($persistentId, array(
-                "edu_id" => $uniqueId,
-                "home_organization_type"=> $homeOrganizationType,
-                "mobile"=> $mobile,
-                "home_postal_address"=> $homePostalAddress,
-                "affiliation"=> $affiliation,
-                "swiss_library_person_residence" => $swissLibraryPersonResidence
-            ));
-        }catch (\Exception $e) {
-            $this->flashMessenger()->setNamespace("error")->addMessage(
-                $this->translate($e->getMessage())
-            );
-        }
-
-        return parent::homeAction();
-    }
-
     /**
      * Show photo copy requests
      *

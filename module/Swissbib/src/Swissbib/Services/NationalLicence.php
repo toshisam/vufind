@@ -80,7 +80,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
 
         $this->checkIfUserIsBlocked($user);
 
-        if($user->hasAldreadyRequestedTemporaryAccess()) {
+        if($user->hasAlreadyRequestedTemporaryAccess()) {
             throw new \Exception("snl.youHaveAlreadyRequestedTemporary");
         }
 
@@ -115,10 +115,10 @@ class NationalLicence implements ServiceLocatorAwareInterface
     }
 
     /**
-     * Get the current national licence user if it exsists
+     * Get the current national licence user if it exists
      *
      * @param null $persistentId
-     * @return array|\ArrayObject|null
+     * @return NationalLicenceUser
      * @throws \Exception
      */
     public function getCurrentNationalLicenceUser($persistentId = null)
@@ -128,26 +128,30 @@ class NationalLicence implements ServiceLocatorAwareInterface
             $persistentId = $_SERVER["persistent-id"];
         }
         if(empty($persistentId)) {
-            throw new \Exception("Unable to fetch the user from the database.");
+            throw new \Exception("Error retrieving the current user.");
         }
         /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $userTable */
         $userTable = $this->getTable("\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser");
-
-        return $userTable->getUserByPersistentId($persistentId);
+        $user= $userTable->getUserByPersistentId($persistentId);
+        if(empty($user)) {
+            throw new \Exception("Impossible to retrieve the current user in the database");
+        }
+        return $user;
     }
 
     /**
-     * Get a NationalLicenceUser or creates a new one if is not exsisting in the database
+     * Get a NationalLicenceUser or creates a new one if is not existing in the database
      *
      * @param string $persistentId Edu-id persistent id
      * @param array $userFields Array of national licence user fields with their values.
-     * @return NationalLicenceUser
+     * @return NationalLicenceUser $user
      */
-    public function createNationalLicenceUserIfNotExsists($persistentId, $userFields = array())
+    public function getOrCreateNationalLicenceUserIfNotExists($persistentId, $userFields = array())
     {
         /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $userTable */
         $userTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
         $user = $userTable->getUserByPersistentId($persistentId);
+
         if(empty($user)) {
             $user = $userTable->createNationalLicenceUserRow($persistentId, $userFields);
         }
@@ -180,7 +184,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
     {
         $user = $this->getCurrentNationalLicenceUser();
 
-        // Has accepted temrs and conditions
+        // Has accepted terms and conditions
         /** @var NationalLicenceUser $user */
         if (!$user->hasAcceptedTermsAndConditions()) return false;
         // Is not blocked by the administrators
@@ -188,7 +192,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
         // Last activity at least in the last 12 months
         if(!$this->hasBeenActiveInLast12Months($user)) return false;
         // Has requested a temporary access || Has a verified home postal address
-        $hasTemporaryAccess = $user->hasAldreadyRequestedTemporaryAccess() &&
+        $hasTemporaryAccess = $user->hasAlreadyRequestedTemporaryAccess() &&
                               $this->isTemporaryAccessCurrentlyValid($user);
         $hasVerifiedSwissAddress = $this->hasVerifiedSwissAddress();
 

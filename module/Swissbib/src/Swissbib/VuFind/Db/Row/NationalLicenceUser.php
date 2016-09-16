@@ -42,10 +42,10 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Check is user has already requested a teporary access to the National Licence content
+     * Check is user has already requested a temporary access to the National Licence content
      * @return mixed
      */
-    public function hasAldreadyRequestedTemporaryAccess()
+    public function hasAlreadyRequestedTemporaryAccess()
     {
         return $this->request_temporary_access;
     }

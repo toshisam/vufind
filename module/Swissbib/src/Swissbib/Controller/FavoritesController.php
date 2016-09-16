@@ -105,7 +105,7 @@ class FavoritesController extends BaseController
      */
     public function deleteAction()
     {
-        $institutionCode = $this->params()->fromPost('institution');
+        $institutionCode    = $this->params()->fromPost('institution');
         $sendList        = !!$this->params()->fromPost('list');
 
         if ($institutionCode) {
