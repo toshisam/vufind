@@ -1,0 +1,10 @@
+<? if (!$this->hasAcceptedTermsAndConditions): ?>
+    <h3><?= $this->transEsc('snl.termsAndConditions') ?></h3>
+    <p>
+        <a href="<?= $this->url('national-licences') ?>/accept-terms-conditions"><input class="text-aligned-checkbox" type="checkbox" <?= $this->user->condition_accepted == true ? 'checked' : ''?>></a>
+        <?= $this->transEsc('snl.terms_conditions.accept') ?>
+        <a href><?= $this->transEsc('snl.terms_conditions.text') ?></a>
+        <?= $this->transEsc('snl.terms_conditions.text2') ?>
+
+    </p>
+<? endif; ?>
