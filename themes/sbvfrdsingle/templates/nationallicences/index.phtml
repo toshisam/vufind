@@ -10,74 +10,83 @@ $this->layout()->breadcrumbs = '<li><a href="' . $this->url('myresearch-home') .
 
     <h1><?= $this->transEsc('snl.accessNationalLicences') ?></h1>
     <?= $this->flashmessages(); ?>
-
     <!-- First of all chack if use is blocked -->
     <? if ($this->user->isBlocked()): ?>
-        <div class="alert alert-danger"><?= $this->transEsc('snl.youAccountHasBeenBlocked') ?></div>
+        <div class="alert alert-danger"><?= $this->transEsc('snl.yourAccountHasBeenBlocked') ?></div>
     <? else: ?>
-        <h3><?= $this->transEsc('snl.temporaryAccess') ?></h3>
+        <? if (!$this->hasPermanentAccess): ?>
+            <? if (!$this->hasAcceptedTermsAndConditions): ?>
+                <h3><?= $this->transEsc('snl.termsAndConditions') ?></h3>
+                <p>
+                    <a href="<?= $this->url('national-licences') ?>/accept-terms-conditions"><input class="text-aligned-checkbox" type="checkbox" <?= $this->user->condition_accepted == true ? 'checked' : ''?>></a>
+                    <?= $this->transEsc('snl.terms_conditions.accept') ?>
+                    <a href><?= $this->transEsc('snl.terms_conditions.text') ?></a>
+                    <?= $this->transEsc('snl.terms_conditions.text2') ?>
 
-        <? if ($this->user->request_temporary_access): ?>
-            <p>
-                <?= $this->transEsc('snl.youHaveAlreadyRequestedTemporary') ?>
-                <?= $this->transEsc('snl.itExpiresOn') ." ". $this->user->getExpirationDate()->format('d-m-Y') ?>.
-            </p>
-        <? else:; ?>
-            <!-- User didn't have requested a temporary access yet -->
-            <!-- Check if the user has a phone number in its edu-ID account -->
-            <? if ($this->mobile): ?>
-                <!-- Check if it's a swiss phone number -->
-                <? if ($this->isSwissPhoneNumber): ?>
-                    <p><?= $this->transEsc('snl.temporaryAccessCanOnlyRequestedOnceValid14Days') ?></p>
+                </p>
+            <? endif; ?>
+
+            <hr>
+
+            <h3><?= $this->transEsc('snl.temporaryAccess') ?></h3>
+
+            <? if ($this->user->request_temporary_access): ?>
+                <? if ($this->temporaryAccessValid): ?>
                     <p>
-                        <span class="text-aligned-icon icon-success"><i class="fa fa-check"></i></span>
-                        <?= $this->transEsc('snl.youHaveSwissMobilePhoneNumebr') ?>
+                        <?= $this->transEsc('snl.youHaveAlreadyRequestedTemporary') ?>
+                        <?= $this->transEsc('snl.itExpiresOn') ." ". $this->user->getExpirationDate()->format('d-m-Y') ?>.
                     </p>
-                    <a href="<?= $this->url('national-licences') ?>/activate-temporary-access">
-                        <div class="btn btn-primary"><?= $this->transEsc('snl.temporaryAccess.activate') ?></div>
-                    </a>
-                <? else:; ?>
-                    <!-- It's not a swiss phone number -->
+                <? else: ?>
                     <p>
-                        <span class="text-aligned-icon icon-danger"><i class="fa fa-times"></i></span>
-                        <?= $this->transEsc('snl.youDontHaveSwissMobilePhoneNumeber') ?>
+                        <?= $this->transEsc('snl.temporaryAccessExpired') ?>
                     </p>
-                    <a href="https://eduid.ch/web/change-account-data/1/"><?= $this->transEsc('snl.modify') ?></a>
-                    <?= $this->transEsc('snl.yourMobilePhoneInYourEduIdaccount') ?>
                 <? endif; ?>
-            <? else:; ?>
-                <!-- User don't have a mobile phone number in their edu-ID account-->
-                <p>
-                    <span class="text-aligned-icon icon-danger"><i class="fa fa-times"></i></span> <?= $this->transEsc('snl.youDontHaveMobilePhoneNumeber') ?>
-                    <a href="https://eduid.ch/web/change-account-data/1/"><?= $this->transEsc('snl.add') ?></a>
-                    <?= $this->transEsc('snl.yourMobilePhoneInYourEduIdaccount') ?>
-                </p>
-            <? endif; ?>
-        <? endif; ?>
 
-        <hr>
-        <h3><?= $this->transEsc('snl.permanentAccess') ?></h3>
-
-        <? if ($this->swissLibraryPersonResidence): ?>
-            <? if ($this->swissLibraryPersonResidence === 'CH'): ?>
-                <p>
-                    <span class="text-aligned-icon icon-success"><i class="fa fa-check"></i></span>
-                    <?= $this->transEsc('snl.youHavePostalAddresInSwitzerland') ?>
-                </p>
             <? else:; ?>
-                <!-- User have a foreign adress -->
-                <p>
-                    <span class="text-aligned-icon icon-danger"><i class="fa fa-times"></i></span>
-                    <?= $this->transEsc('snl.thisServiceIsOnlyForSwissResidents') ?>
-                </p>
+                <!-- User didn't have requested a temporary access yet -->
+                <!-- Check if the user has a phone number in its edu-ID account -->
+                <? if ($this->mobile): ?>
+                    <!-- Check if it's a swiss phone number -->
+                    <? if ($this->isSwissPhoneNumber): ?>
+                        <p><?= $this->transEsc('snl.temporaryAccessCanOnlyRequestedOnceValid14Days') ?></p>
+                        <p>
+                            <span class="text-aligned-icon icon-success"><i class="fa fa-check"></i></span>
+                            <?= $this->transEsc('snl.youHaveSwissMobilePhoneNumebr') ?>
+                        </p>
+                        <a href="<?= $this->url('national-licences') ?>/activate-temporary-access">
+                            <button class="btn btn-primary" <?= $this->hasAcceptedTermsAndConditions? "" : "disabled"; ?>><?= $this->transEsc('snl.temporaryAccess.activate') ?></button>
+                        </a>
+                    <? else:; ?>
+                        <!-- It's not a swiss phone number -->
+                        <p>
+                            <span class="text-aligned-icon icon-danger"><i class="fa fa-times"></i></span>
+                            <?= $this->transEsc('snl.youDontHaveSwissMobilePhoneNumeber') ?>
+                        </p>
+                        <a href="https://eduid.ch/web/change-account-data/1/"><?= $this->transEsc('snl.modify') ?></a>
+                        <?= $this->transEsc('snl.yourMobilePhoneInYourEduIdaccount') ?>
+                    <? endif; ?>
+                <? else:; ?>
+                    <!-- User don't have a mobile phone number in their edu-ID account-->
+                    <p>
+                        <span class="text-aligned-icon icon-danger"><i class="fa fa-times"></i></span> <?= $this->transEsc('snl.youDontHaveMobilePhoneNumeber') ?>
+                        <a href="https://eduid.ch/web/change-account-data/1/"><?= $this->transEsc('snl.add') ?></a>
+                        <?= $this->transEsc('snl.yourMobilePhoneInYourEduIdaccount') ?>
+                    </p>
+                <? endif; ?>
             <? endif; ?>
-        <? else:; ?>
-            <? if ($this->homePostalAddress): ?>
-                <? if ($this->isHomePostalAddressInSwitzerland): ?>
+
+            <hr>
+            <h3><?= $this->transEsc('snl.permanentAccess') ?></h3>
+
+            <? if ($this->swissLibraryPersonResidence): ?>
+                <? if ($this->swissLibraryPersonResidence === 'CH'): ?>
                     <p>
                         <span class="text-aligned-icon icon-success"><i class="fa fa-check"></i></span>
                         <?= $this->transEsc('snl.youHavePostalAddresInSwitzerland') ?>
                     </p>
+                    <a href="<?= $this->url('national-licences') ?>/activate-permanent-access">
+                        <button class="btn btn-primary" <?= $this->hasAcceptedTermsAndConditions? "" : "disabled"; ?>><?= $this->transEsc('snl.permanentAccess.activate') ?></button>
+                    </a>
                 <? else:; ?>
                     <!-- User have a foreign adress -->
                     <p>
@@ -86,33 +95,36 @@ $this->layout()->breadcrumbs = '<li><a href="' . $this->url('myresearch-home') .
                     </p>
                 <? endif; ?>
             <? else:; ?>
-                <!-- User have to fill the homePostalAddress in the Swiss edu-Id account -->
-                <p>
-                    <span class="text-aligned-icon icon-danger"><i class="fa fa-times"></i></span>
-                    <?= $this->transEsc('snl.theAddressNotVerifiedYet') ?>
-                    <a href="https://eduid.ch/web/change-account-data/1/"><?= $this->transEsc('snl.theAddressNotVerifiedYet.verify') ?></a>
-                    <?= $this->transEsc('snl.theAddressNotVerifiedYet.verify2') ?>
-                </p>
+                <? if ($this->homePostalAddress): ?>
+                    <? if ($this->isHomePostalAddressInSwitzerland): ?>
+                        <p>
+                            <span class="text-aligned-icon icon-success"><i class="fa fa-check"></i></span>
+                            <?= $this->transEsc('snl.youHavePostalAddresInSwitzerland') ?>asd
+                        </p>
+                        <a href="<?= $this->url('national-licences') ?>/activate-permanent-access">
+                            <button class="btn btn-primary" <?= $this->hasAcceptedTermsAndConditions? "" : "disabled"; ?>><?= $this->transEsc('snl.temporaryAccess.activate') ?></button>
+                        </a>
+                    <? else:; ?>
+                        <!-- User have a foreign adress -->
+                        <p>
+                            <span class="text-aligned-icon icon-danger"><i class="fa fa-times"></i></span>
+                            <?= $this->transEsc('snl.thisServiceIsOnlyForSwissResidents') ?>
+                        </p>
+                    <? endif; ?>
+                <? else:; ?>
+                    <!-- User have to fill the homePostalAddress in the Swiss edu-Id account -->
+                    <p>
+                        <span class="text-aligned-icon icon-danger"><i class="fa fa-times"></i></span>
+                        <?= $this->transEsc('snl.theAddressNotVerifiedYet') ?>
+                        <a href="https://eduid.ch/web/change-account-data/1/"><?= $this->transEsc('snl.theAddressNotVerifiedYet.verify') ?></a>
+                        <?= $this->transEsc('snl.theAddressNotVerifiedYet.verify2') ?>
+
+                    </p>
+                    <p>
+                        <img src="https://test.swissbib.ch/themes/sbvfrdsingle/images/verify_help.png" class="img-thumbnail image-address-verify-help">
+                    </p>
+                <? endif; ?>
             <? endif; ?>
-        <? endif; ?>
-
-        <hr>
-
-        <? if (!$this->user->hasAcceptedTermsAndConditions()): ?>
-            <h3><?= $this->transEsc('snl.termsAndConditions') ?></h3>
-            <p>
-                <a href="<?= $this->url('national-licences') ?>/accept-terms-conditions"><input class="text-aligned-checkbox" type="checkbox" <?= $this->user->condition_accepted == true ? 'checked' : ''?>></a>
-                <?= $this->transEsc('snl.terms_conditions.accept') ?>
-                <a href><?= $this->transEsc('snl.terms_conditions.text') ?></a>
-                <?= $this->transEsc('snl.terms_conditions.text2') ?>
-
-            </p>
-        <? endif; ?>
-
-        <? if ($this->isNationalLicenceCompliant): ?>
-            <div class="alert alert-success"><?= $this->transEsc('snl.nationalLicenceCompliant') ?></div>
-        <? else:; ?>
-            <div class="alert alert-warning"><?= $this->transEsc('snl.youDontHaveAccessToNationalLicencesError') ?></div>
         <? endif; ?>
 
     <? endif; ?>

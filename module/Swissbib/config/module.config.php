@@ -2,6 +2,8 @@
 
 namespace Swissbib\Module\Config;
 
+use Swissbib\Controller\NationalLicencesController;
+
 return [
     'router' => [
         'routes' => [
@@ -209,11 +211,11 @@ return [
             'install'              => 'Swissbib\Controller\NoProductiveSupportController',
             'feedback'             => 'Swissbib\Controller\FeedbackController',
             'cover'                => 'Swissbib\Controller\CoverController',
-            'national-licences'    => 'Swissbib\Controller\NationalLicencesController',
         ],
         'factories'  => [
             'record' => 'Swissbib\Controller\Factory::getRecordController',
             'cart'   => 'VuFind\Controller\Factory::getCartController',
+            'national-licences' => 'Swissbib\Controller\Factory::getNationalLicenceController',
         ]
     ],
     'service_manager' => [
@@ -221,7 +223,6 @@ return [
             'VuFindTheme\ResourceContainer'                 => 'Swissbib\VuFind\ResourceContainer',
             'Swissbib\QRCode'                               => 'Swissbib\CRCode\QrCodeService',
             'MarcFormatter'                                 => 'Swissbib\XSLT\MARCFormatter',
-            'NationalLicenceService'                        => 'Swissbib\Services\NationalLicence'
         ],
         'factories' => [
             'Swissbib\HoldingsHelper'                       =>  'Swissbib\RecordDriver\Helper\Factory::getHoldingsHelper',
@@ -262,6 +263,8 @@ return [
             'Swissbib\Record\Form\CopyForm'                 =>  'Swissbib\Record\Factory::getCopyForm',
             'Swissbib\MyResearch\Form\AddressForm'          =>  'Swissbib\MyResearch\Factory::getAddressForm',
             'Swissbib\Feedback\Form\FeedbackForm'           =>  'Swissbib\Feedback\Factory::getFeedbackForm',
+            'Swissbib\NationalLicenceService'               =>  'Swissbib\Services\Factory::getNationalLicenceService',
+            'Swissbib\SwitchApiService'                     =>  'Swissbib\Services\Factory::getSwitchApiService',
         ]
     ],
     'view_helpers'    => [
@@ -392,6 +395,13 @@ return [
             //'|jquery\.min.js|', // jquery 1.6
             //'|^jquery\.form\.js|',
         ],
+        'asset_manager' => [
+          'resolver_configs' => [
+              'paths' => [
+                    'Swissbib'
+              ]
+          ]
+        ],
         // This section contains service manager configurations for all Swissbib
         // pluggable components:
         'plugin_managers' => [
@@ -413,6 +423,20 @@ return [
             'invokeables' => [
                 'nationallicence' => 'Swissbib\VuFind\Db\Table\NationalLicenceUser'
             ]
+        ],
+        'switch_api' => [
+            'national_licence_programme_group_id' => "f4d40595-6d7d-41bc-9fa2-7139d2fcf892",
+            'base_endpoint_url' => "https://test.eduid.ch/sg/index.php",
+            'auth_user' => "natlic",
+            'auth_password' => "Amg6vZXo",
+            'schema_patch' => "urn:ietf:params:scim:api:messages:2.0:PatchOp",
+            'operation_add' => "add",
+            'operation_remove' => "remove",
+            'path_member' => "member"
+        ],
+        'national_licence' => [
+            'allowed_mobile_prefixes' => ['+41 79', '+41 78','+41 77' ,'+41 76'],
+
         ]
-    ]
+    ],
 ];

@@ -34,6 +34,10 @@ use Swissbib\VuFind\Db\Row\NationalLicenceUser;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Class NationalLicence
+ * @package Swissbib\Services
+ */
 class NationalLicence implements ServiceLocatorAwareInterface
 {
     /**
@@ -42,6 +46,24 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * @var ServiceLocatorInterface
      */
     protected $serviceLocator;
+
+    /** @var  array  $config */
+    protected $config;
+
+    /** @var  SwitchApi $switchApi */
+    protected $switchApiService;
+
+    /**
+     * NationalLicence constructor.
+     *
+     * @param SwitchApi $switchApiService
+     * @param array $config
+     */
+    public function __construct($switchApiService, $config)
+    {
+        $this->switchApiService = $switchApiService;
+        $this->config = $config['swissbib']['national_licence'];
+    }
 
     /**
      * Set serviceManager instance
@@ -85,7 +107,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
         }
 
         if(!$user->hasAcceptedTermsAndConditions()){
-            throw new \Exception("snl.plaeseAcceptTermsAndConditions");
+            throw new \Exception("snl.pleaseAcceptTermsAndConditions");
         }
 
         /** @var string $mobile */
@@ -146,7 +168,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * @param array $userFields Array of national licence user fields with their values.
      * @return NationalLicenceUser $user
      */
-    public function getOrCreateNationalLicenceUserIfNotExists($persistentId, $userFields = array())
+    public function getOrCreateNationalLicenceUserIfNotExists($persistentId, $userFields = [])
     {
         /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $userTable */
         $userTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
@@ -168,9 +190,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
     public function isSwissPhoneNumber($phoneNumber){
         if(!$phoneNumber) return false;
         $prefix = substr( $phoneNumber, 0, 6 );
-        if ($prefix === "+41 79") return true;
-        if ($prefix === "+41 78") return true;
-        if ($prefix === "+41 77") return true;
+        foreach ($this->config['allowed_mobile_prefixes'] as $allowedPrefix) {
+            if ($prefix === $allowedPrefix) return true;
+        }
 
         return false;
     }
@@ -257,7 +279,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * @param NationalLicenceUser $user
      * @return bool
      */
-    protected function isTemporaryAccessCurrentlyValid($user) {
+    public function isTemporaryAccessCurrentlyValid($user) {
         if(new \DateTime() > $user->getExpirationDate()) {
             return false;
         }
@@ -304,5 +326,55 @@ class NationalLicence implements ServiceLocatorAwareInterface
         if($user->isBlocked()){
             throw new Exception("snl.impossibleProcessTheActionUserAccountBlockedError");
         }
+    }
+
+    /**
+     * Set request permanent access to user
+     *
+     * @param NationalLicenceUser $user
+     */
+    public function setPermanentAccess($user = null)
+    {
+        if(empty($user)) {
+            $user = $this->getCurrentNationalLicenceUser();
+        }
+        $user->setRequestPermanentAccess();
+        $user->save();
+    }
+
+    /**
+     * This method sets the national-licence-compliant flag in the SWITCH API
+     *
+     * @param NationalLicenceUser $user
+     * @throws \Exception
+     */
+    public function setNationalLicenceCompliantFlag($user = null)
+    {
+        if (empty($user)) {
+           $user = $this->getCurrentNationalLicenceUser();
+        }
+        if (!$this->isNationalLicenceCompliant()) {
+            throw new \Exception("User is not compliant with the Swiss National Licence");
+        }
+        /** @var SwitchApi $switchApiService */
+        $this->switchApiService->setNationalCompliantFlag($user->getEduId());
+
+        $this->setPermanentAccess($user);
+    }
+
+    /**
+     * Check if user has access to the national licence content.
+     *
+     * @param NationalLicenceUser $user
+     * @return boolean
+     */
+    public function hasAccessToNationalLicenceContent($user)
+    {
+        if(!$user->hasAcceptedTermsAndConditions()) return false;
+        if($user->hasAlreadyRequestedTemporaryAccess() && $this->isTemporaryAccessCurrentlyValid($user)){
+            return true;
+        }
+        if($user->hasRequestPermanentAccess()) return true;
+        return false;
     }
 }

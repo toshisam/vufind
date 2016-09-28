@@ -210,4 +210,23 @@ class Factory
     {
         return static::getGenericPluginManager($sm, 'VuFind\Search\Results');
     }
+
+    /**
+     * Construct the Service\NationalLicence service.
+     *
+     * @param ServiceManager $sm
+     * @return NationalLicence
+     */
+    public static function getNationalLicenceService(ServiceManager $sm) {
+
+        return new NationalLicence($sm->get('Swissbib\SwitchApiService'), $sm->get('Config'));
+    }
+
+    public static function getSwitchApiService(ServiceManager $sm) {
+
+        return new SwitchApi( $sm->get('Config'));
+    }
+
+
+
 }

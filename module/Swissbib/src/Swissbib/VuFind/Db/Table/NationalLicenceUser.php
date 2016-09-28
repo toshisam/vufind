@@ -50,7 +50,7 @@ class NationalLicenceUser extends Gateway
     public function getUserById($id)
     {
 
-        return $this->select(array('id' => $id))
+        return $this->select(['id' => $id])
             ->current();
     }
 
@@ -67,7 +67,7 @@ class NationalLicenceUser extends Gateway
             throw new \Exception("Cannot fetch user with empty persistent_id");
         }
 
-        return $this->select(array('persistent_id' => $persistentId))
+        return $this->select(['persistent_id' => $persistentId])
             ->current();
     }
 
@@ -79,7 +79,7 @@ class NationalLicenceUser extends Gateway
      * @return \Swissbib\VuFind\Db\Row\NationalLicenceUser $user
      * @throws \Exception
      */
-    public function createNationalLicenceUserRow($persistentId, array $fieldsValue = array())
+    public function createNationalLicenceUserRow($persistentId, array $fieldsValue = [])
     {
         if (empty($persistentId)) {
             throw new \Exception("The persistent-id is mandatory for creating a National Licence User");

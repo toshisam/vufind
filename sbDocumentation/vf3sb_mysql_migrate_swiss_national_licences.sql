@@ -18,6 +18,7 @@ CREATE TABLE `national_licence_user` (
 
   `condition_accepted`  BOOLEAN DEFAULT FALSE,
   `request_temporary_access` BOOLEAN NOT NULL DEFAULT FALSE,
+  `request_permanent_access` BOOLEAN NOT NULL DEFAULT FALSE,
   `date_expiration` datetime DEFAULT NULL,
   `blocked` BOOLEAN NOT NULL DEFAULT FALSE,
   `last_edu_id_activity` datetime DEFAULT NULL,

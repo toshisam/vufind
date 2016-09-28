@@ -29,23 +29,36 @@
 namespace Swissbib\Controller;
 use Swissbib\Services\NationalLicence;
 use Swissbib\VuFind\Db\Row\NationalLicenceUser;
+use Zend\Config\Reader\Ini;
+use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 
 
 class NationalLicencesController extends BaseController
 {
     /**
+     * @var NationalLicence $nationalLicenceService
+     */
+    protected $nationalLicenceService;
+
+    /**
+     * Constructor.
+     *
+     * NationalLicencesController constructor.
+     * @param NationalLicence $nationalLicenceService
+     */
+    public function __construct(NationalLicence $nationalLicenceService)
+    {
+        $this->nationalLicenceService = $nationalLicenceService;
+    }
+
+    /**
      * Show the form for became compliant with the Swiss National Licences
      *
      * @return mixed|ViewModel
      */
-    public function indexAction(){
-        $account = $this->getAuthManager();
-
-        if ($account->isLoggedIn() == false) {
-            return $this->forceLogin();
-        }
-
+    public function indexAction()
+    {
         //TODO: Remove the following two lines, they are just for debugging!
         $n=$this->params()->fromQuery("preset");
         //Set a test preset for debugging the view
@@ -62,14 +75,11 @@ class NationalLicencesController extends BaseController
         $swissLibraryPersonResidence    = isset($_SERVER["swissLibraryPersonResidence"]) ?
                                                 $_SERVER["swissLibraryPersonResidence"] : null;
 
-        /** @var NationalLicence $nationalLicenceService */
-        $nationalLicenceService = $this->getServiceLocator()->get("NationalLicenceService");
-
         /** @var NationalLicenceUser $user */
         $user = null;
         try {
             // Create a national licence user liked the the current logged user
-            $user = $nationalLicenceService->getOrCreateNationalLicenceUserIfNotExists($persistentId, array(
+            $user = $this->nationalLicenceService->getOrCreateNationalLicenceUserIfNotExists($persistentId, array(
                 "edu_id" => $uniqueId,
                 "home_organization_type"=> $homeOrganizationType,
                 "mobile"=> $mobile,
@@ -91,11 +101,24 @@ class NationalLicencesController extends BaseController
         }
 
         // Compute the checks
-        $isHomePostalAddressInSwitzerland = false;//$nationalLicenceService->isAddressInSwitzerland($homePostalAddress);
-        $isSwissPhoneNumber = false; //$nationalLicenceService->isSwissPhoneNumber($mobile);
-        $isNationalLicenceCompliant = false; //$nationalLicenceService->isNationalLicenceCompliant();
+        $isHomePostalAddressInSwitzerland   = $this->nationalLicenceService->isAddressInSwitzerland($homePostalAddress);
+        $isSwissPhoneNumber                 = $this->nationalLicenceService->isSwissPhoneNumber($mobile);
+        $isNationalLicenceCompliant         = $this->nationalLicenceService->isNationalLicenceCompliant();
+        $temporaryAccessValid               = $this->nationalLicenceService->isTemporaryAccessCurrentlyValid($user);
+        $hasAcceptedTermsAndConditions      = $user->hasAcceptedTermsAndConditions();
+        $hasPermanentAccess                 = $user->hasRequestPermanentAccess();
+        $hasAccessToNationalLicenceContent  = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
 
-        return new ViewModel(
+        if($hasAccessToNationalLicenceContent){
+            $this->flashMessenger()->addSuccessMessage(
+                $this->translate("snl.nationalLicenceCompliant")
+            );
+        } else {
+            $this->flashMessenger()->addErrorMessage(
+                $this->translate("snl.youDontHaveAccessToNationalLicencesError")
+            );
+        }
+        $view = new ViewModel(
             [
                 "swissLibraryPersonResidence" => $swissLibraryPersonResidence,
                 "homePostalAddress" => $homePostalAddress,
@@ -103,9 +126,14 @@ class NationalLicencesController extends BaseController
                 "user" => $user,
                 "isSwissPhoneNumber" => $isSwissPhoneNumber,
                 "isHomePostalAddressInSwitzerland" => $isHomePostalAddressInSwitzerland,
-                "isNationalLicenceCompliant" => $isNationalLicenceCompliant
+                "isNationalLicenceCompliant" => $isNationalLicenceCompliant,
+                "temporaryAccessValid" => $temporaryAccessValid,
+                "hasAcceptedTermsAndConditions" => $hasAcceptedTermsAndConditions,
+                "hasPermanentAccess" => $hasPermanentAccess,
+                //"hasAccessToNationalLicenceContent" => $hasAccessToNationalLicenceContent
             ]
         );
+        return $view;
     }
 
     /**
@@ -113,7 +141,8 @@ class NationalLicencesController extends BaseController
      * TODO: To delete, this is just for debugging
      * @param int $n
      */
-    protected function presets($n = 0){
+    protected function presets($n = 0)
+    {
         switch ($n){
             case 1:
                 $_SERVER["homePostalAddress"] = 'Roswiesenstrasse 100$8051 Zürich$Switzerland';
@@ -149,11 +178,10 @@ class NationalLicencesController extends BaseController
      * Called when user click on the accept terms and conditions checkbox.
      * This information will be directly stored in the database.
      */
-    public function acceptTermsConditionsAction(){
-        /** @var NationalLicence $nationalLicenceService */
-        $nationalLicenceService = $this->getServiceLocator()->get("NationalLicenceService");
+    public function acceptTermsConditionsAction()
+    {
         try {
-            $nationalLicenceService->acceptTermsConditions();
+            $this->nationalLicenceService->acceptTermsConditions();
             //TODO: Update the national compliant flag if compliant
         } catch (\Exception $e) {
             $this->flashMessenger()->setNamespace("error")->addMessage(
@@ -166,13 +194,11 @@ class NationalLicencesController extends BaseController
     /**
      * Send request for the temporary access
      */
-    public function activateTemporaryAccessAction(){
-        /** @var NationalLicence $nationalLicenceService */
-        $nationalLicenceService = $this->getServiceLocator()->get("NationalLicenceService");
-
+    public function activateTemporaryAccessAction()
+    {
         $accessCreatedSuccessfully = false;
         try {
-            $accessCreatedSuccessfully = $nationalLicenceService->createTemporaryAccessForUser();
+            $accessCreatedSuccessfully = $this->nationalLicenceService->createTemporaryAccessForUser();
         } catch (\Exception $e) {
             $this->flashMessenger()->setNamespace("error")->addMessage(
                 $this->translate($e->getMessage())
@@ -193,5 +219,42 @@ class NationalLicencesController extends BaseController
         $this->redirect()->toRoute("national-licences");
     }
 
+    /**
+     * Set the permanent access for the current user. Internally this will also adds the user to the National Licence Program
+     * using the Switch API.
+     */
+    public function activatePermanentAccessAction()
+    {
+        try {
+            $this->nationalLicenceService->setNationalLicenceCompliantFlag();
+            $this->flashMessenger()->setNamespace("success")->addMessage(
+                $this->translate("snl.yourRequestPermanentAccessSuccessful")
+            );
+        } catch (\Exception $e) {
+            $this->flashMessenger()->setNamespace("error")->addMessage(
+                $this->translate("snl.requestPermanentAccessNotSuccessful")
+            );
+        }
+        $this->redirect()->toRoute("national-licences");
+    }
+
+    /**
+     * Method called before every action. It checks if the user is authenticated and it
+     * redirects it to the login page otherwise.
+     *
+     * @param MvcEvent $e
+     * @return mixed|\Zend\Http\Response
+     */
+    public function onDispatch(MvcEvent $e)
+    {
+        $account = $this->getAuthManager();
+
+        if (false === $account->isLoggedIn() ) {
+            $this->forceLogin(false);
+            return $this->redirect()->toRoute('myresearch-home');
+        }else{
+            return parent::onDispatch($e);
+        }
+    }
 
 }

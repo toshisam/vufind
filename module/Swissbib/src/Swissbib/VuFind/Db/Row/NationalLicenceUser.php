@@ -61,6 +61,16 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
+     * Set expiration date.
+     *
+     * @param \DateTime $date
+     */
+    public function setExpirationDate($date)
+    {
+        $this->date_expiration = $date->format('Y-m-d H:i:s');
+    }
+
+    /**
      * Set the temporary access for 14 days
      *
      * @return bool
@@ -68,7 +78,7 @@ class NationalLicenceUser extends RowGateway
     public function setTemporaryAccess()
     {
         $this->request_temporary_access = true;
-        $this->date_expiration  = (new \DateTime())->modify('+14 day')->format('Y-m-d H:i:s');
+        $this->setExpirationDate((new \DateTime())->modify('+14 day'));
         $n = $this->save();
         if($n > 0) {
             return true;
@@ -159,6 +169,50 @@ class NationalLicenceUser extends RowGateway
     public function getCreatedDate()
     {
         return new \DateTime($this->created);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isIsInitialized()
+    {
+        return $this->isInitialized;
+    }
+
+    /**
+     * @param boolean $isInitialized
+     */
+    public function setIsInitialized($isInitialized)
+    {
+        $this->isInitialized = $isInitialized;
+    }
+
+    /**
+     * Check if user has requested the permanent access
+     *
+     * @return boolean
+     */
+    public function hasRequestPermanentAccess()
+    {
+        return $this->request_permanent_access;
+    }
+
+    /**
+     * Set the permanent access to the user
+     */
+    public function setRequestPermanentAccess()
+    {
+        $this->request_permanent_access = true;
+    }
+
+    /**
+     * Get the unique id of the national licence user
+     *
+     * @return string Edu-Id of the user
+     */
+    public function getEduId()
+    {
+        return $this->edu_id;
     }
 
 
