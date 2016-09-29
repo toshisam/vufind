@@ -169,6 +169,8 @@ class SwitchApi implements ServiceLocatorAwareInterface
                 ]
             ]
         ];
+        $str = json_encode($params, JSON_PRETTY_PRINT);
+        //echo "<pre> $str < /pre>";
         $rawData  = json_encode($params, JSON_UNESCAPED_SLASHES);
         $client ->setRawBody($rawData);
         $response = $client->send();
@@ -210,7 +212,7 @@ class SwitchApi implements ServiceLocatorAwareInterface
             'maxredirects' => 0,
             'timeout'      => 30
         ]);
-        echo $client->getUri();
+        //echo $client->getUri();
         $client->setHeaders([
             "Content-Type" => "application/json",
             "Accept" => "application/json"

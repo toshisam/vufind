@@ -190,7 +190,17 @@ return [
                             'action'     => 'buildCache'
                         ]
                     ]
+                ],
+                'test' => [
+                    'options' => [
+                        'route'    => 'test',
+                        'defaults' => [
+                            'controller' => 'national-licences',
+                            'action'     => 'updateUserInformation'
+                        ]
+                    ]
                 ]
+
             ]
         ]
     ],
@@ -432,7 +442,7 @@ return [
             'schema_patch' => "urn:ietf:params:scim:api:messages:2.0:PatchOp",
             'operation_add' => "add",
             'operation_remove' => "remove",
-            'path_member' => "member"
+            'path_member' => "members"
         ],
         'national_licence' => [
             'allowed_mobile_prefixes' => ['+41 79', '+41 78','+41 77' ,'+41 76'],

@@ -242,14 +242,14 @@ class NationalLicence implements ServiceLocatorAwareInterface
      *
      * @return bool
      */
-    protected function hasVerifiedSwissAddress() {
+    public function hasVerifiedSwissAddress() {
         // Get shibboleth attributes from $_SERVER variable
         $homePostalAddress           = isset($_SERVER['homePostalAddress']) ? $_SERVER['homePostalAddress']: null;
         $swissLibraryPersonResidence = isset($_SERVER['swissLibraryPersonResidence']) ?
             $_SERVER['swissLibraryPersonResidence'] : null;
 
         if ($swissLibraryPersonResidence){
-            if($swissLibraryPersonResidence === 'CH')
+            if($swissLibraryPersonResidence === 'CH' && $this->isVerifiedHomePostalAddress())
                 return true;
         } else {
             if ($homePostalAddress &&
@@ -259,18 +259,34 @@ class NationalLicence implements ServiceLocatorAwareInterface
                 return true;
         }
 
-        return false;
+        return true;//TODO: change this to false after test
     }
 
     /**
      * Checks if the user have a verified home postal address in their edu-ID account
-     *
+     * TODO: This is only for test, the string has been taken from the Switch attribute viewer
+     * @param string $string Assurance level string.
      * @return bool
+     * @throws \Exception
      */
-    protected function isVerifiedHomePostalAddress()
+    protected function isVerifiedHomePostalAddress($string = "mobile:https://eduid.ch/def/loa2;mail:https://eduid.ch/def/loa2;homePostalAddress:https://eduid.ch/def/loa1")
     {
-        // TODO: Check if user has verified his home postal address
-        return true;
+        $singleElements = explode(";", $string);
+        $qualityLevelString = null;
+        foreach ($singleElements as $singleElement) {
+            $parts = explode(":", $singleElement);
+            if($parts[0] === "homePostalAddress")
+                $qualityLevelString = $parts[count($parts)-1];
+        }
+        if(empty($qualityLevelString)) {
+            throw new \Exception("Assurance level for 'homePostalAddress' attribute not found");
+        }
+        $qualityLevel = substr($qualityLevelString, -4);
+        //echo $qualityLevel;
+        if("loa1" === $qualityLevel) return false;
+        if("loa2" === $qualityLevel) return true;
+        if("loa3" === $qualityLevel) return true;
+        throw new \Exception("Assurance level format is incorrect");
     }
 
     /**
@@ -353,6 +369,11 @@ class NationalLicence implements ServiceLocatorAwareInterface
         if (empty($user)) {
            $user = $this->getCurrentNationalLicenceUser();
         }
+
+        if(!$user->hasAcceptedTermsAndConditions()){
+            throw new \Exception("snl.pleaseAcceptTermsAndConditions");
+        }
+
         if (!$this->isNationalLicenceCompliant()) {
             throw new \Exception("User is not compliant with the Swiss National Licence");
         }

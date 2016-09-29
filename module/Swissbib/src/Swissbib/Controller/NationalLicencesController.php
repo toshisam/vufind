@@ -63,6 +63,8 @@ class NationalLicencesController extends BaseController
         $n=$this->params()->fromQuery("preset");
         //Set a test preset for debugging the view
         $this->presets($n);
+        //$str = json_encode($_SERVER, JSON_PRETTY_PRINT);
+        //echo "<pre style='color: red;'>$str</pre>";
 
         // Get user information from the shibboleth attributes
         $uniqueId                       = isset($_SERVER["uniqueID"]) ? $_SERVER["uniqueID"]: null;
@@ -106,6 +108,7 @@ class NationalLicencesController extends BaseController
         $isNationalLicenceCompliant         = $this->nationalLicenceService->isNationalLicenceCompliant();
         $temporaryAccessValid               = $this->nationalLicenceService->isTemporaryAccessCurrentlyValid($user);
         $hasAcceptedTermsAndConditions      = $user->hasAcceptedTermsAndConditions();
+        $hasVerifiedHomePostalAddress       = $this->nationalLicenceService->hasVerifiedSwissAddress();
         $hasPermanentAccess                 = $user->hasRequestPermanentAccess();
         $hasAccessToNationalLicenceContent  = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
 
@@ -130,6 +133,7 @@ class NationalLicencesController extends BaseController
                 "temporaryAccessValid" => $temporaryAccessValid,
                 "hasAcceptedTermsAndConditions" => $hasAcceptedTermsAndConditions,
                 "hasPermanentAccess" => $hasPermanentAccess,
+                "hasVerifiedHomePostalAddress" => $hasVerifiedHomePostalAddress
                 //"hasAccessToNationalLicenceContent" => $hasAccessToNationalLicenceContent
             ]
         );
@@ -232,7 +236,7 @@ class NationalLicencesController extends BaseController
             );
         } catch (\Exception $e) {
             $this->flashMessenger()->setNamespace("error")->addMessage(
-                $this->translate("snl.requestPermanentAccessNotSuccessful")
+                $this->translate($e->getMessage())
             );
         }
         $this->redirect()->toRoute("national-licences");
@@ -257,4 +261,8 @@ class NationalLicencesController extends BaseController
         }
     }
 
+
+    public function updateUserInformationAction() {
+            echo "test cron job";
+    }
 }
