@@ -420,7 +420,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
      *
      * @param string $to The receiver of the mail.
      */
-    public function sendExportEmailTo($to = null)
+    public function sendExportEmail($to = null)
     {
         $users = $this->getListNationalLicenceUserWithVuFindUsers();
         $path = getcwd() . $this->config['user_export_path'] . "/" . $this->config['user_export_filename'];

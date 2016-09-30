@@ -20,7 +20,7 @@ class ConsoleController extends BaseController
     public function sendNationalLicenceUsersExportAction() {
         /** @var NationalLicence $nationalLicenceService */
         $nationalLicenceService = $this->getServiceLocator()->get('Swissbib\NationalLicenceService');
-        $nationalLicenceService->sendExportEmailTo();
+        $nationalLicenceService->sendExportEmail();
     }
 
     public function updateNationalLicenceUserInfoAction() {
