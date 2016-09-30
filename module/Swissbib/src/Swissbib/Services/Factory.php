@@ -219,12 +219,33 @@ class Factory
      */
     public static function getNationalLicenceService(ServiceManager $sm) {
 
-        return new NationalLicence($sm->get('Swissbib\SwitchApiService'), $sm->get('Config'));
+        return new NationalLicence(
+            $sm->get('Swissbib\SwitchApiService'),
+            $sm->get('Swissbib\EmailService'),
+            $sm->get('Config')
+        );
     }
 
+    /**
+     * Get SwitchApi service.
+     *
+     * @param ServiceManager $sm
+     * @return SwitchApi
+     */
     public static function getSwitchApiService(ServiceManager $sm) {
 
-        return new SwitchApi( $sm->get('Config'));
+        return new SwitchApi($sm->get('Config'));
+    }
+
+    /**
+     * Get Email service.
+     *
+     * @param ServiceManager $sm
+     * @return Email
+     */
+    public static function getEmailService(ServiceManager $sm) {
+
+        return new Email($sm->get('Config'));
     }
 
 

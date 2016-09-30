@@ -28,9 +28,13 @@
 
 namespace Swissbib\VuFind\Db\Row;
 use VuFind\Db\Row\RowGateway;
+use VuFind\Db\Table\User;
 
 class NationalLicenceUser extends RowGateway
 {
+    /** @var  \VuFind\Db\Row\User $relUser */
+    protected $relUser;
+
     /**
     * Constructor
     *
@@ -120,7 +124,7 @@ class NationalLicenceUser extends RowGateway
      * Get persistent id
      */
     public function  getPersistentId() {
-        $this->persistent_id;
+        return $this->persistent_id;
     }
 
     /**
@@ -215,5 +219,19 @@ class NationalLicenceUser extends RowGateway
         return $this->edu_id;
     }
 
+    /**
+     * @return \VuFind\Db\Row\User
+     */
+    public function getRelUser()
+    {
+        return $this->relUser;
+    }
 
+    /**
+     * @param \VuFind\Db\Row\User $relUser
+     */
+    public function setRelUser($relUser)
+    {
+        $this->relUser = $relUser;
+    }
 }

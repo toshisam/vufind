@@ -29,6 +29,7 @@ namespace Swissbib\VuFind\Db\Table;
 
 use VuFind\Db\Table\Gateway;
 use VuFind\Db\Table\User;
+use Zend\Db\Sql\Select;
 
 class NationalLicenceUser extends Gateway
 {
@@ -111,7 +112,6 @@ class NationalLicenceUser extends Gateway
         return $nationalUser;
     }
 
-
     /**
      * Update user fields
      *
@@ -122,8 +122,34 @@ class NationalLicenceUser extends Gateway
     {
         $user = $this->getUserByPersistentId($persistentId);
         foreach ($fieldsValues as $key => $value) {
-            $user->$key = $value;
+            if($user->$key !== $value) {
+                $user->$key = $value;
+            }
         }
         $user->save();
+    }
+
+    /**
+     * Get list of all National licence users with relative VuFind users.
+     *
+     * @return array
+     */
+    public function getList()
+    {
+        /** @var User $userTable */
+        $userTable = $this->getDbTable('user');
+
+        $nationalLicenceUsers = $this->select(function (Select $select) {
+            $select->where->greaterThan("id", 0);
+        });
+        $arr_resultSet = [];
+        /** @var \Swissbib\VuFind\Db\Row\NationalLicenceUser $nationalLicenceUser */
+        foreach ($nationalLicenceUsers as $nationalLicenceUser) {
+            /** @var \VuFind\Db\Row\User $user */
+            $user = $userTable->getByUsername($nationalLicenceUser->getPersistentId());
+            $nationalLicenceUser->setRelUser($user);
+            $arr_resultSet[] = $nationalLicenceUser;
+        }
+        return $arr_resultSet;
     }
 }

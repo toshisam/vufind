@@ -191,12 +191,21 @@ return [
                         ]
                     ]
                 ],
-                'test' => [
+                'send-national-licence-users-export' => [
                     'options' => [
-                        'route'    => 'test',
+                        'route'    => 'send-national-licence-users-export',
                         'defaults' => [
-                            'controller' => 'national-licences',
-                            'action'     => 'updateUserInformation'
+                            'controller' => 'console',
+                            'action'     => 'sendNationalLicenceUsersExport'
+                        ]
+                    ]
+                ],
+                'update-national-licence-user-info' => [
+                    'options' => [
+                        'route'    => 'update-national-licence-user-info',
+                        'defaults' => [
+                            'controller' => 'console',
+                            'action'     => 'updateNationalLicenceUserInfo'
                         ]
                     ]
                 ]
@@ -221,6 +230,7 @@ return [
             'install'              => 'Swissbib\Controller\NoProductiveSupportController',
             'feedback'             => 'Swissbib\Controller\FeedbackController',
             'cover'                => 'Swissbib\Controller\CoverController',
+            'console'              => 'Swissbib\Controller\ConsoleController',
         ],
         'factories'  => [
             'record' => 'Swissbib\Controller\Factory::getRecordController',
@@ -275,6 +285,7 @@ return [
             'Swissbib\Feedback\Form\FeedbackForm'           =>  'Swissbib\Feedback\Factory::getFeedbackForm',
             'Swissbib\NationalLicenceService'               =>  'Swissbib\Services\Factory::getNationalLicenceService',
             'Swissbib\SwitchApiService'                     =>  'Swissbib\Services\Factory::getSwitchApiService',
+            'Swissbib\EmailService'                         =>  'Swissbib\Services\Factory::getEmailService',
         ]
     ],
     'view_helpers'    => [
@@ -444,9 +455,52 @@ return [
             'operation_remove' => "remove",
             'path_member' => "members"
         ],
-        'national_licence' => [
+        'national_licence_service' => [
             'allowed_mobile_prefixes' => ['+41 79', '+41 78','+41 77' ,'+41 76'],
+            'user_export_path' => '/export/nationalLicence',
+            'user_export_filename' => 'user_export.csv',
+            'national_licence_user_fields_to_export' => [
+                'id',
+                'edu_id',
+                'persistent_id',
+                'user_id',
+                'home_organization_type',
+                'mobile',
+                'home_postal_address',
+                'affiliation',
+                'swiss_library_person_residence',
+                'condition_accepted',
+                'request_temporary_access',
+                'request_permanent_access',
+                'date_expiration',
+                'blocked',
+                'last_edu_id_activity',
+                'last_account_extension_request',
+                'created'
+            ],
+            'vufind_user_fields_to_export' => [
+                'id',
+                'username',
+                'password',
+                'firstname',
+                'lastname',
+                'email',
+                'cat_username',
+                'cat_password',
+                'cat_pass_enc',
+                'college',
+                'major',
+                'home_library',
+                'created',
+                'favorite_institutions',
+                'language',
+                'max_hits',
+            ],
 
+        ],
+        'email_service' => [
+            'default_email_address_to' => 'scogno@snowflake.ch', //Change with your production address
+            'default_email_address_from' => 'test@snowflake.ch', //Change with your production address
         ]
     ],
 ];

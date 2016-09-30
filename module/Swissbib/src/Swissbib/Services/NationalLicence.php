@@ -29,6 +29,7 @@
 
 namespace Swissbib\Services;
 
+
 use Swissbib\Libadmin\Exception\Exception;
 use Swissbib\VuFind\Db\Row\NationalLicenceUser;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -46,23 +47,25 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * @var ServiceLocatorInterface
      */
     protected $serviceLocator;
-
     /** @var  array  $config */
     protected $config;
-
     /** @var  SwitchApi $switchApi */
     protected $switchApiService;
+    /** @var Email $emailService */
+    protected $emailService;
 
     /**
      * NationalLicence constructor.
      *
      * @param SwitchApi $switchApiService
+     * @param Email $emailService
      * @param array $config
      */
-    public function __construct($switchApiService, $config)
+    public function __construct($switchApiService, $emailService, $config)
     {
         $this->switchApiService = $switchApiService;
-        $this->config = $config['swissbib']['national_licence'];
+        $this->emailService = $emailService;
+        $this->config = $config['swissbib']['national_licence_service'];
     }
 
     /**
@@ -398,4 +401,113 @@ class NationalLicence implements ServiceLocatorAwareInterface
         if($user->hasRequestPermanentAccess()) return true;
         return false;
     }
+
+    /**
+     * Get list of all national licence users and their related vufind user.
+     *
+     * @return \Zend\Db\ResultSet\ResultSet
+     */
+    public function getListNationalLicenceUserWithVuFindUsers()
+    {
+        /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $userTable */
+        $userTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
+
+        return $userTable->getList();
+    }
+
+    /**
+     * Send e-mail.
+     *
+     * @param string $to The receiver of the mail.
+     */
+    public function sendExportEmailTo($to = null)
+    {
+        $users = $this->getListNationalLicenceUserWithVuFindUsers();
+        $path = getcwd() . $this->config['user_export_path'] . "/" . $this->config['user_export_filename'];
+        $attachmentFilePath = $this->createCsvFileFromListUsers($path, $users);
+        $this->emailService->sendMail($to, "This is an export of the National Licence users.", $attachmentFilePath);
+    }
+
+    /**
+     * Create a csv file export from the list of users
+     *
+     * @param string $path Path of the created file
+     * @param array(NationalLicenceUser) $users List of National Licence users
+     * @return string
+     */
+    protected function createCsvFileFromListUsers($path, $users)
+    {
+        $fieldsNationalLicenceUser = $this->config['national_licence_user_fields_to_export'];
+        $fieldVuFindUser = $this->config['vufind_user_fields_to_export'];
+
+        $file = fopen($path, 'w+') or die("Unable to open file!");
+
+        //Header
+        $str="";
+        foreach ($fieldsNationalLicenceUser as $field) {
+            $str = $str . $field . ",";
+        }
+        foreach ($fieldVuFindUser as $field) {
+            $str = $str . $field . ",";
+        }
+        $str = $str . "\r\n";
+        fwrite($file, $str);
+
+        //Data
+        /** @var NationalLicenceUser $user */
+        foreach ($users as $user) {
+            $str = "";
+            foreach ($fieldsNationalLicenceUser as $field) {
+                $str = $str . $user->$field . ",";
+            }
+            foreach ($fieldVuFindUser as $field) {
+                $str = $str . $user->getRelUser()->$field . ",";
+            }
+            $str = $str . "\r\n";
+            fwrite($file, $str);
+        }
+        fclose($file);
+        return $path;
+    }
+
+    /**
+     * Check if the homePostalAddress of the user is still compliant with the Swiss National Licence.
+     * TODO
+     * @param NationalLicenceUser $user
+     * @return boolean
+     */
+    protected function isHomePostalAddressNationalLicenceCompliant($user)
+    {
+        //No address -->remove flag
+        //Postal address not verified anymore --> remove user to national compliant group
+        //Postal address not in CH -->remove user to national compliant group
+        return false;
+    }
+
+    /**
+     * Check and update the National Licence user with the last attributes in their edu-ID account and update
+     * the flag accordingly.
+     * TODO
+     */
+    public function checkAndUpdateNationalLicenceUserInfo()
+    {
+        //Get list of users
+        $users = $this->getListNationalLicenceUserWithVuFindUsers();
+        //Foreach users
+        foreach ($users as $user) {
+            //Update attributes from the edu-Id account
+            //If last activity date < last 12 month
+            //If last_account_extension_request == null
+            //Send and email to the user for exteding their account
+            //Set the last_account_extension_request to now
+            //Else if last_account_extension_request < 10 days ago
+            //Unset the national licence compliant glag
+
+            //if user is not anymore compliant with their homePostalAddress
+            if(!$this->isHomePostalAddressNationalLicenceCompliant($user)) {
+                //Unset the national licence compliant flag
+            }
+        }
+    }
+
 }

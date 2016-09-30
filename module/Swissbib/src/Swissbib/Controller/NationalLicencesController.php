@@ -27,12 +27,12 @@
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
 namespace Swissbib\Controller;
+
 use Swissbib\Services\NationalLicence;
 use Swissbib\VuFind\Db\Row\NationalLicenceUser;
 use Zend\Config\Reader\Ini;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
-
 
 class NationalLicencesController extends BaseController
 {
@@ -261,8 +261,11 @@ class NationalLicencesController extends BaseController
         }
     }
 
-
-    public function updateUserInformationAction() {
-            echo "test cron job";
+    /**
+     * Method called when user want to extend his account. The link to access to this function has to be send by e-mail.
+     */
+    public function extendAccountAction()
+    {
+        //Update user information about last login
     }
 }

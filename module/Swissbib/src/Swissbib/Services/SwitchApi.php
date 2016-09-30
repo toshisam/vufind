@@ -200,6 +200,14 @@ class SwitchApi implements ServiceLocatorAwareInterface
     }
 
     /**
+     * Get the update attributes of a the national licence user.
+     * TODO
+     */
+    protected function getNationalLicenceUserCurrentInformation(){
+        //Make http request fro retrieve new edu-ID information usign the back-channel api
+    }
+
+    /**
      * Get an instance of the HTTP Client with some basic configuration.
      *
      * @param string $method

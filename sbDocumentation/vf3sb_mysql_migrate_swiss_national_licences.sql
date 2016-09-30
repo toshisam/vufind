@@ -1,7 +1,8 @@
 --
 -- Table structure for table `swiss_national_licence`
 --
-
+use libadmin;
+DROP TABLE IF EXISTS `national_licence_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `national_licence_user` (
@@ -22,6 +23,7 @@ CREATE TABLE `national_licence_user` (
   `date_expiration` datetime DEFAULT NULL,
   `blocked` BOOLEAN NOT NULL DEFAULT FALSE,
   `last_edu_id_activity` datetime DEFAULT NULL,
+  `last_account_extension_request` datetime DEFAULT NULL,
   `created` datetime  DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES user(`id`),
