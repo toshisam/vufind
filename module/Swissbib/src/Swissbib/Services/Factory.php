@@ -44,27 +44,6 @@ use Swissbib\VuFind\Recommend\FavoriteFacets;
 class Factory
 {
     /**
-     * Generic plugin manager factory (support method).
-     *
-     * @param ServiceManager $sm Service manager.
-     * @param string         $ns VuFind namespace containing plugin manager
-     *
-     * @return object
-     */
-    public static function getGenericPluginManager(ServiceManager $sm, $ns)
-    {
-        $className = 'Swissbib\\' . $ns . '\PluginManager';
-        $configKey = strtolower(str_replace('\\', '_', $ns));
-        $config = $sm->get('Config');
-        return new $className(
-            new \Zend\ServiceManager\Config(
-                //we need the swissbib specific configurations
-                $config['swissbib']['plugin_managers'][$configKey]
-            )
-        );
-    }
-
-    /**
      * Constructs a type for redirecting resources using the appropriate protocol
      * (most often used for http resources in https environments).
      *
@@ -188,6 +167,28 @@ class Factory
     }
 
     /**
+     * Generic plugin manager factory (support method).
+     *
+     * @param ServiceManager $sm Service manager.
+     * @param string         $ns VuFind namespace containing plugin manager
+     *
+     * @return object
+     */
+    public static function getGenericPluginManager(ServiceManager $sm, $ns)
+    {
+        $className = 'Swissbib\\' . $ns . '\PluginManager';
+        $configKey = strtolower(str_replace('\\', '_', $ns));
+        $config = $sm->get('Config');
+
+        return new $className(
+            new \Zend\ServiceManager\Config(
+            //we need the swissbib specific configurations
+                $config['swissbib']['plugin_managers'][$configKey]
+            )
+        );
+    }
+
+    /**
      * Construct the Search\Params Plugin Manager.
      *
      * @param ServiceManager $sm Service manager.
@@ -217,7 +218,8 @@ class Factory
      * @param ServiceManager $sm
      * @return NationalLicence
      */
-    public static function getNationalLicenceService(ServiceManager $sm) {
+    public static function getNationalLicenceService(ServiceManager $sm)
+    {
 
         return new NationalLicence(
             $sm->get('Swissbib\SwitchApiService'),
@@ -232,7 +234,8 @@ class Factory
      * @param ServiceManager $sm
      * @return SwitchApi
      */
-    public static function getSwitchApiService(ServiceManager $sm) {
+    public static function getSwitchApiService(ServiceManager $sm)
+    {
 
         return new SwitchApi($sm->get('Config'));
     }
@@ -243,11 +246,11 @@ class Factory
      * @param ServiceManager $sm
      * @return Email
      */
-    public static function getEmailService(ServiceManager $sm) {
+    public static function getEmailService(ServiceManager $sm)
+    {
 
         return new Email($sm->get('Config'));
     }
-
 
 
 }

@@ -3,28 +3,23 @@
  * Service for sending e-mail.
  *
  * PHP version 5
- *
  * Copyright (C) project swissbib, University Library Basel, Switzerland
  * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
  * as published by the Free Software Foundation.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category Swissbib_VuFind2
- *
+ * @package  Service
  * @author   Simone Cogno <scogno@snowflake.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- *
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
 namespace Swissbib\Services;
@@ -39,13 +34,18 @@ use Zend\Mail\Transport\Sendmail as SendmailTransport;
 
 class Email implements ServiceLocatorAwareInterface
 {
-    /** @var  ServiceLocatorInterface $serviceLocator */
+    /**
+     * @var  ServiceLocatorInterface $serviceLocator
+     */
     protected $serviceLocator;
-    /** @var  array $config */
+    /**
+     * @var  array $config
+     */
     protected $config;
 
     /**
      * Email constructor.
+     * @param array $config
      */
     public function __construct($config)
     {
@@ -75,15 +75,14 @@ class Email implements ServiceLocatorAwareInterface
      *
      * @param string $textMail           Email text
      * @param string $attachmentFilePath Attachment file path
-     *
+     * @param int    $contentType
      * @return Mime\Message
      */
     public function createMimeMessage(
         $textMail,
         $attachmentFilePath = null,
         $contentType = null
-    )
-    {
+    ) {
         if (empty($contentType)) {
             $contentType = Mime\Mime::TYPE_HTML;
         }
@@ -119,10 +118,9 @@ class Email implements ServiceLocatorAwareInterface
     /**
      * Send e-mail with defined mime message (text and attached file).
      *
-     * @param string $to
+     * @param string       $to
      * @param Mime\Message $mimeMessage
-     * @param string $subject
-     *
+     * @param string       $subject
      * @throws \Exception
      */
     public function sendMailWithAttachment($to, $mimeMessage, $subject)

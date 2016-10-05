@@ -3,28 +3,23 @@
  * Controller of the National Licence page on the Swissbib account.
  *
  * PHP version 5
- *
  * Copyright (C) project swissbib, University Library Basel, Switzerland
  * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
  * as published by the Free Software Foundation.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category Swissbib_VuFind2
- *
+ * @package  Controller
  * @author   Simone Cogno <scogno@snowflake.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- *
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
 namespace Swissbib\Controller;
@@ -43,7 +38,6 @@ class NationalLicencesController extends BaseController
 
     /**
      * Constructor.
-     *
      * NationalLicencesController constructor.
      *
      * @param NationalLicence $nationalLicenceService
@@ -57,6 +51,7 @@ class NationalLicencesController extends BaseController
      * Show the form for became compliant with the Swiss National Licences.
      *
      * @return mixed|ViewModel
+     * @throws \Exception
      */
     public function indexAction()
     {
@@ -85,7 +80,9 @@ class NationalLicencesController extends BaseController
             isset($_SERVER['swissLibraryPersonResidence']) ?
                 $_SERVER['swissLibraryPersonResidence'] : null;
 
-        /** @var NationalLicenceUser $user */
+        /**
+         * @var NationalLicenceUser $user
+         */
         $user = null;
         try {
             // Create a national licence user liked the the current logged user
@@ -207,8 +204,8 @@ class NationalLicencesController extends BaseController
      * and it redirects it to the login page otherwise.
      *
      * @param MvcEvent $e
-     *
      * @return mixed|\Zend\Http\Response
+     * @throws \Exception
      */
     public function onDispatch(MvcEvent $e)
     {
@@ -305,7 +302,7 @@ class NationalLicencesController extends BaseController
                     $this->translate($message['text'])
                 );
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->flashMessenger()->setNamespace('success')->addMessage(
                 $this->translate('snl.yourRequestPermanentAccessSuccessful')
             );

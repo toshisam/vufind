@@ -21,10 +21,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category Swissbib_VuFind2
- *
+ * @package  Controller
  * @author   Simone Cogno <scogno@snowflake.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- *
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
 namespace Swissbib\Controller;
@@ -38,12 +37,20 @@ class ConsoleController extends BaseController
      */
     public function sendNationalLicenceUsersExportAction()
     {
-        /** @var NationalLicence $nationalLicenceService */
+        /**
+         * @var NationalLicence $nationalLicenceService
+         */
         $nationalLicenceService = $this->getServiceLocator()
             ->get('Swissbib\NationalLicenceService');
         $nationalLicenceService->sendExportEmail();
     }
 
+    /**
+     * Script command for update the national licence users with their
+     * new attributes.
+     *
+     * @throws \Exception
+     */
     public function updateNationalLicenceUserInfoAction()
     {
 
@@ -58,7 +65,9 @@ class ConsoleController extends BaseController
         $router = $event->getRouter();
         $routeMatch = $router->match($request);
 
-        /** @var NationalLicence $nationalLicenceService */
+        /**
+         * @var NationalLicence $nationalLicenceService
+         */
         $nationalLicenceService = $this->getServiceLocator()
             ->get('Swissbib\NationalLicenceService');
         $nationalLicenceService->checkAndUpdateNationalLicenceUserInfo();

@@ -1,29 +1,23 @@
 <?php
 /**
  * Row Definition for national licence user.
- *
  * PHP version 5
- *
  * Copyright (C) Villanova University 2010.
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
  * as published by the Free Software Foundation.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category VuFind
- *
+ * @package  VuFind_Db_Row
  * @author   Simone Cogno <scogno@snowflake.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- *
  * @link     https://vufind.org Main Site
  */
 namespace Swissbib\VuFind\Db\Row;
@@ -33,7 +27,9 @@ use VuFind\Db\Table\User;
 
 class NationalLicenceUser extends RowGateway
 {
-    /** @var  \VuFind\Db\Row\User $relUser */
+    /**
+     * @var  \VuFind\Db\Row\User $relUser
+     */
     protected $relUser;
 
     /**
@@ -203,6 +199,8 @@ class NationalLicenceUser extends RowGateway
 
     /**
      * Set the permanent access to the user.
+     *
+     * @param bool $bool
      */
     public function setRequestPermanentAccess($bool = true)
     {
@@ -243,7 +241,7 @@ class NationalLicenceUser extends RowGateway
     public function getLastAccountExtensionRequest()
     {
         if (empty($this->last_account_extension_request)) {
-            return;
+            return null;
         }
 
         return new \DateTime($this->last_account_extension_request);
@@ -252,14 +250,14 @@ class NationalLicenceUser extends RowGateway
     /**
      * Set the last_account_extension_request field.
      *
-     * @param $date
+     * @param \DateTime $date
      */
     public function setLastAccountExtensionRequest($date)
     {
         $this->last_account_extension_request = $date->format('Y-m-d H:i:s');
     }
 
-    public function unsetLastAccountextensionRequest()
+    public function unsetLastAccountExtensionRequest()
     {
         $this->last_account_extension_request = null;
     }
@@ -268,7 +266,6 @@ class NationalLicenceUser extends RowGateway
      * Get nameID of the national licence user.
      *
      * @return string
-     *
      * @throws \Exception
      */
     public function getNameId()

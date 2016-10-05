@@ -3,30 +3,25 @@
  * SwitchApiServiceTest.
  *
  * PHP version 5
- *
  * Copyright (C) project swissbib, University Library Basel, Switzerland
  * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
- *
  * Date: 1/2/13
  * Time: 4:09 PM
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
  * as published by the Free Software Foundation.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category Swissbib_VuFind2
- *
+ * @package  SwissbibTest_NationalLicence
  * @author   Simone Cogno  <scogno@snowflake.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- *
  * @link     http://www.swissbib.org
  */
 namespace SwissbibTest\NationalLicence;
@@ -39,13 +34,21 @@ use Zend\ServiceManager\ServiceManager;
 
 class SwitchApiServiceTest extends VuFindTestCase
 {
-    /** @var  ReflectionClass $switchApiService */
+    /**
+     * @var  ReflectionClass $switchApiService
+     */
     protected $switchApiServiceReflected;
-    /** @var  SwitchApi $switchApiService */
+    /**
+     * @var  SwitchApi $switchApiService
+     */
     protected $switchApiServiceOriginal;
-    /** @var  array $config */
+    /**
+     * @var  array $config
+     */
     protected $config;
-    /** @var  ServiceManager $sm */
+    /**
+     * @var  ServiceManager $sm
+     */
     protected $sm;
 
     /**
@@ -117,7 +120,7 @@ class SwitchApiServiceTest extends VuFindTestCase
     }
 
     /**
-     * This just test if a call to the back channel endpoint didn't fail.
+     * This just test if a call to the back channel endpoint did not fail.
      */
     public function testGetUserUpdatedInformation()
     {
@@ -143,12 +146,11 @@ class SwitchApiServiceTest extends VuFindTestCase
      * several private or protected methods.
      *
      * @param SwitchApi $originalClass
-     *
      * @return ReflectionClass
      */
     protected function getReflectedClass($originalClass)
     {
-        $class = new ReflectionClass($this->switchApiService);
+        $class = new ReflectionClass($originalClass);
 
         return $class;
     }

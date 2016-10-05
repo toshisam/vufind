@@ -4,28 +4,23 @@
  * National Licence registration platform by Switch.
  *
  * PHP version 5
- *
  * Copyright (C) project swissbib, University Library Basel, Switzerland
  * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2,
  * as published by the Free Software Foundation.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category Swissbib_VuFind2
- *
+ * @package  Services
  * @author   Simone Cogno <scogno@snowflake.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- *
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
 namespace Swissbib\Services;
@@ -67,7 +62,6 @@ class SwitchApi implements ServiceLocatorAwareInterface
      * Set national-licence-compliant flag to the user.
      *
      * @param $userExternalId
-     *
      * @throws \Exception
      */
     public function setNationalCompliantFlag($userExternalId)
@@ -89,9 +83,7 @@ class SwitchApi implements ServiceLocatorAwareInterface
      * Create a user in the National Licenses registration platform.
      *
      * @param string $externalId
-     *
      * @return mixed
-     *
      * @throws \Exception
      */
     protected function createSwitchUser($externalId)
@@ -99,7 +91,9 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $client = $this->getBaseClient(Request::METHOD_POST, '/Users');
         $params = ['externalID' => $externalId];
         $client->setRawBody(json_encode($params, JSON_UNESCAPED_SLASHES));
-        /** @var Response $response */
+        /**
+         * @var Response $response
+         */
         $response = $client->send();
         $statusCode = $response->getStatusCode();
         $body = $response->getBody();
@@ -117,14 +111,12 @@ class SwitchApi implements ServiceLocatorAwareInterface
      * @param string $method
      * @param string $relPath
      * @param string $basePath
-     *
      * @return Client
      */
     protected function getBaseClient(
         $method = Request::METHOD_GET,
         $relPath = '', $basePath = null
-    )
-    {
+    ) {
         if (empty($basePath)) {
             $basePath = $this->config['base_endpoint_url'];
         }
@@ -148,7 +140,6 @@ class SwitchApi implements ServiceLocatorAwareInterface
      * registration platform.
      *
      * @param string $userInternalId
-     *
      * @throws \Exception
      */
     protected function addUserToNationalCompliantGroup($userInternalId)
@@ -190,8 +181,8 @@ class SwitchApi implements ServiceLocatorAwareInterface
      * Check if the user is on the National Licenses Programme group.
      *
      * @param string $userExternalId
-     *
      * @return bool
+     * @throws \Exception
      */
     public function userIsOnNationalCompliantSwitchGroup($userExternalId)
     {
@@ -213,9 +204,7 @@ class SwitchApi implements ServiceLocatorAwareInterface
      * Get user info from the National Licenses registration platform.
      *
      * @param string $internalId
-     *
      * @return mixed
-     *
      * @throws \Exception
      */
     protected function getSwitchUserInfo($internalId)
@@ -236,7 +225,6 @@ class SwitchApi implements ServiceLocatorAwareInterface
      * Unset the national compliant flag from the user.
      *
      * @param $userExternalId
-     *
      * @throws \Exception
      */
     public function unsetNationalCompliantFlag($userExternalId)
@@ -257,7 +245,6 @@ class SwitchApi implements ServiceLocatorAwareInterface
      * Remove a national licence user from the national-licence-programme-group.
      *
      * @param string $userInternalId
-     *
      * @throws \Exception
      */
     protected function removeUserToNationalCompliantGroup($userInternalId)
@@ -295,8 +282,8 @@ class SwitchApi implements ServiceLocatorAwareInterface
      *
      * @param string $nameId
      * @param string $persistentId
-     *
      * @return NationalLicenceUser
+     * @throws \Exception
      */
     public function getUserUpdatedInformation($nameId, $persistentId)
     {
@@ -330,11 +317,15 @@ class SwitchApi implements ServiceLocatorAwareInterface
                 $userFields[$key] = $updatedUser[$value];
             }
         }
-        /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $userTable */
+        /**
+         * @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $userTable
+         */
         $userTable =
             $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
 
-        /* @var NationalLicenceUser $user */
+        /**
+         * @var NationalLicenceUser $user
+         */
         return $userTable->updateRowByPersistentId(
             $persistentId,
             $nationalLicenceField,
@@ -347,16 +338,16 @@ class SwitchApi implements ServiceLocatorAwareInterface
      * TODO.
      *
      * @param string $nameId
-     *
      * @return NationalLicenceUser
-     *
      * @throws \Exception
      */
     protected function getNationalLicenceUserCurrentInformation($nameId)
     {
         //Make http request fro retrieve new edu-ID information usign the back-
         //channel api
-        /** @var Client $client */
+        /**
+         * @var Client $client
+         */
         $client = $this->getBaseClient(
             Request::METHOD_GET,
             $this->config['back_channel_endpoint_path'],
@@ -380,7 +371,6 @@ class SwitchApi implements ServiceLocatorAwareInterface
      * Get a database table object.
      *
      * @param string $table Name of table to retrieve
-     *
      * @return \VuFind\Db\Table\Gateway
      */
     protected function getTable($table)
