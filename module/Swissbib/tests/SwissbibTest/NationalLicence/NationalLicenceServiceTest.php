@@ -56,7 +56,9 @@ class NationalLicenceServiceTest extends VuFindTestCase
     {
         parent::setUp();
         $this->sm = Bootstrap::getServiceManager();
-        $this->nationalLicenceService = $this->sm->get('Swissbib\NationalLicenceService');
+        $this->nationalLicenceService = $this->sm->get(
+            'Swissbib\NationalLicenceService'
+        );
     }
 
     /**
@@ -90,7 +92,8 @@ class NationalLicenceServiceTest extends VuFindTestCase
             null => false,
         ];
         foreach ($testAddresses as $testAddress => $expectedResult) {
-            $res = $this->nationalLicenceService->isAddressInSwitzerland($testAddress);
+            $res = $this->nationalLicenceService
+                ->isAddressInSwitzerland($testAddress);
             $this->assertEquals($expectedResult, $res);
         }
     }
@@ -104,91 +107,20 @@ class NationalLicenceServiceTest extends VuFindTestCase
         $user = $this->getNationalLicenceUserObjectInstance();
 
         $user->setExpirationDate(new \DateTime());
-        $res = $this->nationalLicenceService->isTemporaryAccessCurrentlyValid($user);
+        $res = $this->nationalLicenceService
+            ->isTemporaryAccessCurrentlyValid($user);
         $this->assertEquals(true, $res);
 
         $user->setExpirationDate((new \DateTime())->modify('-1 day'));
-        $res = $this->nationalLicenceService->isTemporaryAccessCurrentlyValid($user);
+        $res = $this->nationalLicenceService
+            ->isTemporaryAccessCurrentlyValid($user);
         $this->assertEquals(false, $res);
 
         $user->setExpirationDate((new \DateTime())->modify('+1 day'));
-        $res = $this->nationalLicenceService->isTemporaryAccessCurrentlyValid($user);
+        $res = $this->nationalLicenceService
+            ->isTemporaryAccessCurrentlyValid($user);
         $this->assertEquals(true, $res);
         fwrite(STDERR, print_r($res, true));
-    }
-
-    /**
-     * Test if the user has acess to national licence content. TODO to update.
-     */
-    public function testHasAccessToNationalLicenceContent()
-    {
-        $user = $this->getNationalLicenceUserObjectInstance();
-        $this->setFieldsToUser($user, [
-            'condition_accepted' => false,
-            'request_temporary_access' => false,
-            'request_permanent_access' => false,
-            'date_expiration' => null,
-            'blocked' => false,
-            'last_edu_id_activity' => null,
-        ]);
-        $res = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
-        $this->assertEquals(false, $res);
-
-        $user = $this->getNationalLicenceUserObjectInstance();
-        $this->setFieldsToUser($user, [
-            'condition_accepted' => false,
-            'request_temporary_access' => true,
-            'request_permanent_access' => false,
-            'date_expiration' => (new \DateTime())->modify('+14 days')->format('Y-m-d H:i:s'),
-            'blocked' => false,
-            'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
-        ]);
-        $res = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
-        $this->assertEquals(false, $res);
-
-        $user = $this->getNationalLicenceUserObjectInstance();
-        $this->setFieldsToUser($user, [
-            'condition_accepted' => true,
-            'request_temporary_access' => true,
-            'request_permanent_access' => false,
-            'date_expiration' => (new \DateTime())->modify('+14 days')->format('Y-m-d H:i:s'),
-            'blocked' => false,
-            'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
-        ]);
-        $res = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
-        $this->assertEquals(true, $res);
-
-        $user = $this->getNationalLicenceUserObjectInstance();
-        $this->setFieldsToUser($user, [
-            'condition_accepted' => true,
-            'request_temporary_access' => false,
-            'request_permanent_access' => true,
-            'date_expiration' => (new \DateTime())->modify('+14 days')->format('Y-m-d H:i:s'),
-            'blocked' => false,
-            'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
-        ]);
-        $res = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
-        $this->assertEquals(true, $res);
-    }
-
-    public function testSendExportEmail()
-    {
-        $config = $this->sm->get('Config');
-        $to = $config['swissbib']['email_service']['default_email_address_to'];
-        //$this->nationalLicenceService->sendExportEmail($to);
-    }
-
-    /**
-     * Helper method to modify fields to a NationalLicenceUser instance.
-     *
-     * @param $user
-     * @param $fields
-     */
-    protected function setFieldsToUser($user, $fields)
-    {
-        foreach ($fields as $key => $value) {
-            $user->$key = $value;
-        }
     }
 
     /**
@@ -206,6 +138,87 @@ class NationalLicenceServiceTest extends VuFindTestCase
         $user = $userTable->createRow();
 
         return $user;
+    }
+
+    /**
+     * Test if the user has acess to national licence content. TODO to update.
+     */
+    public function testHasAccessToNationalLicenceContent()
+    {
+        $user = $this->getNationalLicenceUserObjectInstance();
+        $this->setFieldsToUser($user, [
+            'condition_accepted' => false,
+            'request_temporary_access' => false,
+            'request_permanent_access' => false,
+            'date_expiration' => null,
+            'blocked' => false,
+            'last_edu_id_activity' => null,
+        ]);
+        $res = $this->nationalLicenceService
+            ->hasAccessToNationalLicenceContent($user);
+        $this->assertEquals(false, $res);
+
+        $user = $this->getNationalLicenceUserObjectInstance();
+        $this->setFieldsToUser($user, [
+            'condition_accepted' => false,
+            'request_temporary_access' => true,
+            'request_permanent_access' => false,
+            'date_expiration' => (new \DateTime())->modify('+14 days')
+                ->format('Y-m-d H:i:s'),
+            'blocked' => false,
+            'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
+        ]);
+        $res = $this->nationalLicenceService
+            ->hasAccessToNationalLicenceContent($user);
+        $this->assertEquals(false, $res);
+
+        $user = $this->getNationalLicenceUserObjectInstance();
+        $this->setFieldsToUser($user, [
+            'condition_accepted' => true,
+            'request_temporary_access' => true,
+            'request_permanent_access' => false,
+            'date_expiration' => (new \DateTime())->modify('+14 days')
+                ->format('Y-m-d H:i:s'),
+            'blocked' => false,
+            'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
+        ]);
+        $res = $this->nationalLicenceService
+            ->hasAccessToNationalLicenceContent($user);
+        $this->assertEquals(true, $res);
+
+        $user = $this->getNationalLicenceUserObjectInstance();
+        $this->setFieldsToUser($user, [
+            'condition_accepted' => true,
+            'request_temporary_access' => false,
+            'request_permanent_access' => true,
+            'date_expiration' => (new \DateTime())->modify('+14 days')
+                ->format('Y-m-d H:i:s'),
+            'blocked' => false,
+            'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
+        ]);
+        $res = $this->nationalLicenceService
+            ->hasAccessToNationalLicenceContent($user);
+        $this->assertEquals(true, $res);
+    }
+
+    /**
+     * Helper method to modify fields to a NationalLicenceUser instance.
+     *
+     * @param $user
+     * @param $fields
+     */
+    protected function setFieldsToUser($user, $fields)
+    {
+        foreach ($fields as $key => $value) {
+            $user->$key = $value;
+        }
+    }
+
+    public function testSendExportEmail()
+    {
+        $config = $this->sm->get('Config');
+        $to = $config['swissbib']['email_service']['default_email_address_to'];
+        //$this->nationalLicenceService->sendExportEmail($to);
     }
 
     /**

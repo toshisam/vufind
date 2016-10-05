@@ -55,9 +55,13 @@ class SwitchApiServiceTest extends VuFindTestCase
     {
         parent::setUp();
         $this->sm = Bootstrap::getServiceManager();
-        $this->switchApiServiceOriginal = $this->sm->get('Swissbib\SwitchApiService');
-        $this->switchApiServiceReflected = new ReflectionClass($this->switchApiServiceOriginal);
-        $this->config = ($this->sm->get('Config'))['swissbib']['tests']['switch_api'];
+        $this->switchApiServiceOriginal = $this->sm
+            ->get('Swissbib\SwitchApiService');
+        $this->switchApiServiceReflected = new ReflectionClass(
+            $this->switchApiServiceOriginal
+        );
+        $this->config =
+            ($this->sm->get('Config'))['swissbib']['tests']['switch_api'];
     }
 
     /**
@@ -66,13 +70,17 @@ class SwitchApiServiceTest extends VuFindTestCase
     public function testUnsetNationalCompliantFlag()
     {
         $externalId = $this->config['external_id_test'];
-        $isOnGroup = $this->switchApiServiceOriginal->userIsOnNationalCompliantSwitchGroup($externalId);
+        $isOnGroup = $this->switchApiServiceOriginal
+            ->userIsOnNationalCompliantSwitchGroup($externalId);
         if (!$isOnGroup) {
-            $this->switchApiServiceOriginal->setNationalCompliantFlag($externalId);
+            $this->switchApiServiceOriginal
+                ->setNationalCompliantFlag($externalId);
         }
-        self::assertEquals(true, $this->switchApiServiceOriginal->userIsOnNationalCompliantSwitchGroup($externalId));
+        self::assertEquals(true, $this->switchApiServiceOriginal
+            ->userIsOnNationalCompliantSwitchGroup($externalId));
         $this->switchApiServiceOriginal->unsetNationalCompliantFlag($externalId);
-        self::assertEquals(false, $this->switchApiServiceOriginal->userIsOnNationalCompliantSwitchGroup($externalId));
+        self::assertEquals(false, $this->switchApiServiceOriginal
+            ->userIsOnNationalCompliantSwitchGroup($externalId));
     }
 
     /**
@@ -81,19 +89,31 @@ class SwitchApiServiceTest extends VuFindTestCase
     public function testSetNationalCompliantFlag()
     {
         $externalId = $this->config['external_id_test'];
-        $isOnGroup = $this->switchApiServiceOriginal->userIsOnNationalCompliantSwitchGroup($externalId);
+        $isOnGroup = $this->switchApiServiceOriginal
+            ->userIsOnNationalCompliantSwitchGroup($externalId);
         if ($isOnGroup) {
-            $method = $this->switchApiServiceReflected->getMethod('createSwitchUser');
+            $method = $this->switchApiServiceReflected
+                ->getMethod('createSwitchUser');
             $method->setAccessible(true);
-            $internalId = $method->invoke($this->switchApiServiceOriginal, $externalId);
+            $internalId = $method->invoke(
+                $this->switchApiServiceOriginal,
+                $externalId
+            );
 
-            $method = $this->switchApiServiceReflected->getMethod('removeUserToNationalCompliantGroup');
+            $method = $this->switchApiServiceReflected
+                ->getMethod('removeUserToNationalCompliantGroup');
             $method->setAccessible(true);
             $method->invoke($this->switchApiServiceOriginal, $internalId);
         }
-        self::assertEquals(false, $this->switchApiServiceOriginal->userIsOnNationalCompliantSwitchGroup($externalId));
+        self::assertEquals(false,
+            $this->switchApiServiceOriginal
+                ->userIsOnNationalCompliantSwitchGroup($externalId)
+        );
         $this->switchApiServiceOriginal->setNationalCompliantFlag($externalId);
-        self::assertEquals(true, $this->switchApiServiceOriginal->userIsOnNationalCompliantSwitchGroup($externalId));
+        self::assertEquals(true,
+            $this->switchApiServiceOriginal
+                ->userIsOnNationalCompliantSwitchGroup($externalId)
+        );
     }
 
     /**
@@ -101,22 +121,11 @@ class SwitchApiServiceTest extends VuFindTestCase
      */
     public function testGetUserUpdatedInformation()
     {
-        //$res = $this->switchApiServiceOriginal->getUserUpdatedInformation('L34Mbh0HJUmUM6h2Rql/DNF9oRk=', 'https://eduid.ch/idp/shibboleth!https://test.swissbib.ch/shibboleth!L34Mbh0HJUmUM6h2Rql/DNF9oRk=');
+        //$res = $this->switchApiServiceOriginal
+        //->getUserUpdatedInformation('L34Mbh0HJUmUM6h2Rql/DNF9oRk=',
+        // 'https://eduid.ch/idp/shibboleth!https://test.swissbib.ch/
+        //shibboleth!L34Mbh0HJUmUM6h2Rql/DNF9oRk=');
         //$this->unitPrint($res);
-    }
-
-    /**
-     * Get a reflection class for the SwitchApi service. This is used for call several private or protected methods.
-     *
-     * @param SwitchApi $originalClass
-     *
-     * @return ReflectionClass
-     */
-    protected function getReflectedClass($originalClass)
-    {
-        $class = new ReflectionClass($this->switchApiService);
-
-        return $class;
     }
 
     /**
@@ -127,5 +136,20 @@ class SwitchApiServiceTest extends VuFindTestCase
     public function unitPrint($variable)
     {
         fwrite(STDERR, print_r($variable, true));
+    }
+
+    /**
+     * Get a reflection class for the SwitchApi service. This is used for call
+     * several private or protected methods.
+     *
+     * @param SwitchApi $originalClass
+     *
+     * @return ReflectionClass
+     */
+    protected function getReflectedClass($originalClass)
+    {
+        $class = new ReflectionClass($this->switchApiService);
+
+        return $class;
     }
 }

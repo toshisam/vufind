@@ -53,36 +53,21 @@ class Email implements ServiceLocatorAwareInterface
     }
 
     /**
-     * Set serviceManager instance.
-     *
-     * @param ServiceLocatorInterface $serviceLocator ServiceLocatorInterface
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-    }
-
-    /**
-     * Retrieve serviceManager instance.
-     *
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
      * Send e-mail with attachment.
      *
      * @param string $to                 The recipient of the e-mail
      * @param string $textMail           Text of the e-mail
      * @param string $attachmentFilePath File path of the file to attach
+     * @throws \Exception
      */
     public function sendMail($to, $textMail, $attachmentFilePath)
     {
         $mimeMessage = $this->createMimeMessage($textMail, $attachmentFilePath);
-        $this->sendMailWithAttachment($to, $mimeMessage, 'National licence user export');
+        $this->sendMailWithAttachment(
+            $to,
+            $mimeMessage,
+            'National licence user export'
+        );
     }
 
     /**
@@ -93,7 +78,11 @@ class Email implements ServiceLocatorAwareInterface
      *
      * @return Mime\Message
      */
-    public function createMimeMessage($textMail, $attachmentFilePath = null, $contentType = null)
+    public function createMimeMessage(
+        $textMail,
+        $attachmentFilePath = null,
+        $contentType = null
+    )
     {
         if (empty($contentType)) {
             $contentType = Mime\Mime::TYPE_HTML;
@@ -109,7 +98,8 @@ class Email implements ServiceLocatorAwareInterface
 
         if (!empty($attachmentFilePath)) {
             //Get the attached file reference
-            $fileContent = fopen($attachmentFilePath, 'r') or die('Unable to open file!');
+            $fileContent = fopen($attachmentFilePath, 'r')
+            or die('Unable to open file!');
             $attachment = new Mime\Part($fileContent);
             $attachment->type = 'text/csv';
             $attachment->filename = 'user_export.csv';
@@ -129,16 +119,18 @@ class Email implements ServiceLocatorAwareInterface
     /**
      * Send e-mail with defined mime message (text and attached file).
      *
-     * @param string       $to
+     * @param string $to
      * @param Mime\Message $mimeMessage
-     * @param string       $subject
+     * @param string $subject
      *
      * @throws \Exception
      */
     public function sendMailWithAttachment($to, $mimeMessage, $subject)
     {
         if (empty($to)) {
-            throw new \Exception('Impossible to send the e-mail: recipient not given');
+            throw new \Exception(
+                'Impossible to send the e-mail: recipient not given'
+            );
         }
         // and finally we create the actual email
         $message = new Message();
@@ -154,18 +146,49 @@ class Email implements ServiceLocatorAwareInterface
      * Send the account extension e-mail to a specific user.
      *
      * @param string $to User e-mail that the e-mail will be sent to.
+     * @throws \Exception
      */
     public function sendAccountExtensionEmail($to)
     {
         $sl = $this->getServiceLocator();
         $vhm = $sl->get('viewhelpermanager');
         $url = $vhm->get('url');
-        $link = $this->config['national_licence_service']['base_domain_path'].$url('national-licences', array('action' => 'extend-account'), array('force_canonical' => true));
-        echo $link;
-        $textMail = '<p>You acccount expires in 10 days. Please&nbsp;<a href="'.$link.'">click here</a> to extend you account duration.</p>'.
-            '<p>Best regards,</p>'.
+        $link = $this->config['national_licence_service']['base_domain_path'] .
+            $url(
+                'national-licences',
+                array('action' => 'extend-account'),
+                array('force_canonical' => true)
+            );
+        $textMail = '<p>You acccount expires in 10 days. Please&nbsp;<a href="' .
+            $link .
+            '">click here</a> to extend you account duration.</p>' .
+            '<p>Best regards,</p>' .
             '<p>Swissbib</p>';
-        $mimeMessage = $this->createMimeMessage($textMail, null, Mime\Mime::TYPE_HTML);
+        $mimeMessage = $this->createMimeMessage(
+            $textMail,
+            null,
+            Mime\Mime::TYPE_HTML
+        );
         $this->sendMailWithAttachment($to, $mimeMessage, 'Account extension');
+    }
+
+    /**
+     * Retrieve serviceManager instance.
+     *
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * Set serviceManager instance.
+     *
+     * @param ServiceLocatorInterface $serviceLocator ServiceLocatorInterface
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
     }
 }

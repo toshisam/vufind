@@ -39,7 +39,8 @@ class ConsoleController extends BaseController
     public function sendNationalLicenceUsersExportAction()
     {
         /** @var NationalLicence $nationalLicenceService */
-        $nationalLicenceService = $this->getServiceLocator()->get('Swissbib\NationalLicenceService');
+        $nationalLicenceService = $this->getServiceLocator()
+            ->get('Swissbib\NationalLicenceService');
         $nationalLicenceService->sendExportEmail();
     }
 
@@ -47,7 +48,8 @@ class ConsoleController extends BaseController
     {
 
         //These lines allow to retrieve the route urls from the controller command
-        //http://stackoverflow.com/questions/27295895/how-can-i-create-a-url-in-a-console-controller-in-zf2
+        //http://stackoverflow.com/questions/27295895/how-can-i-
+        //create-a-url-in-a-console-controller-in-zf2
         $event = $this->getEvent();
         $http = $this->getServiceLocator()->get('HttpRouter');
         $router = $event->setRouter($http);
@@ -57,7 +59,8 @@ class ConsoleController extends BaseController
         $routeMatch = $router->match($request);
 
         /** @var NationalLicence $nationalLicenceService */
-        $nationalLicenceService = $this->getServiceLocator()->get('Swissbib\NationalLicenceService');
+        $nationalLicenceService = $this->getServiceLocator()
+            ->get('Swissbib\NationalLicenceService');
         $nationalLicenceService->checkAndUpdateNationalLicenceUserInfo();
     }
 }

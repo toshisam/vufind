@@ -47,7 +47,8 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Check is user has already requested a temporary access to the National Licence content.
+     * Check is user has already requested a temporary access to the
+     * National Licence content.
      *
      * @return mixed
      */
@@ -57,23 +58,14 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Get the expiration date of the temporary access to the National Licence content.
+     * Get the expiration date of the temporary access to the
+     * National Licence content.
      *
      * @return \DateTime
      */
     public function getExpirationDate()
     {
         return new \DateTime($this->date_expiration);
-    }
-
-    /**
-     * Set expiration date.
-     *
-     * @param \DateTime $date
-     */
-    public function setExpirationDate($date)
-    {
-        $this->date_expiration = $date->format('Y-m-d H:i:s');
     }
 
     /**
@@ -91,6 +83,16 @@ class NationalLicenceUser extends RowGateway
         }
 
         return false;
+    }
+
+    /**
+     * Set expiration date.
+     *
+     * @param \DateTime $date
+     */
+    public function setExpirationDate($date)
+    {
+        $this->date_expiration = $date->format('Y-m-d H:i:s');
     }
 
     /**
@@ -124,14 +126,6 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Get persistent id.
-     */
-    public function getPersistentId()
-    {
-        return $this->persistent_id;
-    }
-
-    /**
      * Set persistent id field.
      *
      * @param string $persistentId
@@ -140,6 +134,7 @@ class NationalLicenceUser extends RowGateway
     {
         $this->persistent_id = $persistentId;
     }
+
     /**
      * Set user id related to the User db table.
      *
@@ -284,6 +279,14 @@ class NationalLicenceUser extends RowGateway
         }
 
         return $parts[2];
+    }
+
+    /**
+     * Get persistent id.
+     */
+    public function getPersistentId()
+    {
+        return $this->persistent_id;
     }
 
     /**

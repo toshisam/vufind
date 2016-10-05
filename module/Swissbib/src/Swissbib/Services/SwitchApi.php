@@ -1,6 +1,7 @@
 <?php
 /**
- * Service used to manage the user registration process using the National Licence registration platform by Switch.
+ * Service used to manage the user registration process using the
+ * National Licence registration platform by Switch.
  *
  * PHP version 5
  *
@@ -63,26 +64,6 @@ class SwitchApi implements ServiceLocatorAwareInterface
     }
 
     /**
-     * Set service locator.
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-    }
-
-    /**
-     * Get service locator.
-     *
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
      * Set national-licence-compliant flag to the user.
      *
      * @param $userExternalId
@@ -97,26 +78,10 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $this->addUserToNationalCompliantGroup($internalId);
         // 3 verify that the user is on the National Compliant group
         if (!$this->userIsOnNationalCompliantSwitchGroup($userExternalId)) {
-            throw new \Exception('Was not possible to add user to the national-licence-compliant group');
-        }
-    }
-
-    /**
-     * Unset the national compliant flag from the user.
-     *
-     * @param $userExternalId
-     *
-     * @throws \Exception
-     */
-    public function unsetNationalCompliantFlag($userExternalId)
-    {
-        // 1 create a user
-        $internalId = $this->createSwitchUser($userExternalId);
-        // 2 Add user to the National Compliant group
-        $this->removeUserToNationalCompliantGroup($internalId);
-        // 3 verify that the user is not in the National Compliant group
-        if ($this->userIsOnNationalCompliantSwitchGroup($userExternalId)) {
-            throw new \Exception('Was not possible to remove the user to the national-licence-compliant group');
+            throw new \Exception(
+                'Was not possible to add user to the ' .
+                'national-licence-compliant group'
+            );
         }
     }
 
@@ -147,30 +112,40 @@ class SwitchApi implements ServiceLocatorAwareInterface
     }
 
     /**
-     * Get user info from the National Licenses registration platform.
+     * Get an instance of the HTTP Client with some basic configuration.
      *
-     * @param string $internalId
+     * @param string $method
+     * @param string $relPath
+     * @param string $basePath
      *
-     * @return mixed
-     *
-     * @throws \Exception
+     * @return Client
      */
-    protected function getSwitchUserInfo($internalId)
+    protected function getBaseClient(
+        $method = Request::METHOD_GET,
+        $relPath = '', $basePath = null
+    )
     {
-        $client = $this->getBaseClient(Request::METHOD_GET, '/Users/'.$internalId);
-        $response = $client->send();
-        $statusCode = $response->getStatusCode();
-        $body = $response->getBody();
-        if ($statusCode !== 200) {
-            throw new \Exception("Status code: $statusCode result: $body");
+        if (empty($basePath)) {
+            $basePath = $this->config['base_endpoint_url'];
         }
-        $res = json_decode($body);
+        $client = new Client($basePath . $relPath, [
+            'maxredirects' => 0,
+            'timeout' => 30,
+        ]);
+        //echo $client->getUri();
+        $client->setHeaders([
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ]);
+        $client->setMethod($method);
+        $client->setAuth($this->config['auth_user'], $this->config['auth_password']);
 
-        return $res;
+        return $client;
     }
 
     /**
-     * Add user to the National Licenses Programme group on the National Licenses registration platform.
+     * Add user to the National Licenses Programme group on the National Licenses
+     * registration platform.
      *
      * @param string $userInternalId
      *
@@ -178,7 +153,8 @@ class SwitchApi implements ServiceLocatorAwareInterface
      */
     protected function addUserToNationalCompliantGroup($userInternalId)
     {
-        $client = $this->getBaseClient(Request::METHOD_PATCH, '/Groups/'.$this->config['national_licence_programme_group_id']);
+        $client = $this->getBaseClient(Request::METHOD_PATCH, '/Groups/' .
+            $this->config['national_licence_programme_group_id']);
         $params = [
             'schemas' => [
                 $this->config['schema_patch'],
@@ -189,7 +165,9 @@ class SwitchApi implements ServiceLocatorAwareInterface
                     'path' => $this->config['path_member'],
                     'value' => [
                         [
-                            '$ref' => $this->config['base_endpoint_url'].'/Users/'.$userInternalId,
+                            '$ref' => $this->config['base_endpoint_url'] .
+                                '/Users/' .
+                                $userInternalId,
                             'value' => $userInternalId,
                         ],
                     ],
@@ -198,39 +176,6 @@ class SwitchApi implements ServiceLocatorAwareInterface
         ];
         $str = json_encode($params, JSON_PRETTY_PRINT);
         //echo "<pre> $str < /pre>";
-        $rawData = json_encode($params, JSON_UNESCAPED_SLASHES);
-        $client->setRawBody($rawData);
-        $response = $client->send();
-        $statusCode = $response->getStatusCode();
-        $body = $response->getBody();
-        if ($statusCode !== 200) {
-            throw new \Exception("Status code: $statusCode result: $body");
-        }
-    }
-
-    /**
-     * Remove a national licence user from the national-licence-programme-group.
-     *
-     * @param string $userInternalId
-     *
-     * @throws \Exception
-     */
-    protected function removeUserToNationalCompliantGroup($userInternalId)
-    {
-        $client = $this->getBaseClient(Request::METHOD_PATCH, '/Groups/'.$this->config['national_licence_programme_group_id']);
-        $params = [
-            'schemas' => [
-                $this->config['schema_patch'],
-            ],
-            'Operations' => [
-                [
-                    'op' => $this->config['operation_remove'],
-                    'path' => $this->config['path_member']."[value eq \"$userInternalId\"]",
-                ],
-            ],
-        ];
-        $str = json_encode($params, JSON_PRETTY_PRINT);
-        //TODO echo "<pre> $str < /pre>";
         $rawData = json_encode($params, JSON_UNESCAPED_SLASHES);
         $client->setRawBody($rawData);
         $response = $client->send();
@@ -253,7 +198,10 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $internalId = $this->createSwitchUser($userExternalId);
         $switchUser = $this->getSwitchUserInfo($internalId);
         foreach ($switchUser->groups as $group) {
-            if ($group->value === $this->config['national_licence_programme_group_id']) {
+            if (
+                $group->value ===
+                $this->config['national_licence_programme_group_id']
+            ) {
                 return true;
             }
         }
@@ -262,61 +210,84 @@ class SwitchApi implements ServiceLocatorAwareInterface
     }
 
     /**
-     * Get the update attributes of a the national licence user.
-     * TODO.
+     * Get user info from the National Licenses registration platform.
      *
-     * @param string $nameId
+     * @param string $internalId
      *
-     * @return NationalLicenceUser
+     * @return mixed
      *
      * @throws \Exception
      */
-    protected function getNationalLicenceUserCurrentInformation($nameId)
+    protected function getSwitchUserInfo($internalId)
     {
-        //Make http request fro retrieve new edu-ID information usign the back-channel api
-        /** @var Client $client */
-        $client = $this->getBaseClient(Request::METHOD_GET, $this->config['back_channel_endpoint_path'], $this->config['base_endpoint_url_back_channel']);
-        $client->setParameterGet([
-            'entityID' => $this->config['back_channel_param_entityID'],
-            'nameId' => $nameId,
-        ]);
+        $client = $this->getBaseClient(Request::METHOD_GET, '/Users/' . $internalId);
         $response = $client->send();
         $statusCode = $response->getStatusCode();
         $body = $response->getBody();
         if ($statusCode !== 200) {
             throw new \Exception("Status code: $statusCode result: $body");
         }
+        $res = json_decode($body);
 
-        return json_decode($body);
+        return $res;
     }
 
     /**
-     * Get an instance of the HTTP Client with some basic configuration.
+     * Unset the national compliant flag from the user.
      *
-     * @param string $method
-     * @param string $relPath
-     * @param string $basePath
+     * @param $userExternalId
      *
-     * @return Client
+     * @throws \Exception
      */
-    protected function getBaseClient($method = Request::METHOD_GET, $relPath = '', $basePath = null)
+    public function unsetNationalCompliantFlag($userExternalId)
     {
-        if (empty($basePath)) {
-            $basePath = $this->config['base_endpoint_url'];
+        // 1 create a user
+        $internalId = $this->createSwitchUser($userExternalId);
+        // 2 Add user to the National Compliant group
+        $this->removeUserToNationalCompliantGroup($internalId);
+        // 3 verify that the user is not in the National Compliant group
+        if ($this->userIsOnNationalCompliantSwitchGroup($userExternalId)) {
+            throw new \Exception(
+                'Was not possible to remove the user to the ' .
+                'national-licence-compliant group');
         }
-        $client = new Client($basePath.$relPath, [
-            'maxredirects' => 0,
-            'timeout' => 30,
-        ]);
-        //echo $client->getUri();
-        $client->setHeaders([
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ]);
-        $client->setMethod($method);
-        $client->setAuth($this->config['auth_user'], $this->config['auth_password']);
+    }
 
-        return $client;
+    /**
+     * Remove a national licence user from the national-licence-programme-group.
+     *
+     * @param string $userInternalId
+     *
+     * @throws \Exception
+     */
+    protected function removeUserToNationalCompliantGroup($userInternalId)
+    {
+        $client = $this->getBaseClient(
+            Request::METHOD_PATCH,
+            '/Groups/' . $this->config['national_licence_programme_group_id']
+        );
+        $params = [
+            'schemas' => [
+                $this->config['schema_patch'],
+            ],
+            'Operations' => [
+                [
+                    'op' => $this->config['operation_remove'],
+                    'path' => $this->config['path_member'] .
+                        "[value eq \"$userInternalId\"]",
+                ],
+            ],
+        ];
+        $str = json_encode($params, JSON_PRETTY_PRINT);
+        //TODO echo "<pre> $str < /pre>";
+        $rawData = json_encode($params, JSON_UNESCAPED_SLASHES);
+        $client->setRawBody($rawData);
+        $response = $client->send();
+        $statusCode = $response->getStatusCode();
+        $body = $response->getBody();
+        if ($statusCode !== 200) {
+            throw new \Exception("Status code: $statusCode result: $body");
+        }
     }
 
     /**
@@ -329,7 +300,8 @@ class SwitchApi implements ServiceLocatorAwareInterface
      */
     public function getUserUpdatedInformation($nameId, $persistentId)
     {
-        $updatedUser = (array) $this->getNationalLicenceUserCurrentInformation($nameId);
+        $updatedUser =
+            (array)$this->getNationalLicenceUserCurrentInformation($nameId);
         $nationalLicenceFieldRelation = [
             'mobile' => 'mobile',
             'persistent_id' => 'persistent-id',
@@ -359,9 +331,49 @@ class SwitchApi implements ServiceLocatorAwareInterface
             }
         }
         /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $userTable */
-        $userTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
+        $userTable =
+            $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
+
         /* @var NationalLicenceUser $user */
-        return $userTable->updateRowByPersistentId($persistentId, $nationalLicenceField, $userFields);
+        return $userTable->updateRowByPersistentId(
+            $persistentId,
+            $nationalLicenceField,
+            $userFields
+        );
+    }
+
+    /**
+     * Get the update attributes of a the national licence user.
+     * TODO.
+     *
+     * @param string $nameId
+     *
+     * @return NationalLicenceUser
+     *
+     * @throws \Exception
+     */
+    protected function getNationalLicenceUserCurrentInformation($nameId)
+    {
+        //Make http request fro retrieve new edu-ID information usign the back-
+        //channel api
+        /** @var Client $client */
+        $client = $this->getBaseClient(
+            Request::METHOD_GET,
+            $this->config['back_channel_endpoint_path'],
+            $this->config['base_endpoint_url_back_channel']
+        );
+        $client->setParameterGet([
+            'entityID' => $this->config['back_channel_param_entityID'],
+            'nameId' => $nameId,
+        ]);
+        $response = $client->send();
+        $statusCode = $response->getStatusCode();
+        $body = $response->getBody();
+        if ($statusCode !== 200) {
+            throw new \Exception("Status code: $statusCode result: $body");
+        }
+
+        return json_decode($body);
     }
 
     /**
@@ -376,5 +388,25 @@ class SwitchApi implements ServiceLocatorAwareInterface
         return $this->getServiceLocator()
             ->get('VuFind\DbTablePluginManager')
             ->get($table);
+    }
+
+    /**
+     * Get service locator.
+     *
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * Set service locator.
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
     }
 }

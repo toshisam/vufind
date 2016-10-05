@@ -57,7 +57,8 @@ class Factory
     }
 
     /**
-     * Construct the NationalLicenceController by injecting the NationalLicence service.
+     * Construct the NationalLicenceController by injecting the
+     * NationalLicence service.
      *
      * @param ServiceManager $sm Service manager.
      * @return NationalLicencesController
