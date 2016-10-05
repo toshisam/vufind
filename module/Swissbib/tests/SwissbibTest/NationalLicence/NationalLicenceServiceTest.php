@@ -23,12 +23,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category Swissbib_VuFind2
- * @package  SwissbibTest_NationalLicence
+ *
  * @author   Simone Cogno  <scogno@snowflake.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ *
  * @link     http://www.swissbib.org
  */
-
 namespace SwissbibTest\NationalLicence;
 
 use Swissbib\Services\NationalLicence;
@@ -40,17 +40,17 @@ use SwissbibTest\Bootstrap;
 class NationalLicenceServiceTest extends VuFindTestCase
 {
     /**
-     * @var ServiceManager $sm
+     * @var ServiceManager
      */
     protected $sm;
 
     /**
-     * @var NationalLicence $nationalLicenceService
+     * @var NationalLicence
      */
     protected $nationalLicenceService;
 
     /**
-     * Set up service manager and National Licence Service
+     * Set up service manager and National Licence Service.
      */
     public function setUp()
     {
@@ -60,17 +60,17 @@ class NationalLicenceServiceTest extends VuFindTestCase
     }
 
     /**
-     * Test isSwissPhoneNumber method
+     * Test isSwissPhoneNumber method.
      */
     public function testIsSwissPhoneNumber()
     {
         $testPhones = [
-            "+41 793433434" => true,
-            "+41 773433434" => true,
-            "+41 763433434" => true,
-            "+41 743433434" => false,
-            "+39 793433434" => false,
-            null => false
+            '+41 793433434' => true,
+            '+41 773433434' => true,
+            '+41 763433434' => true,
+            '+41 743433434' => false,
+            '+39 793433434' => false,
+            null => false,
         ];
         foreach ($testPhones as $phone => $expectedResult) {
             $res = $this->nationalLicenceService->isSwissPhoneNumber($phone);
@@ -79,7 +79,7 @@ class NationalLicenceServiceTest extends VuFindTestCase
     }
 
     /**
-     * Test isAddressInSwitzerland method
+     * Test isAddressInSwitzerland method.
      */
     public function testAddressIsInSwitzerland()
     {
@@ -87,17 +87,16 @@ class NationalLicenceServiceTest extends VuFindTestCase
             'Route de l\'aurore 10$1700 Fribourg$Switzerland' => true,
             'Theobalds Road 29$WC2N London$England' => false,
             'Roswiesenstrasse 100$8051 Zürich$Switzerland' => true,
-            null => false
+            null => false,
         ];
         foreach ($testAddresses as $testAddress => $expectedResult) {
             $res = $this->nationalLicenceService->isAddressInSwitzerland($testAddress);
             $this->assertEquals($expectedResult, $res);
         }
-
     }
 
     /**
-     * Test isTemporaryAccessCurrentlyValid method
+     * Test isTemporaryAccessCurrentlyValid method.
      */
     public function testIsTemporaryAccessCurrentlyValid()
     {
@@ -108,19 +107,18 @@ class NationalLicenceServiceTest extends VuFindTestCase
         $res = $this->nationalLicenceService->isTemporaryAccessCurrentlyValid($user);
         $this->assertEquals(true, $res);
 
-        $user->setExpirationDate((new \DateTime())->modify("-1 day"));
+        $user->setExpirationDate((new \DateTime())->modify('-1 day'));
         $res = $this->nationalLicenceService->isTemporaryAccessCurrentlyValid($user);
         $this->assertEquals(false, $res);
 
-
-        $user->setExpirationDate((new \DateTime())->modify("+1 day"));
+        $user->setExpirationDate((new \DateTime())->modify('+1 day'));
         $res = $this->nationalLicenceService->isTemporaryAccessCurrentlyValid($user);
         $this->assertEquals(true, $res);
-        fwrite(STDERR, print_r($res, TRUE));
+        fwrite(STDERR, print_r($res, true));
     }
 
     /**
-     * Test if the user has acess to national licence content. TODO to update
+     * Test if the user has acess to national licence content. TODO to update.
      */
     public function testHasAccessToNationalLicenceContent()
     {
@@ -141,7 +139,7 @@ class NationalLicenceServiceTest extends VuFindTestCase
             'condition_accepted' => false,
             'request_temporary_access' => true,
             'request_permanent_access' => false,
-            'date_expiration' => (new \DateTime())->modify("+14 days")->format('Y-m-d H:i:s'),
+            'date_expiration' => (new \DateTime())->modify('+14 days')->format('Y-m-d H:i:s'),
             'blocked' => false,
             'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
         ]);
@@ -153,27 +151,25 @@ class NationalLicenceServiceTest extends VuFindTestCase
             'condition_accepted' => true,
             'request_temporary_access' => true,
             'request_permanent_access' => false,
-            'date_expiration' => (new \DateTime())->modify("+14 days")->format('Y-m-d H:i:s'),
+            'date_expiration' => (new \DateTime())->modify('+14 days')->format('Y-m-d H:i:s'),
             'blocked' => false,
             'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
         ]);
         $res = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
         $this->assertEquals(true, $res);
-
 
         $user = $this->getNationalLicenceUserObjectInstance();
         $this->setFieldsToUser($user, [
             'condition_accepted' => true,
             'request_temporary_access' => false,
             'request_permanent_access' => true,
-            'date_expiration' => (new \DateTime())->modify("+14 days")->format('Y-m-d H:i:s'),
+            'date_expiration' => (new \DateTime())->modify('+14 days')->format('Y-m-d H:i:s'),
             'blocked' => false,
             'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
         ]);
         $res = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
         $this->assertEquals(true, $res);
     }
-
 
     public function testSendExportEmail()
     {
@@ -205,7 +201,7 @@ class NationalLicenceServiceTest extends VuFindTestCase
         /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $userTable */
         $userTable = $this->sm
             ->get('VuFind\DbTablePluginManager')
-            ->get("\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser");
+            ->get('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
         /** @var NationalLicenceUser $user */
         $user = $userTable->createRow();
 
@@ -219,6 +215,6 @@ class NationalLicenceServiceTest extends VuFindTestCase
      */
     public function unitPrint($variable)
     {
-        fwrite(STDERR, print_r($variable, TRUE));
+        fwrite(STDERR, print_r($variable, true));
     }
 }

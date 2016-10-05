@@ -20,13 +20,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category VuFind
- * @package  Db_Row
+ *
  * @author   Simone Cogno <scogno@snowflake.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ *
  * @link     https://vufind.org Main Site
  */
-
 namespace Swissbib\VuFind\Db\Row;
+
 use VuFind\Db\Row\RowGateway;
 use VuFind\Db\Table\User;
 
@@ -36,17 +37,18 @@ class NationalLicenceUser extends RowGateway
     protected $relUser;
 
     /**
-    * Constructor
-    *
-    * @param \Zend\Db\Adapter\Adapter $adapter Database adapter
-    */
+     * Constructor.
+     *
+     * @param \Zend\Db\Adapter\Adapter $adapter Database adapter
+     */
     public function __construct($adapter)
     {
         parent::__construct('id', 'national_licence_user', $adapter);
     }
 
     /**
-     * Check is user has already requested a temporary access to the National Licence content
+     * Check is user has already requested a temporary access to the National Licence content.
+     *
      * @return mixed
      */
     public function hasAlreadyRequestedTemporaryAccess()
@@ -55,7 +57,7 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Get the expiration date of the temporary access to the National Licence content
+     * Get the expiration date of the temporary access to the National Licence content.
      *
      * @return \DateTime
      */
@@ -75,7 +77,7 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Set the temporary access for 14 days
+     * Set the temporary access for 14 days.
      *
      * @return bool
      */
@@ -84,14 +86,15 @@ class NationalLicenceUser extends RowGateway
         $this->request_temporary_access = true;
         $this->setExpirationDate((new \DateTime())->modify('+14 day'));
         $n = $this->save();
-        if($n > 0) {
+        if ($n > 0) {
             return true;
         }
+
         return false;
     }
 
     /**
-     * Check if use has accepted terms and conditions
+     * Check if use has accepted terms and conditions.
      *
      * @return bool
      */
@@ -101,7 +104,7 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Check if user account is blocked
+     * Check if user account is blocked.
      *
      * @return bool
      */
@@ -111,7 +114,7 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Set condition accepted for the user
+     * Set condition accepted for the user.
      *
      * @param bool $accepted
      */
@@ -121,14 +124,15 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Get persistent id
+     * Get persistent id.
      */
-    public function  getPersistentId() {
+    public function getPersistentId()
+    {
         return $this->persistent_id;
     }
 
     /**
-     * Set persistent id field
+     * Set persistent id field.
      *
      * @param string $persistentId
      */
@@ -137,7 +141,8 @@ class NationalLicenceUser extends RowGateway
         $this->persistent_id = $persistentId;
     }
     /**
-     * Set user id related to the User db table
+     * Set user id related to the User db table.
+     *
      * @param int $id User id
      */
     public function setUserId($id)
@@ -146,7 +151,7 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Get the last activity date on the edu-ID account
+     * Get the last activity date on the edu-ID account.
      *
      * @return \DateTime
      */
@@ -156,7 +161,7 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Set the last activity date on the edu-ID account
+     * Set the last activity date on the edu-ID account.
      *
      * @param \DateTime $date
      */
@@ -166,7 +171,7 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Return the creation date of the national licence user
+     * Return the creation date of the national licence user.
      *
      * @return \DateTime
      */
@@ -176,7 +181,7 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isIsInitialized()
     {
@@ -184,7 +189,7 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * @param boolean $isInitialized
+     * @param bool $isInitialized
      */
     public function setIsInitialized($isInitialized)
     {
@@ -192,9 +197,9 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Check if user has requested the permanent access
+     * Check if user has requested the permanent access.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasRequestPermanentAccess()
     {
@@ -202,7 +207,7 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Set the permanent access to the user
+     * Set the permanent access to the user.
      */
     public function setRequestPermanentAccess($bool = true)
     {
@@ -210,7 +215,7 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Get the unique id of the national licence user
+     * Get the unique id of the national licence user.
      *
      * @return string Edu-Id of the user
      */
@@ -242,9 +247,10 @@ class NationalLicenceUser extends RowGateway
      */
     public function getLastAccountExtensionRequest()
     {
-        if(empty($this->last_account_extension_request)) {
-            return null;
+        if (empty($this->last_account_extension_request)) {
+            return;
         }
+
         return new \DateTime($this->last_account_extension_request);
     }
 
@@ -267,14 +273,16 @@ class NationalLicenceUser extends RowGateway
      * Get nameID of the national licence user.
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function getNameId()
     {
         $parts = explode('!', $this->getPersistentId());
-        if(count($parts) !== 3) {
-            throw new \Exception("Invalid persistent id");
+        if (count($parts) !== 3) {
+            throw new \Exception('Invalid persistent id');
         }
+
         return $parts[2];
     }
 

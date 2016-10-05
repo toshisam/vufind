@@ -23,17 +23,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category Swissbib_VuFind2
- * @package  SwissbibTest_NationalLicence
+ *
  * @author   Simone Cogno  <scogno@snowflake.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ *
  * @link     http://www.swissbib.org
  */
-
-
 namespace SwissbibTest\NationalLicence;
 
 use ReflectionClass;
-use Swissbib\Services\Email;
 use Swissbib\Services\SwitchApi;
 use VuFindTest\Unit\TestCase as VuFindTestCase;
 use SwissbibTest\Bootstrap;
@@ -51,7 +49,7 @@ class SwitchApiServiceTest extends VuFindTestCase
     protected $sm;
 
     /**
-     * Set up service manager and National Licence Service
+     * Set up service manager and National Licence Service.
      */
     public function setUp()
     {
@@ -111,6 +109,7 @@ class SwitchApiServiceTest extends VuFindTestCase
      * Get a reflection class for the SwitchApi service. This is used for call several private or protected methods.
      *
      * @param SwitchApi $originalClass
+     *
      * @return ReflectionClass
      */
     protected function getReflectedClass($originalClass)
@@ -127,6 +126,6 @@ class SwitchApiServiceTest extends VuFindTestCase
      */
     public function unitPrint($variable)
     {
-        fwrite(STDERR, print_r($variable, TRUE));
+        fwrite(STDERR, print_r($variable, true));
     }
 }

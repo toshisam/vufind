@@ -23,12 +23,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category Swissbib_VuFind2
- * @package  SwissbibTest_NationalLicence
+ *
  * @author   Simone Cogno  <scogno@snowflake.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ *
  * @link     http://www.swissbib.org
  */
-
 namespace SwissbibTest\NationalLicence;
 
 use Swissbib\Services\Email;
@@ -44,7 +44,7 @@ class EmailServiceTest extends VuFindTestCase
     protected $sm;
 
     /**
-     * Set up service manager and National Licence Service
+     * Set up service manager and National Licence Service.
      */
     public function setUp()
     {
@@ -56,7 +56,7 @@ class EmailServiceTest extends VuFindTestCase
     public function testSendAccountExtensionEmail()
     {
         try {
-            $this->emailService->sendAccountExtensionEmail("scogno@snowflake.ch");
+            $this->emailService->sendAccountExtensionEmail('scogno@snowflake.ch');
         } catch (Exception $e) {
             self::fail($e->getMessage());
         }
@@ -69,6 +69,6 @@ class EmailServiceTest extends VuFindTestCase
      */
     public function unitPrint($variable)
     {
-        fwrite(STDERR, print_r($variable, TRUE));
+        fwrite(STDERR, print_r($variable, true));
     }
 }

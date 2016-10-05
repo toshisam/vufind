@@ -21,23 +21,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category Swissbib_VuFind2
- * @package  Controller
+ *
  * @author   Simone Cogno <scogno@snowflake.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ *
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
 namespace Swissbib\Controller;
 
 use Swissbib\Services\NationalLicence;
 use Swissbib\VuFind\Db\Row\NationalLicenceUser;
-use Zend\Config\Reader\Ini;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 
 class NationalLicencesController extends BaseController
 {
     /**
-     * @var NationalLicence $nationalLicenceService
+     * @var NationalLicence
      */
     protected $nationalLicenceService;
 
@@ -45,6 +45,7 @@ class NationalLicencesController extends BaseController
      * Constructor.
      *
      * NationalLicencesController constructor.
+     *
      * @param NationalLicence $nationalLicenceService
      */
     public function __construct(NationalLicence $nationalLicenceService)
@@ -53,125 +54,127 @@ class NationalLicencesController extends BaseController
     }
 
     /**
-     * Show the form for became compliant with the Swiss National Licences
+     * Show the form for became compliant with the Swiss National Licences.
      *
      * @return mixed|ViewModel
      */
     public function indexAction()
     {
         //TODO: Remove the following two lines, they are just for debugging!
-        $n=$this->params()->fromQuery("preset");
+        $n = $this->params()->fromQuery('preset');
         //Set a test preset for debugging the view
         $this->presets($n);
         //$str = json_encode($_SERVER, JSON_PRETTY_PRINT);
         //echo "<pre style='color: red;'>$str</pre>";
 
         // Get user information from the shibboleth attributes
-        $uniqueId                       = isset($_SERVER["uniqueID"]) ? $_SERVER["uniqueID"]: null;
-        $persistentId                   = isset($_SERVER["persistent-id"]) ? $_SERVER["persistent-id"]: null;
-        $homePostalAddress              = isset($_SERVER["homePostalAddress"]) ? $_SERVER["homePostalAddress"]: null;
-        $mobile                         = isset($_SERVER["mobile"]) ? $_SERVER["mobile"]: null;
-        $homeOrganizationType           = isset($_SERVER["home_organization_type"]) ?
-                                                $_SERVER["home_organization_type"]: null;
-        $affiliation                    = isset($_SERVER["affiliation"]) ? $_SERVER["affiliation"]: null;
-        $swissLibraryPersonResidence    = isset($_SERVER["swissLibraryPersonResidence"]) ?
-                                                $_SERVER["swissLibraryPersonResidence"] : null;
+        $uniqueId = isset($_SERVER['uniqueID']) ? $_SERVER['uniqueID'] : null;
+        $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : null;
+        $homePostalAddress = isset($_SERVER['homePostalAddress']) ? $_SERVER['homePostalAddress'] : null;
+        $mobile = isset($_SERVER['mobile']) ? $_SERVER['mobile'] : null;
+        $homeOrganizationType = isset($_SERVER['home_organization_type']) ?
+                                                $_SERVER['home_organization_type'] : null;
+        $affiliation = isset($_SERVER['affiliation']) ? $_SERVER['affiliation'] : null;
+        $swissLibraryPersonResidence = isset($_SERVER['swissLibraryPersonResidence']) ?
+                                                $_SERVER['swissLibraryPersonResidence'] : null;
 
         /** @var NationalLicenceUser $user */
         $user = null;
         try {
             // Create a national licence user liked the the current logged user
             $user = $this->nationalLicenceService->getOrCreateNationalLicenceUserIfNotExists($persistentId, array(
-                "edu_id" => $uniqueId,
-                "home_organization_type"=> $homeOrganizationType,
-                "mobile"=> $mobile,
-                "home_postal_address"=> $homePostalAddress,
-                "affiliation"=> $affiliation,
-                "swiss_library_person_residence" => $swissLibraryPersonResidence
+                'edu_id' => $uniqueId,
+                'home_organization_type' => $homeOrganizationType,
+                'mobile' => $mobile,
+                'home_postal_address' => $homePostalAddress,
+                'affiliation' => $affiliation,
+                'swiss_library_person_residence' => $swissLibraryPersonResidence,
             ));
-        }catch (\Exception $e) {
-            $this->flashMessenger()->setNamespace("error")->addMessage(
+        } catch (\Exception $e) {
+            $this->flashMessenger()->setNamespace('error')->addMessage(
                 $this->translate($e->getMessage())
             );
         }
 
         //TODO: Remove this lines, they are just for debugging!
-        if(isset($n)){
+        if (isset($n)) {
             echo "<p style='color:red'>Home postal address: $homePostalAddress</p>";
             echo "<p style='color:red'>Mobile: $mobile</p>";
             echo "<p style='color:red'>Swiss Library Person Residence: $swissLibraryPersonResidence</p>";
         }
 
         // Compute the checks
-        $isHomePostalAddressInSwitzerland   = $this->nationalLicenceService->isAddressInSwitzerland($homePostalAddress);
-        $isSwissPhoneNumber                 = $this->nationalLicenceService->isSwissPhoneNumber($mobile);
-        $isNationalLicenceCompliant         = $this->nationalLicenceService->isNationalLicenceCompliant();
-        $temporaryAccessValid               = $this->nationalLicenceService->isTemporaryAccessCurrentlyValid($user);
-        $hasAcceptedTermsAndConditions      = $user->hasAcceptedTermsAndConditions();
-        $hasVerifiedHomePostalAddress       = $this->nationalLicenceService->hasVerifiedSwissAddress();
-        $hasPermanentAccess                 = $user->hasRequestPermanentAccess();
-        $hasAccessToNationalLicenceContent  = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
+        $isHomePostalAddressInSwitzerland = $this->nationalLicenceService->isAddressInSwitzerland($homePostalAddress);
+        $isSwissPhoneNumber = $this->nationalLicenceService->isSwissPhoneNumber($mobile);
+        $isNationalLicenceCompliant = $this->nationalLicenceService->isNationalLicenceCompliant();
+        $temporaryAccessValid = $this->nationalLicenceService->isTemporaryAccessCurrentlyValid($user);
+        $hasAcceptedTermsAndConditions = $user->hasAcceptedTermsAndConditions();
+        $hasVerifiedHomePostalAddress = $this->nationalLicenceService->hasVerifiedSwissAddress();
+        $hasPermanentAccess = $user->hasRequestPermanentAccess();
+        $hasAccessToNationalLicenceContent = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
         //var_dump($hasAccessToNationalLicenceContent);
-        if($hasAccessToNationalLicenceContent){
+        if ($hasAccessToNationalLicenceContent) {
             $this->flashMessenger()->addSuccessMessage(
-                $this->translate("snl.nationalLicenceCompliant")
+                $this->translate('snl.nationalLicenceCompliant')
             );
         } else {
             $this->flashMessenger()->addErrorMessage(
-                $this->translate("snl.youDontHaveAccessToNationalLicencesError")
+                $this->translate('snl.youDontHaveAccessToNationalLicencesError')
             );
         }
         $view = new ViewModel(
             [
-                "swissLibraryPersonResidence" => $swissLibraryPersonResidence,
-                "homePostalAddress" => $homePostalAddress,
-                "mobile" => $mobile,
-                "user" => $user,
-                "isSwissPhoneNumber" => $isSwissPhoneNumber,
-                "isHomePostalAddressInSwitzerland" => $isHomePostalAddressInSwitzerland,
-                "isNationalLicenceCompliant" => $isNationalLicenceCompliant,
-                "temporaryAccessValid" => $temporaryAccessValid,
-                "hasAcceptedTermsAndConditions" => $hasAcceptedTermsAndConditions,
-                "hasPermanentAccess" => $hasPermanentAccess,
-                "hasVerifiedHomePostalAddress" => $hasVerifiedHomePostalAddress
+                'swissLibraryPersonResidence' => $swissLibraryPersonResidence,
+                'homePostalAddress' => $homePostalAddress,
+                'mobile' => $mobile,
+                'user' => $user,
+                'isSwissPhoneNumber' => $isSwissPhoneNumber,
+                'isHomePostalAddressInSwitzerland' => $isHomePostalAddressInSwitzerland,
+                'isNationalLicenceCompliant' => $isNationalLicenceCompliant,
+                'temporaryAccessValid' => $temporaryAccessValid,
+                'hasAcceptedTermsAndConditions' => $hasAcceptedTermsAndConditions,
+                'hasPermanentAccess' => $hasPermanentAccess,
+                'hasVerifiedHomePostalAddress' => $hasVerifiedHomePostalAddress,
                 //"hasAccessToNationalLicenceContent" => $hasAccessToNationalLicenceContent
             ]
         );
+
         return $view;
     }
 
     /**
      * Define some test presets for testing the frontend view
-     * TODO: To delete, this is just for debugging
+     * TODO: To delete, this is just for debugging.
+     *
      * @param int $n
      */
     protected function presets($n = 0)
     {
-        switch ($n){
+        switch ($n) {
             case 1:
-                $_SERVER["homePostalAddress"] = 'Roswiesenstrasse 100$8051 Zürich$Switzerland';
-                $_SERVER["mobile"] = "+41 793433434";
-                $_SERVER["swissLibraryPersonResidence"] = "CH";
+                $_SERVER['homePostalAddress'] = 'Roswiesenstrasse 100$8051 Zürich$Switzerland';
+                $_SERVER['mobile'] = '+41 793433434';
+                $_SERVER['swissLibraryPersonResidence'] = 'CH';
                 break;
             case 2:
-                $_SERVER["homePostalAddress"] = 'Theobalds Road 29$WC2N London$England';
-                $_SERVER["mobile"] = "+44 743433434";
-                $_SERVER["swissLibraryPersonResidence"] = "EN";
+                $_SERVER['homePostalAddress'] = 'Theobalds Road 29$WC2N London$England';
+                $_SERVER['mobile'] = '+44 743433434';
+                $_SERVER['swissLibraryPersonResidence'] = 'EN';
                 break;
             case 3:
-                $_SERVER["homePostalAddress"] = null;
-                $_SERVER["mobile"] = "+41 793433434";
-                $_SERVER["swissLibraryPersonResidence"] = null;
+                $_SERVER['homePostalAddress'] = null;
+                $_SERVER['mobile'] = '+41 793433434';
+                $_SERVER['swissLibraryPersonResidence'] = null;
                 break;
             case 4:
-                $_SERVER["homePostalAddress"] = null;
-                $_SERVER["mobile"] = null;
-                $_SERVER["swissLibraryPersonResidence"] = null;
+                $_SERVER['homePostalAddress'] = null;
+                $_SERVER['mobile'] = null;
+                $_SERVER['swissLibraryPersonResidence'] = null;
                 break;
             case 5:
-                $_SERVER["homePostalAddress"] = 'Roswiesenstrasse 100$8051 Zürich$Switzerland';
-                $_SERVER["mobile"] = null;
-                $_SERVER["swissLibraryPersonResidence"] = null;
+                $_SERVER['homePostalAddress'] = 'Roswiesenstrasse 100$8051 Zürich$Switzerland';
+                $_SERVER['mobile'] = null;
+                $_SERVER['swissLibraryPersonResidence'] = null;
                 break;
             default:
 
@@ -188,15 +191,15 @@ class NationalLicencesController extends BaseController
             $this->nationalLicenceService->acceptTermsConditions();
             //TODO: Update the national compliant flag if compliant
         } catch (\Exception $e) {
-            $this->flashMessenger()->setNamespace("error")->addMessage(
+            $this->flashMessenger()->setNamespace('error')->addMessage(
                 $this->translate($e->getMessage())
             );
         }
-        $this->redirect()->toRoute("national-licences");
+        $this->redirect()->toRoute('national-licences');
     }
 
     /**
-     * Send request for the temporary access
+     * Send request for the temporary access.
      */
     public function activateTemporaryAccessAction()
     {
@@ -204,42 +207,44 @@ class NationalLicencesController extends BaseController
         try {
             $accessCreatedSuccessfully = $this->nationalLicenceService->createTemporaryAccessForUser();
         } catch (\Exception $e) {
-            $this->flashMessenger()->setNamespace("error")->addMessage(
+            $this->flashMessenger()->setNamespace('error')->addMessage(
                 $this->translate($e->getMessage())
             );
-            $this->redirect()->toRoute("national-licences");
+            $this->redirect()->toRoute('national-licences');
+
             return;
         }
         if (!$accessCreatedSuccessfully) {
-            $this->flashMessenger()->setNamespace("error")->addMessage(
-                $this->translate("snl.wasNotPossibleToCreateTemporaryAccessError")
+            $this->flashMessenger()->setNamespace('error')->addMessage(
+                $this->translate('snl.wasNotPossibleToCreateTemporaryAccessError')
             );
-            $this->redirect()->toRoute("national-licences");
+            $this->redirect()->toRoute('national-licences');
+
             return;
         }
-        $this->flashMessenger()->setNamespace("success")->addMessage(
-            $this->translate("snl.yourTemporaryAccessWasCreatedSuccessfully")
+        $this->flashMessenger()->setNamespace('success')->addMessage(
+            $this->translate('snl.yourTemporaryAccessWasCreatedSuccessfully')
         );
-        $this->redirect()->toRoute("national-licences");
+        $this->redirect()->toRoute('national-licences');
     }
 
     /**
-     * Set the permanent access for the current user. Internally this will also adds the user to the National Licence Program
-     * using the Switch API.
+     * Set the permanent access for the current user. Internally this will also
+     * adds the user to the National Licence Program using the Switch API.
      */
     public function activatePermanentAccessAction()
     {
         try {
             $this->nationalLicenceService->setNationalLicenceCompliantFlag();
-            $this->flashMessenger()->setNamespace("success")->addMessage(
-                $this->translate("snl.yourRequestPermanentAccessSuccessful")
+            $this->flashMessenger()->setNamespace('success')->addMessage(
+                $this->translate('snl.yourRequestPermanentAccessSuccessful')
             );
         } catch (\Exception $e) {
-            $this->flashMessenger()->setNamespace("error")->addMessage(
+            $this->flashMessenger()->setNamespace('error')->addMessage(
                 $this->translate($e->getMessage())
             );
         }
-        $this->redirect()->toRoute("national-licences");
+        $this->redirect()->toRoute('national-licences');
     }
 
     /**
@@ -247,41 +252,42 @@ class NationalLicencesController extends BaseController
      * redirects it to the login page otherwise.
      *
      * @param MvcEvent $e
+     *
      * @return mixed|\Zend\Http\Response
      */
     public function onDispatch(MvcEvent $e)
     {
         $account = $this->getAuthManager();
 
-        if (false === $account->isLoggedIn() ) {
+        if (false === $account->isLoggedIn()) {
             $this->forceLogin(false);
+
             return $this->redirect()->toRoute('myresearch-home');
-        }else{
+        } else {
             return parent::onDispatch($e);
         }
     }
 
     /**
      * Method called when user want to extend his account. The link to access to this function has to be send by e-mail.
-     * TODO
+     * TODO.
      */
     public function extendAccountAction()
     {
         try {
             $this->nationalLicenceService->extendAccountIfCompliant();
-            if($this->nationalLicenceService->isMessageSet()) {
+            if ($this->nationalLicenceService->isMessageSet()) {
                 $message = $this->nationalLicenceService->getMessage();
                 $this->flashMessenger()->setNamespace($message['type'])->addMessage(
                     $this->translate($message['text'])
                 );
             }
         } catch (Exception $e) {
-            $this->flashMessenger()->setNamespace("success")->addMessage(
-                $this->translate("snl.yourRequestPermanentAccessSuccessful")
+            $this->flashMessenger()->setNamespace('success')->addMessage(
+                $this->translate('snl.yourRequestPermanentAccessSuccessful')
             );
         }
         //redirect to home page
-        $this->redirect()->toRoute("national-licences");
-
+        $this->redirect()->toRoute('national-licences');
     }
 }
