@@ -61,11 +61,13 @@ class Factory
      * NationalLicence service.
      *
      * @param ServiceManager $sm Service manager.
+     *                            
      * @return NationalLicencesController
      */
     public function getNationalLicenceController(ServiceManager $sm)
     {
         $sl = $sm->getServiceLocator();
+
         return new NationalLicencesController(
             $sl->get('Swissbib\NationalLicenceService')
         );

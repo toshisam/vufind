@@ -32,20 +32,35 @@ use VuFindTest\Unit\TestCase as VuFindTestCase;
 use Zend\ServiceManager\ServiceManager;
 use SwissbibTest\Bootstrap;
 
+/**
+ * Class NationalLicenceServiceTest.
+ *
+ * @category Swissbib_VuFind2
+ * @package  SwissbibTest_NationalLicence
+ * @author   Simone Cogno  <scogno@snowflake.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org
+ */
 class NationalLicenceServiceTest extends VuFindTestCase
 {
     /**
+     * Service manager.
+     *
      * @var ServiceManager
      */
     protected $sm;
 
     /**
+     * National Licence.
+     *
      * @var NationalLicence
      */
     protected $nationalLicenceService;
 
     /**
      * Set up service manager and National Licence Service.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -58,6 +73,8 @@ class NationalLicenceServiceTest extends VuFindTestCase
 
     /**
      * Test isSwissPhoneNumber method.
+     *
+     * @return void
      */
     public function testIsSwissPhoneNumber()
     {
@@ -77,6 +94,8 @@ class NationalLicenceServiceTest extends VuFindTestCase
 
     /**
      * Test isAddressInSwitzerland method.
+     *
+     * @return void
      */
     public function testAddressIsInSwitzerland()
     {
@@ -95,10 +114,14 @@ class NationalLicenceServiceTest extends VuFindTestCase
 
     /**
      * Test isTemporaryAccessCurrentlyValid method.
+     *
+     * @return void
      */
     public function testIsTemporaryAccessCurrentlyValid()
     {
         /**
+         * National licence user.
+         *
          * @var NationalLicenceUser $user
          */
         $user = $this->getNationalLicenceUserObjectInstance();
@@ -129,12 +152,16 @@ class NationalLicenceServiceTest extends VuFindTestCase
     protected function getNationalLicenceUserObjectInstance()
     {
         /**
+         * National licence user.
+         *
          * @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $userTable
          */
         $userTable = $this->sm
             ->get('VuFind\DbTablePluginManager')
             ->get('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
         /**
+         * National licence user.
+         *
          * @var NationalLicenceUser $user
          */
         $user = $userTable->createRow();
@@ -144,60 +171,73 @@ class NationalLicenceServiceTest extends VuFindTestCase
 
     /**
      * Test if the user has acess to national licence content. TODO to update.
+     *
+     * @return void
      */
     public function testHasAccessToNationalLicenceContent()
     {
         $user = $this->getNationalLicenceUserObjectInstance();
-        $this->setFieldsToUser($user, [
-            'condition_accepted' => false,
-            'request_temporary_access' => false,
-            'request_permanent_access' => false,
-            'date_expiration' => null,
-            'blocked' => false,
-            'last_edu_id_activity' => null,
-        ]);
+        $this->setFieldsToUser(
+            $user, [
+                'condition_accepted' => false,
+                'request_temporary_access' => false,
+                'request_permanent_access' => false,
+                'date_expiration' => null,
+                'blocked' => false,
+                'last_edu_id_activity' => null,
+            ]
+        );
         $res = $this->nationalLicenceService
             ->hasAccessToNationalLicenceContent($user);
         $this->assertEquals(false, $res);
 
         $user = $this->getNationalLicenceUserObjectInstance();
-        $this->setFieldsToUser($user, [
-            'condition_accepted' => false,
-            'request_temporary_access' => true,
-            'request_permanent_access' => false,
-            'date_expiration' => (new \DateTime())->modify('+14 days')
-                ->format('Y-m-d H:i:s'),
-            'blocked' => false,
-            'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
-        ]);
+        $this->setFieldsToUser(
+            $user,
+            [
+                'condition_accepted' => false,
+                'request_temporary_access' => true,
+                'request_permanent_access' => false,
+                'date_expiration' => (new \DateTime())->modify('+14 days')
+                    ->format('Y-m-d H:i:s'),
+                'blocked' => false,
+                'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
+            ]
+        );
         $res = $this->nationalLicenceService
             ->hasAccessToNationalLicenceContent($user);
         $this->assertEquals(false, $res);
 
         $user = $this->getNationalLicenceUserObjectInstance();
-        $this->setFieldsToUser($user, [
-            'condition_accepted' => true,
-            'request_temporary_access' => true,
-            'request_permanent_access' => false,
-            'date_expiration' => (new \DateTime())->modify('+14 days')
-                ->format('Y-m-d H:i:s'),
-            'blocked' => false,
-            'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
-        ]);
+        $this->setFieldsToUser(
+            $user,
+            [
+                'condition_accepted' => true,
+                'request_temporary_access' => true,
+                'request_permanent_access' => false,
+                'date_expiration' => (new \DateTime())->modify('+14 days')
+                    ->format('Y-m-d H:i:s'),
+                'blocked' => false,
+                'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
+            ]
+        );
         $res = $this->nationalLicenceService
             ->hasAccessToNationalLicenceContent($user);
         $this->assertEquals(true, $res);
 
         $user = $this->getNationalLicenceUserObjectInstance();
-        $this->setFieldsToUser($user, [
-            'condition_accepted' => true,
-            'request_temporary_access' => false,
-            'request_permanent_access' => true,
-            'date_expiration' => (new \DateTime())->modify('+14 days')
-                ->format('Y-m-d H:i:s'),
-            'blocked' => false,
-            'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
-        ]);
+        $this->setFieldsToUser(
+            $user,
+            [
+                'condition_accepted' => true,
+                'request_temporary_access' => false,
+                'request_permanent_access' => true,
+                'date_expiration' => (new \DateTime())->modify('+14 days')
+                    ->format('Y-m-d H:i:s'),
+                'blocked' => false,
+                'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
+            ]
+        );
         $res = $this->nationalLicenceService
             ->hasAccessToNationalLicenceContent($user);
         $this->assertEquals(true, $res);
@@ -206,8 +246,10 @@ class NationalLicenceServiceTest extends VuFindTestCase
     /**
      * Helper method to modify fields to a NationalLicenceUser instance.
      *
-     * @param $user
-     * @param $fields
+     * @param NationalLicenceUser $user   User
+     * @param array               $fields Field
+     *
+     * @return void
      */
     protected function setFieldsToUser($user, $fields)
     {
@@ -216,6 +258,11 @@ class NationalLicenceServiceTest extends VuFindTestCase
         }
     }
 
+    /**
+     * Test send export email.
+     *
+     * @return void
+     */
     public function testSendExportEmail()
     {
         $config = $this->sm->get('Config');
@@ -226,7 +273,9 @@ class NationalLicenceServiceTest extends VuFindTestCase
     /**
      * Workaround to print in the unit test console.
      *
-     * @param $variable
+     * @param mixed $variable Variable
+     *
+     * @return void
      */
     public function unitPrint($variable)
     {

@@ -182,7 +182,7 @@ class Factory
 
         return new $className(
             new \Zend\ServiceManager\Config(
-            //we need the swissbib specific configurations
+                //we need the swissbib specific configurations
                 $config['swissbib']['plugin_managers'][$configKey]
             )
         );
@@ -215,7 +215,8 @@ class Factory
     /**
      * Construct the Service\NationalLicence service.
      *
-     * @param ServiceManager $sm
+     * @param ServiceManager $sm Service manager
+     *
      * @return NationalLicence
      */
     public static function getNationalLicenceService(ServiceManager $sm)
@@ -231,7 +232,8 @@ class Factory
     /**
      * Get SwitchApi service.
      *
-     * @param ServiceManager $sm
+     * @param ServiceManager $sm Service manager
+     *
      * @return SwitchApi
      */
     public static function getSwitchApiService(ServiceManager $sm)
@@ -243,7 +245,8 @@ class Factory
     /**
      * Get Email service.
      *
-     * @param ServiceManager $sm
+     * @param ServiceManager $sm service manager
+     *                            
      * @return Email
      */
     public static function getEmailService(ServiceManager $sm)

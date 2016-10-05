@@ -226,10 +226,11 @@ class Params extends VuFindSolrParams
      * GetFacetLabel
      *
      * @param string $field Facet field name.
-     * @param string $value
+     * @param string $value Value
+     *                       
      * @return string Human-readable description of field.
      */
-    public function getFacetLabel($field, $value = NULL)
+    public function getFacetLabel($field, $value = null)
     {
         switch($field) {
         case 'publishDate':

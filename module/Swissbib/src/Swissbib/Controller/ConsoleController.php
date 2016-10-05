@@ -30,14 +30,28 @@ namespace Swissbib\Controller;
 
 use Swissbib\Services\NationalLicence;
 
+/**
+ * Class ConsoleController.
+ *
+ * @category Swissbib_VuFind2
+ * @package  Controller
+ * @author   Simone Cogno <scogno@snowflake.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
+ */
 class ConsoleController extends BaseController
 {
     /**
      * Send the National Licence user list export in .csv format via e-mail.
+     *
+     * @return void
+     * @throws \Exception
      */
     public function sendNationalLicenceUsersExportAction()
     {
         /**
+         * National Licence service.
+         *
          * @var NationalLicence $nationalLicenceService
          */
         $nationalLicenceService = $this->getServiceLocator()
@@ -49,6 +63,7 @@ class ConsoleController extends BaseController
      * Script command for update the national licence users with their
      * new attributes.
      *
+     * @return void
      * @throws \Exception
      */
     public function updateNationalLicenceUserInfoAction()
@@ -66,6 +81,8 @@ class ConsoleController extends BaseController
         $routeMatch = $router->match($request);
 
         /**
+         * National licence service.
+         *
          * @var NationalLicence $nationalLicenceService
          */
         $nationalLicenceService = $this->getServiceLocator()

@@ -1,5 +1,5 @@
 #!/bin/bash
-VUFIND_BASE=/home/nicolas/PhpstormProjects/swissbib/source
+VUFIND_BASE=$(dirname $0)
 VUFIND_CACHE=$VUFIND_BASE/local/cache
 
 BASEDIR=$(dirname $0)

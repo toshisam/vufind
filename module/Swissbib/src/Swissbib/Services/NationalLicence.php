@@ -31,6 +31,12 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class NationalLicence.
+ *
+ * @category Swissbib_VuFind2
+ * @package  Service
+ * @author   Simone Cogno <scogno@snowflake.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
 class NationalLicence implements ServiceLocatorAwareInterface
 {
@@ -41,28 +47,36 @@ class NationalLicence implements ServiceLocatorAwareInterface
      */
     protected $serviceLocator;
     /**
-     * @var  array $config
+     * Config.
+     *
+     * @var array $config
      */
     protected $config;
     /**
-     * @var  SwitchApi $switchApi
+     * Switch api.
+     *
+     * @var SwitchApi $switchApi
      */
     protected $switchApiService;
     /**
+     * Email service.
+     *
      * @var Email $emailService
      */
     protected $emailService;
     /**
-     * @var  array $message
+     * Message.
+     *
+     * @var array $message
      */
     protected $message;
 
     /**
      * NationalLicence constructor.
      *
-     * @param SwitchApi $switchApiService
-     * @param Email     $emailService
-     * @param array     $config
+     * @param SwitchApi $switchApiService Switch Api service
+     * @param Email     $emailService     Email service
+     * @param array     $config           Config
      */
     public function __construct($switchApiService, $emailService, $config)
     {
@@ -75,7 +89,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * Create a temporary access for the user valid for 14 days. If the user id is
      * not provided the current user in the $_SERVER variable will be used.
      *
-     * @param int $persistentId
+     * @param int $persistentId Persistent id
+     *
      * @return bool
      * @throws \Exception
      */
@@ -83,6 +98,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
     {
 
         /**
+         * National licence user.
+         *
          * @var NationalLicenceUser $user
          */
         $user = $this->getCurrentNationalLicenceUser($persistentId);
@@ -98,6 +115,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
         }
 
         /**
+         * Mobile.
+         *
          * @var string $mobile
          */
         $mobile = $_SERVER['mobile'];
@@ -116,7 +135,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * Get the current national licence user if it exists.
      *
-     * @param string $persistentId
+     * @param string $persistentId Persistent id
+     *
      * @return NationalLicenceUser
      * @throws \Exception
      */
@@ -130,6 +150,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
             throw new \Exception('Error retrieving the current user.');
         }
         /**
+         * National licence user.
+         *
          * @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $userTable
          */
         $userTable = $this->getTable(
@@ -149,6 +171,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * Get a database table object.
      *
      * @param string $table Name of table to retrieve
+     *
      * @return \VuFind\Db\Table\Gateway
      */
     protected function getTable($table)
@@ -172,6 +195,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * Set serviceManager instance.
      *
      * @param ServiceLocatorInterface $serviceLocator ServiceLocatorInterface
+     *
+     * @return void
      */
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
@@ -181,7 +206,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * Check if the user account is blocked.
      *
-     * @param NationalLicenceUser $user
+     * @param NationalLicenceUser $user Nationa licence user
+     *
+     * @return void
      * @throws Exception
      */
     protected function checkIfUserIsBlocked($user)
@@ -196,7 +223,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * Check is it's a swiss phone number.
      *
-     * @param string $phoneNumber
+     * @param string $phoneNumber Phone number
+     *
      * @return bool
      */
     public function isSwissPhoneNumber($phoneNumber)
@@ -216,10 +244,16 @@ class NationalLicence implements ServiceLocatorAwareInterface
 
     /**
      * Persist information if the user accepts the terms and conditions.
+     *
+     * @return void
+     * @throws Exception
+     * @throws \Exception
      */
     public function acceptTermsConditions()
     {
         /**
+         * National licence user.
+         *
          * @var NationalLicenceUser $user
          */
         $user = $this->getCurrentNationalLicenceUser();
@@ -235,6 +269,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * @param string $persistentId Edu-id persistent id
      * @param array  $userFields   Array of national licence user fields with their
      *                             values.
+     *
      * @return NationalLicenceUser $user
      * @throws \Exception
      */
@@ -243,6 +278,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
         $userFields = []
     ) {
         /**
+         * Nationa licence user table.
+         *
          * @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $userTable
          */
         $userTable = $this->getTable(
@@ -263,7 +300,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * This method sets the national-licence-compliant flag in the SWITCH API.
      *
-     * @param NationalLicenceUser $user
+     * @param NationalLicenceUser $user NationalLicenceUser
+     *
+     * @return void
      * @throws \Exception
      */
     public function setNationalLicenceCompliantFlag($user = null)
@@ -281,7 +320,6 @@ class NationalLicence implements ServiceLocatorAwareInterface
                 'User is not compliant with the Swiss National Licence'
             );
         }
-        /* @var SwitchApi $switchApiService */
         $this->switchApiService->setNationalCompliantFlag($user->getEduId());
 
         $this->setPermanentAccess($user);
@@ -299,6 +337,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
 
         // Has accepted terms and conditions
         /**
+         * National licence user
+         *
          * @var NationalLicenceUser $user
          */
         if (!$user->hasAcceptedTermsAndConditions()) {
@@ -313,7 +353,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
             return false;
         }
         // Has requested a temporary access || Has a verified home postal address
-        $hasTemporaryAccess = $user->hasAlreadyRequestedTemporaryAccess() &&
+        $hasTemporaryAccess
+            = $user->hasAlreadyRequestedTemporaryAccess() &&
             $this->isTemporaryAccessCurrentlyValid($user);
         $hasVerifiedSwissAddress = $this->hasVerifiedSwissAddress();
 
@@ -323,7 +364,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * Check if the user has been active in the last 12 Months.
      *
-     * @param NationalLicenceUser $user
+     * @param NationalLicenceUser $user NationalLicenceUser
+     *
      * @return bool
      */
     protected function hasBeenActiveInLast12Months($user)
@@ -341,7 +383,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * Check if the temporary access of the user is still valid.
      *
-     * @param NationalLicenceUser $user
+     * @param NationalLicenceUser $user NationalLicenceUser
+     *
      * @return bool
      */
     public function isTemporaryAccessCurrentlyValid($user)
@@ -356,7 +399,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * Check if the current user has a verified swiss address.
      *
-     * @param NationalLicenceUser $user
+     * @param NationalLicenceUser $user NationalLicenceUser
+     *
      * @return bool
      * @throws \Exception
      */
@@ -366,8 +410,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
             // Get shibboleth attributes from $_SERVER variable
             $homePostalAddress = isset($_SERVER['homePostalAddress']) ?
                 $_SERVER['homePostalAddress'] : null;
-            $swissLibraryPersonResidence =
-                isset($_SERVER['swissLibraryPersonResidence']) ?
+            $swissLibraryPersonResidence
+                = isset($_SERVER['swissLibraryPersonResidence']) ?
                     $_SERVER['swissLibraryPersonResidence'] : null;
         } else {
             $homePostalAddress = $user->getHomePostalAddress();
@@ -375,17 +419,17 @@ class NationalLicence implements ServiceLocatorAwareInterface
         }
 
         if ($swissLibraryPersonResidence) {
-            if ($swissLibraryPersonResidence === 'CH' &&
-                $this->isVerifiedHomePostalAddress()
+            if ($swissLibraryPersonResidence === 'CH'
+                && $this->isVerifiedHomePostalAddress()
             ) {
                 //TODO: add the quality string
                 return true;
             }
         }
 
-        if (!empty($homePostalAddress) &&
-            $this->isAddressInSwitzerland($homePostalAddress) &&
-            $this->isVerifiedHomePostalAddress() //TODO
+        if (!empty($homePostalAddress)
+            && $this->isAddressInSwitzerland($homePostalAddress)
+            && $this->isVerifiedHomePostalAddress() //TODO
         ) {
             echo 'is address in switzerland confirmed' . "\r\n";
 
@@ -402,6 +446,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * attribute viewer.
      *
      * @param string $string Assurance level string.
+     *
      * @return bool
      * @throws \Exception
      */
@@ -434,6 +479,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * Check if it is a swiss address.
      *
      * @param string $homeAddressString Home address from Swiss edu-ID account
+     *
      * @return bool True if it's a Swiss address False otherwise
      */
     public function isAddressInSwitzerland($homeAddressString)
@@ -447,7 +493,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * Set request permanent access to user.
      *
-     * @param NationalLicenceUser $user
+     * @param NationalLicenceUser $user NationalLicenceUser
+     *
+     * @return void
      * @throws \Exception
      */
     public function setPermanentAccess($user = null)
@@ -462,7 +510,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * Check if user has access to the national licence content.
      *
-     * @param NationalLicenceUser $user
+     * @param NationalLicenceUser $user NationalLicenceUser
+     *
      * @return bool
      * @throws \Exception
      */
@@ -471,8 +520,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
         if (!$user->hasAcceptedTermsAndConditions()) {
             return false;
         }
-        if ($user->hasAlreadyRequestedTemporaryAccess() &&
-            $this->isTemporaryAccessCurrentlyValid($user)
+        if ($user->hasAlreadyRequestedTemporaryAccess()
+            && $this->isTemporaryAccessCurrentlyValid($user)
         ) {
             return true;
         }
@@ -486,7 +535,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * Check if use has permanent access to the national licence content.
      *
-     * @param NationalLicenceUser $user
+     * @param NationalLicenceUser $user National Licence User
+     *
      * @return bool
      * @throws \Exception
      */
@@ -495,8 +545,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
         if (empty($user)) {
             $user = $this->getCurrentNationalLicenceUser();
         }
-        if ($user->hasRequestPermanentAccess() &&
-            $this->switchApiService->userIsOnNationalCompliantSwitchGroup(
+        if ($user->hasRequestPermanentAccess()
+            && $this->switchApiService->userIsOnNationalCompliantSwitchGroup(
                 $user->getEduId()
             )
         ) {
@@ -510,6 +560,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * Send e-mail.
      *
      * @param string $to The receiver of the mail.
+     *
+     * @return void
      * @throws \Exception
      */
     public function sendExportEmail($to = null)
@@ -535,6 +587,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
     public function getListNationalLicenceUserWithVuFindUsers()
     {
         /**
+         * National licence user table.
+         *
          * @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $userTable
          */
         $userTable = $this->getTable(
@@ -549,12 +603,13 @@ class NationalLicence implements ServiceLocatorAwareInterface
      *
      * @param string                     $path  Path of the created file
      * @param array(NationalLicenceUser) $users List of National Licence users
+     *
      * @return string
      */
     protected function createCsvFileFromListUsers($path, $users)
     {
-        $fieldsNationalLicenceUser =
-            $this->config['national_licence_user_fields_to_export'];
+        $fieldsNationalLicenceUser
+            = $this->config['national_licence_user_fields_to_export'];
         $fieldVuFindUser = $this->config['vufind_user_fields_to_export'];
 
         $file = fopen($path, 'w+') or die('Unable to open file!');
@@ -572,6 +627,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
 
         //Data
         /**
+         * National licence user.
+         *
          * @var NationalLicenceUser $user
          */
         foreach ($users as $user) {
@@ -595,6 +652,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * edu-ID account and update
      * the flag accordingly.
      * TODO.
+     *
+     * @return void
+     * @throws \Exception
      */
     public function checkAndUpdateNationalLicenceUserInfo()
     {
@@ -602,6 +662,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
         $users = $this->getListNationalLicenceUserWithVuFindUsers();
         //Foreach users
         /**
+         * National licence user.
+         *
          * @var NationalLicenceUser $user
          */
         foreach ($users as $user) {
@@ -650,7 +712,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * Check if the user was active the last 12 month.
      * TODO
-     * @param NationalLicenceUser $user
+     *
+     * @param NationalLicenceUser $user National Licence User
+     *
      * @return bool
      */
     protected function activeLast12Month($user)
@@ -661,7 +725,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * Check if the last email request for extending the account is still valid.
      *
-     * @param NationalLicenceUser $user
+     * @param NationalLicenceUser $user National Licence User
+     *
      * @return bool
      */
     protected function isAccountExtensionRequestStillValid($user)
@@ -680,6 +745,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
 
     /**
      * Method used for extending the user account.
+     *
+     * @return void
+     * @throws \Exception
      */
     public function extendAccountIfCompliant()
     {
@@ -705,16 +773,20 @@ class NationalLicence implements ServiceLocatorAwareInterface
             $user->save();
             //TODO: Update user information about last login (switch endpoint?)
             //Display a message that shows that the extension is made successfully
-            $this->setMessage([
-                'type' => 'success',
-                'text' => 'snl.extensionRequestProcessedSuccessfully',
-            ]);
+            $this->setMessage(
+                [
+                    'type' => 'success',
+                    'text' => 'snl.extensionRequestProcessedSuccessfully',
+                ]
+            );
         } else {
             //Block the user? Or delete it?
-            $this->setMessage([
-                'type' => 'error',
-                'text' => 'snl.extensionRequestExpired',
-            ]);
+            $this->setMessage(
+                [
+                    'type' => 'error',
+                    'text' => 'snl.extensionRequestExpired',
+                ]
+            );
         }
     }
 
@@ -734,7 +806,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * Set a message.
      *
-     * @param array $message
+     * @param array $message Message
+     *
+     * @return void
      * @throws \Exception
      */
     public function setMessage($message)
@@ -746,8 +820,10 @@ class NationalLicence implements ServiceLocatorAwareInterface
             );
         }
         if (empty($message['type']) || empty($message['text'])) {
-            throw new \Exception('Error when adding the message.' .
-                ' Empty type or text message.');
+            throw new \Exception(
+                'Error when adding the message.' .
+                ' Empty type or text message.'
+            );
         }
         $this->message = $message;
     }

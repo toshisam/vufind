@@ -32,27 +32,46 @@ use VuFindTest\Unit\TestCase as VuFindTestCase;
 use SwissbibTest\Bootstrap;
 use Zend\ServiceManager\ServiceManager;
 
+/**
+ * Class SwitchApiServiceTest.
+ *
+ * @category Swissbib_VuFind2
+ * @package  SwissbibTest_NationalLicence
+ * @author   Simone Cogno  <scogno@snowflake.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org
+ */
 class SwitchApiServiceTest extends VuFindTestCase
 {
     /**
-     * @var  ReflectionClass $switchApiService
+     * Reflection class.
+     *
+     * @var ReflectionClass $switchApiService
      */
     protected $switchApiServiceReflected;
     /**
-     * @var  SwitchApi $switchApiService
+     * Switch api service
+     *
+     * @var SwitchApi $switchApiService
      */
     protected $switchApiServiceOriginal;
     /**
-     * @var  array $config
+     * Config.
+     *
+     * @var array $config
      */
     protected $config;
     /**
-     * @var  ServiceManager $sm
+     * Service manager.
+     *
+     * @var ServiceManager $sm
      */
     protected $sm;
 
     /**
      * Set up service manager and National Licence Service.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -63,12 +82,15 @@ class SwitchApiServiceTest extends VuFindTestCase
         $this->switchApiServiceReflected = new ReflectionClass(
             $this->switchApiServiceOriginal
         );
-        $this->config =
-            ($this->sm->get('Config'))['swissbib']['tests']['switch_api'];
+        $this->config
+            = ($this->sm->get('Config'))['swissbib']['tests']['switch_api'];
     }
 
     /**
      * Test the unsetNationalCompliantFlag method.
+     *
+     * @return void
+     * @throws \Exception
      */
     public function testUnsetNationalCompliantFlag()
     {
@@ -79,15 +101,22 @@ class SwitchApiServiceTest extends VuFindTestCase
             $this->switchApiServiceOriginal
                 ->setNationalCompliantFlag($externalId);
         }
-        self::assertEquals(true, $this->switchApiServiceOriginal
-            ->userIsOnNationalCompliantSwitchGroup($externalId));
+        self::assertEquals(
+            true, $this->switchApiServiceOriginal
+                ->userIsOnNationalCompliantSwitchGroup($externalId)
+        );
         $this->switchApiServiceOriginal->unsetNationalCompliantFlag($externalId);
-        self::assertEquals(false, $this->switchApiServiceOriginal
-            ->userIsOnNationalCompliantSwitchGroup($externalId));
+        self::assertEquals(
+            false, $this->switchApiServiceOriginal
+                ->userIsOnNationalCompliantSwitchGroup($externalId)
+        );
     }
 
     /**
      * Test the setNationalCompliantFlag method.
+     *
+     * @return void
+     * @throws \Exception
      */
     public function testSetNationalCompliantFlag()
     {
@@ -108,12 +137,14 @@ class SwitchApiServiceTest extends VuFindTestCase
             $method->setAccessible(true);
             $method->invoke($this->switchApiServiceOriginal, $internalId);
         }
-        self::assertEquals(false,
+        self::assertEquals(
+            false,
             $this->switchApiServiceOriginal
                 ->userIsOnNationalCompliantSwitchGroup($externalId)
         );
         $this->switchApiServiceOriginal->setNationalCompliantFlag($externalId);
-        self::assertEquals(true,
+        self::assertEquals(
+            true,
             $this->switchApiServiceOriginal
                 ->userIsOnNationalCompliantSwitchGroup($externalId)
         );
@@ -121,6 +152,8 @@ class SwitchApiServiceTest extends VuFindTestCase
 
     /**
      * This just test if a call to the back channel endpoint did not fail.
+     *
+     * @return void
      */
     public function testGetUserUpdatedInformation()
     {
@@ -134,7 +167,9 @@ class SwitchApiServiceTest extends VuFindTestCase
     /**
      * Workaround to print in the unit test console.
      *
-     * @param $variable
+     * @param mixed $variable Variable
+     *
+     * @return void
      */
     public function unitPrint($variable)
     {
@@ -145,7 +180,8 @@ class SwitchApiServiceTest extends VuFindTestCase
      * Get a reflection class for the SwitchApi service. This is used for call
      * several private or protected methods.
      *
-     * @param SwitchApi $originalClass
+     * @param SwitchApi $originalClass Original class
+     *
      * @return ReflectionClass
      */
     protected function getReflectedClass($originalClass)

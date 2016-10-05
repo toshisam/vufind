@@ -31,19 +31,34 @@ use VuFindTest\Unit\TestCase as VuFindTestCase;
 use SwissbibTest\Bootstrap;
 use Zend\ServiceManager\ServiceManager;
 
+/**
+ * Class EmailServiceTest.
+ *
+ * @category Swissbib_VuFind2
+ * @package  SwissbibTest_NationalLicence
+ * @author   Simone Cogno  <scogno@snowflake.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org
+ */
 class EmailServiceTest extends VuFindTestCase
 {
     /**
-     * @var  Email $emailService
+     * Email service.
+     *
+     * @var Email $emailService
      */
     protected $emailService;
     /**
-     * @var  ServiceManager $sm
+     * Service manager.
+     *
+     * @var ServiceManager $sm
      */
     protected $sm;
 
     /**
      * Set up service manager and National Licence Service.
+     *
+     * @return void
      */
     public function setUp()
     {
@@ -52,6 +67,11 @@ class EmailServiceTest extends VuFindTestCase
         $this->emailService = $this->sm->get('Swissbib\EmailService');
     }
 
+    /**
+     * Test send account extenion email.
+     *
+     * @return void
+     */
     public function testSendAccountExtensionEmail()
     {
         try {
@@ -64,7 +84,9 @@ class EmailServiceTest extends VuFindTestCase
     /**
      * Workaround to print in the unit test console.
      *
-     * @param $variable
+     * @param mixed $variable Variable
+     *
+     * @return void
      */
     public function unitPrint($variable)
     {

@@ -32,20 +32,34 @@ use Zend\Mail\Message;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mail\Transport\Sendmail as SendmailTransport;
 
+/**
+ * Class Email.
+ *
+ * @category Swissbib_VuFind2
+ * @package  Service
+ * @author   Simone Cogno <scogno@snowflake.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
+ */
 class Email implements ServiceLocatorAwareInterface
 {
     /**
-     * @var  ServiceLocatorInterface $serviceLocator
+     * Service locator.
+     *
+     * @var ServiceLocatorInterface $serviceLocator ServiceLocatorInterface.
      */
     protected $serviceLocator;
     /**
-     * @var  array $config
+     * Config.
+     *
+     * @var array $config
      */
     protected $config;
 
     /**
      * Email constructor.
-     * @param array $config
+     *
+     * @param array $config Config.
      */
     public function __construct($config)
     {
@@ -58,6 +72,8 @@ class Email implements ServiceLocatorAwareInterface
      * @param string $to                 The recipient of the e-mail
      * @param string $textMail           Text of the e-mail
      * @param string $attachmentFilePath File path of the file to attach
+     *
+     * @return void
      * @throws \Exception
      */
     public function sendMail($to, $textMail, $attachmentFilePath)
@@ -75,7 +91,8 @@ class Email implements ServiceLocatorAwareInterface
      *
      * @param string $textMail           Email text
      * @param string $attachmentFilePath Attachment file path
-     * @param int    $contentType
+     * @param int    $contentType        Content type
+     *
      * @return Mime\Message
      */
     public function createMimeMessage(
@@ -118,9 +135,11 @@ class Email implements ServiceLocatorAwareInterface
     /**
      * Send e-mail with defined mime message (text and attached file).
      *
-     * @param string       $to
-     * @param Mime\Message $mimeMessage
-     * @param string       $subject
+     * @param string       $to          Recipient.
+     * @param Mime\Message $mimeMessage Mime message
+     * @param string       $subject     Subject
+     *
+     * @return void
      * @throws \Exception
      */
     public function sendMailWithAttachment($to, $mimeMessage, $subject)
@@ -144,6 +163,8 @@ class Email implements ServiceLocatorAwareInterface
      * Send the account extension e-mail to a specific user.
      *
      * @param string $to User e-mail that the e-mail will be sent to.
+     *
+     * @return void
      * @throws \Exception
      */
     public function sendAccountExtensionEmail($to)
@@ -184,6 +205,8 @@ class Email implements ServiceLocatorAwareInterface
      * Set serviceManager instance.
      *
      * @param ServiceLocatorInterface $serviceLocator ServiceLocatorInterface
+     *
+     * @return void
      */
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {

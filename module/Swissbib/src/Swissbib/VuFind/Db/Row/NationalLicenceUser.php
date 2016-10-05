@@ -25,10 +25,21 @@ namespace Swissbib\VuFind\Db\Row;
 use VuFind\Db\Row\RowGateway;
 use VuFind\Db\Table\User;
 
+/**
+ * Class NationalLicenceUser.
+ *
+ * @category VuFind
+ * @package  VuFind_Db_Row
+ * @author   Simone Cogno <scogno@snowflake.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     https://vufind.org Main Site
+ */
 class NationalLicenceUser extends RowGateway
 {
     /**
-     * @var  \VuFind\Db\Row\User $relUser
+     * User.
+     *
+     * @var \VuFind\Db\Row\User $relUser
      */
     protected $relUser;
 
@@ -84,7 +95,9 @@ class NationalLicenceUser extends RowGateway
     /**
      * Set expiration date.
      *
-     * @param \DateTime $date
+     * @param \DateTime $date Date
+     *
+     * @return void
      */
     public function setExpirationDate($date)
     {
@@ -114,7 +127,9 @@ class NationalLicenceUser extends RowGateway
     /**
      * Set condition accepted for the user.
      *
-     * @param bool $accepted
+     * @param bool $accepted Accepted
+     *
+     * @return void
      */
     public function setConditionsAccepted($accepted = false)
     {
@@ -124,7 +139,9 @@ class NationalLicenceUser extends RowGateway
     /**
      * Set persistent id field.
      *
-     * @param string $persistentId
+     * @param string $persistentId Persistent id
+     *
+     * @return void
      */
     public function setPersistentId($persistentId)
     {
@@ -134,7 +151,9 @@ class NationalLicenceUser extends RowGateway
     /**
      * Set user id related to the User db table.
      *
-     * @param int $id User id
+     * @param int $id User id  Id
+     *
+     * @return void
      */
     public function setUserId($id)
     {
@@ -154,7 +173,9 @@ class NationalLicenceUser extends RowGateway
     /**
      * Set the last activity date on the edu-ID account.
      *
-     * @param \DateTime $date
+     * @param \DateTime $date Date
+     *
+     * @return void
      */
     public function setLastActivityDate(\DateTime $date)
     {
@@ -172,6 +193,8 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
+     * Se id initialized.
+     *
      * @return bool
      */
     public function isIsInitialized()
@@ -180,7 +203,11 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * @param bool $isInitialized
+     * Set initialized.
+     *
+     * @param bool $isInitialized Is initialized
+     *
+     * @return void
      */
     public function setIsInitialized($isInitialized)
     {
@@ -200,7 +227,9 @@ class NationalLicenceUser extends RowGateway
     /**
      * Set the permanent access to the user.
      *
-     * @param bool $bool
+     * @param bool $bool Booleans value
+     *
+     * @return void
      */
     public function setRequestPermanentAccess($bool = true)
     {
@@ -218,6 +247,8 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
+     * Get related user.
+     *
      * @return \VuFind\Db\Row\User
      */
     public function getRelUser()
@@ -226,7 +257,11 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * @param \VuFind\Db\Row\User $relUser
+     * Set related user.
+     *
+     * @param \VuFind\Db\Row\User $relUser Related user
+     *
+     * @return void
      */
     public function setRelUser($relUser)
     {
@@ -250,13 +285,20 @@ class NationalLicenceUser extends RowGateway
     /**
      * Set the last_account_extension_request field.
      *
-     * @param \DateTime $date
+     * @param \DateTime $date Account extension date expiration
+     *
+     * @return void
      */
     public function setLastAccountExtensionRequest($date)
     {
         $this->last_account_extension_request = $date->format('Y-m-d H:i:s');
     }
 
+    /**
+     * Unset last account extension request.
+     *
+     * @return void
+     */
     public function unsetLastAccountExtensionRequest()
     {
         $this->last_account_extension_request = null;
@@ -280,6 +322,8 @@ class NationalLicenceUser extends RowGateway
 
     /**
      * Get persistent id.
+     *
+     * @return void
      */
     public function getPersistentId()
     {

@@ -26,6 +26,15 @@ use VuFind\Db\Table\Gateway;
 use VuFind\Db\Table\User;
 use Zend\Db\Sql\Select;
 
+/**
+ * Class NationalLicenceUser.
+ *
+ * @category VuFind
+ * @package  VuFind_Db_Table
+ * @author   Simone Cogno <scogno@snowflake.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     https://vufind.org Main Site
+ */
 class NationalLicenceUser extends Gateway
 {
     /**
@@ -42,7 +51,8 @@ class NationalLicenceUser extends Gateway
     /**
      * Get user by id.
      *
-     * @param int $id
+     * @param int $id Id
+     *
      * @return \Swissbib\VuFind\Db\Row\NationalLicenceUser
      */
     public function getUserById($id)
@@ -55,7 +65,8 @@ class NationalLicenceUser extends Gateway
      * Create a new National licence user row.
      *
      * @param string $persistentId Edu-id persistent id
-     * @param array  $fieldsValue
+     * @param array  $fieldsValue  Fieldd value
+     *
      * @return \Swissbib\VuFind\Db\Row\NationalLicenceUser $user
      * @throws \Exception
      */
@@ -70,6 +81,8 @@ class NationalLicenceUser extends Gateway
         }
 
         /**
+         * User.
+         *
          * @var \Swissbib\VuFind\Db\Row\NationalLicenceUser $nationalUser
          */
         $nationalUser = $this->createRow();
@@ -80,11 +93,15 @@ class NationalLicenceUser extends Gateway
             $nationalUser->$key = $value;
         }
         /**
+         * User table.
+         *
          * @var User $userTable
          */
         $userTable = $this->getDbTable('user');
 
         /**
+         * User.
+         *
          * @var \VuFind\Db\Row\User $user
          */
         $user = $userTable->getByUsername($persistentId);
@@ -110,6 +127,7 @@ class NationalLicenceUser extends Gateway
      * @param array $fieldsValues         Array of fields => value to update
      * @param array $fieldsValuesRelation Array of fields of the relation table=>
      *                                    value to update
+     *
      * @return \Swissbib\VuFind\Db\Row\NationalLicenceUser
      * @throws \Exception
      */
@@ -141,7 +159,8 @@ class NationalLicenceUser extends Gateway
     /**
      * Get user by persistent_id.
      *
-     * @param string $persistentId
+     * @param string $persistentId Persistent id
+     *
      * @return \Swissbib\VuFind\Db\Row\NationalLicenceUser
      * @throws \Exception
      */
@@ -151,6 +170,8 @@ class NationalLicenceUser extends Gateway
             throw new \Exception('Cannot fetch user with empty persistent_id');
         }
         /**
+         * National licence user.
+         *
          * @var \Swissbib\VuFind\Db\Row\NationalLicenceUser $nationalLicenceUser
          */
         $nationalLicenceUser = $this->select(['persistent_id' => $persistentId])
@@ -159,6 +180,8 @@ class NationalLicenceUser extends Gateway
             return null;
         }
         /**
+         * User table.
+         *
          * @var User $userTable
          */
         $userTable = $this->getDbTable('user');
@@ -179,19 +202,27 @@ class NationalLicenceUser extends Gateway
     public function getList()
     {
         /**
+         * User table.
+         *
          * @var User $userTable
          */
         $userTable = $this->getDbTable('user');
 
-        $nationalLicenceUsers = $this->select(function (Select $select) {
-            $select->where->greaterThan('id', 0);
-        });
+        $nationalLicenceUsers = $this->select(
+            function (Select $select) {
+                $select->where->greaterThan('id', 0);
+            }
+        );
         $arr_resultSet = [];
         /**
+         * National licence user.
+         *
          * @var \Swissbib\VuFind\Db\Row\NationalLicenceUser $nationalLicenceUser
          */
         foreach ($nationalLicenceUsers as $nationalLicenceUser) {
             /**
+             * User.
+             *
              * @var \VuFind\Db\Row\User $user
              */
             $user = $userTable->getByUsername($nationalLicenceUser->getPersistentId());

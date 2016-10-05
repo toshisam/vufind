@@ -29,9 +29,20 @@ use Swissbib\VuFind\Db\Row\NationalLicenceUser;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 
+/**
+ * Class NationalLicencesController.
+ *
+ * @category Swissbib_VuFind2
+ * @package  Controller
+ * @author   Simone Cogno <scogno@snowflake.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
+ */
 class NationalLicencesController extends BaseController
 {
     /**
+     * National licence.
+     *
      * @var NationalLicence
      */
     protected $nationalLicenceService;
@@ -40,7 +51,7 @@ class NationalLicencesController extends BaseController
      * Constructor.
      * NationalLicencesController constructor.
      *
-     * @param NationalLicence $nationalLicenceService
+     * @param NationalLicence $nationalLicenceService NationalLicence.
      */
     public function __construct(NationalLicence $nationalLicenceService)
     {
@@ -64,23 +75,25 @@ class NationalLicencesController extends BaseController
 
         // Get user information from the shibboleth attributes
         $uniqueId = isset($_SERVER['uniqueID']) ? $_SERVER['uniqueID'] : null;
-        $persistentId =
-            isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : null;
-        $homePostalAddress =
-            isset($_SERVER['homePostalAddress']) ?
-                $_SERVER['homePostalAddress'] : null;
-        $mobile =
-            isset($_SERVER['mobile']) ? $_SERVER['mobile'] : null;
-        $homeOrganizationType =
-            isset($_SERVER['home_organization_type']) ?
-                $_SERVER['home_organization_type'] : null;
-        $affiliation =
-            isset($_SERVER['affiliation']) ? $_SERVER['affiliation'] : null;
-        $swissLibraryPersonResidence =
-            isset($_SERVER['swissLibraryPersonResidence']) ?
-                $_SERVER['swissLibraryPersonResidence'] : null;
+        $persistentId
+            = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : null;
+        $homePostalAddress
+            = isset($_SERVER['homePostalAddress']) ?
+            $_SERVER['homePostalAddress'] : null;
+        $mobile
+            = isset($_SERVER['mobile']) ? $_SERVER['mobile'] : null;
+        $homeOrganizationType
+            = isset($_SERVER['home_organization_type']) ?
+            $_SERVER['home_organization_type'] : null;
+        $affiliation
+            = isset($_SERVER['affiliation']) ? $_SERVER['affiliation'] : null;
+        $swissLibraryPersonResidence
+            = isset($_SERVER['swissLibraryPersonResidence']) ?
+            $_SERVER['swissLibraryPersonResidence'] : null;
 
         /**
+         * National licence user.
+         *
          * @var NationalLicenceUser $user
          */
         $user = null;
@@ -95,8 +108,10 @@ class NationalLicencesController extends BaseController
                         'mobile' => $mobile,
                         'home_postal_address' => $homePostalAddress,
                         'affiliation' => $affiliation,
-                        'swiss_library_person_residence' => $swissLibraryPersonResidence,
-                    ));
+                        'swiss_library_person_residence' =>
+                            $swissLibraryPersonResidence,
+                    )
+                );
         } catch (\Exception $e) {
             $this->flashMessenger()->setNamespace('error')->addMessage(
                 $this->translate($e->getMessage())
@@ -112,21 +127,22 @@ class NationalLicencesController extends BaseController
         }
 
         // Compute the checks
-        $isHomePostalAddressInSwitzerland =
-            $this->nationalLicenceService
+        $isHomePostalAddressInSwitzerland
+            = $this->nationalLicenceService
                 ->isAddressInSwitzerland($homePostalAddress);
-        $isSwissPhoneNumber =
-            $this->nationalLicenceService->isSwissPhoneNumber($mobile);
-        $isNationalLicenceCompliant =
-            $this->nationalLicenceService->isNationalLicenceCompliant();
-        $temporaryAccessValid =
-            $this->nationalLicenceService->isTemporaryAccessCurrentlyValid($user);
+        $isSwissPhoneNumber
+            = $this->nationalLicenceService->isSwissPhoneNumber($mobile);
+        $isNationalLicenceCompliant
+            = $this->nationalLicenceService->isNationalLicenceCompliant();
+        $temporaryAccessValid
+            = $this->nationalLicenceService->isTemporaryAccessCurrentlyValid($user);
         $hasAcceptedTermsAndConditions = $user->hasAcceptedTermsAndConditions();
-        $hasVerifiedHomePostalAddress =
-            $this->nationalLicenceService->hasVerifiedSwissAddress();
+        $hasVerifiedHomePostalAddress
+            = $this->nationalLicenceService->hasVerifiedSwissAddress();
         $hasPermanentAccess = $user->hasRequestPermanentAccess();
-        $hasAccessToNationalLicenceContent =
-            $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
+        $hasAccessToNationalLicenceContent
+            = $this->nationalLicenceService
+                ->hasAccessToNationalLicenceContent($user);
         //var_dump($hasAccessToNationalLicenceContent);
         if ($hasAccessToNationalLicenceContent) {
             $this->flashMessenger()->addSuccessMessage(
@@ -161,41 +177,42 @@ class NationalLicencesController extends BaseController
      * Define some test presets for testing the frontend view
      * TODO: To delete, this is just for debugging.
      *
-     * @param int $n
+     * @param int $n Number preset.
+     *
+     * @return void
      */
     protected function presets($n = 0)
     {
         switch ($n) {
-            case 1:
-                $_SERVER['homePostalAddress'] =
-                    'Roswiesenstrasse 100$8051 Zürich$Switzerland';
-                $_SERVER['mobile'] = '+41 793433434';
-                $_SERVER['swissLibraryPersonResidence'] = 'CH';
-                break;
-            case 2:
-                $_SERVER['homePostalAddress'] =
-                    'Theobalds Road 29$WC2N London$England';
-                $_SERVER['mobile'] = '+44 743433434';
-                $_SERVER['swissLibraryPersonResidence'] = 'EN';
-                break;
-            case 3:
-                $_SERVER['homePostalAddress'] = null;
-                $_SERVER['mobile'] = '+41 793433434';
-                $_SERVER['swissLibraryPersonResidence'] = null;
-                break;
-            case 4:
-                $_SERVER['homePostalAddress'] = null;
-                $_SERVER['mobile'] = null;
-                $_SERVER['swissLibraryPersonResidence'] = null;
-                break;
-            case 5:
-                $_SERVER['homePostalAddress'] =
-                    'Roswiesenstrasse 100$8051 Zürich$Switzerland';
-                $_SERVER['mobile'] = null;
-                $_SERVER['swissLibraryPersonResidence'] = null;
-                break;
-            default:
-
+        case 1:
+            $_SERVER['homePostalAddress']
+                = 'Roswiesenstrasse 100$8051 Zürich$Switzerland';
+            $_SERVER['mobile'] = '+41 793433434';
+            $_SERVER['swissLibraryPersonResidence'] = 'CH';
+            break;
+        case 2:
+            $_SERVER['homePostalAddress']
+                = 'Theobalds Road 29$WC2N London$England';
+            $_SERVER['mobile'] = '+44 743433434';
+            $_SERVER['swissLibraryPersonResidence'] = 'EN';
+            break;
+        case 3:
+            $_SERVER['homePostalAddress'] = null;
+            $_SERVER['mobile'] = '+41 793433434';
+            $_SERVER['swissLibraryPersonResidence'] = null;
+            break;
+        case 4:
+            $_SERVER['homePostalAddress'] = null;
+            $_SERVER['mobile'] = null;
+            $_SERVER['swissLibraryPersonResidence'] = null;
+            break;
+        case 5:
+            $_SERVER['homePostalAddress']
+                = 'Roswiesenstrasse 100$8051 Zürich$Switzerland';
+            $_SERVER['mobile'] = null;
+            $_SERVER['swissLibraryPersonResidence'] = null;
+            break;
+        default:
         }
     }
 
@@ -203,7 +220,8 @@ class NationalLicencesController extends BaseController
      * Method called before every action. It checks if the user is authenticated
      * and it redirects it to the login page otherwise.
      *
-     * @param MvcEvent $e
+     * @param MvcEvent $e MvcEvent.
+     *
      * @return mixed|\Zend\Http\Response
      * @throws \Exception
      */
@@ -223,6 +241,8 @@ class NationalLicencesController extends BaseController
     /**
      * Called when user click on the accept terms and conditions checkbox.
      * This information will be directly stored in the database.
+     *
+     * @return void
      */
     public function acceptTermsConditionsAction()
     {
@@ -239,6 +259,8 @@ class NationalLicencesController extends BaseController
 
     /**
      * Send request for the temporary access.
+     *
+     * @return void
      */
     public function activateTemporaryAccessAction()
     {
@@ -271,6 +293,8 @@ class NationalLicencesController extends BaseController
     /**
      * Set the permanent access for the current user. Internally this will also
      * adds the user to the National Licence Program using the Switch API.
+     *
+     * @return void
      */
     public function activatePermanentAccessAction()
     {
@@ -291,6 +315,8 @@ class NationalLicencesController extends BaseController
      * Method called when user want to extend his account. The link to access
      * to this function has to be send by e-mail.
      * TODO.
+     *
+     * @return void
      */
     public function extendAccountAction()
     {
