@@ -20,9 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * @category VuFind
- * @package  Db_Row
+ *
  * @author   Simone Cogno <scogno@snowflake.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ *
  * @link     https://vufind.org Main Site
  */
 namespace Swissbib\VuFind\Db\Table;
@@ -33,9 +34,8 @@ use Zend\Db\Sql\Select;
 
 class NationalLicenceUser extends Gateway
 {
-
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -43,47 +43,60 @@ class NationalLicenceUser extends Gateway
     }
 
     /**
-     * Get user by id
+     * Get user by id.
      *
      * @param int $id
+     *
      * @return \Swissbib\VuFind\Db\Row\NationalLicenceUser
      */
     public function getUserById($id)
     {
-
         return $this->select(['id' => $id])
             ->current();
     }
 
     /**
-     * Get user by persistent_id
+     * Get user by persistent_id.
      *
      * @param string $persistentId
+     *
      * @return \Swissbib\VuFind\Db\Row\NationalLicenceUser
+     *
      * @throws \Exception
      */
     public function getUserByPersistentId($persistentId)
     {
         if (empty($persistentId)) {
-            throw new \Exception("Cannot fetch user with empty persistent_id");
+            throw new \Exception('Cannot fetch user with empty persistent_id');
         }
+        /** @var \Swissbib\VuFind\Db\Row\NationalLicenceUser $nationalLicenceUser */
+        $nationalLicenceUser = $this->select(['persistent_id' => $persistentId])
+                                     ->current();
+        if (empty($nationalLicenceUser)) {
+            return;
+        }
+        /** @var User $userTable */
+        $userTable = $this->getDbTable('user');
+        $relUser = $userTable->getByUsername($nationalLicenceUser->getPersistentId());
+        $nationalLicenceUser->setRelUser($relUser);
 
-        return $this->select(['persistent_id' => $persistentId])
-            ->current();
+        return $nationalLicenceUser;
     }
 
     /**
-     * Create a new National licence user row
+     * Create a new National licence user row.
      *
      * @param string $persistentId Edu-id persistent id
-     * @param array $fieldsValue
+     * @param array  $fieldsValue
+     *
      * @return \Swissbib\VuFind\Db\Row\NationalLicenceUser $user
+     *
      * @throws \Exception
      */
     public function createNationalLicenceUserRow($persistentId, array $fieldsValue = [])
     {
         if (empty($persistentId)) {
-            throw new \Exception("The persistent-id is mandatory for creating a National Licence User");
+            throw new \Exception('The persistent-id is mandatory for creating a National Licence User');
         }
 
         /** @var \Swissbib\VuFind\Db\Row\NationalLicenceUser $nationalUser */
@@ -106,27 +119,42 @@ class NationalLicenceUser extends Gateway
             $nationalUser->setUserId($user->id);
         }
         $savedUser = $nationalUser->save();
-        if(empty($savedUser)) {
-            throw new \Exception("Impossible to create the National Licence user.");
+        if (empty($savedUser)) {
+            throw new \Exception('Impossible to create the National Licence user.');
         }
+
         return $nationalUser;
     }
 
     /**
-     * Update user fields
+     * Update user fields.
      *
-     * @param integer $persistentId User persistent id
-     * @param array $fieldsValues Array of fields => value to update
+     * @param int   $persistentId         User persistent id
+     * @param array $fieldsValues         Array of fields => value to update
+     * @param array $fieldsValuesRelation Array of fields of the relation table=> value to update
+     *
+     * @return \Swissbib\VuFind\Db\Row\NationalLicenceUser
      */
-    public function updateRowByPersistentId($persistentId, array $fieldsValues)
+    public function updateRowByPersistentId($persistentId, array $fieldsValues, array $fieldsValuesRelation = null)
     {
-        $user = $this->getUserByPersistentId($persistentId);
+        $nationalLicenceUser = $this->getUserByPersistentId($persistentId);
         foreach ($fieldsValues as $key => $value) {
-            if($user->$key !== $value) {
-                $user->$key = $value;
+            if ($nationalLicenceUser->$key !== $value) {
+                $nationalLicenceUser->$key = $value;
             }
         }
-        $user->save();
+        if (!empty($fieldsValuesRelation)) {
+            $user = $nationalLicenceUser->getRelUser();
+            foreach ($fieldsValuesRelation as $key => $value) {
+                if ($user->$key !== $value) {
+                    $user->$key = $value;
+                }
+            }
+            $user->save();
+        }
+        $nationalLicenceUser->save();
+
+        return $nationalLicenceUser;
     }
 
     /**
@@ -140,7 +168,7 @@ class NationalLicenceUser extends Gateway
         $userTable = $this->getDbTable('user');
 
         $nationalLicenceUsers = $this->select(function (Select $select) {
-            $select->where->greaterThan("id", 0);
+            $select->where->greaterThan('id', 0);
         });
         $arr_resultSet = [];
         /** @var \Swissbib\VuFind\Db\Row\NationalLicenceUser $nationalLicenceUser */
@@ -150,6 +178,7 @@ class NationalLicenceUser extends Gateway
             $nationalLicenceUser->setRelUser($user);
             $arr_resultSet[] = $nationalLicenceUser;
         }
+
         return $arr_resultSet;
     }
 }

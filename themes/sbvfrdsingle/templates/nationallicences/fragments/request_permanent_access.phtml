@@ -2,6 +2,6 @@
     <span class="text-aligned-icon icon-success"><i class="fa fa-check"></i></span>
     <?= $this->transEsc('snl.youHavePostalAddresInSwitzerland') ?>
 </p>
-<a href="<?= $this->url('national-licences') ?>/activate-permanent-access">
+<a href="<?= $this->url('national-licences', ['action' => 'activate-permanent-access']) ?>">
     <button class="btn btn-primary" <?= $this->hasAcceptedTermsAndConditions? "" : "disabled"; ?>><?= $this->transEsc('snl.permanentAccess.activate') ?></button>
 </a>
