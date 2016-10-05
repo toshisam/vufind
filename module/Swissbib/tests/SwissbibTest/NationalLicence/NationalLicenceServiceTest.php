@@ -1,9 +1,32 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: nicolas
- * Date: 02.09.16
- * Time: 16:05
+ * NationalLicenceServiceTest.
+ *
+ * PHP version 5
+ *
+ * Copyright (C) project swissbib, University Library Basel, Switzerland
+ * http://www.swissbib.org  / http://www.swissbib.ch / http://www.ub.unibas.ch
+ *
+ * Date: 1/2/13
+ * Time: 4:09 PM
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @category Swissbib_VuFind2
+ * @package  SwissbibTest_NationalLicence
+ * @author   Simone Cogno  <scogno@snowflake.ch>
+ * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @link     http://www.swissbib.org
  */
 
 namespace SwissbibTest\NationalLicence;
@@ -47,7 +70,7 @@ class NationalLicenceServiceTest extends VuFindTestCase
             "+41 763433434" => true,
             "+41 743433434" => false,
             "+39 793433434" => false,
-            null            => false
+            null => false
         ];
         foreach ($testPhones as $phone => $expectedResult) {
             $res = $this->nationalLicenceService->isSwissPhoneNumber($phone);
@@ -62,9 +85,9 @@ class NationalLicenceServiceTest extends VuFindTestCase
     {
         $testAddresses = [
             'Route de l\'aurore 10$1700 Fribourg$Switzerland' => true,
-            'Theobalds Road 29$WC2N London$England'           => false,
-            'Roswiesenstrasse 100$8051 Zürich$Switzerland'    => true,
-            null                                              => false
+            'Theobalds Road 29$WC2N London$England' => false,
+            'Roswiesenstrasse 100$8051 Zürich$Switzerland' => true,
+            null => false
         ];
         foreach ($testAddresses as $testAddress => $expectedResult) {
             $res = $this->nationalLicenceService->isAddressInSwitzerland($testAddress);
@@ -96,7 +119,10 @@ class NationalLicenceServiceTest extends VuFindTestCase
         fwrite(STDERR, print_r($res, TRUE));
     }
 
-    public function test()
+    /**
+     * Test if the user has acess to national licence content. TODO to update
+     */
+    public function testHasAccessToNationalLicenceContent()
     {
         $user = $this->getNationalLicenceUserObjectInstance();
         $this->setFieldsToUser($user, [
@@ -148,6 +174,14 @@ class NationalLicenceServiceTest extends VuFindTestCase
         $this->assertEquals(true, $res);
     }
 
+
+    public function testSendExportEmail()
+    {
+        $config = $this->sm->get('Config');
+        $to = $config['swissbib']['email_service']['default_email_address_to'];
+        //$this->nationalLicenceService->sendExportEmail($to);
+    }
+
     /**
      * Helper method to modify fields to a NationalLicenceUser instance.
      *
@@ -160,6 +194,7 @@ class NationalLicenceServiceTest extends VuFindTestCase
             $user->$key = $value;
         }
     }
+
     /**
      * Get an instance of the national licence user object.
      *
@@ -182,7 +217,8 @@ class NationalLicenceServiceTest extends VuFindTestCase
      *
      * @param $variable
      */
-    public function unitPrint($variable){
+    public function unitPrint($variable)
+    {
         fwrite(STDERR, print_r($variable, TRUE));
     }
 }

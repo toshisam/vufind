@@ -448,6 +448,9 @@ return [
         'switch_api' => [
             'national_licence_programme_group_id' => "f4d40595-6d7d-41bc-9fa2-7139d2fcf892",
             'base_endpoint_url' => "https://test.eduid.ch/sg/index.php",
+            'base_endpoint_url_back_channel' => 'https://test.swissbib.ch',
+            'back_channel_param_entityID' => 'https://eduid.ch/idp/shibboleth',
+            'back_channel_endpoint_path' => '/Shibboleth.sso/AttributeResolver',
             'auth_user' => "natlic",
             'auth_password' => "Amg6vZXo",
             'schema_patch' => "urn:ietf:params:scim:api:messages:2.0:PatchOp",
@@ -456,6 +459,7 @@ return [
             'path_member' => "members"
         ],
         'national_licence_service' => [
+            'base_domain_path' => 'https://test.swissbib.ch',
             'allowed_mobile_prefixes' => ['+41 79', '+41 78','+41 77' ,'+41 76'],
             'user_export_path' => '/export/nationalLicence',
             'user_export_filename' => 'user_export.csv',
@@ -496,11 +500,22 @@ return [
                 'language',
                 'max_hits',
             ],
-
+            'request_account_extension_expiration_days' => 10, //TODO: update this value
         ],
         'email_service' => [
-            'default_email_address_to' => 'scogno@snowflake.ch', //Change with your production address
             'default_email_address_from' => 'test@snowflake.ch', //Change with your production address
+        ],
+        'tests' => [
+            'switch_api' => [
+                'external_id_test' => '1234567@eduid.ch'
+            ],
+            'national_licence_service' => [
+
+            ],
+            'email_service' => [
+                'default_email_address_to' => 'scogno@snowflake.ch', //Change with your production address
+                'default_email_address_from' => 'test@snowflake.ch', //Change with your production address
+            ],
         ]
     ],
 ];

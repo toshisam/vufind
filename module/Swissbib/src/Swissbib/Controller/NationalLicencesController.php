@@ -111,7 +111,7 @@ class NationalLicencesController extends BaseController
         $hasVerifiedHomePostalAddress       = $this->nationalLicenceService->hasVerifiedSwissAddress();
         $hasPermanentAccess                 = $user->hasRequestPermanentAccess();
         $hasAccessToNationalLicenceContent  = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
-
+        //var_dump($hasAccessToNationalLicenceContent);
         if($hasAccessToNationalLicenceContent){
             $this->flashMessenger()->addSuccessMessage(
                 $this->translate("snl.nationalLicenceCompliant")
@@ -263,9 +263,25 @@ class NationalLicencesController extends BaseController
 
     /**
      * Method called when user want to extend his account. The link to access to this function has to be send by e-mail.
+     * TODO
      */
     public function extendAccountAction()
     {
-        //Update user information about last login
+        try {
+            $this->nationalLicenceService->extendAccountIfCompliant();
+            if($this->nationalLicenceService->isMessageSet()) {
+                $message = $this->nationalLicenceService->getMessage();
+                $this->flashMessenger()->setNamespace($message['type'])->addMessage(
+                    $this->translate($message['text'])
+                );
+            }
+        } catch (Exception $e) {
+            $this->flashMessenger()->setNamespace("success")->addMessage(
+                $this->translate("snl.yourRequestPermanentAccessSuccessful")
+            );
+        }
+        //redirect to home page
+        $this->redirect()->toRoute("national-licences");
+
     }
 }

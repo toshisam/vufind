@@ -67,9 +67,18 @@ class NationalLicenceUser extends Gateway
         if (empty($persistentId)) {
             throw new \Exception("Cannot fetch user with empty persistent_id");
         }
+        /** @var \Swissbib\VuFind\Db\Row\NationalLicenceUser $nationalLicenceUser */
+        $nationalLicenceUser =  $this->select(['persistent_id' => $persistentId])
+                                     ->current();
+        if(empty($nationalLicenceUser)) {
+            return null;
+        }
+        /** @var User $userTable */
+        $userTable = $this->getDbTable('user');
+        $relUser = $userTable->getByUsername($nationalLicenceUser->getPersistentId());
+        $nationalLicenceUser->setRelUser($relUser);
 
-        return $this->select(['persistent_id' => $persistentId])
-            ->current();
+        return $nationalLicenceUser;
     }
 
     /**
@@ -117,16 +126,28 @@ class NationalLicenceUser extends Gateway
      *
      * @param integer $persistentId User persistent id
      * @param array $fieldsValues Array of fields => value to update
+     * @param array $fieldsValuesRelation Array of fields of the relation table=> value to update
+     * @return \Swissbib\VuFind\Db\Row\NationalLicenceUser
      */
-    public function updateRowByPersistentId($persistentId, array $fieldsValues)
+    public function updateRowByPersistentId($persistentId, array $fieldsValues, array $fieldsValuesRelation = null)
     {
-        $user = $this->getUserByPersistentId($persistentId);
+        $nationalLicenceUser = $this->getUserByPersistentId($persistentId);
         foreach ($fieldsValues as $key => $value) {
-            if($user->$key !== $value) {
-                $user->$key = $value;
+            if($nationalLicenceUser->$key !== $value) {
+                $nationalLicenceUser->$key = $value;
             }
         }
-        $user->save();
+        if(!empty($fieldsValuesRelation)) {
+            $user = $nationalLicenceUser->getRelUser();
+            foreach ($fieldsValuesRelation as $key => $value) {
+                if($user->$key !== $value) {
+                    $user->$key = $value;
+                }
+            }
+            $user->save();
+        }
+        $nationalLicenceUser->save();
+        return $nationalLicenceUser;
     }
 
     /**

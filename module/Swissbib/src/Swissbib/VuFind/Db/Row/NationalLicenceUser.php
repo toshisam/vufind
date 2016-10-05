@@ -204,9 +204,9 @@ class NationalLicenceUser extends RowGateway
     /**
      * Set the permanent access to the user
      */
-    public function setRequestPermanentAccess()
+    public function setRequestPermanentAccess($bool = true)
     {
-        $this->request_permanent_access = true;
+        $this->request_permanent_access = $bool;
     }
 
     /**
@@ -233,5 +233,68 @@ class NationalLicenceUser extends RowGateway
     public function setRelUser($relUser)
     {
         $this->relUser = $relUser;
+    }
+
+    /**
+     * Get the date of the last time that the extension request was made.
+     *
+     * @return \DateTime
+     */
+    public function getLastAccountExtensionRequest()
+    {
+        if(empty($this->last_account_extension_request)) {
+            return null;
+        }
+        return new \DateTime($this->last_account_extension_request);
+    }
+
+    /**
+     * Set the last_account_extension_request field.
+     *
+     * @param $date
+     */
+    public function setLastAccountExtensionRequest($date)
+    {
+        $this->last_account_extension_request = $date->format('Y-m-d H:i:s');
+    }
+
+    public function unsetLastAccountextensionRequest()
+    {
+        $this->last_account_extension_request = null;
+    }
+
+    /**
+     * Get nameID of the national licence user.
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function getNameId()
+    {
+        $parts = explode('!', $this->getPersistentId());
+        if(count($parts) !== 3) {
+            throw new \Exception("Invalid persistent id");
+        }
+        return $parts[2];
+    }
+
+    /**
+     * Get the home_postal_address field.
+     *
+     * @return string
+     */
+    public function getHomePostalAddress()
+    {
+        return $this->home_postal_address;
+    }
+
+    /**
+     * Get the swiss_library_person_residence field.
+     *
+     * @return string
+     */
+    public function getSwissLibraryPersonResidence()
+    {
+        return $this->swiss_library_person_residence;
     }
 }

@@ -24,7 +24,17 @@ class ConsoleController extends BaseController
     }
 
     public function updateNationalLicenceUserInfoAction() {
-        echo __METHOD__;
+
+        //These lines allow to retrieve the route urls from the controller command
+        //http://stackoverflow.com/questions/27295895/how-can-i-create-a-url-in-a-console-controller-in-zf2
+        $event  = $this->getEvent();
+        $http   = $this->getServiceLocator()->get('HttpRouter');
+        $router = $event->setRouter($http);
+        $request = new \Zend\Http\Request();
+        $request->setUri('');
+        $router = $event->getRouter();
+        $routeMatch = $router->match($request);
+
         /** @var NationalLicence $nationalLicenceService */
         $nationalLicenceService = $this->getServiceLocator()->get('Swissbib\NationalLicenceService');
         $nationalLicenceService->checkAndUpdateNationalLicenceUserInfo();
