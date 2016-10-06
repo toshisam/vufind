@@ -136,6 +136,18 @@ class NationalLicenceUser extends Gateway
         array $fieldsValues,
         array $fieldsValuesRelation = null
     ) {
+        //Check and convert in the right format
+        if(isset($fieldsValues['active_last_12_month'])) {
+            $swissEduIdUsagely = $fieldsValues['active_last_12_month'];
+            if (!is_bool($swissEduIdUsagely)) {
+                if(is_string($swissEduIdUsagely)) {
+                    $fieldsValues['active_last_12_month'] = $fieldsValues['active_last_12_month'] === 'TRUE';
+                } else {
+                    throw new \Exception("Impossible to read the swissEduIdUsagely attributes. Format is incorrect.");
+                }
+            }
+        }
+
         $nationalLicenceUser = $this->getUserByPersistentId($persistentId);
         foreach ($fieldsValues as $key => $value) {
             if ($nationalLicenceUser->$key !== $value) {

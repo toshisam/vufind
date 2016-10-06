@@ -68,7 +68,7 @@ class ConsoleController extends BaseController
      */
     public function updateNationalLicenceUserInfoAction()
     {
-
+        echo "Update national licence users info cron job started.\r\n";
         //These lines allow to retrieve the route urls from the controller command
         //http://stackoverflow.com/questions/27295895/how-can-i-
         //create-a-url-in-a-console-controller-in-zf2

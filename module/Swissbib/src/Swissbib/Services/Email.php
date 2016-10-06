@@ -162,12 +162,12 @@ class Email implements ServiceLocatorAwareInterface
     /**
      * Send the account extension e-mail to a specific user.
      *
-     * @param string $to User e-mail that the e-mail will be sent to.
+     * @param string $toUser User e-mail that the e-mail will be sent to.
      *
      * @return void
      * @throws \Exception
      */
-    public function sendAccountExtensionEmail($to)
+    public function sendAccountExtensionEmail($toUser)
     {
         $sl = $this->getServiceLocator();
         $vhm = $sl->get('viewhelpermanager');
@@ -178,17 +178,25 @@ class Email implements ServiceLocatorAwareInterface
                 array('action' => 'extend-account'),
                 array('force_canonical' => true)
             );
-        $textMail = '<p>You acccount expires in 10 days. Please&nbsp;<a href="' .
+        $textMail = '<p>You account expires in 10 days. Please&nbsp;<a href="' .
             $link .
             '">click here</a> to extend you account duration.</p>' .
             '<p>Best regards,</p>' .
             '<p>Swissbib</p>';
+        $username = $toUser->firstname . ' ' . $toUser->lastname;
+        $textMail = '<p>Dear '. $username .',<br /> <br /> We noticed that you didn\'t use '.
+            'Swiss National Licences as a private user in the last 12 months. '.
+            'Please visit <a href="' . $link . '" '.
+            'target="_blank" rel="noreferrer">this link</a> '.
+            'in the next 30 days to keep your account active. Take this occasion to update '.
+            'your personal information if needed. Otherwise your account will be made inactive'.
+            ' and you will need to register again.</p>';
         $mimeMessage = $this->createMimeMessage(
             $textMail,
             null,
             Mime\Mime::TYPE_HTML
         );
-        $this->sendMailWithAttachment($to, $mimeMessage, 'Account extension');
+        $this->sendMailWithAttachment($toUser->email, $mimeMessage, 'Account extension');
     }
 
     /**

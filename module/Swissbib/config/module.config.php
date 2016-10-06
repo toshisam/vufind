@@ -450,7 +450,7 @@ return [
                 "f4d40595-6d7d-41bc-9fa2-7139d2fcf892",
             'base_endpoint_url' => "https://test.eduid.ch/sg/index.php",
             'base_endpoint_url_back_channel' => 'https://test.swissbib.ch',
-            'back_channel_param_entityID' => 'https://eduid.ch/idp/shibboleth',
+            'back_channel_param_entityID' => 'https://test.eduid.ch/idp/shibboleth',
             'back_channel_endpoint_path' => '/Shibboleth.sso/AttributeResolver',
             'auth_user' => "natlic",
             'auth_password' => "Amg6vZXo",
@@ -464,6 +464,7 @@ return [
             'allowed_mobile_prefixes' => ['+41 79', '+41 78','+41 77' ,'+41 76'],
             'user_export_path' => '/export/nationalLicence',
             'user_export_filename' => 'user_export.csv',
+            'user_export_default_email_address_to' => 'scogno@snowflake.ch',
             'national_licence_user_fields_to_export' => [
                 'id',
                 'edu_id',
@@ -479,7 +480,8 @@ return [
                 'request_permanent_access',
                 'date_expiration',
                 'blocked',
-                'last_edu_id_activity',
+                'active_last_12_month',
+                'assurance_level',
                 'last_account_extension_request',
                 'created'
             ],
@@ -501,7 +503,7 @@ return [
                 'language',
                 'max_hits',
             ],
-            'request_account_extension_expiration_days' => 10, //TODO: update vale
+            'request_account_extension_expiration_days' => 30,
         ],
         'email_service' => [
             //Change with your production address

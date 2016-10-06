@@ -206,7 +206,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * Check if the user account is blocked.
      *
-     * @param NationalLicenceUser $user Nationa licence user
+     * @param NationalLicenceUser $user National licence user
      *
      * @return void
      * @throws Exception
@@ -278,7 +278,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
         $userFields = []
     ) {
         /**
-         * Nationa licence user table.
+         * National licence user table.
          *
          * @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $userTable
          */
@@ -349,35 +349,15 @@ class NationalLicence implements ServiceLocatorAwareInterface
             return false;
         }
         // Last activity at least in the last 12 months
-        if (!$this->hasBeenActiveInLast12Months($user)) {
+        if (!$user->hasBeenActiveInLast12Month()) {
             return false;
         }
         // Has requested a temporary access || Has a verified home postal address
         $hasTemporaryAccess
-            = $user->hasAlreadyRequestedTemporaryAccess() &&
-            $this->isTemporaryAccessCurrentlyValid($user);
+            = $user->hasAlreadyRequestedTemporaryAccess() && $this->isTemporaryAccessCurrentlyValid($user);
         $hasVerifiedSwissAddress = $this->hasVerifiedSwissAddress();
 
         return $hasTemporaryAccess || $hasVerifiedSwissAddress;
-    }
-
-    /**
-     * Check if the user has been active in the last 12 Months.
-     *
-     * @param NationalLicenceUser $user NationalLicenceUser
-     *
-     * @return bool
-     */
-    protected function hasBeenActiveInLast12Months($user)
-    {
-        //TODO: Change this method. This will be provided as a shibbboleth attribute
-        // by SWITCH.
-        $pastPoint = (new \DateTime())->modify('-12 months');
-        if ($pastPoint > $user->getLastActivityDate()) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -408,54 +388,49 @@ class NationalLicence implements ServiceLocatorAwareInterface
     {
         if (empty($user)) {
             // Get shibboleth attributes from $_SERVER variable
-            $homePostalAddress = isset($_SERVER['homePostalAddress']) ?
-                $_SERVER['homePostalAddress'] : null;
-            $swissLibraryPersonResidence
-                = isset($_SERVER['swissLibraryPersonResidence']) ?
-                    $_SERVER['swissLibraryPersonResidence'] : null;
-        } else {
-            $homePostalAddress = $user->getHomePostalAddress();
-            $swissLibraryPersonResidence = $user->getSwissLibraryPersonResidence();
+            $user = $this->getCurrentNationalLicenceUser();
         }
 
-        if ($swissLibraryPersonResidence) {
-            if ($swissLibraryPersonResidence === 'CH'
-                && $this->isVerifiedHomePostalAddress()
+        $homePostalAddress = $user->getHomePostalAddress();
+        $swissLibraryPersonResidence = $user->getSwissLibraryPersonResidence();
+
+        if (!empty($swissLibraryPersonResidence)) {
+            if ($swissLibraryPersonResidence === 'CH' && $this->isVerifiedHomePostalAddress($user)
             ) {
-                //TODO: add the quality string
                 return true;
             }
         }
 
         if (!empty($homePostalAddress)
             && $this->isAddressInSwitzerland($homePostalAddress)
-            && $this->isVerifiedHomePostalAddress() //TODO
+            && $this->isVerifiedHomePostalAddress($user)
         ) {
-            echo 'is address in switzerland confirmed' . "\r\n";
-
             return true;
         }
 
-        return false;//TODO: change this to false after test and after adding the
-        // correct quality check
+        return false;
     }
 
     /**
      * Checks if the user have a verified home postal address in their edu-ID account
-     * TODO: This is only for test, the string has been taken from the Switch
+     *
      * attribute viewer.
      *
-     * @param string $string Assurance level string.
+     * @param NationalLicenceUser $user Assurance level string.
      *
      * @return bool
      * @throws \Exception
      */
-    protected function isVerifiedHomePostalAddress(
-        $string = 'mobile:https://eduid.ch/def/loa2;mail:https://eduid.ch/def/loa2;' .
-        'homePostalAddress:https://eduid.ch/def/loa1'
-    ) {
-        return true;
-        /*$singleElements = explode(";", $string);
+    protected function isVerifiedHomePostalAddress($user = null) {
+        if(empty($user)) {
+            $user = $this->getCurrentNationalLicenceUser();
+        }
+        if(empty($user->getHomePostalAddress())) {
+            return false;
+        }
+
+        $string = $user->getAssuranceLevel();
+        $singleElements = explode(";", $string);
         $qualityLevelString = null;
         foreach ($singleElements as $singleElement) {
             $parts = explode(":", $singleElement);
@@ -472,7 +447,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
         if("loa1" === $qualityLevel) return false;
         if("loa2" === $qualityLevel) return true;
         if("loa3" === $qualityLevel) return true;
-        throw new \Exception("Assurance level format is incorrect");*/
+        throw new \Exception("Assurance level format is incorrect");
     }
 
     /**
@@ -566,6 +541,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
      */
     public function sendExportEmail($to = null)
     {
+        if(empty($to)) {
+            $to = $this->config['user_export_default_email_address_to'];
+        }
         $users = $this->getListNationalLicenceUserWithVuFindUsers();
         $path = getcwd() . $this->config['user_export_path'] .
             '/' .
@@ -651,7 +629,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * Check and update the National Licence user with the last attributes in their
      * edu-ID account and update
      * the flag accordingly.
-     * TODO.
+     *
      *
      * @return void
      * @throws \Exception
@@ -667,20 +645,20 @@ class NationalLicence implements ServiceLocatorAwareInterface
          * @var NationalLicenceUser $user
          */
         foreach ($users as $user) {
-            echo 'Processing user' . $user->getEduId() . ".\r\n";
+            echo 'Processing user ' . $user->getEduId() . ".\r\n";
             //Update attributes from the edu-Id account
             $user = $this->switchApiService->getUserUpdatedInformation(
                 $user->getNameId(), $user->getPersistentId()
             );
             //If last activity date < last 12 month
-            if (!$this->activeLast12Month($user)) {
-                echo "User is not active in last 12 month.\r\n";
+            if (!$user->hasBeenActiveInLast12Month()) {
+                echo "User was not active in last 12 month.\r\n";
                 //If last_account_extension_request == null
                 if ($this->isAccountExtensionRequestStillValid($user)) {
                     echo "Account extension request is still valid.\r\n";
                     //Send and email to the user for extending their account
                     $this->emailService->sendAccountExtensionEmail(
-                        $user->getRelUser()->email
+                        $user->getRelUser()
                     );
                     echo 'Email sent to ' . $user->getRelUser()->email . "\r\n";
                     //Set the last_account_extension_request to now
@@ -709,18 +687,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
         }
     }
 
-    /**
-     * Check if the user was active the last 12 month.
-     * TODO
-     *
-     * @param NationalLicenceUser $user National Licence User
-     *
-     * @return bool
-     */
-    protected function activeLast12Month($user)
-    {
-        return false;
-    }
+
 
     /**
      * Check if the last email request for extending the account is still valid.
@@ -735,8 +702,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
         if (empty($dateRequest)) {
             return true;
         }
-        $dayValidity = $this->config['request_account_extension_expiration_days'];
-        if ($dateRequest < (new \DateTime())->modify("-$dayValidity days")) {
+        $daysValidity = $this->config['request_account_extension_expiration_days'];
+        if ($dateRequest < (new \DateTime())->modify("-$daysValidity days")) {
             return false;
         }
 
@@ -771,7 +738,6 @@ class NationalLicence implements ServiceLocatorAwareInterface
             //Unset the extension request date
             $user->unsetLastAccountExtensionRequest();
             $user->save();
-            //TODO: Update user information about last login (switch endpoint?)
             //Display a message that shows that the extension is made successfully
             $this->setMessage(
                 [
@@ -780,7 +746,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
                 ]
             );
         } else {
-            //Block the user? Or delete it?
+            $this->switchApiService->unsetNationalCompliantFlag(
+                $user->getEduId()
+            );
             $this->setMessage(
                 [
                     'type' => 'error',
@@ -833,7 +801,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
      *
      * @return bool
      */
-    public function isMessageSet()
+    public function isSetMessage()
     {
         return !empty($this->message);
     }

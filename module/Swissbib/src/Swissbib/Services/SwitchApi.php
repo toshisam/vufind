@@ -326,6 +326,7 @@ class SwitchApi implements ServiceLocatorAwareInterface
             'edu_id' => 'uniqueID',
             'home_postal_address' => 'homePostalAddress',
             'affiliation' => 'affiliation',
+            'active_last_12_month' => 'swissEduIDUsage1y'
         ];
         $userFieldsRelation = [
             'username' => 'persistent-id',
@@ -368,7 +369,7 @@ class SwitchApi implements ServiceLocatorAwareInterface
 
     /**
      * Get the update attributes of a the national licence user.
-     * TODO.
+     *
      *
      * @param string $nameId Name id
      *
@@ -399,7 +400,8 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $statusCode = $response->getStatusCode();
         $body = $response->getBody();
         if ($statusCode !== 200) {
-            throw new \Exception("Status code: $statusCode result: $body");
+            throw new \Exception("There were a problem retrieving data for user with name " .
+                "id: $nameId. Status code: $statusCode result: $body");
         }
 
         return json_decode($body);

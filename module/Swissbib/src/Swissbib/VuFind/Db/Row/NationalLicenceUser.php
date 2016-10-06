@@ -161,28 +161,6 @@ class NationalLicenceUser extends RowGateway
     }
 
     /**
-     * Get the last activity date on the edu-ID account.
-     *
-     * @return \DateTime
-     */
-    public function getLastActivityDate()
-    {
-        return new \DateTime($this->last_edu_id_activity);
-    }
-
-    /**
-     * Set the last activity date on the edu-ID account.
-     *
-     * @param \DateTime $date Date
-     *
-     * @return void
-     */
-    public function setLastActivityDate(\DateTime $date)
-    {
-        $this->last_edu_id_activity = $date->format('Y-m-d H:i:s');
-    }
-
-    /**
      * Return the creation date of the national licence user.
      *
      * @return \DateTime
@@ -323,7 +301,7 @@ class NationalLicenceUser extends RowGateway
     /**
      * Get persistent id.
      *
-     * @return void
+     * @return string
      */
     public function getPersistentId()
     {
@@ -348,5 +326,67 @@ class NationalLicenceUser extends RowGateway
     public function getSwissLibraryPersonResidence()
     {
         return $this->swiss_library_person_residence;
+    }
+
+    /**
+     * User is active in the edu_ID account in the last 12 month.
+     *
+     * @return boolean
+     */
+    public function hasBeenActiveInLast12Month()
+    {
+        return false;
+        //return $this->active_last_12_month; TODO change this after test
+    }
+
+    /**
+     * Set if the user were active in the last 12 month.
+     *
+     * @param boolean $active_last_12_month User were active in the last 12 month
+     */
+    public function setActiveLast12Month($active_last_12_month)
+    {
+
+        $this->active_last_12_month = $active_last_12_month === 'TRUE';
+    }
+
+    /**
+     * Get assurance level string.
+     *
+     * @return string
+     */
+    public function getAssuranceLevel()
+    {
+        return $this->assurance_level;
+    }
+
+    /**
+     * Set assurance level string.
+     *
+     * @param string $assurance_level Assurance level string
+     */
+    public function setAssuranceLevel($assurance_level)
+    {
+        $this->assurance_level = $assurance_level;
+    }
+
+    /**
+     * Get display name.
+     *
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        return $this->display_name;
+    }
+
+    /**
+     * Set display name string.
+     *
+     * @param string $display_name Display name
+     */
+    public function setDisplayName($display_name)
+    {
+        $this->display_name = $display_name;
     }
 }
