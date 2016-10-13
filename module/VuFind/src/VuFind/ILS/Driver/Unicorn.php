@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * @category VuFind2
+ * @category VuFind
  * @package  ILS_Drivers
  * @author   Tuan Nguyen <tuan@yorku.ca>
  * @author   Drew Farrugia <vufind-unicorn-l@lists.lehigh.edu>
@@ -35,7 +35,7 @@ use File_MARC, VuFind\Exception\ILS as ILSException;
  * Unicorn/Symphony server. Please note: currently you will need to download
  * the driver.pl in the yorku branch on google code to use this driver.
  *
- * @category VuFind2
+ * @category VuFind
  * @package  ILS_Drivers
  * @author   Tuan Nguyen <tuan@yorku.ca>
  * @author   Drew Farrugia <vufind-unicorn-l@lists.lehigh.edu>
@@ -322,7 +322,7 @@ class Unicorn extends AbstractBase implements \VuFindHttp\HttpServiceAwareInterf
             $cmp = create_function(
                 '$a,$b',
                 'if ($a["shelving_key"] == $b["shelving_key"]) '
-                .     'return $a["number"] - $b["number"];'
+                . 'return $a["number"] - $b["number"];'
                 . 'return $a["shelving_key"] < $b["shelving_key"] ? 1 : -1;'
             );
             usort($items, $cmp);

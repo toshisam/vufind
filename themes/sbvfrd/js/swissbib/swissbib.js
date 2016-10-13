@@ -138,23 +138,6 @@ var swissbib = {
   },
 
   /**
-   *
-   */
-  updatePageForLogin: function() {
-    swissbib.updatePageForLoginParent();
-
-    if($('#user-favorites').length > 0) {
-      Lightbox.addCloseAction(function(){document.location.reload(true);});
-    }
-
-    //console.log(window.location.pathname.substring('Search/History'));
-
-    if(window.location.pathname.indexOf('Search/History') !== -1) {
-      Lightbox.addCloseAction(function(){document.location.reload(true);});
-    }
-  },
-
-  /**
    * function for the UserVoice feedback widget in swissbib green
    */
   initUserVoiceFeedback: function() {
@@ -263,10 +246,3 @@ $(document).on('show.bs.collapse', swissbib.initBackgroundsRecursive);
 $(document).on('hide.bs.collapse', swissbib.initBackgroundsRecursive);
 $(document).on('shown.bs.collapse', swissbib.destructBackgroundsRecursive);
 $(document).on('hidden.bs.collapse', swissbib.destructBackgroundsRecursive);
-
-
-/**
- * Hook into VuFind method
- */
-swissbib.updatePageForLoginParent = updatePageForLogin;
-updatePageForLogin = swissbib.updatePageForLogin;

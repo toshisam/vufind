@@ -30,7 +30,14 @@
  */
 namespace Swissbib\VuFind\View\Helper\Root;
 
+use VuFind\Search\Base\Results,
+    VuFind\Search\Results\PluginManager,
+    Swissbib\VuFind\Search\Helper\SearchTabsHelper,
+    Zend\View\Helper\Url,
+    Zend\Http\Request;
 use VuFind\View\Helper\Root\SearchTabs as VuFindSearchTabs;
+//use Swissbib\VuFind\Search\SearchTabsHelper;
+//use Swissbib\VuFind\Search\Results\PluginManager as PluginManager;
 
 /**
  * SearchTabs
@@ -38,32 +45,50 @@ use VuFind\View\Helper\Root\SearchTabs as VuFindSearchTabs;
  * @category Swissbib_VuFind2
  * @package  VuFind_View_Helper_Root
  * @author   Guenter Hipler <guenter.hipler@unibas.ch>
+ * @author   Matthias Edel <matthias.edel@unibas.ch>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://www.swissbib.org  Main Page
  */
 class SearchTabs extends VuFindSearchTabs
 {
     /**
-     * Invoke SearchTabs
+     * Constructor
+     *
+     * @param PluginManager    $results Search results plugin manager
+     * @param Url              $url     URL helper
+     * @param SearchTabsHelper $helper  Search tabs helper
+     */
+    public function __construct(PluginManager $results, Url $url,
+        SearchTabsHelper $helper
+    ) {
+        $this->results = $results;
+        $this->url = $url;
+        $this->helper = $helper;
+    }
+
+    /**
+     * Determine information about search tabs
      *
      * @param string $activeSearchClass The search class ID of the active search
      * @param string $query             The current search query
      * @param string $handler           The current search handler
      * @param string $type              The current search type (basic/advanced)
+     * @param array  $hiddenFilters     The current hidden filters
      * @param string $view              variable to determine which tab config
      *                                  should be used
      *
      * @return array
      */
-    public function __invoke($activeSearchClass, $query, $handler,
-        $type = 'basic', $view = 'default'
+    public function getTabConfig($activeSearchClass, $query, $handler,
+        $type = 'basic', $hiddenFilters = [],
+        $view = 'default'
     ) {
-        $backupConfig = $this->config;
-        $this->config = $this->injectViewDependentConfig($view);
+        $backupConfig = $this->helper->getTabConfig();
+        $this->helper->setTabConfig($this->injectViewDependentConfig($view));
 
-        $tabs = parent::__invoke($activeSearchClass, $query, $handler, $type);
+        $tabs = parent::getTabConfig($activeSearchClass, $query, $handler, $type);
 
-        $this->config = $backupConfig;
+        $this->helper->setTabConfig($backupConfig);
         return $tabs;
     }
 
@@ -79,11 +104,17 @@ class SearchTabs extends VuFindSearchTabs
     {
         switch ($view) {
         case 'advanced':
-            return array_key_exists('AdvancedSearchTabs', $this->config) ?
-                $this->config['AdvancedSearchTabs'] : [];
+            return array_key_exists(
+                'AdvancedSearchTabs',
+                $this->helper->getTabConfig()
+            ) ?
+                $this->helper->getTabConfig()['AdvancedSearchTabs'] : [];
         default:
-            return array_key_exists('SearchTabs', $this->config) ?
-                $this->config['SearchTabs'] : [];
+            return array_key_exists(
+                'SearchTabs',
+                $this->helper->getTabConfig()
+            ) ?
+                $this->helper->getTabConfig()['SearchTabs'] : [];
         }
     }
 }

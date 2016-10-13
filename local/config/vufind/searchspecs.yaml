@@ -37,6 +37,8 @@ AllFields:
     - [pf, 'title_short^1000']
     - [ps, '2']
     - [bf, 'recip(abs(ms(NOW/DAY,freshness)),3.16e-10,100,100)']
+    - [mm, '100%']
+
 #  DismaxParams:
 #  boost param as in old solrconfig.xml
   QueryFields:
@@ -117,6 +119,9 @@ Author:
       - [onephrase, 50]
       - [and, 50]
       - [or, 20]
+  DismaxParams:
+    - [mm, '100%']
+
 
 ISN:
   DismaxFields:
@@ -145,6 +150,9 @@ ISN:
     urn_isn_mv:
       - [and, 100]
       - [or, ~]
+  DismaxParams:
+    - [mm, '100%']
+
 
 Subject:
   DismaxHandler: edismax
@@ -155,6 +163,7 @@ Subject:
       - [onephrase, 350]
   DismaxParams:
     - [bf, 'recip(abs(ms(NOW/DAY,freshness)),3.16e-10,100,100)']
+    - [mm, '100%']
 
 JournalTitle:
   DismaxFields:
@@ -178,6 +187,7 @@ JournalTitle:
   DismaxParams:
     - [pf, 'title_short^100000']
     - [ps, '2']
+    - [mm, '100%']
 
 
 FRBR:
@@ -268,6 +278,7 @@ Title:
       - [and, 50]
   DismaxParams:
     - [bf, 'recip(abs(ms(NOW/DAY,freshness)),3.16e-10,100,100)']
+    - [mm, '100%']
 
 Series:
   DismaxHandler: edismax

@@ -1017,6 +1017,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Returns as array to use same template with foreach as normally
+     * 
      * @return array
      */
     public function getMostSpecificFormat()
@@ -1051,6 +1052,23 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         $year2 = substr($code, 11, 4);
 
         return [$dateType, $year1, $year2];
+    }
+
+    /**
+     * Get the main authors of the record.
+     *
+     * @return array
+     */
+    public function getPrimaryAuthors()
+    {
+        $primaryAuthors = $this->getPrimaryAuthor();
+        if (empty($primaryAuthors)) {
+            return null;
+        }
+        if (!is_array($primaryAuthors)) {
+            $primaryAuthors = [$primaryAuthors];
+        }
+        return $primaryAuthors;
     }
 
     /**
@@ -1098,6 +1116,33 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         }
 
         return $authors;
+    }
+
+    /**
+     * Get the main corporate author (if any) for the record.
+     *
+     * @return string
+     */
+    public function getCorporateAuthors()
+    {
+        $tempAuthor = $this->getCorporateAuthor();
+        return empty($tempAuthor) ?
+            null : [$this->getCorporateAuthor()];
+    }
+
+    /**
+     * Get the main corporate author (if any) for the record.
+     *
+     * @return string
+     */
+    public function getCorporateAuthor()
+    {
+        // Try 110 first -- if none found, try 710 next.
+        $main = $this->getFirstFieldValue('110', ['a', 'b']);
+        if (!empty($main)) {
+            return $main;
+        }
+        return $this->getFirstFieldValue('710', ['a', 'b']);
     }
 
     /**
@@ -1282,6 +1327,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get Hierarchical level of record
+     * 
      * @return String
      */
     public function getHierachicalLevel()
@@ -1343,6 +1389,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get biographical information or administrative history
+     * 
      * @return array
      */
     public function getHistData()
@@ -1352,6 +1399,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get added entry geographic name
+     * 
      * @return array
      */
     public function getPlaceNames()
@@ -1606,6 +1654,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get Physical Medium (MARC21: field 340)
+     * 
      * @return array
      */
     public function getPhysicalMedium()
@@ -1630,7 +1679,10 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getCitationNotes()
     {
-        return $this->getFieldArray('510');
+        $separator = isset($this->mainConfig->Record->marcPublicationInfoSeparator)
+            ? $this->mainConfig->Record->marcPublicationInfoSeparator : ' ';
+
+        return $this->getFieldArray('510', ['a', 'c'], true, $separator);
     }
 
     /**
@@ -1675,6 +1727,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get language information
+     * 
      * @return array
      */
     public function getLangData()
@@ -1684,6 +1737,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get Ownership and Custodial History Note (MARC21: field 561)
+     * 
      * @return array
      */
     public function getOwnerNote()
@@ -1879,6 +1933,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             'f' => 'f',
             'g' => 'g',
             'h' => 'h',
+            'p' => 'p',
             't' => 't',
             '_v' => 'v',
             '_x' => 'x',
@@ -2133,7 +2188,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         $filter = array_key_exists('filter_str_mv', $this->fields) ?
             $this->fields['filter_str_mv'] : [];
-        return in_array('ONL', $filter)  ? true : false;
+        return in_array('ONL', $filter) ? true : false;
     }
 
     /**

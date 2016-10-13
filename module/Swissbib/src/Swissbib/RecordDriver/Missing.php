@@ -271,6 +271,7 @@ class Missing extends VFMissing implements SwissbibRecordDriver
 
     /**
      * Get Hierarchical level of record
+     * 
      * @return String
      */
     public function getHierachicalLevel()

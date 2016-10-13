@@ -19,11 +19,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * @category VuFind2
+ * @category VuFind
  * @package  Db_Table
  * @author   Demian Katz <demian.katz@villanova.edu>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://vufind.org   Main Site
+ * @link     https://vufind.org Main Site
  */
 namespace VuFind\Db\Table;
 use Zend\Db\Sql\Expression;
@@ -31,11 +31,11 @@ use Zend\Db\Sql\Expression;
 /**
  * Table Definition for resource_tags
  *
- * @category VuFind2
+ * @category VuFind
  * @package  Db_Table
  * @author   Demian Katz <demian.katz@villanova.edu>
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
- * @link     http://vufind.org   Main Site
+ * @link     https://vufind.org Main Site
  */
 class ResourceTags extends Gateway
 {
@@ -299,6 +299,30 @@ class ResourceTags extends Gateway
         $userId = null, $resourceId = null, $tagId = null
     ) {
         $callback = function ($select) use ($userId, $resourceId, $tagId) {
+            $select->columns(
+                [
+                    'resource_id' => new Expression(
+                        'MAX(?)', ['resource_tags.resource_id'],
+                        [Expression::TYPE_IDENTIFIER]
+                    ),
+                    'tag_id' => new Expression(
+                        'MAX(?)', ['resource_tags.tag_id'],
+                        [Expression::TYPE_IDENTIFIER]
+                    ),
+                    'list_id' => new Expression(
+                        'MAX(?)', ['resource_tags.list_id'],
+                        [Expression::TYPE_IDENTIFIER]
+                    ),
+                    'user_id' => new Expression(
+                        'MAX(?)', ['resource_tags.user_id'],
+                        [Expression::TYPE_IDENTIFIER]
+                    ),
+                    'id' => new Expression(
+                        'MAX(?)', ['resource_tags.id'],
+                        [Expression::TYPE_IDENTIFIER]
+                    )
+                ]
+            );
             $select->join(
                 ['r' => 'resource'],
                 'resource_tags.resource_id = r.id',
@@ -313,8 +337,8 @@ class ResourceTags extends Gateway
             if (!is_null($tagId)) {
                 $select->where->equalTo('resource_tags.tag_id', $tagId);
             }
-            $select->group(["resource_id"]);
-            $select->order(["title"]);
+            $select->group(['resource_id', 'title']);
+            $select->order(['title']);
         };
         return $this->select($callback);
     }
@@ -332,6 +356,30 @@ class ResourceTags extends Gateway
     {
 
         $callback = function ($select) use ($userId, $resourceId, $tagId) {
+            $select->columns(
+                [
+                    'resource_id' => new Expression(
+                        'MAX(?)', ['resource_tags.resource_id'],
+                        [Expression::TYPE_IDENTIFIER]
+                    ),
+                    'tag_id' => new Expression(
+                        'MAX(?)', ['resource_tags.tag_id'],
+                        [Expression::TYPE_IDENTIFIER]
+                    ),
+                    'list_id' => new Expression(
+                        'MAX(?)', ['resource_tags.list_id'],
+                        [Expression::TYPE_IDENTIFIER]
+                    ),
+                    'user_id' => new Expression(
+                        'MAX(?)', ['resource_tags.user_id'],
+                        [Expression::TYPE_IDENTIFIER]
+                    ),
+                    'id' => new Expression(
+                        'MAX(?)', ['resource_tags.id'],
+                        [Expression::TYPE_IDENTIFIER]
+                    )
+                ]
+            );
             $select->join(
                 ['t' => 'tags'],
                 'resource_tags.tag_id = t.id',
@@ -346,8 +394,8 @@ class ResourceTags extends Gateway
             if (!is_null($tagId)) {
                 $select->where->equalTo('resource_tags.tag_id', $tagId);
             }
-            $select->group(["tag_id"]);
-            $select->order(["tag"]);
+            $select->group(['tag_id', 'tag']);
+            $select->order(['tag']);
         };
         return $this->select($callback);
     }
@@ -364,6 +412,30 @@ class ResourceTags extends Gateway
     public function getUniqueUsers($userId = null, $resourceId = null, $tagId = null)
     {
         $callback = function ($select) use ($userId, $resourceId, $tagId) {
+            $select->columns(
+                [
+                    'resource_id' => new Expression(
+                        'MAX(?)', ['resource_tags.resource_id'],
+                        [Expression::TYPE_IDENTIFIER]
+                    ),
+                    'tag_id' => new Expression(
+                        'MAX(?)', ['resource_tags.tag_id'],
+                        [Expression::TYPE_IDENTIFIER]
+                    ),
+                    'list_id' => new Expression(
+                        'MAX(?)', ['resource_tags.list_id'],
+                        [Expression::TYPE_IDENTIFIER]
+                    ),
+                    'user_id' => new Expression(
+                        'MAX(?)', ['resource_tags.user_id'],
+                        [Expression::TYPE_IDENTIFIER]
+                    ),
+                    'id' => new Expression(
+                        'MAX(?)', ['resource_tags.id'],
+                        [Expression::TYPE_IDENTIFIER]
+                    )
+                ]
+            );
             $select->join(
                 ['u' => 'user'],
                 'resource_tags.user_id = u.id',
@@ -378,8 +450,8 @@ class ResourceTags extends Gateway
             if (!is_null($tagId)) {
                 $select->where->equalTo('resource_tags.tag_id', $tagId);
             }
-            $select->group(["user_id"]);
-            $select->order(["username"]);
+            $select->group(['user_id', 'username']);
+            $select->order(['username']);
         };
         return $this->select($callback);
     }
