@@ -459,11 +459,12 @@ return [
             'path_member' => "members"
         ],
         'national_licence_service' => [
+            //Change with the production host address
             'base_domain_path' => 'https://test.swissbib.ch',
             'allowed_mobile_prefixes' => ['+41 79', '+41 78','+41 77' ,'+41 76'],
             'user_export_path' => '/export/nationalLicence',
             'user_export_filename' => 'user_export.csv',
-            'user_export_default_email_address_to' => 'scogno@snowflake.ch',
+            'user_export_default_email_address_to' => 'nl@consortium.ch ',
             'national_licence_user_fields_to_export' => [
                 'mobile',
                 'home_postal_address',
@@ -485,7 +486,7 @@ return [
         ],
         'email_service' => [
             //Change with the production address
-            'default_email_address_from' => 'test@snowflake.ch',
+            'default_email_address_from' => 'nl@consortium.ch ',
             'smtp_options' => [
                 'name' => 'host',
                 //Change with production SMTP server host
@@ -508,7 +509,7 @@ return [
 
             ],
             'email_service' => [
-                'default_email_address_to' => 'scogno@snowflake.ch',
+                'default_email_address_to' => '',
                 'default_email_address_from' => 'test@snowflake.ch',
             ],
         ]
