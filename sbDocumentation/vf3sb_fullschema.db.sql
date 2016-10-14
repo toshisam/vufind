@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.1.73, for redhat-linux-gnu (x86_64)
+-- MySQL dump 10.15  Distrib 10.0.25-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: dbvfgreenRDprod
+-- Host: localhost    Database: v3greentest
 -- ------------------------------------------------------
--- Server version	5.1.73
+-- Server version	10.0.25-MariaDB-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -46,7 +46,7 @@ CREATE TABLE `comments` (
   `user_id` int(11) NOT NULL DEFAULT '0',
   `resource_id` int(11) NOT NULL DEFAULT '0',
   `comment` text NOT NULL,
-  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created` datetime NOT NULL DEFAULT '2000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `resource_id` (`resource_id`),
@@ -65,8 +65,27 @@ DROP TABLE IF EXISTS `oai_resumption`;
 CREATE TABLE `oai_resumption` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `params` text,
-  `expires` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `expires` datetime NOT NULL DEFAULT '2000-00-00 00:00:00',
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `record`
+--
+
+DROP TABLE IF EXISTS `record`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `record_id` varchar(255) DEFAULT NULL,
+  `source` varchar(50) DEFAULT NULL,
+  `version` varchar(20) NOT NULL,
+  `data` longtext,
+  `updated` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `record_id_source` (`record_id`,`source`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -79,14 +98,14 @@ DROP TABLE IF EXISTS `resource`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `resource` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `record_id` varchar(120) NOT NULL DEFAULT '',
+  `record_id` varchar(255) NOT NULL DEFAULT '',
   `title` varchar(200) NOT NULL DEFAULT '',
   `author` varchar(200) DEFAULT NULL,
   `year` mediumint(6) DEFAULT NULL,
-  `source` varchar(50) NOT NULL DEFAULT 'VuFind',
+  `source` varchar(50) NOT NULL DEFAULT 'Solr',
   PRIMARY KEY (`id`),
   KEY `record_id` (`record_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=32132 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -112,7 +131,7 @@ CREATE TABLE `resource_tags` (
   CONSTRAINT `resource_tags_ibfk_15` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`) ON DELETE CASCADE,
   CONSTRAINT `resource_tags_ibfk_16` FOREIGN KEY (`list_id`) REFERENCES `user_list` (`id`) ON DELETE SET NULL,
   CONSTRAINT `resource_tags_ibfk_17` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11444 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,15 +146,16 @@ CREATE TABLE `search` (
   `user_id` int(11) NOT NULL DEFAULT '0',
   `session_id` varchar(128) DEFAULT NULL,
   `folder_id` int(11) DEFAULT NULL,
-  `created` date NOT NULL DEFAULT '0000-00-00',
+  `created` datetime NOT NULL DEFAULT '2000-00-00 00:00:00',
   `title` varchar(20) DEFAULT NULL,
   `saved` int(1) NOT NULL DEFAULT '0',
   `search_object` blob,
+  `checksum` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `folder_id` (`folder_id`),
   KEY `session_id` (`session_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41358482 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -150,11 +170,11 @@ CREATE TABLE `session` (
   `session_id` varchar(128) DEFAULT NULL,
   `data` text,
   `last_used` int(12) NOT NULL DEFAULT '0',
-  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created` datetime NOT NULL DEFAULT '2000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `session_id` (`session_id`),
   KEY `last_used` (`last_used`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=189993030 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -168,7 +188,7 @@ CREATE TABLE `tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tag` varchar(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5434 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -180,20 +200,19 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(200) DEFAULT NULL,
+  `username` varchar(255) NOT NULL DEFAULT '',
   `password` varchar(32) NOT NULL DEFAULT '',
   `pass_hash` varchar(60) DEFAULT NULL,
   `firstname` varchar(50) NOT NULL DEFAULT '',
   `lastname` varchar(50) NOT NULL DEFAULT '',
-  `email` varchar(250) NOT NULL DEFAULT '',
+  `email` varchar(255) NOT NULL DEFAULT '',
   `cat_username` varchar(50) DEFAULT NULL,
-  `cat_password` varchar(50) DEFAULT NULL,
-  `cat_pass_enc` varchar(110) DEFAULT NULL,
+  `cat_password` varchar(70) DEFAULT NULL,
+  `cat_pass_enc` varchar(170) DEFAULT NULL,
   `college` varchar(100) NOT NULL DEFAULT '',
   `major` varchar(100) NOT NULL DEFAULT '',
   `home_library` varchar(100) NOT NULL DEFAULT '',
-  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `sb_nickname` text NOT NULL,
+  `created` datetime NOT NULL DEFAULT '2000-00-00 00:00:00',
   `favorite_institutions` text NOT NULL,
   `language` varchar(2) NOT NULL DEFAULT '',
   `max_hits` smallint(6) NOT NULL DEFAULT '0',
@@ -201,7 +220,31 @@ CREATE TABLE `user` (
   `verify_hash` varchar(42) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27822 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `user_card`
+--
+
+DROP TABLE IF EXISTS `user_card`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_card` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `card_name` varchar(255) NOT NULL DEFAULT '',
+  `cat_username` varchar(50) NOT NULL DEFAULT '',
+  `cat_password` varchar(50) DEFAULT NULL,
+  `cat_pass_enc` varchar(110) DEFAULT NULL,
+  `home_library` varchar(100) NOT NULL DEFAULT '',
+  `created` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `saved` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `user_card_cat_username` (`cat_username`),
+  CONSTRAINT `user_card_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -218,27 +261,11 @@ CREATE TABLE `user_list` (
   `description` text,
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `public` int(11) NOT NULL DEFAULT '0',
+  `expires` datetime NOT NULL DEFAULT '2000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `user_list_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `user_localdata`
---
-
-DROP TABLE IF EXISTS `user_localdata`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_localdata` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `language` text,
-  `max_hits` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8709 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -262,7 +289,7 @@ CREATE TABLE `user_resource` (
   CONSTRAINT `user_resource_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
   CONSTRAINT `user_resource_ibfk_2` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`) ON DELETE CASCADE,
   CONSTRAINT `user_resource_ibfk_5` FOREIGN KEY (`list_id`) REFERENCES `user_list` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=34033 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -309,4 +336,4 @@ CREATE TABLE `user_stats_fields` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-05-08 16:08:44
+-- Dump completed on 2016-08-31 15:24:56

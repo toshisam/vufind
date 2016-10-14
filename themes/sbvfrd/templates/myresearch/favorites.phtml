@@ -21,7 +21,7 @@ $isLoggedIn = !!$this->auth()->isLoggedIn();
       <fieldset class="form-group">
         <label for="query" class="col-sm-2 control-label"><?= $this->transEsc('Library') ?></label>
         <div class="col-sm-10">
-          <input type="text" id="query" class="form-control" autocomplete="off" autofocus/>
+          <input type="text" id="query" class="form-control autocomplete" autocomplete="off" autofocus/>
         </div>
       </fieldset>
 
@@ -48,12 +48,3 @@ $isLoggedIn = !!$this->auth()->isLoggedIn();
 <div class="<?= $this->layoutClass('sidebar') ?>">
   <?= $this->context($this)->renderInContext("myresearch/menu.phtml", array('active' => 'favorite-institutions')) ?>
 </div>
-
-<script type="text/javascript">
-  $('input#query').autocomplete({
-    maxResults: 10,
-    handler: function(query, cb) {
-      cb(<?=json_encode(array_values($autocompleterData))?>);
-    }
-  });
-</script>
