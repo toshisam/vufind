@@ -9,11 +9,11 @@ $this->layout()->breadcrumbs = '<li><a href="' . $this->url('myresearch-home') .
 <div class="<?= $this->layoutClass('mainbody') ?>">
 
     <h1><?= $this->transEsc('snl.accessNationalLicences') ?></h1>
-    <?= $this->flashmessages(); ?>
     <!-- First of all chack if use is blocked -->
     <? if ($this->user->isBlocked()): ?>
         <div class="alert alert-danger"><?= $this->transEsc('snl.yourAccountHasBeenBlocked') ?></div>
     <? else: ?>
+        <?= $this->flashmessages(); ?>
         <? if (!$this->hasPermanentAccess): ?>
             <?= $this->context($this)->renderInContext("nationallicences/terms_conditions.phtml", []) ?>
             <hr>

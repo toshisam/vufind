@@ -25,11 +25,15 @@
 namespace Swissbib\Services;
 
 use Zend\Di\ServiceLocator;
+use Zend\Mail\Protocol\SmtpPluginManager;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Mime;
-use Zend\Mail\Message;
 use Zend\ServiceManager\ServiceManager;
+//use Zend\Mail\Transport\Sendmail as SendmailTransport;
+use Zend\Mail\Message;
+use Zend\Mail\Transport\Smtp as SmtpTransport;
+use Zend\Mail\Transport\SmtpOptions;
 use Zend\Mail\Transport\Sendmail as SendmailTransport;
 
 /**
@@ -72,17 +76,18 @@ class Email implements ServiceLocatorAwareInterface
      * @param string $to                 The recipient of the e-mail
      * @param string $textMail           Text of the e-mail
      * @param string $attachmentFilePath File path of the file to attach
+     * @param bool   $tls
      *
-     * @return void
      * @throws \Exception
      */
-    public function sendMail($to, $textMail, $attachmentFilePath)
+    public function sendMail($to, $textMail, $attachmentFilePath, $tls = false)
     {
         $mimeMessage = $this->createMimeMessage($textMail, $attachmentFilePath);
         $this->sendMailWithAttachment(
             $to,
             $mimeMessage,
-            'National licence user export'
+            'National licence user export',
+            $tls
         );
     }
 
@@ -138,11 +143,11 @@ class Email implements ServiceLocatorAwareInterface
      * @param string       $to          Recipient.
      * @param Mime\Message $mimeMessage Mime message
      * @param string       $subject     Subject
+     * @param bool         $tlsActive   Send with TLS encryption
      *
-     * @return void
      * @throws \Exception
      */
-    public function sendMailWithAttachment($to, $mimeMessage, $subject)
+    public function sendMailWithAttachment($to, $mimeMessage, $subject, $tlsActive = false)
     {
         if (empty($to)) {
             throw new \Exception(
@@ -155,7 +160,14 @@ class Email implements ServiceLocatorAwareInterface
         $message->addTo($to)
             ->addFrom($this->config['email_service']['default_email_address_from'])
             ->setSubject($subject);
-        $transport = new SendmailTransport();
+        $transport = null;
+        if($tlsActive) {
+            $transport = new SmtpTransport();
+            $options = new SmtpOptions($this->config['email_service']['smtp_options']);
+            $transport->setOptions($options);
+        } else {
+            $transport = new SendmailTransport();
+        }
         $transport->send($message);
     }
 
@@ -178,11 +190,6 @@ class Email implements ServiceLocatorAwareInterface
                 array('action' => 'extend-account'),
                 array('force_canonical' => true)
             );
-        $textMail = '<p>You account expires in 10 days. Please&nbsp;<a href="' .
-            $link .
-            '">click here</a> to extend you account duration.</p>' .
-            '<p>Best regards,</p>' .
-            '<p>Swissbib</p>';
         $username = $toUser->firstname . ' ' . $toUser->lastname;
         $textMail = '<p>Dear '. $username .',<br /> <br /> We noticed that you didn\'t use '.
             'Swiss National Licences as a private user in the last 12 months. '.

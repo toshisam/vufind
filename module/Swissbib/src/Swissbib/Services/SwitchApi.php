@@ -293,8 +293,7 @@ class SwitchApi implements ServiceLocatorAwareInterface
                 ],
             ],
         ];
-        $str = json_encode($params, JSON_PRETTY_PRINT);
-        //TODO echo "<pre> $str < /pre>";
+
         $rawData = json_encode($params, JSON_UNESCAPED_SLASHES);
         $client->setRawBody($rawData);
         $response = $client->send();

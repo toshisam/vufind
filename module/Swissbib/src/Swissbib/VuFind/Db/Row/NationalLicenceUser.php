@@ -83,6 +83,7 @@ class NationalLicenceUser extends RowGateway
     public function setTemporaryAccess()
     {
         $this->request_temporary_access = true;
+        $this->request_temporary_access_created = (new \DateTime())->format('Y-m-d H:i:s');
         $this->setExpirationDate((new \DateTime())->modify('+14 day'));
         $n = $this->save();
         if ($n > 0) {
@@ -212,6 +213,7 @@ class NationalLicenceUser extends RowGateway
     public function setRequestPermanentAccess($bool = true)
     {
         $this->request_permanent_access = $bool;
+        $this->request_permanent_access_created = (new \DateTime())->format('Y-m-d H:i:s');
     }
 
     /**
@@ -335,8 +337,8 @@ class NationalLicenceUser extends RowGateway
      */
     public function hasBeenActiveInLast12Month()
     {
-        return false;
-        //return $this->active_last_12_month; TODO change this after test
+
+        return $this->active_last_12_month;
     }
 
     /**

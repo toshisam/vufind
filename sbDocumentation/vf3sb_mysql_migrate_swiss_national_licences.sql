@@ -21,9 +21,12 @@ CREATE TABLE `national_licence_user` (
 
   `condition_accepted`  BOOLEAN DEFAULT FALSE,
   `request_temporary_access` BOOLEAN NOT NULL DEFAULT FALSE,
+  `request_temporary_access_created` datetime DEFAULT NULL,
   `request_permanent_access` BOOLEAN NOT NULL DEFAULT FALSE,
+  `request_permanent_access_created` datetime DEFAULT NULL,
   `date_expiration` datetime DEFAULT NULL,
   `blocked` BOOLEAN NOT NULL DEFAULT FALSE,
+  `blocked_created` datetime DEFAULT NULL,
   `active_last_12_month` BOOLEAN NOT NULL DEFAULT FALSE,
   `last_account_extension_request` datetime DEFAULT NULL,
   `created` datetime  DEFAULT CURRENT_TIMESTAMP,

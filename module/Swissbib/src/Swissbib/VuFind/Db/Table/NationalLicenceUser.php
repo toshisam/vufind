@@ -244,4 +244,91 @@ class NationalLicenceUser extends Gateway
 
         return $arr_resultSet;
     }
+
+
+    /**
+     * Get number of temporary access of the last x months.
+     *
+     * @param $months Number of the last months
+     *
+     * @return int
+     */
+    public function getLastTemporaryRequest($months)
+    {
+        $date = new \DateTime();
+        $date->modify("-$months month");
+        $numberOfTemporaryRequests = $this->select (
+            function (Select $select) use ($date) {
+                $select->where->greaterThan('request_temporary_access_created', $date->format('Y-m-d H:i:s'));
+            }
+        );
+
+        return count($numberOfTemporaryRequests);
+    }
+
+
+    /**
+     * Get number of last permanent access requests.
+     *
+     * @param $months
+     *
+     * @return int
+     */
+    public function getNumberOfLastPermanentRequest($months)
+    {
+        $date = new \DateTime();
+        $date->modify("-$months month");
+        $numberOfTemporaryRequests = $this->select (
+            function (Select $select) use ($date) {
+                $select->where->greaterThan('request_permanent_access_created', $date->format('Y-m-d H:i:s'));
+            }
+        );
+
+        return count($numberOfTemporaryRequests);
+    }
+
+    /**
+     * @param $months
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function getLastBlockedUser($months)
+    {
+        $date = new \DateTime();
+        $date->modify("-$months month");
+        $lastBlockedUsers = $this->select (
+            function (Select $select) use ($date) {
+                $select->where->greaterThan('blocked_created', $date->format('Y-m-d H:i:s'))
+                              ->equalTo('blocked', true);
+            }
+        );
+
+        /**
+         * User table.
+         *
+         * @var User $userTable
+         */
+        $userTable = $this->getDbTable('user');
+
+        $arr_resultSet = [];
+        /**
+         * National licence user.
+         *
+         * @var \Swissbib\VuFind\Db\Row\NationalLicenceUser $lastBlockedUser
+         */
+        foreach ($lastBlockedUsers as $lastBlockedUser) {
+            /**
+             * User.
+             *
+             * @var \VuFind\Db\Row\User $user
+             */
+            $user = $userTable->getByUsername($lastBlockedUser->getPersistentId());
+            $lastBlockedUser->setRelUser($user);
+            $arr_resultSet[] = $lastBlockedUser;
+        }
+
+
+        return $arr_resultSet;
+    }
 }

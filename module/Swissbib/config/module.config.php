@@ -209,7 +209,6 @@ return [
                         ]
                     ]
                 ]
-
             ]
         ]
     ],
@@ -466,14 +465,8 @@ return [
             'user_export_filename' => 'user_export.csv',
             'user_export_default_email_address_to' => 'scogno@snowflake.ch',
             'national_licence_user_fields_to_export' => [
-                'id',
-                'edu_id',
-                'persistent_id',
-                'user_id',
-                'home_organization_type',
                 'mobile',
                 'home_postal_address',
-                'affiliation',
                 'swiss_library_person_residence',
                 'condition_accepted',
                 'request_temporary_access',
@@ -481,35 +474,33 @@ return [
                 'date_expiration',
                 'blocked',
                 'active_last_12_month',
-                'assurance_level',
-                'last_account_extension_request',
                 'created'
             ],
             'vufind_user_fields_to_export' => [
-                'id',
-                'username',
-                'password',
                 'firstname',
                 'lastname',
                 'email',
-                'cat_username',
-                'cat_password',
-                'cat_pass_enc',
-                'college',
-                'major',
-                'home_library',
-                'created',
-                'favorite_institutions',
-                'language',
-                'max_hits',
             ],
             'request_account_extension_expiration_days' => 30,
         ],
         'email_service' => [
-            //Change with your production address
+            //Change with the production address
             'default_email_address_from' => 'test@snowflake.ch',
+            'smtp_options' => [
+                'name' => 'host',
+                //Change with production SMTP server host
+                'host' => 'smtp.gmail.com',
+                'port'=> 587,
+                'connection_class' => 'login',
+                'connection_config' => [
+                    //Change with production SMTP credentials
+                    'username' => "",
+                    'password' => '',
+                    'ssl'=> 'tls',
+                ]
+            ]
         ],
-        'tests' => [
+        'tests' => [ //Unit test configuration
             'switch_api' => [
                 'external_id_test' => '1234567@eduid.ch'
             ],

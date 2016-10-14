@@ -342,19 +342,23 @@ class NationalLicence implements ServiceLocatorAwareInterface
          * @var NationalLicenceUser $user
          */
         if (!$user->hasAcceptedTermsAndConditions()) {
+
             return false;
         }
         // Is not blocked by the administrators
         if ($user->isBlocked()) {
+
             return false;
         }
         // Last activity at least in the last 12 months
         if (!$user->hasBeenActiveInLast12Month()) {
+
             return false;
         }
         // Has requested a temporary access || Has a verified home postal address
         $hasTemporaryAccess
             = $user->hasAlreadyRequestedTemporaryAccess() && $this->isTemporaryAccessCurrentlyValid($user);
+
         $hasVerifiedSwissAddress = $this->hasVerifiedSwissAddress();
 
         return $hasTemporaryAccess || $hasVerifiedSwissAddress;
@@ -545,14 +549,16 @@ class NationalLicence implements ServiceLocatorAwareInterface
             $to = $this->config['user_export_default_email_address_to'];
         }
         $users = $this->getListNationalLicenceUserWithVuFindUsers();
+        
         $path = getcwd() . $this->config['user_export_path'] .
             '/' .
             $this->config['user_export_filename'];
         $attachmentFilePath = $this->createCsvFileFromListUsers($path, $users);
         $this->emailService->sendMail(
             $to,
-            'This is an export of the National Licence users.',
-            $attachmentFilePath
+            $this->getExportTextEmail(),
+            $attachmentFilePath,
+            true
         );
     }
 
@@ -594,10 +600,10 @@ class NationalLicence implements ServiceLocatorAwareInterface
 
         //Header
         $str = '';
-        foreach ($fieldsNationalLicenceUser as $field) {
+        foreach ($fieldVuFindUser as $field) {
             $str = $str . $field . ',';
         }
-        foreach ($fieldVuFindUser as $field) {
+        foreach ($fieldsNationalLicenceUser as $field) {
             $str = $str . $field . ',';
         }
         $str = $str . "\r\n";
@@ -611,11 +617,11 @@ class NationalLicence implements ServiceLocatorAwareInterface
          */
         foreach ($users as $user) {
             $str = '';
-            foreach ($fieldsNationalLicenceUser as $field) {
-                $str = $str . $user->$field . ',';
-            }
             foreach ($fieldVuFindUser as $field) {
                 $str = $str . $user->getRelUser()->$field . ',';
+            }
+            foreach ($fieldsNationalLicenceUser as $field) {
+                $str = $str . $user->$field . ',';
             }
             $str = $str . "\r\n";
             fwrite($file, $str);
@@ -623,6 +629,110 @@ class NationalLicence implements ServiceLocatorAwareInterface
         fclose($file);
 
         return $path;
+    }
+
+    /**
+     * Get the text of the export e-mail.
+     *
+     * @return string
+     * @throws \Exception
+     */
+    private function getExportTextEmail()
+    {
+        $countLastTemporaryRequests = $this->getLastTemporaryRequestOfLastMonth();
+        $countLastPermanentRequests = $this->getLastPermanentAccessOfLastMonth();
+        $listBLockedUsers = $this->getLastBlockedUsersOfLastMonth();
+
+        $text = "This is an export of the National Licence users. You can find the exported users in the attached file. <br> In the last month there were <b>$countLastTemporaryRequests</b> temporary access requests ".
+        " and <b>$countLastPermanentRequests</b> permanent access requests.<br>";
+
+        return $text . $this->userToText($listBLockedUsers);
+    }
+
+    /**
+     * Get last temporary request of the last month.
+     *
+     * @return int
+     */
+    private function getLastTemporaryRequestOfLastMonth()
+    {
+        /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable */
+        $nationalLicenceUserTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
+        return $nationalLicenceUserTable->getLastTemporaryRequest(1);
+    }
+
+    /**
+     * Get the number of the last permanent access requests.
+     *
+     * @return int
+     */
+    private function getLastPermanentAccessOfLastMonth()
+    {
+        /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable */
+        $nationalLicenceUserTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
+        return $nationalLicenceUserTable->getNumberOfLastPermanentRequest(1);
+    }
+
+    /**
+     * Get last blocked users of the last month.
+     *
+     * @return array
+     * @throws \Exception
+     */
+    private function getLastBlockedUsersOfLastMonth()
+    {
+        /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable */
+        $nationalLicenceUserTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
+        return $nationalLicenceUserTable->getLastBlockedUser(1);
+    }
+
+    /**
+     * @param array(NationalLicenceUser) $users
+     *
+     * @return string
+     */
+    private function userToText($users)
+    {
+        $fieldsNationalLicenceUser = [
+            'mobile',
+            'blocked',
+            'blocked_created',
+        ];
+        $fieldVuFindUser = [
+            'firstname',
+            'lastname',
+            'email',
+        ];
+
+        $str = "<br><br><p>List of last blocked users of the last month:</p><br><br>";
+        $str = $str. "Fields: ";
+        foreach ($fieldVuFindUser as $field) {
+            $str = $str . $field . ', ';
+        }
+        foreach ($fieldsNationalLicenceUser as $field) {
+            $str = $str . $field . ', ';
+        }
+
+        $str = rtrim($str, ", ") . "<br><br>";
+        //Data
+        /**
+         * National licence user.
+         *
+         * @var NationalLicenceUser $user
+         */
+        foreach ($users as $user) {
+            $str = $str . "- ";
+            foreach ($fieldVuFindUser as $field) {
+                $str = $str . $user->getRelUser()->$field . ', ';
+            }
+            foreach ($fieldsNationalLicenceUser as $field) {
+                $str = $str . $user->$field . ', ';
+            }
+
+            $str = rtrim($str, ", ") . "<br>";
+        }
+
+        return $str;
     }
 
     /**
@@ -654,8 +764,16 @@ class NationalLicence implements ServiceLocatorAwareInterface
             if (!$user->hasBeenActiveInLast12Month()) {
                 echo "User was not active in last 12 month.\r\n";
                 //If last_account_extension_request == null
-                if ($this->isAccountExtensionRequestStillValid($user)) {
-                    echo "Account extension request is still valid.\r\n";
+                if($this->isAccountExtensionEmailHasAlreadyBeenSent($user)) {
+                    if ($this->isAccountExtensionRequestStillValid($user)) {
+                        echo "Account extension request is still valid.\r\n";
+                    } else {
+                        //Else if last_account_extension_request < 10 days ago
+                        //Unset the national licence compliant flag
+                        echo "Unset national compliant flag...\r\n";
+                        $this->switchApiService->unsetNationalCompliantFlag($user->id);
+                    }
+                } else {
                     //Send and email to the user for extending their account
                     $this->emailService->sendAccountExtensionEmail(
                         $user->getRelUser()
@@ -664,10 +782,6 @@ class NationalLicence implements ServiceLocatorAwareInterface
                     //Set the last_account_extension_request to now
                     $user->setLastAccountExtensionRequest(new \DateTime());
                     $user->save();
-                } else {
-                    //Else if last_account_extension_request < 10 days ago
-                    //Unset the national licence compliant flag
-                    $this->switchApiService->unsetNationalCompliantFlag($user->id);
                 }
             }
             //if user is not anymore compliant with their homePostalAddress
@@ -687,7 +801,20 @@ class NationalLicence implements ServiceLocatorAwareInterface
         }
     }
 
-
+    /**
+     * @param NationalLicenceUser $user
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    private function isAccountExtensionEmailHasAlreadyBeenSent($user)
+    {
+        $dateRequest = $user->getLastAccountExtensionRequest();
+        if (empty($dateRequest)) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Check if the last email request for extending the account is still valid.
@@ -695,12 +822,16 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * @param NationalLicenceUser $user National Licence User
      *
      * @return bool
+     * @throws \Exception
      */
     protected function isAccountExtensionRequestStillValid($user)
     {
         $dateRequest = $user->getLastAccountExtensionRequest();
         if (empty($dateRequest)) {
-            return true;
+            throw new \Exception(
+                "Email request is not sent yet. Not possible to check".
+                " it's expired or not."
+            );
         }
         $daysValidity = $this->config['request_account_extension_expiration_days'];
         if ($dateRequest < (new \DateTime())->modify("-$daysValidity days")) {

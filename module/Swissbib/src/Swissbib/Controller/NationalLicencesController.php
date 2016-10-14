@@ -66,12 +66,6 @@ class NationalLicencesController extends BaseController
      */
     public function indexAction()
     {
-        //TODO: Remove the following two lines, they are just for debugging!
-        $n = $this->params()->fromQuery('preset');
-        //Set a test preset for debugging the view
-        $this->presets($n);
-        //$str = json_encode($_SERVER, JSON_PRETTY_PRINT);
-        //echo "<pre style='color: red;'>$str</pre>";
         // Get user information from the shibboleth attributes
         $uniqueId = isset($_SERVER['uniqueID']) ? $_SERVER['uniqueID'] : null;
         $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : null;
@@ -116,13 +110,6 @@ class NationalLicencesController extends BaseController
             );
         }
 
-        //TODO: Remove this lines, they are just for debugging!
-        if (isset($n)) {
-            echo "<p style='color:red'>Home postal address: $homePostalAddress</p>";
-            echo "<p style='color:red'>Mobile: $mobile</p>";
-            echo "<p style='color:red'>Swiss Library Person Residence: " ."$swissLibraryPersonResidence</p>";
-        }
-
         // Compute the checks
         $isHomePostalAddressInSwitzerland   = $this->nationalLicenceService->isAddressInSwitzerland($homePostalAddress);
         $isSwissPhoneNumber                 = $this->nationalLicenceService->isSwissPhoneNumber($mobile);
@@ -132,7 +119,7 @@ class NationalLicencesController extends BaseController
         $hasVerifiedHomePostalAddress       = $this->nationalLicenceService->hasVerifiedSwissAddress();
         $hasPermanentAccess                 = $user->hasRequestPermanentAccess();
         $hasAccessToNationalLicenceContent  = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
-        //var_dump($hasAccessToNationalLicenceContent);
+
         if ($hasAccessToNationalLicenceContent) {
             $this->flashMessenger()->addSuccessMessage(
                 $this->translate('snl.nationalLicenceCompliant')
@@ -160,46 +147,6 @@ class NationalLicencesController extends BaseController
         );
 
         return $view;
-    }
-
-    /**
-     * Define some test presets for testing the frontend view
-     * TODO: To delete, this is just for debugging.
-     *
-     * @param int $n Number preset.
-     *
-     * @return void
-     */
-    protected function presets($n = 0)
-    {
-        switch ($n) {
-        case 1:
-            $_SERVER['homePostalAddress'] = 'Roswiesenstrasse 100$8051 Zürich$Switzerland';
-            $_SERVER['mobile'] = '+41 793433434';
-            $_SERVER['swissLibraryPersonResidence'] = 'CH';
-            break;
-        case 2:
-            $_SERVER['homePostalAddress'] = 'Theobalds Road 29$WC2N London$England';
-            $_SERVER['mobile'] = '+44 743433434';
-            $_SERVER['swissLibraryPersonResidence'] = 'EN';
-            break;
-        case 3:
-            $_SERVER['homePostalAddress'] = null;
-            $_SERVER['mobile'] = '+41 793433434';
-            $_SERVER['swissLibraryPersonResidence'] = null;
-            break;
-        case 4:
-            $_SERVER['homePostalAddress'] = null;
-            $_SERVER['mobile'] = null;
-            $_SERVER['swissLibraryPersonResidence'] = null;
-            break;
-        case 5:
-            $_SERVER['homePostalAddress'] = 'Roswiesenstrasse 100$8051 Zürich$Switzerland';
-            $_SERVER['mobile'] = null;
-            $_SERVER['swissLibraryPersonResidence'] = null;
-            break;
-        default:
-        }
     }
 
     /**

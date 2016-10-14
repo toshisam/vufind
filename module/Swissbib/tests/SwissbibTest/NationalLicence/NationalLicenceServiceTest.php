@@ -27,10 +27,12 @@
 namespace SwissbibTest\NationalLicence;
 
 use Swissbib\Services\NationalLicence;
+use Swissbib\Services\SwitchApi;
 use Swissbib\VuFind\Db\Row\NationalLicenceUser;
 use VuFindTest\Unit\TestCase as VuFindTestCase;
 use Zend\ServiceManager\ServiceManager;
 use SwissbibTest\Bootstrap;
+use ReflectionClass;
 
 /**
  * Class NationalLicenceServiceTest.
@@ -58,6 +60,20 @@ class NationalLicenceServiceTest extends VuFindTestCase
     protected $nationalLicenceService;
 
     /**
+     * Switch API service
+     *
+     * @var SwitchApi $switchApiService
+     */
+    protected $switchApiService;
+
+    /*
+     * Config of Switch API
+     *
+     * @var array
+     */
+    protected $switchApiConfig;
+
+    /**
      * Set up service manager and National Licence Service.
      *
      * @return void
@@ -69,6 +85,13 @@ class NationalLicenceServiceTest extends VuFindTestCase
         $this->nationalLicenceService = $this->sm->get(
             'Swissbib\NationalLicenceService'
         );
+        $this->switchApiService = $this->sm
+            ->get('Swissbib\SwitchApiService');
+        /*$this->switchApiService = new ReflectionClass(
+            $switchApiServiceOriginal
+        );*/
+        $this->switchApiConfig
+            = ($this->sm->get('Config'))['swissbib']['tests']['switch_api'];
     }
 
     /**
@@ -115,7 +138,7 @@ class NationalLicenceServiceTest extends VuFindTestCase
     /**
      * Test isTemporaryAccessCurrentlyValid method.
      *
-     * @return void
+     * @throws \Exception
      */
     public function testIsTemporaryAccessCurrentlyValid()
     {
@@ -172,13 +195,22 @@ class NationalLicenceServiceTest extends VuFindTestCase
     /**
      * Test if the user has acess to national licence content. TODO to update.
      *
-     * @return void
+     * @throws \Exception
      */
     public function testHasAccessToNationalLicenceContent()
     {
+        $externalId = $this->switchApiConfig['external_id_test'];
+        $isOnGroup = $this->switchApiService
+            ->userIsOnNationalCompliantSwitchGroup($externalId);
+        if (!$isOnGroup) {
+            $this->switchApiService
+                ->setNationalCompliantFlag($externalId);
+        }
+
         $user = $this->getNationalLicenceUserObjectInstance();
         $this->setFieldsToUser(
             $user, [
+                'edu_id' => $externalId,
                 'condition_accepted' => false,
                 'request_temporary_access' => false,
                 'request_permanent_access' => false,
@@ -195,13 +227,14 @@ class NationalLicenceServiceTest extends VuFindTestCase
         $this->setFieldsToUser(
             $user,
             [
+                'edu_id' => $externalId,
                 'condition_accepted' => false,
                 'request_temporary_access' => true,
                 'request_permanent_access' => false,
                 'date_expiration' => (new \DateTime())->modify('+14 days')
                     ->format('Y-m-d H:i:s'),
                 'blocked' => false,
-                'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
+                'active_last_12_month' => true,
             ]
         );
         $res = $this->nationalLicenceService
@@ -212,13 +245,14 @@ class NationalLicenceServiceTest extends VuFindTestCase
         $this->setFieldsToUser(
             $user,
             [
+                'edu_id' => $externalId,
                 'condition_accepted' => true,
                 'request_temporary_access' => true,
                 'request_permanent_access' => false,
                 'date_expiration' => (new \DateTime())->modify('+14 days')
                     ->format('Y-m-d H:i:s'),
                 'blocked' => false,
-                'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
+                'active_last_12_month' => true,
             ]
         );
         $res = $this->nationalLicenceService
@@ -229,18 +263,26 @@ class NationalLicenceServiceTest extends VuFindTestCase
         $this->setFieldsToUser(
             $user,
             [
+                'edu_id' => $externalId,
                 'condition_accepted' => true,
                 'request_temporary_access' => false,
                 'request_permanent_access' => true,
                 'date_expiration' => (new \DateTime())->modify('+14 days')
-                    ->format('Y-m-d H:i:s'),
+                                                      ->format('Y-m-d H:i:s'),
                 'blocked' => false,
-                'last_edu_id_activity' => (new \DateTime())->format('Y-m-d H:i:s'),
+                'active_last_12_month' => true,
             ]
         );
+        $isOnGroup = $this->switchApiService
+            ->userIsOnNationalCompliantSwitchGroup($externalId);
+        if ($isOnGroup) {
+            $this->switchApiService
+                ->unsetNationalCompliantFlag($externalId);
+        }
+
         $res = $this->nationalLicenceService
             ->hasAccessToNationalLicenceContent($user);
-        $this->assertEquals(true, $res);
+        $this->assertEquals(false, $res);
     }
 
     /**
@@ -259,18 +301,6 @@ class NationalLicenceServiceTest extends VuFindTestCase
     }
 
     /**
-     * Test send export email.
-     *
-     * @return void
-     */
-    public function testSendExportEmail()
-    {
-        $config = $this->sm->get('Config');
-        $to = $config['swissbib']['email_service']['default_email_address_to'];
-        //$this->nationalLicenceService->sendExportEmail($to);
-    }
-
-    /**
      * Workaround to print in the unit test console.
      *
      * @param mixed $variable Variable
@@ -280,5 +310,20 @@ class NationalLicenceServiceTest extends VuFindTestCase
     public function unitPrint($variable)
     {
         fwrite(STDERR, print_r($variable, true));
+    }
+
+    /**
+     * Get a reflection class for the SwitchApi service. This is used for call
+     * several private or protected methods.
+     *
+     * @param SwitchApi $originalClass Original class
+     *
+     * @return ReflectionClass
+     */
+    protected function getReflectedClass($originalClass)
+    {
+        $class = new ReflectionClass($originalClass);
+
+        return $class;
     }
 }
