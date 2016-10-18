@@ -50,17 +50,5 @@ $isLoggedIn = !!$this->auth()->isLoggedIn();
 </div>
 
 <script type="text/javascript">
-  var suggestionList = $.jStorage.get('favorite-institutions');
-  if (!suggestionList) {
-    suggestionList = <?=json_encode(array_values($autocompleterData))?>;
-    $.jStorage.set('favorite-institutions', suggestionList);
-  }
-  $('input#query').autocomplete({
-    handler: function (query, cb) {
-      var regex = new RegExp(query.val(), 'i');
-      cb(suggestionList.filter(function acmatch(str) {
-        return str.match(regex);
-      }));
-    }
-  });
+  swissbib.FavoriteInstitutions.init(<?=json_encode(array_values($autocompleterData))?>);
 </script>
