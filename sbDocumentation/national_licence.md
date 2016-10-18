@@ -2,6 +2,13 @@
 - Update the db by executing the script located in `/home/nicolas/PhpstormProjects/swissbib/source/sbDocumentation/vf3sb_mysql_migrate_swiss_national_licences.sql`
 - Complete the missing information in the configuration according with the production options
 (file `module/Swissbib/config/module.config.php on section` on  section `swisbib.national_licence`)
+- Set the apache environment variable on the `/etc/apache2/sites-available/test.swissbib.ch.conf` :
+    ```bash
+    #Swiss National Licence specific configuration
+    SetEnv SWITCH_API_PASSW xxxxx
+    SetEnv SWITCH_API_USER xxxxx
+    ```
+    Run `sudo service apache2 restart` for make these variable accessible from the application
 - Run `cli/cssBuilder.sh` for compile the css style
 
 

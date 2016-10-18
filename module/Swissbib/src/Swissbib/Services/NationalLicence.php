@@ -96,7 +96,6 @@ class NationalLicence implements ServiceLocatorAwareInterface
      */
     public function createTemporaryAccessForUser($persistentId = null)
     {
-
         /**
          * National licence user.
          *
@@ -129,7 +128,12 @@ class NationalLicence implements ServiceLocatorAwareInterface
             throw new \Exception('snl.mobilePhoneNumberIsNotSwissError' . $mobile);
         }
 
-        return $user->setTemporaryAccess();
+        if($user->setTemporaryAccess()) {
+            $this->switchApiService->setNationalCompliantFlag($user->getEduId());
+
+            return true;
+        }
+        throw new \Exception("Was not possible to activate temporary access");
     }
 
     /**
@@ -374,6 +378,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
     public function isTemporaryAccessCurrentlyValid($user)
     {
         if (new \DateTime() > $user->getExpirationDate()) {
+            return false;
+        }
+        if (!$this->switchApiService->userIsOnNationalCompliantSwitchGroup($user->getEduId())) {
             return false;
         }
 
