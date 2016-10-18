@@ -125,7 +125,7 @@ class NationalLicencesController extends BaseController
                 $this->translate('snl.nationalLicenceCompliant')
             );
         } else {
-            $this->flashMessenger()->addErrorMessage(
+            $this->flashMessenger()->addInfoMessage(
                 $this->translate('snl.youDontHaveAccessToNationalLicencesError')
             );
         }
