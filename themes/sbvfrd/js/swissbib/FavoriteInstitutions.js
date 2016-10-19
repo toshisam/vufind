@@ -37,27 +37,12 @@ swissbib.FavoriteInstitutions = {
      * @param  {Object}  availableInstitutions
      */
     installAutocomplete: function (availableInstitutions) {
+        //availableInstitutions = ['test1','test2','TESt3',{ label:'STRings or ITEms', value:'items' }];
+        //console.log("->"+availableInstitutions);
         $('input#query').autocomplete({
-            handler: function (query, cb) {
-                var regex = new RegExp(query.val(), 'i');
-                cb(availableInstitutions.filter(function acmatch(str) {
-                    return str.match(regex);
-                }));
-            },
+            static: availableInstitutions,
             callback: $.proxy(this.onInstitutionSelect,this)
         });
-
-        /*
-        $('#query').bind('typeahead:selected', $.proxy(this.onInstitutionSelect, this));
-        $('#query').typeahead({
-            hint: true,
-            highlight: true,
-            minLength: 1,
-        }, {
-            displayKey: 'label',
-            source: swissbib.FavoriteInstitutions.substringMatcher(availableInstitutions),
-        });
-        */
     },
 
 
@@ -81,7 +66,6 @@ swissbib.FavoriteInstitutions = {
      * @param  {Object}  ui
      */
     onInstitutionSelect: function (datum, obj, eventType) {
-        console.log("x:"+datum+"/"+datum.value);
         this.clearSearchField();
         this.addInstitution(datum.value);
 

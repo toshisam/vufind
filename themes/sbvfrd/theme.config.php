@@ -24,6 +24,7 @@ return array(
 
     'vendor/jsTree/jstree.min.js',
 
+    'autocomplete.js',
     'swissbib/swissbib.js',
     'swissbib/common.js',
     'swissbib/AdvancedSearch.js',
