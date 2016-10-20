@@ -194,11 +194,11 @@ class FavoritesController extends BaseController
         $i = 0;
         foreach ($availableInstitutions as $institutionCode => $additionalInfo) {
             $i++;
-            $data[$i] = array(
-                    'value'=>$institutionCode,
-                    'label'=>$translator->translate(
-                    $institutionCode, 'institution'
-                ) . ' ' . $additionalInfo);
+            $data[$i] = [
+                    'value' => $institutionCode,
+                    'label' => $translator->translate(
+                        $institutionCode, 'institution'
+                    ) . ' ' . $additionalInfo];
         }
 
         return $data;
