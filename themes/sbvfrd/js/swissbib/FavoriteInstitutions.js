@@ -37,8 +37,6 @@ swissbib.FavoriteInstitutions = {
      * @param  {Object}  availableInstitutions
      */
     installAutocomplete: function (availableInstitutions) {
-        //availableInstitutions = ['test1','test2','TESt3',{ label:'STRings or ITEms', value:'items' }];
-        //console.log("->"+availableInstitutions);
         $('input#query').autocomplete({
             static: availableInstitutions,
             callback: $.proxy(this.onInstitutionSelect,this)
