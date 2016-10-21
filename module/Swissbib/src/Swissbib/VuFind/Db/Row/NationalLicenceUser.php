@@ -78,13 +78,15 @@ class NationalLicenceUser extends RowGateway
     /**
      * Set the temporary access for 14 days.
      *
+     * @param $numDaysExpiration
+     *
      * @return bool
      */
-    public function setTemporaryAccess()
+    public function setTemporaryAccess($numDaysExpiration)
     {
         $this->request_temporary_access = true;
         $this->request_temporary_access_created = (new \DateTime())->format('Y-m-d H:i:s');
-        $this->setExpirationDate((new \DateTime())->modify('+14 day'));
+        $this->setExpirationDate((new \DateTime())->modify("+$numDaysExpiration day"));
         $n = $this->save();
         if ($n > 0) {
             return true;

@@ -142,13 +142,15 @@ class NationalLicenceServiceTest extends VuFindTestCase
      */
     public function testIsTemporaryAccessCurrentlyValid()
     {
+        putenv("SWITCH_API_USER=".$this->switchApiConfig['auth_user']);
+        putenv("SWITCH_API_PASSW=".$this->switchApiConfig['auth_password']);
         /**
          * National licence user.
          *
          * @var NationalLicenceUser $user
          */
         $user = $this->getNationalLicenceUserObjectInstance();
-
+        $user->edu_id = $this->switchApiConfig['external_id_test'];
         $user->setExpirationDate(new \DateTime());
         $res = $this->nationalLicenceService
             ->isTemporaryAccessCurrentlyValid($user);

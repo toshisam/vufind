@@ -483,6 +483,7 @@ return [
                 'email',
             ],
             'request_account_extension_expiration_days' => 30,
+            'temporary_access_expiration_days' => 14
         ],
         'email_service' => [
             //Change with the production address
@@ -503,7 +504,9 @@ return [
         ],
         'tests' => [ //Unit test configuration
             'switch_api' => [
-                'external_id_test' => '1234567@eduid.ch'
+                'external_id_test' => '1234567@eduid.ch',
+                'auth_user' => 'natlic',
+                'auth_password' => 'Amg6vZXo',
             ],
             'national_licence_service' => [
 

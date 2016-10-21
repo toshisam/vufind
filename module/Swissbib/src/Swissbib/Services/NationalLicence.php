@@ -128,7 +128,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
             throw new \Exception('snl.mobilePhoneNumberIsNotSwissError' . $mobile);
         }
 
-        if($user->setTemporaryAccess()) {
+        if($user->setTemporaryAccess($this->config['temporary_access_expiration_days'])) {
             $this->switchApiService->setNationalCompliantFlag($user->getEduId());
 
             return true;
@@ -332,12 +332,16 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * Check if the current user is compliant with the Swiss National Licence.
      *
+     * @param null $user
+     *
      * @return bool
      * @throws \Exception
      */
-    public function isNationalLicenceCompliant()
+    public function isNationalLicenceCompliant($user = null)
     {
-        $user = $this->getCurrentNationalLicenceUser();
+        if(empty($user)) {
+            $user = $this->getCurrentNationalLicenceUser();
+        }
 
         // Has accepted terms and conditions
         /**
@@ -363,7 +367,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
         $hasTemporaryAccess
             = $user->hasAlreadyRequestedTemporaryAccess() && $this->isTemporaryAccessCurrentlyValid($user);
 
-        $hasVerifiedSwissAddress = $this->hasVerifiedSwissAddress();
+        $hasVerifiedSwissAddress = $this->hasVerifiedSwissAddress($user);
 
         return $hasTemporaryAccess || $hasVerifiedSwissAddress;
     }
@@ -374,6 +378,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * @param NationalLicenceUser $user NationalLicenceUser
      *
      * @return bool
+     * @throws \Exception
      */
     public function isTemporaryAccessCurrentlyValid($user)
     {
@@ -775,7 +780,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
                     if ($this->isAccountExtensionRequestStillValid($user)) {
                         echo "Account extension request is still valid.\r\n";
                     } else {
-                        //Else if last_account_extension_request < 10 days ago
+                        //Else if last_account_extension_request < XX days ago
                         //Unset the national licence compliant flag
                         echo "Unset national compliant flag...\r\n";
                         $this->switchApiService->unsetNationalCompliantFlag($user->id);
@@ -796,7 +801,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
             //Postal address not verified anymore --> remove user to national
             // compliant group
             //Postal address not in CH -->remove user to national compliant group
-            if (!$this->hasVerifiedSwissAddress($user)) {
+            if (!$this->isNationalLicenceCompliant($user)) {
                 echo "Unset national compliant flag...\r\n";
                 //Unset the national licence compliant flag
                 $this->switchApiService->unsetNationalCompliantFlag(
@@ -836,7 +841,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
         $dateRequest = $user->getLastAccountExtensionRequest();
         if (empty($dateRequest)) {
             throw new \Exception(
-                "Email request is not sent yet. Not possible to check".
+                "Email request is not sent yet. Not possible to check if".
                 " it's expired or not."
             );
         }

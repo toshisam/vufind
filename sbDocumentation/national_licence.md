@@ -19,7 +19,6 @@ It is possible to run the following commands via a cron job.
 - Remove the `cli` caches by running  `rm -rf local/cache/cli/`. Be careful to be in the root 
 path before run this command.
 
-
 ##### Export of the National Licence users
 Please make sure you have correctly setup the SMTP server config.
 (`module/Swissbib/config/module.config.php on section` on `swisbib.national_licence.smtp_options`) to support the TLS encryption.
@@ -28,6 +27,9 @@ sudo cli/send-national-licence-user-export.sh
 ```
 
 ##### Maintenence task
+- For production environment: Set the environment variables `SWITCH_API_USER` and `SWITCH_API_PASSW` in the script file 
+`update-national-licence-user-info.sh` or in your `~/.bashrc` or `~/.profile`. This is necessary because the apache environment variables
+ are not available in the cli environment.
 ```bash
 sudo cli/update-national-licence-user-info.sh
 ``` 

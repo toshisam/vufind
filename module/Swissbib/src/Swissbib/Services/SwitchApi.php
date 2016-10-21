@@ -25,6 +25,7 @@
  */
 namespace Swissbib\Services;
 
+use Swissbib\Libadmin\Exception\Exception;
 use Swissbib\VuFind\Db\Row\NationalLicenceUser;
 use Zend\Http\Client;
 use Zend\Http\Request;
@@ -149,7 +150,20 @@ class SwitchApi implements ServiceLocatorAwareInterface
             ]
         );
         $client->setMethod($method);
-        $client->setAuth($this->config['auth_user'], $this->config['auth_password']);
+        $username = $this->config['auth_user'];
+        $passw = $this->config['auth_password'];
+        if(empty($username) || empty($passw)) {
+            if(empty(getenv('SWITCH_API_USER') || empty(getenv('SWITCH_API_PASSW')))) {
+                throw new \Exception('Was not possible to find the SWITCH API credentials. '.
+                    'Make sure you have correctly setup the environment variables '.
+                    '"SWITCH_API_USER" and "SWITCH_API_PASSW" either in the'.
+                    'apache setup or before launching the script.'
+                );
+            }
+            $username = getenv('SWITCH_API_USER');
+            $passw = getenv('SWITCH_API_PASSW');
+        }
+        $client->setAuth($username, $passw);
 
         return $client;
     }
