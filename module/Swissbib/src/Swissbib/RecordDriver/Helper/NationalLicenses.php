@@ -30,8 +30,6 @@
  */
 namespace Swissbib\RecordDriver\Helper;
 
-use Swissbib\RecordDriver\SolrMarc;
-
 /**
  * Build ebook links depending on institution configuration
  * Config in config_base.ini[eBooksOnDemand]
@@ -44,20 +42,18 @@ use Swissbib\RecordDriver\SolrMarc;
  */
 class NationalLicences
 {
-
     /*
     * to check if user has aithorized IP, use:
     * Swissbib\TargetsProxy\IPMatcher::isMatching($ipAddress, array $patterns = [])
     */
-
-
 
     /**
      * Build URL for access the content by authorized IPs
      *
      * @return String
      */
-    protected function buildUrlForAuthorizedIPs() {
+    protected function buildUrlForAuthorizedIPs()
+    {
 
         /*
          * If I am in an authorized network, the link to the fulltext goes directly to the content. Example :
@@ -73,7 +69,8 @@ class NationalLicences
      *
      * @return String
      */
-    protected function buildUrlForUnauthorizedIPs() {
+    protected function buildUrlForUnauthorizedIPs()
+    {
 
         /*
         * If I am not in an authorized network, the url to access the content changes. It requires a Shibboleth authentication first.
