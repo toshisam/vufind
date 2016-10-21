@@ -50,10 +50,5 @@ $isLoggedIn = !!$this->auth()->isLoggedIn();
 </div>
 
 <script type="text/javascript">
-  $('input#query').autocomplete({
-    maxResults: 10,
-    handler: function(query, cb) {
-      cb(<?=json_encode(array_values($autocompleterData))?>);
-    }
-  });
+  swissbib.FavoriteInstitutions.init(<?=json_encode(array_values($autocompleterData))?>);
 </script>

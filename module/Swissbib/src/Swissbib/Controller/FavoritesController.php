@@ -191,10 +191,14 @@ class FavoritesController extends BaseController
         $data = [];
         $translator = $this->getServiceLocator()->get('VuFind\Translator');
 
+        $i = 0;
         foreach ($availableInstitutions as $institutionCode => $additionalInfo) {
-            $data[$institutionCode] = $translator->translate(
-                $institutionCode, 'institution'
-            ) . ' ' . $additionalInfo;
+            $i++;
+            $data[$i] = [
+                    'value' => $institutionCode,
+                    'label' => $translator->translate(
+                        $institutionCode, 'institution'
+                    ) . ' ' . $additionalInfo];
         }
 
         return $data;
