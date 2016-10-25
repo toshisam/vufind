@@ -3,13 +3,16 @@
 - Complete the missing information in the configuration according with the production options
 (file `module/Swissbib/config/module.config.php on section` on  section `swisbib.national_licence`)
 - Set the apache environment variable on the `/etc/apache2/sites-available/test.swissbib.ch.conf` :
+
     ```bash
     #Swiss National Licence specific configuration
     SetEnv SWITCH_API_PASSW xxxxx
     SetEnv SWITCH_API_USER xxxxx
     ```
     Run `sudo service apache2 restart` for make these variable accessible from the application
+    
 - Run `cli/cssBuilder.sh` for compile the css style
+- Create directory for exports in home directory : `mkdir export/nationalLicence`
 
 
 ### Console commands (called by cron job)
