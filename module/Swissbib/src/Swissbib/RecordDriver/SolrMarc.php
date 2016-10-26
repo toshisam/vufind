@@ -2028,6 +2028,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             'd' => 'place',
             't' => 'title',
             'g' => 'related',
+            'q' => 'enumeration',
+            'x' => 'issn',
             ]
         );
     }

@@ -138,6 +138,98 @@ $linkSFX = $viewRecord->getLinkSFX();
         <span property="bookEdition"><?=$this->escapeHtml($edition)?></span><br />
       <? endif; ?>
 
+
+
+      <? if (T_TRUE): ?>
+        <span class="label">Test URL: </span>
+        <span>
+
+            <?
+
+            $gruyterBaseUrl="https://www.degruyter.com/openurl?genre=article";
+            $cambridgeBaseUrl="http://www.cambridge.org/core/product/identifier/";
+            $cambridgeEndUrl="/type/JOURNAL_ARTICLE";
+            $oxfordUrlPart1="http://";
+            $oxfordUrlPart2=".oxfordjournals.org/content/";
+
+
+
+
+            /*$marcField949=$record->getMarcSubFieldMaps(
+                949, [
+                'B' => 'publisherSource'
+            ]);
+            $publisherSource=$marcField949["publisherSource"];
+            echo $publisherSource;*/
+            #$tests=$record->get950();
+            #echo $tests["union"];
+            #$tests=$record->getMarcRecord()->getFields('949');
+            #print_r($tests);
+            #echo $tests[0]->getSubfield('b');
+
+
+
+            $publisherSource="";
+
+            #for testing : use of the id to know the source
+            #instead need to read 949$b
+            switch($id) {
+                case "NLgruyter":
+                    $publisherSource="NL-gruyter";
+                    break;
+                case "NLoxford":
+                    $publisherSource="NL-oxford";
+                    break;
+                case "NLcambridge":
+                    $publisherSource="NL-cambridge";
+            }
+
+
+
+
+
+            switch($publisherSource) {
+                case "NL-gruyter":
+                    #https://www.degruyter.com/openurl?genre=article&issn=2191-4664&volume=106&issue=6&spage=122
+                    $issn=$hostItems[0]["issn"];
+                    $enumeration=$hostItems[0]["enumeration"];
+                    $splitted=explode(":",$enumeration);
+                    $volume=$splitted[0];
+                    $issuePage=explode("<",$splitted[1]);
+                    $issue=$issuePage[0];
+                    $spage=$issuePage[1];
+                    echo $gruyterBaseUrl."&issn=".$issn."&volume=".$volume."&issue=".$issue."&spage=".$spage;
+                    break;
+                case "NL-oxford":
+                    #http://nar.oxfordjournals.org/content/25/17/3389.long
+                    #http://JOURNALCODE.oxfordjournals.org/content/VOLUME/ISSUE/PAGE.long
+                    $journalCode="nar"; #needs to be added to cbs
+                    $enumeration=$hostItems[0]["enumeration"];
+                    $splitted=explode(":",$enumeration);
+                    $volume=$splitted[0];
+                    $issuePage=explode("<",$splitted[1]);
+                    $issue=$issuePage[0];
+                    $spage=$issuePage[1];
+                    echo $oxfordUrlPart1.$journalCode.$oxfordUrlPart2.$volume."/".$issue."/".$spage.".long";
+
+                    break;
+                case "NL-cambridge":
+                    #http://www.cambridge.org/core/product/identifier/S0024282914000401/type/JOURNAL_ARTICLE
+                    #http://www.cambridge.org/core/product/identifier/ARTICLE_IDENTIFIER/type/JOURNAL_ARTICLE
+                    $doi=$record->getDOIs()[0];
+                    #for 10% of articles, this doesn't work, the part after the / is not the cambridge article identifier
+                    $article_id=explode("/",$doi,2)[1]; #everything after the first / in doi
+                    echo $cambridgeBaseUrl.$article_id.$cambridgeEndUrl;
+                    break;
+            }
+
+
+            ?>
+        <br /></span>
+      <? endif; ?>
+
+
+
       <? if (!empty($urls)): ?>
         <span class="label"><?=$this->transEsc('Online Access')?>: </span>
         <span><br />

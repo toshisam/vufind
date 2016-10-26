@@ -54,6 +54,14 @@ class NationalLicences
      */
     protected function buildUrlForAuthorizedIPs()
     {
+        /*
+        773 $q: Volume:Issue<Startpage
+        949 $F: NATIONALLICENCE -> es handelt sich um eine Aufnahme aus den Nationallizenzen
+        949 $b: NL-gruyter oder NL-cambridge oder NL-oxford -> Verlag, für den Pfad relevant
+        */
+
+
+
 
         /*
          * If I am in an authorized network, the link to the fulltext goes directly to the content. Example :
