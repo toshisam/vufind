@@ -24,6 +24,7 @@ $showFRBR = $this->configAccess()->Site->displayFrbr;
 $groupID  = $this->driver->getGroup(true);
 
 $urls = $viewRecord->getExtendedLinkDetails();
+array_push($urls, $this->nationalLicences()->getUrl($record));
 $link360 = $viewRecord->getLink360();
 $linkSFX = $viewRecord->getLinkSFX();
 

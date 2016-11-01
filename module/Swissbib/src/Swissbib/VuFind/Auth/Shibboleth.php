@@ -40,7 +40,7 @@ use VuFind\Exception\Auth as AuthException;
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU General Public License
  * @link     http://vufind.org/wiki/vufind2:developer_manual Wiki
  */
-class Shibboleth extends  VuFindShib
+class Shibboleth extends VuFindShib
 {
     /**
      * VuFind Standard is looking for Server variables delivered by Shibboleth

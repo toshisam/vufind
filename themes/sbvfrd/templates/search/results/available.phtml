@@ -9,8 +9,7 @@ $digibernURL            = (is_array($urldisplay['urls']) && count($urldisplay['u
 $retrosURL              = (is_array($urldisplay['urls']) && count($urldisplay['urls']) > 0) ? preg_grep('/seals/', $urldisplay['urls'][0]) : false;
 $freeURL                = (is_array($urldisplay['urls']) && count($urldisplay['urls']) > 0) ? preg_grep('/sfx./', $urldisplay['urls'][0],PREG_GREP_INVERT) : false;
 $borisURL               = (is_array($urldisplay['urls']) && count($urldisplay['urls']) > 0) ? preg_grep('/boris.unibe/', $urldisplay['urls'][0]) : false;
-$nationallizenzenURL    = (is_array($urldisplay['urls']) && count($urldisplay['urls']) > 0) ? preg_grep('/??????????/', $urldisplay['urls'][0]) : false;
-
+$nationallizenzenURL    = $this->nationalLicences()->getUrl($driver);
 ?>
 
 <? if ($amountHoldings === 1): ?>
@@ -53,7 +52,7 @@ $nationallizenzenURL    = (is_array($urldisplay['urls']) && count($urldisplay['u
         <span class="hidden-xs hidden-sm">BORIS</span>
     </a>
 <? elseif($nationallizenzenURL): ?>
-    <a class="btn btn-primary linkbutton primary icon_link_primary hidden-print" href="<?= $this->redirectProtocolWrapper()->getWrappedURL($nationallizenzenURL['url']) ?>" target="_blank">
+    <a class="btn btn-primary linkbutton primary icon_link_primary hidden-print" href="<?= $this->redirectProtocolWrapper()->getWrappedURL($nationallizenzenURL) ?>" target="_blank">
         <span><i class="fa fa-external-link"></i></span>
         <span class="hidden-xs hidden-sm">National-Lizenz</span>
     </a>

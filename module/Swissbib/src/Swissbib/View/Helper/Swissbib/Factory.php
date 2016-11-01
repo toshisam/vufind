@@ -29,6 +29,7 @@
 namespace Swissbib\View\Helper\Swissbib;
 
 use Swissbib\View\Helper\FormatRelatedEntries;
+use Swissbib\View\Helper\NationalLicences;
 use Swissbib\VuFind\View\Helper\Root\Piwik;
 use Zend\ServiceManager\ServiceManager;
 
@@ -246,5 +247,14 @@ class Factory
             ? $config->Piwik->custom_variables
             : false;
         return new Piwik($url, $siteId, $customVars);
+    }
+
+    /**
+     * @param ServiceManager $sm
+     * @return NationalLicences
+     */
+    public static function getNationalLicences(ServiceManager $sm)
+    {
+        return new NationalLicences($sm->getServiceLocator()->get('VuFind\Config')->get('config'));
     }
 }
