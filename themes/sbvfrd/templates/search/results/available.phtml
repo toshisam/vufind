@@ -54,7 +54,7 @@ $nationallizenzenURL    = $this->nationalLicences()->getUrl($driver);
 <? elseif($nationallizenzenURL): ?>
     <a class="btn btn-primary linkbutton primary icon_link_primary hidden-print" href="<?= $this->redirectProtocolWrapper()->getWrappedURL($nationallizenzenURL) ?>" target="_blank">
         <span><i class="fa fa-external-link"></i></span>
-        <span class="hidden-xs hidden-sm">National-Lizenz</span>
+        <span class="hidden-xs hidden-sm">National Licences</span>
     </a>
 <? elseif($amountHoldings !== 1 && !($amountHoldings > 1) ): ?>
         <p class="hidden-sm hidden-xs hidden-print"><?= $this->transEsc('No Holdings available in the system') ?></p>
