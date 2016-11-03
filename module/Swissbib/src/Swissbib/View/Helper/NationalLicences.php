@@ -34,7 +34,7 @@ use Zend\View\Helper\AbstractHelper;
 use Swissbib\RecordDriver\SolrMarc;
 
 /**
- * return URL for NationalLicence online access if applicable. Otherwise 'false'.
+ * Return URL for NationalLicence online access if applicable. Otherwise 'false'.
  * Config URLs in TargetsProxy.ini.ini[SwissAcademicLibraries]
  *
  * @category Swissbib_VuFind2
@@ -51,6 +51,8 @@ class NationalLicences extends AbstractHelper
 
     /**
      * NationalLicences constructor.
+     *
+     * @param VuFind\Config $config config
      */
     public function __construct($config)
     {
@@ -58,16 +60,18 @@ class NationalLicences extends AbstractHelper
     }
 
     /**
-    * to check if user has authorized IP, use:
-    * Swissbib\TargetsProxy\IPMatcher::isMatching($ipAddress, array $patterns = [])
-    */
+     * Return the url for the record if it's available with NL, otherwise false
+     *
+     * @param SolrMarc $record the record object
+     *
+     * @return bool|String
+     */
     public function getUrl(SolrMarc $record)
     {
         $this->record = $record;
         $this->marcFields = $record->getNationalLicenceData();
 
-        if ($this->marcFields[0] !== "NATIONALLICENCE") { return false;
-        }
+        if ($this->marcFields[0] !== "NATIONALLICENCE") return false;
 
         $issn = $this->marcFields[3];
         $enumeration = $this->marcFields[2];
@@ -88,9 +92,16 @@ class NationalLicences extends AbstractHelper
     }
 
     /**
-     * Build URL for access the content by authorized IPs
+     * Build the url.
      *
-     * @return String
+     * @param String $userAuthorized user authorized?
+     * @param String $issn           issn
+     * @param String $volume         volume
+     * @param String $issue          issue
+     * @param String $sPage          start page
+     * @param String $doiSuffix      doi suffix
+     *
+     * @return null
      */
     protected function buildUrl($userAuthorized, $issn, $volume, $issue, $sPage, $doiSuffix)
     {
@@ -104,13 +115,14 @@ class NationalLicences extends AbstractHelper
     }
 
     /**
+     * Return skeleton for url.
+     *
+     * @param String $userAuthorized user authorized?
+     *
      * @return null
      */
     protected function getPublisherBlueprintUrl($userAuthorized)
     {
-        // 949 $b: NL-gruyter oder NL-cambridge oder NL-oxford -> Verlag, für den Pfad relevant
-        // get konkrete domain/url for publisher from config_base.ini (add section there!)
-
         /* config.ini:
         [PublisherUrls]
         nl-oxford-unauthorized=
@@ -120,8 +132,6 @@ class NationalLicences extends AbstractHelper
         nl-gruyter-authorized=https://www.degruyter.com/openurl?genre=article&issn={ISSN}&volume={VOLUME}&issue={ISSUE}&spage={SPAGE}
         nl-cambridge-authorized=http://www.cambridge.org/core/product/identifier/{DOI-SUFFIX}/type/JOURNAL_ARTICLE
          */
-
-        $url = "";
 
         $urlBlueprintKey = ($userAuthorized ? "" : "un") . "authorized";
         $publisher = $this->marcFields[1];

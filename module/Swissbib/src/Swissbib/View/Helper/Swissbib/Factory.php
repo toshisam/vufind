@@ -250,7 +250,10 @@ class Factory
     }
 
     /**
-     * @param ServiceManager $sm
+     * Construct NationalLicence Helper
+     *
+     * @param ServiceManager $sm Service manager.
+     *
      * @return NationalLicences
      */
     public static function getNationalLicences(ServiceManager $sm)
