@@ -36,7 +36,7 @@ if (isset($item['locationMap']) && $item['locationMap']) {
     <?= $mapLink ?>
     <?php if (isset($item['institutionUrl'])): ?>
       <?php $wrappedURL = $this->redirectProtocolWrapper()->getWrappedURL($item['institutionUrl']) ?>
-      <a href="<?= $this->escapeHtml($wrappedURL) ?>" target="_blank" title="<?=$this->transEsc('Library_Information')?>"> <i class="fa fa-info-circle"></i></a>
+      <a href="<?= $this->escapeHtml($wrappedURL) ?>" target="_blank" title="<?=$this->transEsc('Library_Information')?>" data-lightbox-ignore> <i class="fa fa-info-circle"></i></a>
     <?php endif; ?>
   </td>
   <td><?= $this->escapeHtml($item['signature']) ?></td>
