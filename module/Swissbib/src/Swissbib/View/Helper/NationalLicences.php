@@ -69,7 +69,7 @@ class NationalLicences extends AbstractHelper
 
         if ( $this->marcFields[0] !== "NATIONALLICENCE") return false;
 
-        $issn = "";
+        $issn = $this->marcFields[3];
         $enumeration = $this->marcFields[2];
         $splitted = explode(":", $enumeration);
         $volume = $splitted[0];
@@ -125,7 +125,7 @@ nl-cambridge-authorized=http://www.cambridge.org/core/product/identifier/{DOI-SU
 
         $urlBlueprintKey = ( $userAuthorized ? "" : "un" ) . "authorized";
         $publisher = $this->marcFields[1];
-        switch ($publisher)
+        switch (substr($publisher,0 ,10))
             {
             case substr('NL-gruyter',0 ,10):
                 $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
