@@ -57,7 +57,6 @@ class NationalLicences extends AbstractHelper
         $this->config = $config;
     }
 
-
     /**
     * to check if user has authorized IP, use:
     * Swissbib\TargetsProxy\IPMatcher::isMatching($ipAddress, array $patterns = [])
@@ -67,7 +66,8 @@ class NationalLicences extends AbstractHelper
         $this->record = $record;
         $this->marcFields = $record->getNationalLicenceData();
 
-        if ( $this->marcFields[0] !== "NATIONALLICENCE") return false;
+        if ($this->marcFields[0] !== "NATIONALLICENCE") { return false;
+        }
 
         $issn = $this->marcFields[3];
         $enumeration = $this->marcFields[2];
@@ -112,30 +112,30 @@ class NationalLicences extends AbstractHelper
         // get konkrete domain/url for publisher from config_base.ini (add section there!)
 
         /* config.ini:
-[PublisherUrls]
-nl-oxford-unauthorized=
-nl-gruyter-unauthorized= https://www.degruyter.com/applib/openathens?entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth&openAthens2Redirect=https%3A%2F%2Fwww.degruyter.com%2Fopenurl%3Fgenre%3Darticle%26issn%3D{ISSN}%26volume%3D{VOLUME}%26issue%3D{ISSUE}%26spage%3D{SPAGE}
-nl-cambridge-unauthorized=https://shibboleth.cambridge.org/Shibboleth.sso/discovery?entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth&target=https://shibboleth.cambridge.org/CJOShibb2/index?app=https://www.cambridge.org/core/shibboleth?ref=%2Fcore%2Fproduct%2Fidentifier%2F{DOI-SUFFIX}%2Ftype%2FJOURNAL_ARTICLE
-nl-oxford-authorized=
-nl-gruyter-authorized=https://www.degruyter.com/openurl?genre=article&issn={ISSN}&volume={VOLUME}&issue={ISSUE}&spage={SPAGE}
-nl-cambridge-authorized=http://www.cambridge.org/core/product/identifier/{DOI-SUFFIX}/type/JOURNAL_ARTICLE
+        [PublisherUrls]
+        nl-oxford-unauthorized=
+        nl-gruyter-unauthorized= https://www.degruyter.com/applib/openathens?entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth&openAthens2Redirect=https%3A%2F%2Fwww.degruyter.com%2Fopenurl%3Fgenre%3Darticle%26issn%3D{ISSN}%26volume%3D{VOLUME}%26issue%3D{ISSUE}%26spage%3D{SPAGE}
+        nl-cambridge-unauthorized=https://shibboleth.cambridge.org/Shibboleth.sso/discovery?entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth&target=https://shibboleth.cambridge.org/CJOShibb2/index?app=https://www.cambridge.org/core/shibboleth?ref=%2Fcore%2Fproduct%2Fidentifier%2F{DOI-SUFFIX}%2Ftype%2FJOURNAL_ARTICLE
+        nl-oxford-authorized=
+        nl-gruyter-authorized=https://www.degruyter.com/openurl?genre=article&issn={ISSN}&volume={VOLUME}&issue={ISSUE}&spage={SPAGE}
+        nl-cambridge-authorized=http://www.cambridge.org/core/product/identifier/{DOI-SUFFIX}/type/JOURNAL_ARTICLE
          */
 
         $url = "";
 
-        $urlBlueprintKey = ( $userAuthorized ? "" : "un" ) . "authorized";
+        $urlBlueprintKey = ($userAuthorized ? "" : "un") . "authorized";
         $publisher = $this->marcFields[1];
-        switch (substr($publisher,0 ,10))
+        switch (substr($publisher, 0, 10))
             {
-            case substr('NL-gruyter',0 ,10):
-                $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
-                break;
-            case substr('NL-cambridge',0 ,10):
-                $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
-                break;
-            case substr('NL-oxford',0 ,10):
-                $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
-                break;
+        case substr('NL-gruyter', 0, 10):
+            $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
+            break;
+        case substr('NL-cambridge', 0, 10):
+            $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
+            break;
+        case substr('NL-oxford', 0, 10):
+            $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
+            break;
         }
 
         $blueprintUrl = "";

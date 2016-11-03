@@ -60,9 +60,6 @@ class NationalLicences
         949 $b: NL-gruyter oder NL-cambridge oder NL-oxford -> Verlag, für den Pfad relevant
         */
 
-
-
-
         /*
          * If I am in an authorized network, the link to the fulltext goes directly to the content. Example :
          * Article : ABI-Technik. Volume 27, Issue 3, Pages 160–168, ISSN (Online) 2191-4664, ISSN (Print) 0720-6763, DOI: 10.1515/ABITECH.2007.27.3.160, March 2011
