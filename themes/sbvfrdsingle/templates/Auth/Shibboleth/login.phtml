@@ -2,7 +2,7 @@
 
 $encodedProviderID = urlencode($this->serverUrl() . "/" . "shibboleth");
 $encodedTarget = urlencode($this->serverUrl() . "/MyResearch/Home");
-$encodedprivateUserURL ="https://edu-id.ch/idp/profile/SAML2/Unsolicited/SSO?providerId=" . $encodedProviderID . "&target=" . $encodedTarget;
+$encodedprivateUserURL = "https://test.login.eduid.ch/idp/profile/SAML2/Unsolicited/SSO?providerId=" . $encodedProviderID . "&target=" . $encodedTarget;
 ?>
 
 
@@ -22,7 +22,7 @@ $encodedprivateUserURL ="https://edu-id.ch/idp/profile/SAML2/Unsolicited/SSO?pro
     // URL of the WAYF to use
     // Examples: "https://wayf.switch.ch/SWITCHaai/WAYF", "https://wayf-test.switch.ch/aaitest/WAYF";
     // [Mandatory]
-    var wayf_URL = "https://wayf.switch.ch/SWITCHaai/WAYF";
+    var wayf_URL = "https://wayf-test.switch.ch/aaitest/WAYF";
 
     // EntityID of the Service Provider that protects this Resource
     // Examples: "https://econf.switch.ch/shibboleth", "https://dokeos.unige.ch/shibboleth"

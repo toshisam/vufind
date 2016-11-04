@@ -2,6 +2,8 @@
 
 namespace Swissbib\Module\Config;
 
+use Swissbib\Controller\NationalLicencesController;
+
 return [
     'router' => [
         'routes' => [
@@ -41,6 +43,20 @@ return [
                         'controller' => 'my-research',
                         'action'     => 'settings'
                     ]
+                ]
+            ],
+            // Swiss National Licences
+            'national-licences' => [
+                'type'    => 'segment',
+                'options' => [
+                    'route'    => '/NationalLicences[/:action]',
+                    'defaults' => [
+                        'controller' => 'national-licences',
+                        'action'     => 'index'
+                    ],
+                    'constraints' => [
+                        'action'   => '[a-zA-Z][a-zA-Z0-9_-]*'
+                    ],
                 ]
             ],
             'help-page' => [
@@ -174,6 +190,24 @@ return [
                             'action'     => 'buildCache'
                         ]
                     ]
+                ],
+                'send-national-licence-users-export' => [
+                    'options' => [
+                        'route'    => 'send-national-licence-users-export',
+                        'defaults' => [
+                            'controller' => 'console',
+                            'action'     => 'sendNationalLicenceUsersExport'
+                        ]
+                    ]
+                ],
+                'update-national-licence-user-info' => [
+                    'options' => [
+                        'route'    => 'update-national-licence-user-info',
+                        'defaults' => [
+                            'controller' => 'console',
+                            'action'     => 'updateNationalLicenceUserInfo'
+                        ]
+                    ]
                 ]
             ]
         ]
@@ -195,17 +229,19 @@ return [
             'install'              => 'Swissbib\Controller\NoProductiveSupportController',
             'feedback'             => 'Swissbib\Controller\FeedbackController',
             'cover'                => 'Swissbib\Controller\CoverController',
+            'console'              => 'Swissbib\Controller\ConsoleController',
         ],
         'factories'  => [
             'record' => 'Swissbib\Controller\Factory::getRecordController',
             'cart'   => 'VuFind\Controller\Factory::getCartController',
+            'national-licences' => 'Swissbib\Controller\Factory::getNationalLicenceController',
         ]
     ],
     'service_manager' => [
         'invokables' => [
-            'VuFindTheme\ResourceContainer'       => 'Swissbib\VuFind\ResourceContainer',
-            'Swissbib\QRCode'                     => 'Swissbib\CRCode\QrCodeService',
-            'MarcFormatter'                     => 'Swissbib\XSLT\MARCFormatter'
+            'VuFindTheme\ResourceContainer'                 => 'Swissbib\VuFind\ResourceContainer',
+            'Swissbib\QRCode'                               => 'Swissbib\CRCode\QrCodeService',
+            'MarcFormatter'                                 => 'Swissbib\XSLT\MARCFormatter',
         ],
         'factories' => [
             'Swissbib\HoldingsHelper'                       =>  'Swissbib\RecordDriver\Helper\Factory::getHoldingsHelper',
@@ -237,7 +273,7 @@ return [
             'Swissbib\Hierarchy\SimpleTreeGenerator'        =>  'Swissbib\Hierarchy\Factory::getSimpleTreeGenerator',
             'Swissbib\Hierarchy\MultiTreeGenerator'         =>  'Swissbib\Hierarchy\Factory::getMultiTreeGenerator',
 
-        'VuFind\SearchOptionsPluginManager'                 => 'Swissbib\Services\Factory::getSearchOptionsPluginManager',
+            'VuFind\SearchOptionsPluginManager'             => 'Swissbib\Services\Factory::getSearchOptionsPluginManager',
             'VuFind\SearchParamsPluginManager'              => 'Swissbib\Services\Factory::getSearchParamsPluginManager',
             'VuFind\SearchResultsPluginManager'             => 'Swissbib\Services\Factory::getSearchResultsPluginManager',
 
@@ -246,6 +282,9 @@ return [
             'Swissbib\Record\Form\CopyForm'                 =>  'Swissbib\Record\Factory::getCopyForm',
             'Swissbib\MyResearch\Form\AddressForm'          =>  'Swissbib\MyResearch\Factory::getAddressForm',
             'Swissbib\Feedback\Form\FeedbackForm'           =>  'Swissbib\Feedback\Factory::getFeedbackForm',
+            'Swissbib\NationalLicenceService'               =>  'Swissbib\Services\Factory::getNationalLicenceService',
+            'Swissbib\SwitchApiService'                     =>  'Swissbib\Services\Factory::getSwitchApiService',
+            'Swissbib\EmailService'                         =>  'Swissbib\Services\Factory::getEmailService',
         ]
     ],
     'view_helpers'    => [
@@ -376,6 +415,13 @@ return [
             //'|jquery\.min.js|', // jquery 1.6
             //'|^jquery\.form\.js|',
         ],
+        'asset_manager' => [
+          'resolver_configs' => [
+              'paths' => [
+                    'Swissbib'
+              ]
+          ]
+        ],
         // This section contains service manager configurations for all Swissbib
         // pluggable components:
         'plugin_managers' => [
@@ -392,5 +438,83 @@ return [
                 ],
             ]
         ],
-    ]
+
+        'db_table' => [
+            'invokeables' => [
+                'nationallicence' => 'Swissbib\VuFind\Db\Table\NationalLicenceUser'
+            ]
+        ],
+        'switch_api' => [
+            'national_licence_programme_group_id' =>
+                "f4d40595-6d7d-41bc-9fa2-7139d2fcf892",
+            'base_endpoint_url' => "https://test.eduid.ch/sg/index.php",
+            'base_endpoint_url_back_channel' => 'https://test.swissbib.ch',
+            'back_channel_param_entityID' => 'https://test.eduid.ch/idp/shibboleth',
+            'back_channel_endpoint_path' => '/Shibboleth.sso/AttributeResolver',
+            'auth_user' => getenv("SWITCH_API_USER"),
+            'auth_password' => getenv("SWITCH_API_PASSW"),
+            'schema_patch' => "urn:ietf:params:scim:api:messages:2.0:PatchOp",
+            'operation_add' => "add",
+            'operation_remove' => "remove",
+            'path_member' => "members"
+        ],
+        'national_licence_service' => [
+            //Change with the production host address
+            'base_domain_path' => 'https://test.swissbib.ch',
+            'allowed_mobile_prefixes' => ['+41 79', '+41 78','+41 77' ,'+41 76'],
+            'user_export_path' => '/export/nationalLicence',
+            'user_export_filename' => 'user_export.csv',
+            'user_export_default_email_address_to' => 'nl@consortium.ch ',
+            'national_licence_user_fields_to_export' => [
+                'mobile',
+                'home_postal_address',
+                'swiss_library_person_residence',
+                'condition_accepted',
+                'request_temporary_access',
+                'request_permanent_access',
+                'date_expiration',
+                'blocked',
+                'active_last_12_month',
+                'created'
+            ],
+            'vufind_user_fields_to_export' => [
+                'firstname',
+                'lastname',
+                'email',
+            ],
+            'request_account_extension_expiration_days' => 30,
+            'temporary_access_expiration_days' => 14
+        ],
+        'email_service' => [
+            //Change with the production address
+            'default_email_address_from' => 'nl@consortium.ch ',
+            'smtp_options' => [
+                'name' => 'host',
+                //Change with production SMTP server host
+                'host' => 'smtp.gmail.com',
+                'port'=> 587,
+                'connection_class' => 'login',
+                'connection_config' => [
+                    //Change with production SMTP credentials
+                    'username' => "",
+                    'password' => '',
+                    'ssl'=> 'tls',
+                ]
+            ]
+        ],
+        'tests' => [ //Unit test configuration
+            'switch_api' => [
+                'external_id_test' => '1234567@eduid.ch',
+                'auth_user' => 'natlic',
+                'auth_password' => 'Amg6vZXo',
+            ],
+            'national_licence_service' => [
+
+            ],
+            'email_service' => [
+                'default_email_address_to' => '',
+                'default_email_address_from' => 'test@snowflake.ch',
+            ],
+        ]
+    ],
 ];
