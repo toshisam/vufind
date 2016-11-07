@@ -30,14 +30,14 @@
                 <span class="text-aligned-icon icon-danger"><i class="fa fa-times"></i></span>
                 <?= $this->transEsc('snl.youDontHaveSwissMobilePhoneNumeber') ?>
             </p>
-            <a href="https://test.eduid.ch/web/verify-attribute/?attribute=mobile&providerId=https%3A%2F%2Ftest.swissbib.ch%2Fshibboleth&target=https%3A%2F%2Ftest.swissbib.ch%2FNationalLicences"><?= $this->transEsc('snl.modify') ?></a>
+            <a href="https://eduid.ch/web/verify-attribute/?attribute=mobile&providerId=https%3A%2F%2Ftest.swissbib.ch%2Fshibboleth&target=https%3A%2F%2Ftest.swissbib.ch%2FNationalLicences"><?= $this->transEsc('snl.modify') ?></a>
             <?= $this->transEsc('snl.yourMobilePhoneInYourEduIdaccount') ?>
         <? endif; ?>
     <? else:; ?>
         <!-- User don't have a mobile phone number in their edu-ID account-->
         <p>
             <span class="text-aligned-icon icon-danger"><i class="fa fa-times"></i></span> <?= $this->transEsc('snl.youDontHaveMobilePhoneNumeber') ?>
-            <a href="https://test.eduid.ch/web/verify-attribute/?attribute=mobile&providerId=https%3A%2F%2Ftest.swissbib.ch%2Fshibboleth&target=https%3A%2F%2Ftest.swissbib.ch%2FNationalLicences"><?= $this->transEsc('snl.add') ?></a>
+            <a href="https://eduid.ch/web/verify-attribute/?attribute=mobile&providerId=https%3A%2F%2Ftest.swissbib.ch%2Fshibboleth&target=https%3A%2F%2Ftest.swissbib.ch%2FNationalLicences"><?= $this->transEsc('snl.add') ?></a>
             <?= $this->transEsc('snl.yourMobilePhoneInYourEduIdaccount') ?>
         </p>
     <? endif; ?>
