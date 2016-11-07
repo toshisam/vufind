@@ -82,11 +82,12 @@ class NationalLicences extends AbstractHelper
         $page = $issuePage[1];
         $doi = $record->getDOIs()[0];
         $doiSuffix = explode("/", $doi, 2)[1];
+        $journalCode = $this->marcFields[4];
 
         $userIsAuthorized = isset($_SERVER['entitlement']) ?
                             $_SERVER['entitlement'] === 'urn:mace:dir:entitlement:common-lib-terms' : false;
 
-        $url = $this->buildUrl($userIsAuthorized, $issn, $volume, $issue, $page, $doiSuffix);
+        $url = $this->buildUrl($userIsAuthorized, $issn, $volume, $issue, $page, $doiSuffix, $doi, $journalCode);
 
         return $url;
     }
@@ -103,7 +104,7 @@ class NationalLicences extends AbstractHelper
      *
      * @return null
      */
-    protected function buildUrl($userAuthorized, $issn, $volume, $issue, $sPage, $doiSuffix)
+    protected function buildUrl($userAuthorized, $issn, $volume, $issue, $sPage, $doiSuffix, $doi, $journalCode)
     {
         $url = $this->getPublisherBlueprintUrl($userAuthorized);
         $url = str_replace('{ISSN}', $issn, $url);
@@ -111,6 +112,8 @@ class NationalLicences extends AbstractHelper
         $url = str_replace('{ISSUE}', $issue, $url);
         $url = str_replace('{SPAGE}', $sPage, $url);
         $url = str_replace('{DOI-SUFFIX}', $doiSuffix, $url);
+        $url = str_replace('{DOI}', $doi, $url);
+        $url = str_replace('{JOURNAL-CODE}', $journalCode, $url);
         return $url;
     }
 
