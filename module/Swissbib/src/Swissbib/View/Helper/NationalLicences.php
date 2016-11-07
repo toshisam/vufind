@@ -135,15 +135,15 @@ class NationalLicences extends AbstractHelper
 
         $urlBlueprintKey = ($userAuthorized ? "" : "un") . "authorized";
         $publisher = $this->marcFields[1];
-        switch (substr($publisher, 0, 10))
+        switch ($publisher)
             {
-        case substr('NL-gruyter', 0, 10):
+        case 'NL-gruyter':
             $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
             break;
-        case substr('NL-cambridge', 0, 10):
+        case 'NL-cambridge':
             $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
             break;
-        case substr('NL-oxford', 0, 10):
+        case 'NL-oxford':
             $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
             break;
         }

@@ -1508,7 +1508,7 @@ class Holdings
 
                 // Prevent display of untranslated and ungrouped institutions
                 $institutionLabel = $this->translator->translate(
-                    substr($institution, 0, 10), 'institution'
+                    $institution, 'institution'
                 );
                 if ($groupCode == 'unknown' || $institutionLabel === $institution) {
                     if ($groupCode === 'unknown') {
@@ -1552,7 +1552,7 @@ class Holdings
      */
     public function getGroup($institutionCode)
     {
-        $institutionCode = substr($institutionCode, 0, 10);
+        $institutionCode = $institutionCode;
         return isset($this->institution2group[$institutionCode]) ?
             $this->institution2group[$institutionCode] : 'unknown';
     }
