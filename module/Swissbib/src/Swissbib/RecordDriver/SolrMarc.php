@@ -1792,10 +1792,32 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         $publisher = array_values($this->getHoldingsStructure())[0]['institution'];
         $enum = $this->getFieldArray('773', ['q']);
         $issn = $this->getFieldArray('773', ['x']);
+
+
+        $pii="";
+        /* publisher identifier (needed for linking to cambridge)
+        stored in 024, with $2 pii */
+
+        $identifiers=$this->getFieldArray('024',['a','2'],true,"$$$");
+        // example
+        // [0] => 10.1017/S1014233900003497$$$doi
+        // [1] => S1014233900003497$$$pii
+        
+        foreach ($identifiers as $identifier) {
+            $result = explode("$$$",$identifier);
+            if (count($result)>1 && $result[1] == "pii") {
+                $pii = $result[0];
+            }
+        }
+
+
+        $journalCode = $this->getFieldArray('773', ['o']);
         $nlData = [ !empty($ref) ? $ref[0] : "",
                     $publisher,
                     !empty($enum) ? $enum[0] : "",
-                    !empty($issn) ? $issn[0] : ""
+                    !empty($issn) ? $issn[0] : "",
+                    !empty($journalCode) ? $journalCode[0] : "",
+                    $pii
         ];
 
         return $nlData;
