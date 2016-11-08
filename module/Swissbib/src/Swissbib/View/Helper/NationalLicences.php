@@ -52,6 +52,7 @@ class NationalLicences extends AbstractHelper
     protected $marcFields;
     protected $ipMatcher;
     protected $validIps;
+    protected $oxfordUrlCode;
 
     /**
      * NationalLicences constructor.
@@ -65,132 +66,11 @@ class NationalLicences extends AbstractHelper
         $this->ipMatcher = new IpMatcher();
         $this->validIps = explode(",", $this->config->SwissAcademicLibraries->patterns_ip);
         //$RemoteAddress->setUseProxy();
-    }
 
-    public function isUserInIpRange()
-    {
-        $remoteAddress = new RemoteAddress();
-        $ipAddress = $remoteAddress->getIpAddress();
-        $isMatchingIp = $this->ipMatcher->isMatching( $ipAddress, $this->validIps );
-        return $isMatchingIp;
-    }
-
-    /**
-     * Return the url for the record if it's available with NL, otherwise false
-     *
-     * @param SolrMarc $record the record object
-     *
-     * @return bool|String
-     */
-    public function getUrl(SolrMarc $record)
-    {
-        $this->record = $record;
-        $this->marcFields = $record->getNationalLicenceData();
-        if ($this->marcFields[0] !== "NATIONALLICENCE") return false;
-
-        $issn = $this->marcFields[3];
-        $enumeration = $this->marcFields[2];
-        $splitted = explode(":", $enumeration);
-        $volume = $splitted[0];
-        $issuePage = explode("<", $splitted[1]);
-        $issue = $issuePage[0];
-        $page = $issuePage[1];
-        $doi = $record->getDOIs()[0];
-        $journalCode = $this->marcFields[4];
-        $pii = $this->marcFields[5];
-
-        $userIsAuthorized = $this->isUserInIpRange();
-        if ( !$userIsAuthorized && isset($_SERVER['entitlement']) ) {
-            $userIsAuthorized = $_SERVER['entitlement'] === 'urn:mace:dir:entitlement:common-lib-terms';
-        }
-        $userIsAuthorized = false;
-
-        $url = $this->buildUrl($userIsAuthorized, $issn, $volume, $issue, $page, $doiSuffix);
-
-        return $url;
-    }
-
-    /**
-     * Build the url.
-     *
-     * @param String $userAuthorized user authorized?
-     * @param String $issn           issn
-     * @param String $volume         volume
-     * @param String $issue          issue
-     * @param String $sPage          start page
-     * @param String $doiSuffix      doi suffix
-     *
-     * @return null
-     */
-    protected function buildUrl($userAuthorized, $issn, $volume, $issue, $sPage, $pii, $doi, $journalCode)
-    {
-        $url = $this->getPublisherBlueprintUrl($userAuthorized);
-        $url = str_replace('{ISSN}', $issn, $url);
-        $url = str_replace('{VOLUME}', $volume, $url);
-        $url = str_replace('{ISSUE}', $issue, $url);
-        $url = str_replace('{SPAGE}', $sPage, $url);
-        $url = str_replace('{PII}', $pii, $url);
-        $url = str_replace('{DOI}', $doi, $url);
-        $url = str_replace('{JOURNAL-URL-CODE}', $this->getOxfordUrlCode($journalCode), $url);
-        return $url;
-    }
-
-    /**
-     * Return skeleton for url.
-     *
-     * @param String $userAuthorized user authorized?
-     *
-     * @return null
-     */
-    protected function getPublisherBlueprintUrl($userAuthorized)
-    {
-        /* config.ini:
-        [PublisherUrls]
-        nl-oxford-unauthorized=
-        nl-gruyter-unauthorized= https://www.degruyter.com/applib/openathens?entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth&openAthens2Redirect=https%3A%2F%2Fwww.degruyter.com%2Fopenurl%3Fgenre%3Darticle%26issn%3D{ISSN}%26volume%3D{VOLUME}%26issue%3D{ISSUE}%26spage%3D{SPAGE}
-        nl-cambridge-unauthorized=https://shibboleth.cambridge.org/Shibboleth.sso/discovery?entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth&target=https://shibboleth.cambridge.org/CJOShibb2/index?app=https://www.cambridge.org/core/shibboleth?ref=%2Fcore%2Fproduct%2Fidentifier%2F{DOI-SUFFIX}%2Ftype%2FJOURNAL_ARTICLE
-        nl-oxford-authorized=
-        nl-gruyter-authorized=https://www.degruyter.com/openurl?genre=article&issn={ISSN}&volume={VOLUME}&issue={ISSUE}&spage={SPAGE}
-        nl-cambridge-authorized=http://www.cambridge.org/core/product/identifier/{DOI-SUFFIX}/type/JOURNAL_ARTICLE
-         */
-
-        $urlBlueprintKey = ($userAuthorized ? "" : "un") . "authorized";
-        $publisher = $this->marcFields[1];
-        switch ($publisher)
-            {
-        case 'NL-gruyter':
-            $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
-            break;
-        case 'NL-cambridge':
-            $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
-            break;
-        case 'NL-oxford':
-            $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
-            break;
-        }
-
-        $blueprintUrl = "";
-        if (isset($this->config->PublisherUrls->$urlBlueprintKey)) {
-            $blueprintUrl = $this->config->PublisherUrls->$urlBlueprintKey;
-        }
-
-        return $blueprintUrl;
-    }
-
-    /**
-     * Return code to be inserted in the url based on the journal-code which is in the metadata (oxford).
-     *
-     * @param String $journalCode journalCode in the metadata
-     *
-     * @return null
-     */
-    protected function getOxfordUrlCode($journalCode)
-    {
         /*
         Based on Oxford mapping : http://www.oxfordjournals.org/en/help/tech-info/linking.html
          */
-
-        $urlCode = array (
+        $this->oxfordUrlCode = array (
             "asjour" => "asj",
             "afrafj" => "afraf",
             "aibsbu" => "aibsbulletin",
@@ -351,9 +231,129 @@ class NationalLicences extends AbstractHelper
             "tweceb" => "tcbh",
             "vevolu" => "ve"
         );
+    }
 
-        if (isset($urlCode[$journalCode])) {
-            return $urlCode[$journalCode];
+    public function isUserInIpRange()
+    {
+        $remoteAddress = new RemoteAddress();
+        $ipAddress = $remoteAddress->getIpAddress();
+        $isMatchingIp = $this->ipMatcher->isMatching( $ipAddress, $this->validIps );
+        return $isMatchingIp;
+    }
+
+    /**
+     * Return the url for the record if it's available with NL, otherwise false
+     *
+     * @param SolrMarc $record the record object
+     *
+     * @return bool|String
+     */
+    public function getUrl(SolrMarc $record)
+    {
+        $this->record = $record;
+        $this->marcFields = $record->getNationalLicenceData();
+        if ($this->marcFields[0] !== "NATIONALLICENCE") return false;
+
+        $issn = $this->marcFields[3];
+        $enumeration = $this->marcFields[2];
+        $splitted = explode(":", $enumeration);
+        $volume = $splitted[0];
+        $issuePage = explode("<", $splitted[1]);
+        $issue = $issuePage[0];
+        $page = $issuePage[1];
+        $doi = $record->getDOIs()[0];
+        $journalCode = $this->marcFields[4];
+        $pii = $this->marcFields[5];
+
+        $userIsAuthorized = $this->isUserInIpRange();
+        if ( !$userIsAuthorized && isset($_SERVER['entitlement']) ) {
+            $userIsAuthorized = $_SERVER['entitlement'] === 'urn:mace:dir:entitlement:common-lib-terms';
+        }
+        $userIsAuthorized = false;
+
+        $url = $this->buildUrl($userIsAuthorized, $issn, $volume, $issue, $page, $doiSuffix);
+
+        return $url;
+    }
+
+    /**
+     * Build the url.
+     *
+     * @param String $userAuthorized user authorized?
+     * @param String $issn           issn
+     * @param String $volume         volume
+     * @param String $issue          issue
+     * @param String $sPage          start page
+     * @param String $doiSuffix      doi suffix
+     *
+     * @return null
+     */
+    protected function buildUrl($userAuthorized, $issn, $volume, $issue, $sPage, $pii, $doi, $journalCode)
+    {
+        $url = $this->getPublisherBlueprintUrl($userAuthorized);
+        $url = str_replace('{ISSN}', $issn, $url);
+        $url = str_replace('{VOLUME}', $volume, $url);
+        $url = str_replace('{ISSUE}', $issue, $url);
+        $url = str_replace('{SPAGE}', $sPage, $url);
+        $url = str_replace('{PII}', $pii, $url);
+        $url = str_replace('{DOI}', $doi, $url);
+        $url = str_replace('{JOURNAL-URL-CODE}', $this->getOxfordUrlCode($journalCode), $url);
+        return $url;
+    }
+
+    /**
+     * Return skeleton for url.
+     *
+     * @param String $userAuthorized user authorized?
+     *
+     * @return null
+     */
+    protected function getPublisherBlueprintUrl($userAuthorized)
+    {
+        /* config.ini:
+        [PublisherUrls]
+        nl-oxford-unauthorized=
+        nl-gruyter-unauthorized= https://www.degruyter.com/applib/openathens?entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth&openAthens2Redirect=https%3A%2F%2Fwww.degruyter.com%2Fopenurl%3Fgenre%3Darticle%26issn%3D{ISSN}%26volume%3D{VOLUME}%26issue%3D{ISSUE}%26spage%3D{SPAGE}
+        nl-cambridge-unauthorized=https://shibboleth.cambridge.org/Shibboleth.sso/discovery?entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth&target=https://shibboleth.cambridge.org/CJOShibb2/index?app=https://www.cambridge.org/core/shibboleth?ref=%2Fcore%2Fproduct%2Fidentifier%2F{DOI-SUFFIX}%2Ftype%2FJOURNAL_ARTICLE
+        nl-oxford-authorized=
+        nl-gruyter-authorized=https://www.degruyter.com/openurl?genre=article&issn={ISSN}&volume={VOLUME}&issue={ISSUE}&spage={SPAGE}
+        nl-cambridge-authorized=http://www.cambridge.org/core/product/identifier/{DOI-SUFFIX}/type/JOURNAL_ARTICLE
+         */
+
+        $urlBlueprintKey = ($userAuthorized ? "" : "un") . "authorized";
+        $publisher = $this->marcFields[1];
+        switch ($publisher)
+            {
+        case 'NL-gruyter':
+            $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
+            break;
+        case 'NL-cambridge':
+            $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
+            break;
+        case 'NL-oxford':
+            $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
+            break;
+        }
+
+        $blueprintUrl = "";
+        if (isset($this->config->PublisherUrls->$urlBlueprintKey)) {
+            $blueprintUrl = $this->config->PublisherUrls->$urlBlueprintKey;
+        }
+
+        return $blueprintUrl;
+    }
+
+    /**
+     * Return code to be inserted in the url based on the journal-code which is in the metadata (oxford).
+     *
+     * @param String $journalCode journalCode in the metadata
+     *
+     * @return null
+     */
+    protected function getOxfordUrlCode($journalCode)
+    {
+        if (isset($this->oxfordUrlCode[$journalCode])) {
+            return $this->oxfordUrlCode[$journalCode];
         }
         else {
             return $journalCode;
