@@ -258,6 +258,6 @@ class Factory
      */
     public static function getNationalLicences(ServiceManager $sm)
     {
-        return new NationalLicences($sm->getServiceLocator()->get('VuFind\Config')->get('config'));
+        return new NationalLicences($sm);
     }
 }

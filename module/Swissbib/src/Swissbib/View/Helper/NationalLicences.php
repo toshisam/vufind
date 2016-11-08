@@ -32,6 +32,8 @@ namespace Swissbib\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
 use Swissbib\RecordDriver\SolrMarc;
+use Zend\Http\PhpEnvironment\RemoteAddress;
+use Swissbib\TargetsProxy\IpMatcher;
 
 /**
  * Return URL for NationalLicence online access if applicable. Otherwise 'false'.
@@ -48,15 +50,29 @@ class NationalLicences extends AbstractHelper
     protected $config;
     protected $record;
     protected $marcFields;
+    protected $ipMatcher;
+    protected $validIps;
 
     /**
      * NationalLicences constructor.
      *
      * @param VuFind\Config $config config
      */
-    public function __construct($config)
+    public function __construct($sm)
     {
-        $this->config = $config;
+        $this->sm = $sm;
+        $this->config = $sm->getServiceLocator()->get('VuFind\Config')->get('config');
+        $this->ipMatcher = new IpMatcher();
+        $this->validIps = explode(",", $this->config->SwissAcademicLibraries->patterns_ip);
+        //$RemoteAddress->setUseProxy();
+    }
+
+    public function isUserInIpRange()
+    {
+        $remoteAddress = new RemoteAddress();
+        $ipAddress = $remoteAddress->getIpAddress();
+        $isMatchingIp = $this->ipMatcher->isMatching( $ipAddress, $this->validIps );
+        return $isMatchingIp;
     }
 
     /**
@@ -70,7 +86,6 @@ class NationalLicences extends AbstractHelper
     {
         $this->record = $record;
         $this->marcFields = $record->getNationalLicenceData();
-
         if ($this->marcFields[0] !== "NATIONALLICENCE") return false;
 
         $issn = $this->marcFields[3];
@@ -83,8 +98,10 @@ class NationalLicences extends AbstractHelper
         $doi = $record->getDOIs()[0];
         $doiSuffix = explode("/", $doi, 2)[1];
 
-        $userIsAuthorized = isset($_SERVER['entitlement']) ?
-                            $_SERVER['entitlement'] === 'urn:mace:dir:entitlement:common-lib-terms' : false;
+        $userIsAuthorized = $this->isUserInIpRange();
+        if ( !$userIsAuthorized && isset($_SERVER['entitlement']) ) {
+            $userIsAuthorized = $_SERVER['entitlement'] === 'urn:mace:dir:entitlement:common-lib-terms';
+        }
 
         $url = $this->buildUrl($userIsAuthorized, $issn, $volume, $issue, $page, $doiSuffix);
 
