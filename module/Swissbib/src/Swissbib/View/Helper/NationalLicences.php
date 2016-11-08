@@ -84,8 +84,10 @@ class NationalLicences extends AbstractHelper
         $doiSuffix = explode("/", $doi, 2)[1];
         $journalCode = $this->marcFields[4];
 
-        $userIsAuthorized = isset($_SERVER['entitlement']) ?
-                            $_SERVER['entitlement'] === 'urn:mace:dir:entitlement:common-lib-terms' : false;
+        //$userIsAuthorized = isset($_SERVER['entitlement']) ?
+        //                      $_SERVER['entitlement'] === 'urn:mace:dir:entitlement:common-lib-terms' : false;
+        $userIsAuthorized = false;
+
 
         $url = $this->buildUrl($userIsAuthorized, $issn, $volume, $issue, $page, $doiSuffix, $doi, $journalCode);
 
