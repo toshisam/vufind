@@ -113,7 +113,7 @@ class NationalLicences extends AbstractHelper
         $url = str_replace('{SPAGE}', $sPage, $url);
         $url = str_replace('{DOI-SUFFIX}', $doiSuffix, $url);
         $url = str_replace('{DOI}', $doi, $url);
-        $url = str_replace('{JOURNAL-CODE}', $journalCode, $url);
+        $url = str_replace('{JOURNAL-URL-CODE}', $this->getOxfordUrlCode($journalCode), $url);
         return $url;
     }
 
@@ -157,6 +157,190 @@ class NationalLicences extends AbstractHelper
         }
 
         return $blueprintUrl;
+    }
+
+    /**
+     * Return code to be inserted in the url based on the journal-code which is in the metadata (oxford).
+     *
+     * @param String $journalCode journalCode in the metadata
+     *
+     * @return null
+     */
+    protected function getOxfordUrlCode($journalCode)
+    {
+        /*
+        Based on Oxford mapping : http://www.oxfordjournals.org/en/help/tech-info/linking.html
+         */
+
+        $urlCode = array (
+            "asjour" => "asj",
+            "afrafj" => "afraf",
+            "aibsbu" => "aibsbulletin",
+            "ahrrev" => "ahr",
+            "alecon" => "aler",
+            "alhist" => "alh",
+            "analys" => "analysis",
+            "annbot" => "aob",
+            "amtest" => "amt",
+            "biosci" => "bioscience",
+            "biosts" => "biostatistics",
+            "bjaint" => "bja",
+            "bjarev" => "bjaed",
+            "brainj" => "brain",
+            "phisci" => "bjps",
+            "aesthj" => "bjaesthetics",
+            "crimin" => "bjc",
+            "social" => "bjsw",
+            "brimed" => "bmb",
+            "cameco" => "cje",
+            "camquj" => "camqtly",
+            "cs" => "cs",
+            "cjilaw" => "chinesejil",
+            "computer_journal" => "comjnl",
+            "conpec" => "cpe",
+            "czoolo" => "cz",
+            "databa" => "database",
+            "litlin" => "dsh",
+            "dnares" => "dnaresearch",
+            "earlyj" => "em",
+            "enghis" => "ehr",
+            "entsoc" => "es",
+            "eepige" => "eep",
+            "humsup" => "eshremonographs",
+            "escrit" => "eic",
+            "ehjsupp" => "eurheartjsupp",
+            "ehjqcc" => "ehjqcco",
+            "seujhf" => "eurjhfsupp",
+            "ejilaw" => "ejil",
+            "eortho" => "ejo",
+            "eursoj" => "esr",
+            "famprj" => "fampra",
+            "foresj" => "forestry",
+            "formod" => "fmls",
+            "french" => "fh",
+            "frestu" => "fs",
+            "frebul" => "fsb",
+            "gjiarc" => "gsmnras",
+            "geront" => "gerontologist",
+            "global" => "globalsummitry",
+            "hswork" => "hsw",
+            "healed" => "her",
+            "hiwork" => "hwj",
+            "holgen" => "hgs",
+            "icsidr" => "icsidreview",
+            "imanum" => "imajna",
+            "indcor" => "icc",
+            "indlaw" => "ilj",
+            "innovait" => "rcgp-innovait",
+            "ijclaw" => "icon",
+            "inttec" => "ijlit",
+            "lexico" => "ijl",
+            "intpor" => "ijpor",
+            "reflaw" => "ijrl",
+            "irasia" => "irap",
+            "combul" => "itnow",
+            "jrlstu" => "jrls",
+            "jncmon" => "jncimono",
+            "jafeco" => "jae",
+            "japres" => "japr",
+            "jbchem" => "jb",
+            "jconsl" => "jcsl",
+            "eccojcc" => "ecco-jcc",
+            "eccojs" => "ecco-jccs",
+            "cybers" => "cybersecurity",
+            "deafed" => "jdsde",
+            "design" => "jdh",
+            "jnlecg" => "joeg",
+            "envlaw" => "jel",
+            "exbotj" => "jxb",
+            "jfinec" => "jfec",
+            "jhuman" => "jhrp",
+            "jis" => "jinsectscience",
+            "jicjus" => "jicj",
+            "jielaw" => "jiel",
+            "islamj" => "jis",
+            "jlbios" => "jlb",
+            "jleorg" => "jleo",
+            "jmvmyc" => "jmvm",
+            "jmedent" => "jme",
+            "jmther" => "jmt",
+            "petroj" => "petrology",
+            "jporga" => "jpo",
+            "jopart" => "jpart",
+            "pubmed" => "jpubhealth",
+            "refuge" => "jrs",
+            "semant" => "jos",
+            "semitj" => "jss",
+            "jaarel" => "jaar",
+            "hiscol" => "jhc",
+            "jalsci" => "jhmas",
+            "theolj" => "jts",
+            "geron" => "biomedgerontology",
+            "gerona" => "biomedgerontology",
+            "geronb" => "psychsocgerontology",
+            "juecol" => "jue",
+            "lawprj" => "lpr",
+            "lbaeck" => "leobaeck",
+            "libraj" => "library",
+            "igpl" => "jigpal",
+            "mmycol" => "mmy",
+            "modjud" => "mj",
+            "molbev" => "mbe",
+            "mmmcts" => "mmcts",
+            "musicj" => "ml",
+            "mtspec" => "mts",
+            "musict" => "musictherapy",
+            "mtpers" => "mtp",
+            "musqtl" => "mq",
+            "neuonc" => "neuro-oncology",
+            "noprac" => "nop",
+            "nconsc" => "nc",
+            "nictob" => "ntr",
+            "notesj" => "nq",
+            "narsym" => "nass",
+            "ofidis" => "ofid",
+            "operaq" => "oq",
+            "oxartj" => "oaj",
+            "oxjlsj" => "ojls",
+            "omcrep" => "omcr",
+            "ecopol" => "oxrep",
+            "parlij" => "pa",
+            "philoq" => "pq",
+            "polana" => "pan",
+            "pscien" => "ps",
+            "ptpsupp" => "ptps",
+            "proeng" => "peds",
+            "pparep" => "ppar",
+            "pasjap" => "pasj",
+            "pubjof" => "publius",
+            "qjmedj" => "qjmed",
+            "qmathj" => "qjmath",
+            "qjmamj" => "qjmam",
+            "refqtl" => "rsq",
+            "regbio" => "rb",
+            "revesj" => "res",
+            "revfin" => "rfs",
+            "brheum" => "rheumatology",
+            "sabour" => "sabouraudia",
+            "schbul" => "schizophreniabulletin",
+            "sochis" => "shm",
+            "socpol" => "sp",
+            "ssjapj" => "ssjj",
+            "sworkj" => "sw",
+            "soceco" => "ser",
+            "stalaw" => "slr",
+            "tlmsoc" => "tlms",
+            "tweceb" => "tcbh",
+            "vevolu" => "ve"
+        );
+
+        if (isset($urlCode[$journalCode])) {
+            return $urlCode[$journalCode];
+        }
+        else {
+            return $journalCode;
+        }
+
     }
 
 }
