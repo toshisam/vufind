@@ -283,7 +283,8 @@ class NationalLicences extends AbstractHelper
         }
         //$userIsAuthorized = false;
 
-        $url = $this->buildUrl($userIsAuthorized, $issn, $volume, $issue, $page, $pii);
+        $url = $this->buildUrl($userIsAuthorized, $issn, $volume, $issue, $page, $pii, $doi, $journalCode);
+
         return $url;
     }
 
@@ -295,7 +296,9 @@ class NationalLicences extends AbstractHelper
      * @param String $volume         volume
      * @param String $issue          issue
      * @param String $sPage          start page
-     * @param String $doiSuffix      doi suffix
+     * @param String $pii            publisher article identifier
+     * @param String $doi            doi
+     * @param String $journalCode    publisher journal code
      *
      * @return null
      */
