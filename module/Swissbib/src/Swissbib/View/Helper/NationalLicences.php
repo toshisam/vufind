@@ -34,6 +34,7 @@ use Zend\View\Helper\AbstractHelper;
 use Swissbib\RecordDriver\SolrMarc;
 use Zend\Http\PhpEnvironment\RemoteAddress;
 use Swissbib\TargetsProxy\IpMatcher;
+use Swissbib\Services\NationalLicence;
 
 /**
  * Return URL for NationalLicence online access if applicable. Otherwise 'false'.
@@ -47,12 +48,14 @@ use Swissbib\TargetsProxy\IpMatcher;
  */
 class NationalLicences extends AbstractHelper
 {
+    protected $sm;
     protected $config;
     protected $record;
     protected $marcFields;
     protected $ipMatcher;
     protected $validIps;
     protected $oxfordUrlCode;
+    protected $nationalLicenceService;
 
     /**
      * NationalLicences constructor.
@@ -66,6 +69,15 @@ class NationalLicences extends AbstractHelper
         $this->ipMatcher = new IpMatcher();
         $this->validIps = explode(",", $this->config->SwissAcademicLibraries->patterns_ip);
         //$RemoteAddress->setUseProxy();
+        /*
+        $this->nationalLicenceService = new NationalLicence(
+            $this->sm->get('Swissbib\SwitchApiService'),
+            $this->sm->get('Swissbib\EmailService'),
+            $this->sm->get('Config')
+        );
+        */
+        //$this->nationalLicenceService = $this->sm->get('VuFind\NationalLicences');
+        $this->nationalLicenceService = $this->sm->getServiceLocator()->get('Swissbib\NationalLicenceService');
 
         /*
         Based on Oxford mapping : http://www.oxfordjournals.org/en/help/tech-info/linking.html
@@ -267,12 +279,11 @@ class NationalLicences extends AbstractHelper
 
         $userIsAuthorized = $this->isUserInIpRange();
         if ( !$userIsAuthorized && isset($_SERVER['entitlement']) ) {
-            $userIsAuthorized = $_SERVER['entitlement'] === 'urn:mace:dir:entitlement:common-lib-terms';
+            $userIsAuthorized = $this->nationalLicenceService->hasAccessToNationalLicenceContent();
         }
-        $userIsAuthorized = false;
+        //$userIsAuthorized = false;
 
-        $url = $this->buildUrl($userIsAuthorized, $issn, $volume, $issue, $page, $doiSuffix);
-
+        $url = $this->buildUrl($userIsAuthorized, $issn, $volume, $issue, $page, $pii);
         return $url;
     }
 
@@ -310,16 +321,6 @@ class NationalLicences extends AbstractHelper
      */
     protected function getPublisherBlueprintUrl($userAuthorized)
     {
-        /* config.ini:
-        [PublisherUrls]
-        nl-oxford-unauthorized=
-        nl-gruyter-unauthorized= https://www.degruyter.com/applib/openathens?entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth&openAthens2Redirect=https%3A%2F%2Fwww.degruyter.com%2Fopenurl%3Fgenre%3Darticle%26issn%3D{ISSN}%26volume%3D{VOLUME}%26issue%3D{ISSUE}%26spage%3D{SPAGE}
-        nl-cambridge-unauthorized=https://shibboleth.cambridge.org/Shibboleth.sso/discovery?entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth&target=https://shibboleth.cambridge.org/CJOShibb2/index?app=https://www.cambridge.org/core/shibboleth?ref=%2Fcore%2Fproduct%2Fidentifier%2F{DOI-SUFFIX}%2Ftype%2FJOURNAL_ARTICLE
-        nl-oxford-authorized=
-        nl-gruyter-authorized=https://www.degruyter.com/openurl?genre=article&issn={ISSN}&volume={VOLUME}&issue={ISSUE}&spage={SPAGE}
-        nl-cambridge-authorized=http://www.cambridge.org/core/product/identifier/{DOI-SUFFIX}/type/JOURNAL_ARTICLE
-         */
-
         $urlBlueprintKey = ($userAuthorized ? "" : "un") . "authorized";
         $publisher = $this->marcFields[1];
         switch ($publisher)
