@@ -279,9 +279,10 @@ class NationalLicences extends AbstractHelper
 
         $userIsAuthorized = $this->isUserInIpRange();
         if ( !$userIsAuthorized && isset($_SERVER['entitlement']) ) {
-            $userIsAuthorized = $this->nationalLicenceService->hasAccessToNationalLicenceContent();
+            //not working currently (lw 14.11.2016)
+            //$userIsAuthorized = $this->nationalLicenceService->hasAccessToNationalLicenceContent();
         }
-        //$userIsAuthorized = false;
+        $userIsAuthorized = false;
 
         $url = $this->buildUrl($userIsAuthorized, $issn, $volume, $issue, $page, $pii, $doi, $journalCode);
 
