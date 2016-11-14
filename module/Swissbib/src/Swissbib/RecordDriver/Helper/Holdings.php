@@ -1469,6 +1469,11 @@ class Holdings
                 if ($institution === $institutionCode) {
                     $data[] = $item;
                 }
+                /*
+                else if ($item['institution'] === $institutionCode) {
+                    $data[] = $item;
+                }
+                */
             }
         }
 
@@ -1489,7 +1494,8 @@ class Holdings
         $fields = $this->holdings ? $this->holdings->getFields($fieldName) : false;
         $mapping = [
             'B' => 'network',
-            'F' => 'institution_chb'
+            'F' => 'institution_chb',
+            'b' => 'institution'
         ];
 
         if (is_array($fields)) {
@@ -1497,6 +1503,7 @@ class Holdings
                 $item = $this->extractFieldData($field, $mapping);
                 $networkCode = $item['network'];
                 $institution = $item['institution_chb'];
+                $institution949b = $item['institution'];
                 $groupCode = $this->getGroup($institution);
 
                 // Prevent display of untranslated and ungrouped institutions
@@ -1515,7 +1522,8 @@ class Holdings
                     $data[$groupCode] = [
                         'label' => $groupCode,
                         'networkCode' => $networkCode,
-                        'institutions' => []
+                        'institutions' => [],
+                        'institution' => []
                     ];
                 }
 
@@ -1526,6 +1534,9 @@ class Holdings
                         'bibinfolink' => $this->getBibInfoLink($institution)
                     ];
                 }
+
+                // Make sure institution 949$b is present
+                $data[$groupCode]['institution'] = $institution949b;
             }
         }
 
@@ -1541,6 +1552,7 @@ class Holdings
      */
     public function getGroup($institutionCode)
     {
+        $institutionCode = $institutionCode;
         return isset($this->institution2group[$institutionCode]) ?
             $this->institution2group[$institutionCode] : 'unknown';
     }

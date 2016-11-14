@@ -28,6 +28,7 @@
  */
 namespace Swissbib\Controller;
 
+use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -52,6 +53,23 @@ class Factory
     {
         return new RecordController(
             $sm->getServiceLocator()->get('VuFind\Config')->get('config')
+        );
+    }
+
+    /**
+     * Construct the NationalLicenceController by injecting the
+     * NationalLicence service.
+     *
+     * @param ServiceManager $sm Service manager.
+     *                            
+     * @return NationalLicencesController
+     */
+    public function getNationalLicenceController(ServiceManager $sm)
+    {
+        $sl = $sm->getServiceLocator();
+
+        return new NationalLicencesController(
+            $sl->get('Swissbib\NationalLicenceService')
         );
     }
 }
