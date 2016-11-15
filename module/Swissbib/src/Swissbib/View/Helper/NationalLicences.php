@@ -35,6 +35,9 @@ use Swissbib\RecordDriver\SolrMarc;
 use Zend\Http\PhpEnvironment\RemoteAddress;
 use Swissbib\TargetsProxy\IpMatcher;
 use Swissbib\Services\NationalLicence;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\View\HelperPluginManager;
 
 /**
  * Return URL for NationalLicence online access if applicable. Otherwise 'false'.
@@ -58,14 +61,20 @@ class NationalLicences extends AbstractHelper
     protected $nationalLicenceService;
 
     /**
+     * @var HelperPluginManager
+     */
+    protected $helperManager;
+
+    /**
      * NationalLicences constructor.
      *
-     * @param VuFind\Config $config config
+     * @param \VuFind\Config $config config
      */
     public function __construct($sm)
     {
         $this->sm = $sm;
         $this->config = $sm->getServiceLocator()->get('VuFind\Config')->get('config');
+        $this->helperManager =  $sm->getServiceLocator()->get('viewhelpermanager');
         $this->ipMatcher = new IpMatcher();
         $this->validIps = explode(",", $this->config->SwissAcademicLibraries->patterns_ip);
         //$RemoteAddress->setUseProxy();
@@ -285,6 +294,18 @@ class NationalLicences extends AbstractHelper
         $userIsAuthorized = false;
 
         $url = $this->buildUrl($userIsAuthorized, $issn, $volume, $issue, $page, $pii, $doi, $journalCode);
+
+        $urlhelper = $this->getView()->plugin("url");
+
+        //$urlhelper = $this->helperManager->get('url');
+        //$link = $this->config['national_licence_service']['base_domain_path'] .
+         $signPost =   $urlhelper(
+                'national-licences',
+                array('action' => 'signPost')
+            );
+
+        $url = $signPost . '?publisher=' . $url;
+
 
         return $url;
     }

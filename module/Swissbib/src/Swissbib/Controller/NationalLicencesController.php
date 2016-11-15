@@ -242,6 +242,14 @@ class NationalLicencesController extends BaseController
         $this->redirect()->toRoute('national-licences');
     }
 
+
+    public function signpostlAction()
+    {
+        $this->redirect()->toRoute('national-licences');
+    }
+
+
+
     /**
      * Method called when user want to extend his account. The link to access
      * to this function has to be send by e-mail.
