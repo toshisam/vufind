@@ -162,6 +162,7 @@ class NationalLicencesController extends BaseController
     {
         $account = $this->getAuthManager();
 
+
         if (false === $account->isLoggedIn()) {
             $this->forceLogin(false);
 
@@ -245,6 +246,9 @@ class NationalLicencesController extends BaseController
 
     public function signpostlAction()
     {
+        $test = $this->getServerUrl();
+        $t = $this->getRequest()->getQuery("publisher");
+
         $this->redirect()->toRoute('national-licences');
     }
 
