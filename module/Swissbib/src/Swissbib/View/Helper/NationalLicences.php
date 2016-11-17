@@ -289,7 +289,7 @@ class NationalLicences extends AbstractHelper
 
         //return $url;
 
-        return 'https://login.eduid.ch/idp/profile/SAML2/Unsolicited/SSO?providerId=https%3A%2F%2F' . $_SERVER[HTTP_HOST] . '%2Fshibboleth&target=https%3A%2F%2F' . $_SERVER[HTTP_HOST] . '%2FMyResearch%2FHome?publisher=' . urlencode($url);
+        return 'https://login.eduid.ch/idp/profile/SAML2/Unsolicited/SSO?providerId=https%3A%2F%2F' . $_SERVER[HTTP_HOST] . '%2Fshibboleth&target=https%3A%2F%2F' . $_SERVER[HTTP_HOST] . '%2FMyResearchNationalLicenses%2FNlsignpost?publisher=' . urlencode($url);
     }
 
     /**
@@ -331,16 +331,16 @@ class NationalLicences extends AbstractHelper
         $urlBlueprintKey = ($userAuthorized ? "" : "un") . "authorized";
         $publisher = $this->marcFields[1];
         switch ($publisher)
-            {
-        case 'NL-gruyter':
-            $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
-            break;
-        case 'NL-cambridge':
-            $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
-            break;
-        case 'NL-oxford':
-            $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
-            break;
+        {
+            case 'NL-gruyter':
+                $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
+                break;
+            case 'NL-cambridge':
+                $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
+                break;
+            case 'NL-oxford':
+                $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
+                break;
         }
 
         $blueprintUrl = "";
