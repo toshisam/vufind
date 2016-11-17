@@ -72,4 +72,24 @@ class Factory
             $sl->get('Swissbib\NationalLicenceService')
         );
     }
+
+    /**
+     * Construct the MyResearchNationalLicensesController by injecting the
+     * NationalLicence service.
+     *
+     * @param ServiceManager $sm Service manager.
+     *
+     * @return MyResearchNationalLicensesController
+     */
+    public function getMyResearchNationalLicenceController(ServiceManager $sm)
+    {
+        $sl = $sm->getServiceLocator();
+
+        return new MyResearchNationalLicensesController(
+            $sl->get('Swissbib\NationalLicenceService')
+        );
+    }
+
+
+
 }
