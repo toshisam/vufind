@@ -16,7 +16,7 @@ var swissbib = {
     this.initBulkExport();
     this.AdvancedSearch.init();
     this.initHierarchyTree();
-    this.initNationaLicensesFlow();
+    //this.initNationaLicensesFlow();
   },
 
   /**

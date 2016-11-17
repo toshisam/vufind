@@ -52,7 +52,7 @@ $nationallizenzenURL    = $this->nationalLicences()->getUrl($driver);
         <span class="hidden-xs hidden-sm">BORIS</span>
     </a>
 <? elseif($nationallizenzenURL): ?>
-    <a class="btn btn-primary linkbutton primary icon_link_primary hidden-print" href="<?= $this->url('national-licences',['action' => 'signPost']); ?>" target="_blank">
+    <a class="btn btn-primary linkbutton primary icon_link_primary hidden-print" href="<?= $this->redirectProtocolWrapper()->getWrappedURL($nationallizenzenURL) ?>" target="_blank">
 
         <span><i class="fa fa-external-link"></i></span>
         <span class="hidden-xs hidden-sm nlItem">Get it Online</span>
