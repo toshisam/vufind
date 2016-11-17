@@ -289,7 +289,7 @@ class NationalLicences extends AbstractHelper
 
         //return $url;
 
-        return 'https://login.eduid.ch/idp/profile/SAML2/Unsolicited/SSO?providerId=https%3A%2F%2Ftest.swissbib.ch%2Fshibboleth&target=https%3A%2F%2Ftest.swissbib.ch%2FMyResearch%2FHome?publisher=' . urlencode($url);
+        return 'https://login.eduid.ch/idp/profile/SAML2/Unsolicited/SSO?providerId=https%3A%2F%2F' . $_SERVER[HTTP_HOST] . '%2Fshibboleth&target=https%3A%2F%2F' . $_SERVER[HTTP_HOST] . '%2FMyResearch%2FHome?publisher=' . urlencode($url);
     }
 
     /**
