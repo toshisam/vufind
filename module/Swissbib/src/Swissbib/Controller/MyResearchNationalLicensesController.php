@@ -32,6 +32,8 @@ namespace Swissbib\Controller;
 
 use Swissbib\Services\NationalLicence;
 use VuFind\Exception\Auth as AuthException;
+use Swissbib\VuFind\Db\Row\NationalLicenceUser;
+
 
 
 
@@ -81,15 +83,101 @@ class MyResearchNationalLicensesController extends MyResearchController
         }
 
         // Not logged in?  Force user to log in:
-        if ($this->getAuthManager()->isLoggedIn()) {
+        if (!$this->getAuthManager()->isLoggedIn()) {
             $this->setFollowupUrlToReferer();
             return $this->forwardTo('MyResearch', 'Login');
         }
+
+        if ($this->isAuthenticatedWithSwissEduId())
+        {
+            //check attributes and / or start registration process only if user is authenticated
+            // with swiss EduId
+            $user = $this->initializeServiceInstance();
+
+            $hasAccessToNationalLicenceContent  = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
+
+            $test = "";
+
+        }
+
+
         $config = $this->getConfig();
         $page = isset($config->Site->defaultAccountPage)
             ? $config->Site->defaultAccountPage : 'Favorites';
 
         return $this->forwardTo('MyResearch', $page);
+    }
+
+
+    /**
+     * @return NationalLicenceUser
+     */
+    private function initializeServiceInstance()
+    {
+        // Get user information from the shibboleth attributes
+        $uniqueId = isset($_SERVER['uniqueID']) ? $_SERVER['uniqueID'] : null;
+        $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : null;
+        $givenName = isset($_SERVER['givenName']) ? $_SERVER['givenName'] : null;
+        $surname = isset($_SERVER['surname']) ? $_SERVER['surname'] : null;
+        $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : null;
+        $homePostalAddress = isset($_SERVER['homePostalAddress']) ? $_SERVER['homePostalAddress'] :
+            null;
+        $mobile = isset($_SERVER['mobile']) ? $_SERVER['mobile'] : null;
+        $homeOrganizationType = isset($_SERVER['home_organization_type']) ? $_SERVER['home_organization_type'] :
+            null;
+        $affiliation = isset($_SERVER['affiliation']) ? $_SERVER['affiliation'] : null;
+        $swissLibraryPersonResidence = isset($_SERVER['swissLibraryPersonResidence']) ?
+            $_SERVER['swissLibraryPersonResidence'] : null;
+        $swissEduIDUsage1y = isset($_SERVER['swissEduIDUsage1y']) ? $_SERVER['swissEduIDUsage1y'] : null;
+        $swissEduIdAssuranceLevel = isset($_SERVER['swissEduIdAssuranceLevel']) ?
+            $_SERVER['swissEduIdAssuranceLevel'] : null;
+
+        /**
+         * National licence user.
+         *
+         * @var NationalLicenceUser $user
+         */
+        $user = null;
+        try {
+            // Create a national licence user liked the the current logged user
+            $user = $this->nationalLicenceService
+                ->getOrCreateNationalLicenceUserIfNotExists(
+                    $persistentId,
+                    array(
+                        'edu_id' => $uniqueId,
+                        'persistent_id' => $persistentId,
+                        'home_organization_type' => $homeOrganizationType,
+                        'mobile' => $mobile,
+                        'home_postal_address' => $homePostalAddress,
+                        'affiliation' => $affiliation,
+                        'swiss_library_person_residence' => $swissLibraryPersonResidence,
+                        'active_last_12_month' => $swissEduIDUsage1y === 'TRUE',
+                        'assurance_level' => $swissEduIdAssuranceLevel,
+                        'display_name' => $givenName." ".$surname
+                    )
+                );
+        } catch (\Exception $e) {
+            $this->flashMessenger()->setNamespace('error')->addMessage(
+                $this->translate($e->getMessage())
+            );
+        }
+
+        return $user;
+
+    }
+
+    /**
+     * @return boolean
+     */
+    private function isAuthenticatedWithSwissEduId() {
+
+        $idbName = $this->getConfig()->NationaLicensWorkflow->swissEduIdIDP;
+        $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : "";
+
+        return count(preg_grep($idbName, [$persistentId])) > 0;
+
+
+
     }
 
 
