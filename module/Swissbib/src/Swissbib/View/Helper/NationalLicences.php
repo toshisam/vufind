@@ -279,17 +279,17 @@ class NationalLicences extends AbstractHelper
         $pii = $this->marcFields[5];
 
         $userIsAuthorized = $this->isUserInIpRange();
-        if ( !$userIsAuthorized && isset($_SERVER['entitlement']) ) {
-            //not working currently (lw 14.11.2016)
-            //$userIsAuthorized = $this->nationalLicenceService->hasAccessToNationalLicenceContent();
+        if ( !$userIsAuthorized && $this->isAuthenticatedWithSwissEduId()) {
+            $user = $this->nationalLicenceService->getOrCreateNationalLicenceUserIfNotExists($_SERVER['persistent-id']);
+            $userIsAuthorized = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
         }
-        $userIsAuthorized = false;
 
         $url = $this->buildUrl($userIsAuthorized, $issn, $volume, $issue, $page, $pii, $doi, $journalCode);
 
-        //return $url;
-
-        return 'https://login.eduid.ch/idp/profile/SAML2/Unsolicited/SSO?providerId=https%3A%2F%2F' . $_SERVER[HTTP_HOST] . '%2Fshibboleth&target=https%3A%2F%2F' . $_SERVER[HTTP_HOST] . '%2FMyResearchNationalLicenses%2FNlsignpost?publisher=' . urlencode($url);
+        if (!$userIsAuthorized) {
+            $url = 'https://login.eduid.ch/idp/profile/SAML2/Unsolicited/SSO?providerId=https%3A%2F%2F' . $_SERVER['HTTP_HOST'] . '%2Fshibboleth&target=https%3A%2F%2F' . $_SERVER['HTTP_HOST'] . '%2FMyResearchNationalLicenses%2FNlsignpost?publisher=' . urlencode($url);
+        }
+        return $url;
     }
 
     /**
@@ -368,5 +368,12 @@ class NationalLicences extends AbstractHelper
         }
 
     }
+
+    public function isAuthenticatedWithSwissEduId() {
+        $idbName = $this->config->NationaLicensWorkflow->swissEduIdIDP;
+        $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : "";
+        return isset($idbName) ? count(preg_grep($idbName, [$persistentId])) > 0 : false;
+    }
+
 
 }
