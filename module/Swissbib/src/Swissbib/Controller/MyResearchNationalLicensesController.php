@@ -75,6 +75,7 @@ class MyResearchNationalLicensesController extends MyResearchController
     public function nlsignpostAction()
     {
         try {
+
             if (!$this->getAuthManager()->isLoggedIn()) {
                 $this->getAuthManager()->login($this->getRequest());
             }
@@ -82,7 +83,10 @@ class MyResearchNationalLicensesController extends MyResearchController
             $this->processAuthenticationException($e);
         }
 
-        // Not logged in?  Force user to log in:
+
+        // we expect to call this method only as target method at the end of a Shibboleth (particularly swissEduID)
+        //login process
+        //so: if the user is not correctly logged in he/she is led to the regular login page
         if (!$this->getAuthManager()->isLoggedIn()) {
             $this->setFollowupUrlToReferer();
             return $this->forwardTo('MyResearch', 'Login');
@@ -94,24 +98,28 @@ class MyResearchNationalLicensesController extends MyResearchController
             // with swiss EduId
             $user = $this->initializeServiceInstance();
 
-            $hasAccessToNationalLicenceContent  = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
+            $hasAccessToNationalLicenceContent  =
+                $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
 
             if (!$hasAccessToNationalLicenceContent)
             {
                 return $this->forwardTo('national-licences','index');
 
             }else {
-                $this->redirect()->toUrl($this->getDocumentProviderURL());
+                $tURL = $this->getDocumentProviderURL();
+                $this->redirect()->toUrl($tURL);
             }
+
+        } else {
+            //if the user is not logged in with swissEduId he/she is sent to the document but we can't guarentee
+            //correct access - user should be notified about this in advance on the surface
+            $tURL = $this->getDocumentProviderURL();
+            $this->redirect()->toUrl($tURL);
 
         }
 
 
-        $config = $this->getConfig();
-        $page = isset($config->Site->defaultAccountPage)
-            ? $config->Site->defaultAccountPage : 'Favorites';
 
-        return $this->forwardTo('national-licences','index');
     }
 
 
@@ -177,10 +185,10 @@ class MyResearchNationalLicensesController extends MyResearchController
      */
     private function isAuthenticatedWithSwissEduId() {
 
-        $idbName = $this->getConfig()->NationaLicensesWorkflow->swissEduIdIDP;
+        $idbName = $this->config->NationaLicensesWorkflow->swissEduIdIDP;
         $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : "";
-
-        return count(preg_grep($idbName, [$persistentId])) > 0;
+        return (isset($idbName) && !empty($_SERVER['persistent-id'])) ? count(preg_grep("/$idbName/", [$persistentId]))
+            > 0 : false;
 
 
 
@@ -188,7 +196,22 @@ class MyResearchNationalLicensesController extends MyResearchController
 
     private function getDocumentProviderURL ()
     {
-        $this->getServerUrl();
+        $publisher = $this->getRequest()->getQuery()->get("publisher");
+        $target = $this->getRequest()->getQuery()->get("target");
+
+        return $publisher . "&target=" . $target;
+
+
+        /* Structure of the adress:
+        https://test.swissbib.ch/MyResearchNationalLicenses/Nlsignpost?
+        publisher=https://shibboleth.cambridge.org/Shibboleth.sso/discovery?
+        entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth&
+        target=https://shibboleth.cambridge.org/CJOShibb2/index?
+        app=https://www.cambridge.org/core/shibboleth?
+        ref=%2Fcore%2Fproduct%2Fidentifier%2FS0043933916000386%2Ftype%2FJOURNAL_ARTICLE
+
+        so we can ask for the parameters publisher and target and concatenate them
+        */
 
     }
 
