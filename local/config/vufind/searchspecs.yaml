@@ -512,9 +512,9 @@ OCM:
 
 OWC:
   DismaxFields:
-    - classif_ocm
+    - classif_owc
   QueryFields:
-    classif_ocm:
+    classif_owc:
          - [onephrase, ~]
 
 RVK:
