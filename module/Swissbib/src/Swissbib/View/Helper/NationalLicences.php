@@ -370,9 +370,9 @@ class NationalLicences extends AbstractHelper
     }
 
     public function isAuthenticatedWithSwissEduId() {
-        $idbName = $this->config->NationaLicensWorkflow->swissEduIdIDP;
+        $idbName = $this->config->NationaLicensesWorkflow->swissEduIdIDP;
         $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : "";
-        return isset($idbName) ? count(preg_grep($idbName, [$persistentId])) > 0 : false;
+        return isset($idbName) && !empty($_SERVER['persistent-id']) ? count(preg_grep($idbName, [$persistentId])) > 0 : false;
     }
 
 

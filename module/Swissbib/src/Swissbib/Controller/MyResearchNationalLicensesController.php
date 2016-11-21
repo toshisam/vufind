@@ -96,7 +96,13 @@ class MyResearchNationalLicensesController extends MyResearchController
 
             $hasAccessToNationalLicenceContent  = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
 
-            $test = "";
+            if (!$hasAccessToNationalLicenceContent)
+            {
+                return $this->forwardTo('national-licences','index');
+
+            }else {
+                $this->redirect()->toUrl($this->getDocumentProviderURL());
+            }
 
         }
 
@@ -105,7 +111,7 @@ class MyResearchNationalLicensesController extends MyResearchController
         $page = isset($config->Site->defaultAccountPage)
             ? $config->Site->defaultAccountPage : 'Favorites';
 
-        return $this->forwardTo('MyResearch', $page);
+        return $this->forwardTo('national-licences','index');
     }
 
 
@@ -171,12 +177,18 @@ class MyResearchNationalLicensesController extends MyResearchController
      */
     private function isAuthenticatedWithSwissEduId() {
 
-        $idbName = $this->getConfig()->NationaLicensWorkflow->swissEduIdIDP;
+        $idbName = $this->getConfig()->NationaLicensesWorkflow->swissEduIdIDP;
         $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : "";
 
         return count(preg_grep($idbName, [$persistentId])) > 0;
 
 
+
+    }
+
+    private function getDocumentProviderURL ()
+    {
+        $this->getServerUrl();
 
     }
 
