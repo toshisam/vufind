@@ -26,7 +26,7 @@ $groupID  = $this->driver->getGroup(true);
 $urls = $viewRecord->getExtendedLinkDetails();
 $nlUrl = $this->nationalLicences()->getUrl($record);
 if ($nlUrl) {
-    $linkNL = ['url' => $nlUrl, 'desc' => "National-Licence"];
+    $linkNL = ['url' => $nlUrl, 'desc' => "Get it Online (National Licence)"];
     array_push($urls, $linkNL);
 }
 $link360 = $viewRecord->getLink360();
