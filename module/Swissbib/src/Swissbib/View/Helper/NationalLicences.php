@@ -278,18 +278,32 @@ class NationalLicences extends AbstractHelper
         $journalCode = $this->marcFields[4];
         $pii = $this->marcFields[5];
 
-        $userIsAuthorized = $this->isUserInIpRange();
-        if ( !$userIsAuthorized && $this->isAuthenticatedWithSwissEduId()) {
+        $message = "";
+        $userIsAuthorized = false;
+        $userInIpRange = $this->isUserInIpRange();
+        if ($userInIpRange) {
+            $userIsAuthorized = true;
+        }
+        else if ($this->isAuthenticatedWithSwissEduId()) {
             $user = $this->nationalLicenceService->getOrCreateNationalLicenceUserIfNotExists($_SERVER['persistent-id']);
             $userIsAuthorized = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
+            if (!$userIsAuthorized) {
+                $urlhelper = $this->getView()->plugin("url");
+                $url = $urlhelper('national-licences');
+                return ['url' => $url , 'message' => ""];
+            }
+        }
+        else if ( $this->getView()->auth()->getManager()->isLoggedIn() ) {
+            $userIsAuthorized = true;
+            $message = "NationalLicence may not work with your login!";
         }
 
         $url = $this->buildUrl($userIsAuthorized, $issn, $volume, $issue, $page, $pii, $doi, $journalCode);
-
         if (!$userIsAuthorized) {
             $url = 'https://login.eduid.ch/idp/profile/SAML2/Unsolicited/SSO?providerId=https%3A%2F%2F' . $_SERVER['HTTP_HOST'] . '%2Fshibboleth&target=https%3A%2F%2F' . $_SERVER['HTTP_HOST'] . '%2FMyResearchNationalLicenses%2FNlsignpost?publisher=' . urlencode($url);
         }
-        return $url;
+
+        return ['url' => $url , 'message' => $message];
     }
 
     /**

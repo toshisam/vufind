@@ -24,9 +24,9 @@ $showFRBR = $this->configAccess()->Site->displayFrbr;
 $groupID  = $this->driver->getGroup(true);
 
 $urls = $viewRecord->getExtendedLinkDetails();
-$nlUrl = $this->nationalLicences()->getUrl($record);
-if ($nlUrl) {
-    $linkNL = ['url' => $nlUrl, 'desc' => "National-Licence"];
+$nl = $this->nationalLicences()->getUrl($record);
+if ($nl) {
+    $linkNL = ['url' => $nl['url'], 'desc' => "National-Licence"];
     array_push($urls, $linkNL);
 }
 $link360 = $viewRecord->getLink360();
@@ -153,6 +153,11 @@ $linkSFX = $viewRecord->getLinkSFX();
           <? endforeach; ?>
           <? if ($linkSFX): ?>
             <?= $linkSFX ?><br/>
+          <? endif; ?>
+          <? if(!empty($nl['message'])): ?>
+          <div class="flash-message alert alert-info">
+              <strong><?= $nl['message'] ?></strong>
+          </div>
           <? endif; ?>
         </span><br />
       <? endif; ?>

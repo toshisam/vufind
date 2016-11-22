@@ -9,7 +9,7 @@ $digibernURL            = (is_array($urldisplay['urls']) && count($urldisplay['u
 $retrosURL              = (is_array($urldisplay['urls']) && count($urldisplay['urls']) > 0) ? preg_grep('/seals/', $urldisplay['urls'][0]) : false;
 $freeURL                = (is_array($urldisplay['urls']) && count($urldisplay['urls']) > 0) ? preg_grep('/sfx./', $urldisplay['urls'][0],PREG_GREP_INVERT) : false;
 $borisURL               = (is_array($urldisplay['urls']) && count($urldisplay['urls']) > 0) ? preg_grep('/boris.unibe/', $urldisplay['urls'][0]) : false;
-$nationallizenzenURL    = $this->nationalLicences()->getUrl($driver);
+$nationallizenzen       = $this->nationalLicences()->getUrl($driver);
 ?>
 
 <? if ($amountHoldings === 1): ?>
@@ -51,13 +51,18 @@ $nationallizenzenURL    = $this->nationalLicences()->getUrl($driver);
         <span><i class="fa fa-external-link"></i></span>
         <span class="hidden-xs hidden-sm">BORIS</span>
     </a>
-<? elseif($nationallizenzenURL): ?>
-    <a class="btn btn-primary linkbutton primary icon_link_primary hidden-print" href="<?= $this->redirectProtocolWrapper()->getWrappedURL($nationallizenzenURL) ?>" target="_blank">
-
+<? elseif($nationallizenzen): ?>
+    <a class="btn btn-primary linkbutton primary icon_link_primary hidden-print" href="<?= $this->redirectProtocolWrapper()->getWrappedURL($nationallizenzen['url']) ?>" target="_blank">
         <span><i class="fa fa-external-link"></i></span>
         <span class="hidden-xs hidden-sm nlItem">Get it Online</span>
     </a>
-    <div style="display: none"><?= $this->redirectProtocolWrapper()->getWrappedURL($nationallizenzenURL) ?></div>
+    <div style="display: none"><?= $this->redirectProtocolWrapper()->getWrappedURL($nationallizenzen['url']) ?></div>
+    <? if(!empty($nationallizenzen['message'])): ?>
+        <div class="flash-message alert alert-info">
+            <strong><?= $nationallizenzen['message'] ?></strong>
+        </div>
+    <? endif; ?>
+
 <? elseif($amountHoldings !== 1 && !($amountHoldings > 1) ): ?>
         <p class="hidden-sm hidden-xs hidden-print"><?= $this->transEsc('No Holdings available in the system') ?></p>
 <? endif; ?>
