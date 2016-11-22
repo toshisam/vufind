@@ -84,6 +84,9 @@ class Record extends VuFindRecord
                 '956' => [
                     'x|^VIEW && y|^Porträt',
                     'B|^ECOD',
+                ],
+                '950' => [ #we don't display doi links from National Licences, only the special url's with authentication
+                    'B|^NATIONALLICENCE$',
                 ]
             ],
             'mergeLinksByDescription' => [
