@@ -197,16 +197,13 @@ class MyResearchNationalLicensesController extends MyResearchController
     private function getDocumentProviderURL ()
     {
         $publisher = $this->getRequest()->getQuery()->get("publisher");
-        $target = $this->getRequest()->getQuery()->get("target");
 
-        return $publisher . "&target=" . $target;
+        return $publisher;
 
 
         /* Structure of the adress:
         https://test.swissbib.ch/MyResearchNationalLicenses/Nlsignpost?
-        publisher=https://shibboleth.cambridge.org/Shibboleth.sso/discovery?
-        entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth&
-        target=https://shibboleth.cambridge.org/CJOShibb2/index?
+        publisher=https://shibboleth.cambridge.org/CJOShibb2/index?
         app=https://www.cambridge.org/core/shibboleth?
         ref=%2Fcore%2Fproduct%2Fidentifier%2FS0043933916000386%2Ftype%2FJOURNAL_ARTICLE
 

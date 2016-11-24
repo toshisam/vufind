@@ -298,9 +298,11 @@ class NationalLicences extends AbstractHelper
             $message = "NationalLicence may not work with your login!";
         }
 
-        $url = $this->buildUrl($userIsAuthorized, $issn, $volume, $issue, $page, $pii, $doi, $journalCode);
+        echo "tt".$userInIpRange;
+
+        $url = $this->buildUrl($userInIpRange, $issn, $volume, $issue, $page, $pii, $doi, $journalCode);
         if (!$userIsAuthorized) {
-            $url = 'https://login.eduid.ch/idp/profile/SAML2/Unsolicited/SSO?providerId=https%3A%2F%2F' . $_SERVER['HTTP_HOST'] . '%2Fshibboleth&target=https%3A%2F%2F' . $_SERVER['HTTP_HOST'] . '%2FMyResearchNationalLicenses%2FNlsignpost?publisher=' . urlencode($url);
+            $url = 'https://login.eduid.ch/idp/profile/SAML2/Unsolicited/SSO?providerId=https%3A%2F%2F' . $_SERVER['HTTP_HOST'] . '%2Fshibboleth&target=https%3A%2F%2F' . $_SERVER['HTTP_HOST'] . '%2FMyResearchNationalLicenses%2FNlsignpost%3Fpublisher%3D' . urlencode(urlencode($url));
         }
 
         return ['url' => $url , 'message' => $message];
