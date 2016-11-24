@@ -345,6 +345,22 @@ language:
     language:
       - [and, ~]
 
+HostID:
+  DismaxFields:
+    - hostotherID_str_mv
+    - hostissn_isn_mv
+    - hostisbn_isn_mv
+  QueryFields:
+    hostotherID_str_mv:
+      - [and, 100]
+      - [or, ~]
+    hostissn_isn_mv:
+      - [and, 100]
+      - [or, ~]
+    hostisbn_isn_mv:
+      - [and, 100]
+      - [or, ~]
+
 oclc_num:
   CustomMunge:
     oclc_num:
