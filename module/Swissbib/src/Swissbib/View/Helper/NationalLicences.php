@@ -298,7 +298,7 @@ class NationalLicences extends AbstractHelper
             $message = "NationalLicence may not work with your login!";
         }
 
-        echo "tt".$userInIpRange;
+
 
         $url = $this->buildUrl($userInIpRange, $issn, $volume, $issue, $page, $pii, $doi, $journalCode);
         if (!$userIsAuthorized) {

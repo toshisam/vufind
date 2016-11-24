@@ -98,6 +98,8 @@ class MyResearchNationalLicensesController extends MyResearchController
             // with swiss EduId
             $user = $this->initializeServiceInstance();
 
+            //could we do that instead $user = $this->nationalLicenceService->getOrCreateNationalLicenceUserIfNotExists($_SERVER['persistent-id']);
+
             $hasAccessToNationalLicenceContent  =
                 $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
 
@@ -185,10 +187,17 @@ class MyResearchNationalLicensesController extends MyResearchController
      */
     private function isAuthenticatedWithSwissEduId() {
 
-        $idbName = $this->config->NationaLicensesWorkflow->swissEduIdIDP;
+        //doesn't work :
+        //$idbName = $this->config->NationaLicensesWorkflow->swissEduIdIDP;
+
+        $idbName="eduid\.ch\/idp";
+
         $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : "";
         return (isset($idbName) && !empty($_SERVER['persistent-id'])) ? count(preg_grep("/$idbName/", [$persistentId]))
             > 0 : false;
+
+
+
 
 
 
