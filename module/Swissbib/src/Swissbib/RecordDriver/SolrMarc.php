@@ -1789,7 +1789,14 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getNationalLicenceData()
     {
         $ref = $this->getFieldArray('949', ['F']);
-        $publisher = array_values($this->getHoldingsStructure())[0]['institution'];
+        //gives always the same publisher in result list
+        //$publisher = array_values($this->getHoldingsStructure())[0]['institution'];
+
+        $publisher = $this->getFieldArray('035', ['a'])[0];
+        $publisher = explode("-",$publisher)[0];
+        $publisher = str_replace("(NATIONALLICENCE)","NL-",$publisher);
+
+
         $enum = $this->getFieldArray('773', ['q']);
         $issn = $this->getFieldArray('773', ['x']);
 
