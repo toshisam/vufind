@@ -294,8 +294,10 @@ class NationalLicences extends AbstractHelper
             }
         }
         else if ( $this->getView()->auth()->getManager()->isLoggedIn() ) {
-            $userIsAuthorized = true;
-            $message = "NationalLicence may not work with your login!";
+            // we send them to info page asking them to use VPN
+            $urlhelper = $this->getView()->plugin("url");
+            $url = $urlhelper('national-licences');
+            return ['url' => $url , 'message' => ""];
         }
 
 
