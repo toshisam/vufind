@@ -18,10 +18,13 @@ $this->layout()->breadcrumbs = '<li><a href="' . $this->url('myresearch-home') .
         <p><?= $this->transEsc('snl.nonSwissEduLogin3')?> <a href="http://www.nationallicences.ch/"><?= $this->transEsc('snl.nonSwissEduLogin4')?></a>.</p>
     <? else: ?>
         <?= $this->flashmessages(); ?>
+
+        <?= $this->context($this)->renderInContext("nationallicences/intro_text.phtml", []) ?>
+        <hr>
+        <?= $this->context($this)->renderInContext("nationallicences/terms_conditions.phtml", []) ?>
+
+
         <? if (!$this->hasPermanentAccess): ?>
-            <?= $this->context($this)->renderInContext("nationallicences/intro_text.phtml", []) ?>
-            <hr>
-            <?= $this->context($this)->renderInContext("nationallicences/terms_conditions.phtml", []) ?>
             <hr>
             <h3><?= $this->transEsc('snl.temporaryAccess') ?></h3>
             <?= $this->context($this)->renderInContext("nationallicences/temporary_access.phtml", []) ?>

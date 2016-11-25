@@ -8,6 +8,6 @@
 <p>
     <span class="text-aligned-icon icon-danger"><i class="fa fa-times"></i></span>
     <?= $this->transEsc('snl.theAddressNotVerifiedYet') ?>
-    <a href="<?php echo($swissEduIDVerifyBaseUrl."homepostaladdress&providerId=".$encodedProviderID."&target=".$encodedTarget); ?>"><?= $this->transEsc('snl.theAddressNotVerifiedYet.verify') ?></a>
+    <a href="<?php echo($swissEduIDVerifyBaseUrl."homepostaladdress&providerId=".$encodedProviderID."&target=".$encodedTarget); ?>" target="_blank"><?= $this->transEsc('snl.theAddressNotVerifiedYet.verify') ?></a>
     <?= $this->transEsc('snl.theAddressNotVerifiedYet.verify2') ?>
 </p>
