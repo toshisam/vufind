@@ -82,7 +82,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
     {
         $this->switchApiService = $switchApiService;
         $this->emailService = $emailService;
-        $this->config = $config['swissbib']['national_licence_service'];
+        $this->config = $config['NationalLicenceService'];
     }
 
     /**
@@ -769,9 +769,14 @@ class NationalLicence implements ServiceLocatorAwareInterface
         foreach ($users as $user) {
             echo 'Processing user ' . $user->getEduId() . ".\r\n";
             //Update attributes from the edu-Id account
-            $user = $this->switchApiService->getUserUpdatedInformation(
-                $user->getNameId(), $user->getPersistentId()
-            );
+            try{
+                $user = $this->switchApiService->getUserUpdatedInformation(
+                    $user->getNameId(), $user->getPersistentId()
+                );
+            } catch (\Exception $e){
+                echo $e->getMessage();
+            }
+
             //If last activity date < last 12 month
             if (!$user->hasBeenActiveInLast12Month()) {
                 echo "User was not active in last 12 month.\r\n";

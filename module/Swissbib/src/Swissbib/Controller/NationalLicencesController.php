@@ -186,7 +186,7 @@ class NationalLicencesController extends BaseController
                 $this->translate($e->getMessage())
             );
         }
-        $this->redirect()->toRoute('national-licences');
+        return $this->redirect()->toRoute('national-licences');
     }
 
     /**

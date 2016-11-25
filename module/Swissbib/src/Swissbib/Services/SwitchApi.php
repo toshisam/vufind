@@ -65,7 +65,7 @@ class SwitchApi implements ServiceLocatorAwareInterface
      */
     public function __construct($config)
     {
-        $this->config = $config['swissbib']['switch_api'];
+        $this->config = $config['SwitchApi'];
     }
 
     /**
@@ -125,9 +125,9 @@ class SwitchApi implements ServiceLocatorAwareInterface
      *
      * @param string $method   Method
      * @param string $relPath  Rel path
-     * @param string $basePath Base path
      *
      * @return Client
+     * @throws \Exception
      */
     protected function getBaseClient(
         $method = Request::METHOD_GET,
@@ -153,15 +153,11 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $username = $this->config['auth_user'];
         $passw = $this->config['auth_password'];
         if(empty($username) || empty($passw)) {
-            if(empty(getenv('SWITCH_API_USER') || empty(getenv('SWITCH_API_PASSW')))) {
-                throw new \Exception('Was not possible to find the SWITCH API credentials. '.
-                    'Make sure you have correctly setup the environment variables '.
-                    '"SWITCH_API_USER" and "SWITCH_API_PASSW" either in the'.
-                    'apache setup or before launching the script.'
-                );
-            }
-            $username = getenv('SWITCH_API_USER');
-            $passw = getenv('SWITCH_API_PASSW');
+            throw new \Exception('Was not possible to find the SWITCH API credentials. '.
+                'Make sure you have correctly configured the '.
+                '"SWITCH_API_USER" and "SWITCH_API_PASSW" either in the'.
+                'apache setup or before launching the script.'
+            );
         }
         $client->setAuth($username, $passw);
 
@@ -413,7 +409,7 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $statusCode = $response->getStatusCode();
         $body = $response->getBody();
         if ($statusCode !== 200) {
-            throw new \Exception("There were a problem retrieving data for user with name " .
+            throw new \Exception("There was a problem retrieving data for user with name " .
                 "id: $nameId. Status code: $statusCode result: $body");
         }
 

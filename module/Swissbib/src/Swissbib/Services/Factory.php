@@ -28,10 +28,11 @@
  */
 namespace Swissbib\Services;
 
+use Zend\Config\Reader\Ini;
 use Zend\ServiceManager\ServiceManager;
 
 use Swissbib\VuFind\Recommend\FavoriteFacets;
-
+use Zend\Config\Reader;
 /**
  * Factory for Services.
  *
@@ -221,11 +222,10 @@ class Factory
      */
     public static function getNationalLicenceService(ServiceManager $sm)
     {
-
         return new NationalLicence(
             $sm->get('Swissbib\SwitchApiService'),
             $sm->get('Swissbib\EmailService'),
-            $sm->get('Config')
+            self::getLocalVuFindConfig()
         );
     }
 
@@ -238,8 +238,7 @@ class Factory
      */
     public static function getSwitchApiService(ServiceManager $sm)
     {
-
-        return new SwitchApi($sm->get('Config'));
+        return new SwitchApi(self::getLocalVuFindConfig());
     }
 
     /**
@@ -251,9 +250,18 @@ class Factory
      */
     public static function getEmailService(ServiceManager $sm)
     {
-
-        return new Email($sm->get('Config'));
+        return new Email(self::getLocalVuFindConfig());
     }
 
-
+    /**
+     * Function that provide the local VuFind configuration.
+     *
+     * @return array
+     */
+    protected static function getLocalVuFindConfig()
+    {
+        $privateConfig = (new Ini())->fromFile(getcwd() . '/local/config/vufind/config.ini');
+        $baseConfig = (new Ini())->fromFile(getcwd() . '/' . $privateConfig['Parent_Config']['path']);
+        return array_replace_recursive($baseConfig, $privateConfig);
+    }
 }
