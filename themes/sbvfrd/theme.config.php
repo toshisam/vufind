@@ -49,6 +49,7 @@ return array(
       'translateFacets'           => 'Swissbib\View\Helper\Swissbib\Factory::getFacetTranslator',
       'formatRelatedEntries'      => 'Swissbib\View\Helper\Swissbib\Factory::getFormatRelatedEntries',
       'piwik'                     => 'Swissbib\View\Helper\Swissbib\Factory::getPiwik',
+      'nationalLicences'          => 'Swissbib\View\Helper\Swissbib\Factory::getNationalLicences',
     ),
     'invokables' => array(
       //'translate' => 'Swissbib\VuFind\View\Helper\Root\Translate',

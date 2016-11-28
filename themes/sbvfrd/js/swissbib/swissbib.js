@@ -16,6 +16,7 @@ var swissbib = {
     this.initBulkExport();
     this.AdvancedSearch.init();
     this.initHierarchyTree();
+    //this.initNationaLicensesFlow();
   },
 
   /**
@@ -230,7 +231,33 @@ var swissbib = {
         results = regex.exec(location.search);
 
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-  }
+  },
+
+  initNationaLicensesFlow: (function() {
+
+    $('.nlItem').on("click", function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      var publisherURL = $(this).parent().next().text();
+      //use a callback function to analyze the response
+      //JSON as response object
+      /*
+      {
+      status: ['publisherRequest'|'initializelogin']
+      idpURL: 'url of the swisseduidIDP' - shouldn't be a fix value as part of the java script code
+      }
+       */
+      $.ajax({
+            "url": '/NationalLicences/signPost?publisher=' + encodeURIComponent(publisherURL)
+          }
+      )
+    });
+
+    //delete it when we have implemented a correct response
+    return false;
+
+  })
+
 };
 
 
