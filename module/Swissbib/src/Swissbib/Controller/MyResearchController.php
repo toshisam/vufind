@@ -272,7 +272,15 @@ class MyResearchController extends VuFindMyResearchController
         if ($clazz == "Swissbib\\VuFind\\Auth\\Shibboleth") {
             //store the current referrer into a special Session
             $followup = new SessionContainer('ShibbolethSaveFollowup');
-            $tURL = $this->getRequest()->getServer()->get('HTTP_REFERER');
+            //$tURL = $this->getRequest()->getServer()->get('HTTP_REFERER');
+            $tURL = $this->getRequest()->getServer()->get('REQUEST_URI');
+
+            //$this->getRequest()->getServer()->set('HTTP_REFERER',$this->getRequest()->getServer()->get('REDIRECT_URL'));
+            //foreach ($this->getRequest()->getServer() as $key => $value)
+            //{
+            //    $test = "";
+            //}
+
             $followup->url = $tURL;
         }
 

@@ -148,6 +148,7 @@ class IpMatcher
             return self::$_IP_PATTERN_TYPE_RANGE;
         }
 
+        $ip = trim(ltrim($ip, '0'));
         if (ip2long($ip)) {
             return self::$_IP_PATTERN_TYPE_SINGLE;
         }
