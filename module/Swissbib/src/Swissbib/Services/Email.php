@@ -75,8 +75,9 @@ class Email implements ServiceLocatorAwareInterface
      * @param string $to                 The recipient of the e-mail
      * @param string $textMail           Text of the e-mail
      * @param string $attachmentFilePath File path of the file to attach
-     * @param bool   $tls
+     * @param bool   $tls                tls
      *
+     * @returns void
      * @throws \Exception
      */
     public function sendMail($to, $textMail, $attachmentFilePath, $tls = false)
@@ -144,9 +145,11 @@ class Email implements ServiceLocatorAwareInterface
      * @param string       $subject     Subject
      * @param bool         $tlsActive   Send with TLS encryption
      *
+     * @returns void
      * @throws \Exception
      */
-    public function sendMailWithAttachment($to, $mimeMessage, $subject, $tlsActive = false)
+    public function sendMailWithAttachment(
+        $to, $mimeMessage, $subject, $tlsActive = false)
     {
         if (empty($to)) {
             throw new \Exception(
@@ -160,9 +163,10 @@ class Email implements ServiceLocatorAwareInterface
             ->addFrom($this->config['email_service']['default_email_address_from'])
             ->setSubject($subject);
         $transport = null;
-        if($tlsActive) {
+        if ($tlsActive) {
             $transport = new SmtpTransport();
-            $options = new SmtpOptions($this->config['email_service']['smtp_options']);
+            $options = new SmtpOptions(
+                $this->config['email_service']['smtp_options']);
             $transport->setOptions($options);
         } else {
             $transport = new SendmailTransport();
@@ -190,19 +194,23 @@ class Email implements ServiceLocatorAwareInterface
                 ['force_canonical' => true]
             );
         $username = $toUser->firstname . ' ' . $toUser->lastname;
-        $textMail = '<p>Dear ' . $username . ',<br /> <br /> We noticed that you didn\'t use ' .
+        $textMail = '<p>Dear ' . $username .
+            ',<br /> <br /> We noticed that you didn\'t use ' .
             'Swiss National Licences as a private user in the last 12 months. ' .
             'Please visit <a href="' . $link . '" ' .
             'target="_blank" rel="noreferrer">this link</a> ' .
-            'in the next 30 days to keep your account active. Take this occasion to update ' .
-            'your personal information if needed. Otherwise your account will be made inactive' .
+            'in the next 30 days to keep your account active. ' .
+            'Take this occasion to update ' .
+            'your personal information if needed. ' .
+            'Otherwise your account will be made inactive' .
             ' and you will need to register again.</p>';
         $mimeMessage = $this->createMimeMessage(
             $textMail,
             null,
             Mime\Mime::TYPE_HTML
         );
-        $this->sendMailWithAttachment($toUser->email, $mimeMessage, 'Account extension');
+        $this->sendMailWithAttachment(
+            $toUser->email, $mimeMessage, 'Account extension');
     }
 
     /**

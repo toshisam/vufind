@@ -275,8 +275,8 @@ class MyResearchController extends VuFindMyResearchController
             //$tURL = $this->getRequest()->getServer()->get('HTTP_REFERER');
             $tURL = $this->getRequest()->getServer()->get('REQUEST_URI');
 
-            //$this->getRequest()->getServer()
-            //  ->set('HTTP_REFERER',$this->getRequest()->getServer()->get('REDIRECT_URL'));
+            //$this->getRequest()->getServer()->set('HTTP_REFERER',
+            //   $this->getRequest()->getServer()->get('REDIRECT_URL'));
             //foreach ($this->getRequest()->getServer() as $key => $value)
             //{
             //    $test = "";

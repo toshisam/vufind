@@ -82,26 +82,28 @@ class MyResearchNationalLicensesController extends MyResearchController
         // we expect to call this method only as target method
         // at the end of a Shibboleth (particularly swissEduID)
         //login process
-        //so: if user is not correctly logged in he/she is led to the regular login page
+        //so: if user is not correctly logged in,
+        // he/she is led to the regular login page
         if (!$this->getAuthManager()->isLoggedIn()) {
             $this->setFollowupUrlToReferer();
             return $this->forwardTo('MyResearch', 'Login');
         }
 
         if ($this->isAuthenticatedWithSwissEduId()) {
-            //check attributes and / or start registration process only if user is authenticated
-            // with swiss EduId
+            //check attributes and / or start registration process
+            // only if user is authenticated with swiss EduId
             $user = $this->initializeServiceInstance();
 
-            //could we do that instead $user = $this->nationalLicenceService->getOrCreateNationalLicenceUserIfNotExists($_SERVER['persistent-id']);
+            //could we do that instead $user = $this->nationalLicenceService
+            //   ->getOrCreateNationalLicenceUserIfNotExists($_SERVER['persistent-id']);
 
-            $hasAccessToNationalLicenceContent  =
-                $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
+            $hasAccessToNationalLicenceContent = $this->nationalLicenceService
+                ->hasAccessToNationalLicenceContent($user);
 
             if (!$hasAccessToNationalLicenceContent) {
                 return $this->forwardTo('national-licences', 'index');
 
-            }else {
+            } else {
                 $tURL = $this->getDocumentProviderURL();
                 $this->redirect()->toUrl($tURL);
             }
@@ -117,26 +119,40 @@ class MyResearchNationalLicensesController extends MyResearchController
     }
 
     /**
+     *
+     * initialized the service instance
+     *
      * @return NationalLicenceUser
      */
     private function initializeServiceInstance()
     {
         // Get user information from the shibboleth attributes
-        $uniqueId = isset($_SERVER['uniqueID']) ? $_SERVER['uniqueID'] : null;
-        $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : null;
-        $givenName = isset($_SERVER['givenName']) ? $_SERVER['givenName'] : null;
-        $surname = isset($_SERVER['surname']) ? $_SERVER['surname'] : null;
-        $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : null;
-        $homePostalAddress = isset($_SERVER['homePostalAddress']) ? $_SERVER['homePostalAddress'] :
+        $uniqueId =
+            isset($_SERVER['uniqueID']) ? $_SERVER['uniqueID'] : null;
+        $persistentId =
+            isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : null;
+        $givenName =
+            isset($_SERVER['givenName']) ? $_SERVER['givenName'] : null;
+        $surname =
+            isset($_SERVER['surname']) ? $_SERVER['surname'] : null;
+        $persistentId =
+            isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : null;
+        $homePostalAddress =
+            isset($_SERVER['homePostalAddress']) ? $_SERVER['homePostalAddress'] :
             null;
-        $mobile = isset($_SERVER['mobile']) ? $_SERVER['mobile'] : null;
-        $homeOrganizationType = isset($_SERVER['home_organization_type']) ? $_SERVER['home_organization_type'] :
+        $mobile =
+            isset($_SERVER['mobile']) ? $_SERVER['mobile'] : null;
+        $homeOrganizationType =
+            isset($_SERVER['home_organization_type']) ? $_SERVER['home_organization_type'] :
             null;
-        $affiliation = isset($_SERVER['affiliation']) ? $_SERVER['affiliation'] : null;
-        $swissLibraryPersonResidence = isset($_SERVER['swissLibraryPersonResidence']) ?
-            $_SERVER['swissLibraryPersonResidence'] : null;
-        $swissEduIDUsage1y = isset($_SERVER['swissEduIDUsage1y']) ? $_SERVER['swissEduIDUsage1y'] : null;
-        $swissEduIdAssuranceLevel = isset($_SERVER['swissEduIdAssuranceLevel']) ?
+        $affiliation =
+            isset($_SERVER['affiliation']) ? $_SERVER['affiliation'] : null;
+        $swissLibraryPersonResidence =
+            isset($_SERVER['swissLibraryPersonResidence']) ? $_SERVER['swissLibraryPersonResidence'] : null;
+        $swissEduIDUsage1y =
+            isset($_SERVER['swissEduIDUsage1y']) ? $_SERVER['swissEduIDUsage1y'] : null;
+        $swissEduIdAssuranceLevel =
+            isset($_SERVER['swissEduIdAssuranceLevel']) ?
             $_SERVER['swissEduIdAssuranceLevel'] : null;
 
         /**
@@ -157,7 +173,8 @@ class MyResearchNationalLicensesController extends MyResearchController
                         'mobile' => $mobile,
                         'home_postal_address' => $homePostalAddress,
                         'affiliation' => $affiliation,
-                        'swiss_library_person_residence' => $swissLibraryPersonResidence,
+                        'swiss_library_person_residence' =>
+                            $swissLibraryPersonResidence,
                         'active_last_12_month' => $swissEduIDUsage1y === 'TRUE',
                         'assurance_level' => $swissEduIdAssuranceLevel,
                         'display_name' => $givenName . " " . $surname
@@ -174,9 +191,12 @@ class MyResearchNationalLicensesController extends MyResearchController
     }
 
     /**
+     *
+     * checks if current user is authenticated with swiss edu id
+     *
      * @return boolean
      */
-    private function isAuthenticatedWithSwissEduId()
+    protected function isAuthenticatedWithSwissEduId()
     {
 
         //doesn't work :
@@ -184,27 +204,22 @@ class MyResearchNationalLicensesController extends MyResearchController
 
         $idbName = "eduid\.ch\/idp";
 
-        $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : "";
-        return (isset($idbName) && !empty($_SERVER['persistent-id'])) ? count(preg_grep("/$idbName/", [$persistentId]))
-            > 0 : false;
+        $persistentId = isset($_SERVER['persistent-id']) ?
+            $_SERVER['persistent-id'] : "";
+        return (isset($idbName) && !empty($_SERVER['persistent-id'])) ?
+            count(preg_grep("/$idbName/", [$persistentId])) > 0 : false;
 
     }
 
-    private function getDocumentProviderURL()
+    /**
+     * Gets the document provider URL
+     *
+     * @return mixed
+     */
+    protected function getDocumentProviderURL()
     {
         $publisher = $this->getRequest()->getQuery()->get("publisher");
-
         return $publisher;
-
-        /* Structure of the adress:
-        https://test.swissbib.ch/MyResearchNationalLicenses/Nlsignpost?
-        publisher=https://shibboleth.cambridge.org/CJOShibb2/index?
-        app=https://www.cambridge.org/core/shibboleth?
-        ref=%2Fcore%2Fproduct%2Fidentifier%2FS0043933916000386%2Ftype%2FJOURNAL_ARTICLE
-
-        so we can ask for the parameters publisher and target and concatenate them
-        */
-
     }
 
 }
