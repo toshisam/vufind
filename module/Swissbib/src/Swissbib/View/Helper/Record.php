@@ -85,7 +85,7 @@ class Record extends VuFindRecord
                     'x|^VIEW && y|^Porträt',
                     'B|^ECOD',
                 ],
-                '950' => [ #we don't display doi links from National Licences, only the special url's with authentication
+                '950' => [ // we don't display doi links from National Licences, only the special url's with authentication
                     'B|^NATIONALLICENCE$',
                 ]
             ],

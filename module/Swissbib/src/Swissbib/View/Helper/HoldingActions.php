@@ -62,7 +62,7 @@ class HoldingActions extends AbstractTranslatorHelper
         $loginURL   = $this->getView()->url('myresearch-home');
 
         if (isset($item['backlink'])) {
-            if (isset($item['network']) and $item['network']!= 'NATIONALLICENCE') {
+            if (isset($item['network']) and $item['network'] != 'NATIONALLICENCE') {
                 $actions['backlink'] = [
                     'label' => $this->translate('hold_backlink') . "huhu" . $item['network'],
                     'href' => $this->getView()->redirectProtocolWrapper()

@@ -25,7 +25,6 @@
 namespace Swissbib\Services;
 
 use Zend\Di\ServiceLocator;
-use Zend\Mail\Protocol\SmtpPluginManager;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Mime;
@@ -128,10 +127,10 @@ class Email implements ServiceLocatorAwareInterface
             // Setting the encoding is recommended for binary data
             $attachment->encoding = Mime\Mime::ENCODING_BASE64;
             // then add them to a MIME message
-            $mimeMessage->setParts(array($text, $attachment));
+            $mimeMessage->setParts([$text, $attachment]);
         } else {
             // then add it to MIME message
-            $mimeMessage->setParts(array($text));
+            $mimeMessage->setParts([$text]);
         }
 
         return $mimeMessage;
@@ -187,16 +186,16 @@ class Email implements ServiceLocatorAwareInterface
         $link = $this->config['national_licence_service']['base_domain_path'] .
             $url(
                 'national-licences',
-                array('action' => 'extend-account'),
-                array('force_canonical' => true)
+                ['action' => 'extend-account'],
+                ['force_canonical' => true]
             );
         $username = $toUser->firstname . ' ' . $toUser->lastname;
-        $textMail = '<p>Dear '. $username .',<br /> <br /> We noticed that you didn\'t use '.
-            'Swiss National Licences as a private user in the last 12 months. '.
-            'Please visit <a href="' . $link . '" '.
-            'target="_blank" rel="noreferrer">this link</a> '.
-            'in the next 30 days to keep your account active. Take this occasion to update '.
-            'your personal information if needed. Otherwise your account will be made inactive'.
+        $textMail = '<p>Dear ' . $username . ',<br /> <br /> We noticed that you didn\'t use ' .
+            'Swiss National Licences as a private user in the last 12 months. ' .
+            'Please visit <a href="' . $link . '" ' .
+            'target="_blank" rel="noreferrer">this link</a> ' .
+            'in the next 30 days to keep your account active. Take this occasion to update ' .
+            'your personal information if needed. Otherwise your account will be made inactive' .
             ' and you will need to register again.</p>';
         $mimeMessage = $this->createMimeMessage(
             $textMail,

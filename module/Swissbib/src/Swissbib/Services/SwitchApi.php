@@ -25,7 +25,6 @@
  */
 namespace Swissbib\Services;
 
-use Swissbib\Libadmin\Exception\Exception;
 use Swissbib\VuFind\Db\Row\NationalLicenceUser;
 use Zend\Http\Client;
 use Zend\Http\Request;
@@ -154,9 +153,10 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $passw = $this->config['auth_password'];
         if(empty($username) || empty($passw)) {
             if(empty(getenv('SWITCH_API_USER') || empty(getenv('SWITCH_API_PASSW')))) {
-                throw new \Exception('Was not possible to find the SWITCH API credentials. '.
-                    'Make sure you have correctly setup the environment variables '.
-                    '"SWITCH_API_USER" and "SWITCH_API_PASSW" either in the'.
+                throw new \Exception(
+                    'Was not possible to find the SWITCH API credentials. ' .
+                    'Make sure you have correctly setup the environment variables ' .
+                    '"SWITCH_API_USER" and "SWITCH_API_PASSW" either in the' .
                     'apache setup or before launching the script.'
                 );
             }
@@ -383,7 +383,6 @@ class SwitchApi implements ServiceLocatorAwareInterface
     /**
      * Get the update attributes of a the national licence user.
      *
-     *
      * @param string $nameId Name id
      *
      * @return NationalLicenceUser
@@ -413,8 +412,10 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $statusCode = $response->getStatusCode();
         $body = $response->getBody();
         if ($statusCode !== 200) {
-            throw new \Exception("There were a problem retrieving data for user with name " .
-                "id: $nameId. Status code: $statusCode result: $body");
+            throw new \Exception(
+                "There were a problem retrieving data for user with name " .
+                "id: $nameId. Status code: $statusCode result: $body"
+            );
         }
 
         return json_decode($body);

@@ -57,7 +57,6 @@ class NationalLicences extends AbstractHelper
     protected $oxfordUrlCode;
     protected $nationalLicenceService;
 
-
     /**
      * NationalLicences constructor.
      *
@@ -83,7 +82,7 @@ class NationalLicences extends AbstractHelper
         /*
         Based on Oxford mapping : http://www.oxfordjournals.org/en/help/tech-info/linking.html
          */
-        $this->oxfordUrlCode = array (
+        $this->oxfordUrlCode =  [
             "asjour" => "asj",
             "afrafj" => "afraf",
             "aibsbu" => "aibsbulletin",
@@ -243,14 +242,14 @@ class NationalLicences extends AbstractHelper
             "tlmsoc" => "tlms",
             "tweceb" => "tcbh",
             "vevolu" => "ve"
-        );
+        ];
     }
 
     public function isUserInIpRange()
     {
         $remoteAddress = new RemoteAddress();
         $ipAddress = $remoteAddress->getIpAddress();
-        $isMatchingIp = $this->ipMatcher->isMatching( $ipAddress, $this->validIps );
+        $isMatchingIp = $this->ipMatcher->isMatching($ipAddress, $this->validIps);
         return $isMatchingIp;
     }
 
@@ -265,7 +264,8 @@ class NationalLicences extends AbstractHelper
     {
         $this->record = $record;
         $this->marcFields = $record->getNationalLicenceData();
-        if ($this->marcFields[0] !== "NATIONALLICENCE") return false;
+        if ($this->marcFields[0] !== "NATIONALLICENCE") { return false;
+        }
 
         $issn = $this->marcFields[3];
         $enumeration = $this->marcFields[2];
@@ -293,14 +293,12 @@ class NationalLicences extends AbstractHelper
                 return ['url' => $url , 'message' => ""];
             }
         }
-        else if ( $this->getView()->auth()->getManager()->isLoggedIn() ) {
+        else if ($this->getView()->auth()->getManager()->isLoggedIn()) {
             // we send them to info page asking them to use VPN
             $urlhelper = $this->getView()->plugin("url");
             $url = $urlhelper('national-licences');
             return ['url' => $url , 'message' => ""];
         }
-
-
 
         $url = $this->buildUrl($userInIpRange, $issn, $volume, $issue, $page, $pii, $doi, $journalCode);
         if (!$userIsAuthorized) {
@@ -350,15 +348,15 @@ class NationalLicences extends AbstractHelper
         $publisher = $this->marcFields[1];
         switch ($publisher)
         {
-            case 'NL-gruyter':
-                $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
-                break;
-            case 'NL-cambridge':
-                $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
-                break;
-            case 'NL-oxford':
-                $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
-                break;
+        case 'NL-gruyter':
+            $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
+            break;
+        case 'NL-cambridge':
+            $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
+            break;
+        case 'NL-oxford':
+            $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
+            break;
         }
 
         $blueprintUrl = "";
@@ -387,12 +385,12 @@ class NationalLicences extends AbstractHelper
 
     }
 
-    public function isAuthenticatedWithSwissEduId() {
+    public function isAuthenticatedWithSwissEduId()
+    {
         $idbName = $this->config->NationaLicensesWorkflow->swissEduIdIDP;
         $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : "";
         return (isset($idbName) && !empty($_SERVER['persistent-id'])) ? count(preg_grep("/$idbName/", [$persistentId]))
             > 0 : false;
     }
-
 
 }

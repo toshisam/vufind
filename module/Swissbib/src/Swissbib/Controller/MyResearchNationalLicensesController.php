@@ -34,10 +34,6 @@ use Swissbib\Services\NationalLicence;
 use VuFind\Exception\Auth as AuthException;
 use Swissbib\VuFind\Db\Row\NationalLicenceUser;
 
-
-
-
-
 /**
  * Swissbib MyResearchNationalLicensesController
  *
@@ -83,17 +79,16 @@ class MyResearchNationalLicensesController extends MyResearchController
             $this->processAuthenticationException($e);
         }
 
-
-        // we expect to call this method only as target method at the end of a Shibboleth (particularly swissEduID)
+        // we expect to call this method only as target method
+        // at the end of a Shibboleth (particularly swissEduID)
         //login process
-        //so: if the user is not correctly logged in he/she is led to the regular login page
+        //so: if user is not correctly logged in he/she is led to the regular login page
         if (!$this->getAuthManager()->isLoggedIn()) {
             $this->setFollowupUrlToReferer();
             return $this->forwardTo('MyResearch', 'Login');
         }
 
-        if ($this->isAuthenticatedWithSwissEduId())
-        {
+        if ($this->isAuthenticatedWithSwissEduId()) {
             //check attributes and / or start registration process only if user is authenticated
             // with swiss EduId
             $user = $this->initializeServiceInstance();
@@ -103,9 +98,8 @@ class MyResearchNationalLicensesController extends MyResearchController
             $hasAccessToNationalLicenceContent  =
                 $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
 
-            if (!$hasAccessToNationalLicenceContent)
-            {
-                return $this->forwardTo('national-licences','index');
+            if (!$hasAccessToNationalLicenceContent) {
+                return $this->forwardTo('national-licences', 'index');
 
             }else {
                 $tURL = $this->getDocumentProviderURL();
@@ -120,10 +114,7 @@ class MyResearchNationalLicensesController extends MyResearchController
 
         }
 
-
-
     }
-
 
     /**
      * @return NationalLicenceUser
@@ -159,7 +150,7 @@ class MyResearchNationalLicensesController extends MyResearchController
             $user = $this->nationalLicenceService
                 ->getOrCreateNationalLicenceUserIfNotExists(
                     $persistentId,
-                    array(
+                    [
                         'edu_id' => $uniqueId,
                         'persistent_id' => $persistentId,
                         'home_organization_type' => $homeOrganizationType,
@@ -169,8 +160,8 @@ class MyResearchNationalLicensesController extends MyResearchController
                         'swiss_library_person_residence' => $swissLibraryPersonResidence,
                         'active_last_12_month' => $swissEduIDUsage1y === 'TRUE',
                         'assurance_level' => $swissEduIdAssuranceLevel,
-                        'display_name' => $givenName." ".$surname
-                    )
+                        'display_name' => $givenName . " " . $surname
+                    ]
                 );
         } catch (\Exception $e) {
             $this->flashMessenger()->setNamespace('error')->addMessage(
@@ -185,30 +176,25 @@ class MyResearchNationalLicensesController extends MyResearchController
     /**
      * @return boolean
      */
-    private function isAuthenticatedWithSwissEduId() {
+    private function isAuthenticatedWithSwissEduId()
+    {
 
         //doesn't work :
         //$idbName = $this->config->NationaLicensesWorkflow->swissEduIdIDP;
 
-        $idbName="eduid\.ch\/idp";
+        $idbName = "eduid\.ch\/idp";
 
         $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : "";
         return (isset($idbName) && !empty($_SERVER['persistent-id'])) ? count(preg_grep("/$idbName/", [$persistentId]))
             > 0 : false;
 
-
-
-
-
-
     }
 
-    private function getDocumentProviderURL ()
+    private function getDocumentProviderURL()
     {
         $publisher = $this->getRequest()->getQuery()->get("publisher");
 
         return $publisher;
-
 
         /* Structure of the adress:
         https://test.swissbib.ch/MyResearchNationalLicenses/Nlsignpost?
@@ -220,7 +206,5 @@ class MyResearchNationalLicensesController extends MyResearchController
         */
 
     }
-
-
 
 }

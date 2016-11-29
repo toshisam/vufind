@@ -437,7 +437,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * @return bool
      * @throws \Exception
      */
-    protected function isVerifiedHomePostalAddress($user = null) {
+    protected function isVerifiedHomePostalAddress($user = null)
+    {
         if(empty($user)) {
             $user = $this->getCurrentNationalLicenceUser();
         }
@@ -450,8 +451,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
         $qualityLevelString = null;
         foreach ($singleElements as $singleElement) {
             $parts = explode(":", $singleElement);
-            if($parts[0] === "homePostalAddress")
-                $qualityLevelString = $parts[count($parts)-1];
+            if($parts[0] === "homePostalAddress") {
+                $qualityLevelString = $parts[count($parts) - 1];
+            }
         }
         if(empty($qualityLevelString)) {
             throw new \Exception(
@@ -460,9 +462,12 @@ class NationalLicence implements ServiceLocatorAwareInterface
         }
         $qualityLevel = substr($qualityLevelString, -4);
         //echo $qualityLevel;
-        if("loa1" === $qualityLevel) return false;
-        if("loa2" === $qualityLevel) return true;
-        if("loa3" === $qualityLevel) return true;
+        if("loa1" === $qualityLevel) { return false;
+        }
+        if("loa2" === $qualityLevel) { return true;
+        }
+        if("loa3" === $qualityLevel) { return true;
+        }
         throw new \Exception("Assurance level format is incorrect");
     }
 
@@ -655,7 +660,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
         $countLastPermanentRequests = $this->getLastPermanentAccessOfLastMonth();
         $listBLockedUsers = $this->getLastBlockedUsersOfLastMonth();
 
-        $text = "This is an export of the National Licence users. You can find the exported users in the attached file. <br> In the last month there were <b>$countLastTemporaryRequests</b> temporary access requests ".
+        $text = "This is an export of the National Licence users. You can find the exported users in the attached file. <br> In the last month there were <b>$countLastTemporaryRequests</b> temporary access requests " .
         " and <b>$countLastPermanentRequests</b> permanent access requests.<br>";
 
         return $text . $this->userToText($listBLockedUsers);
@@ -668,7 +673,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
      */
     private function getLastTemporaryRequestOfLastMonth()
     {
-        /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable */
+        /**
+ * @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable 
+*/
         $nationalLicenceUserTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
         return $nationalLicenceUserTable->getLastTemporaryRequest(1);
     }
@@ -680,7 +687,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
      */
     private function getLastPermanentAccessOfLastMonth()
     {
-        /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable */
+        /**
+ * @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable 
+*/
         $nationalLicenceUserTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
         return $nationalLicenceUserTable->getNumberOfLastPermanentRequest(1);
     }
@@ -693,7 +702,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
      */
     private function getLastBlockedUsersOfLastMonth()
     {
-        /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable */
+        /**
+ * @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable 
+*/
         $nationalLicenceUserTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
         return $nationalLicenceUserTable->getLastBlockedUser(1);
     }
@@ -717,7 +728,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
         ];
 
         $str = "<br><br><p>List of last blocked users of the last month:</p><br><br>";
-        $str = $str. "Fields: ";
+        $str = $str . "Fields: ";
         foreach ($fieldVuFindUser as $field) {
             $str = $str . $field . ', ';
         }
@@ -751,7 +762,6 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * Check and update the National Licence user with the last attributes in their
      * edu-ID account and update
      * the flag accordingly.
-     *
      *
      * @return void
      * @throws \Exception
@@ -841,7 +851,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
         $dateRequest = $user->getLastAccountExtensionRequest();
         if (empty($dateRequest)) {
             throw new \Exception(
-                "Email request is not sent yet. Not possible to check if".
+                "Email request is not sent yet. Not possible to check if" .
                 " it's expired or not."
             );
         }

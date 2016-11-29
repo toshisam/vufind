@@ -255,5 +255,4 @@ class Factory
         return new Email($sm->get('Config'));
     }
 
-
 }
