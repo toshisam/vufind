@@ -226,6 +226,7 @@ class Params extends VuFindSolrParams
      * GetFacetLabel
      *
      * @param string $field Facet field name.
+     * 
      * @param string $value Facet value.
      *
      * @return string Human-readable description of field.
@@ -236,7 +237,7 @@ class Params extends VuFindSolrParams
         case 'publishDate':
             return 'adv_search_year';
         default:
-            return parent::getFacetLabel($field);
+            return parent::getFacetLabel($field, $value);
         }
     }
 }
