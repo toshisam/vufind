@@ -119,7 +119,16 @@ $formats = $viewRecord->getFormatList();
         </a>
       <? endif; ?>
 
-
+      <? if ($this->userlist()->getMode() !== 'disabled'): ?>
+        <a class="btn btn-primary hidden-print" href="<?= $this->recordLink()->getActionUrl($this->driver, 'Save'); ?>" title="<?= $this->transEsc('Add to favorites') ?>">
+          <span class="memorizelistadd"><i class="fa fa-list-ul"></i></span>
+          <span class="hidden-xs hidden-sm"><?= $this->transEsc('List') ?></span>
+        </a>
+            <? /* Saved lists */ ?>
+            <div class="savedLists alert alert-info hidden hidden-xs hidden-sm hidden-print">
+                <strong><?=$this->transEsc('Saved in')?>:</strong>
+            </div>
+      <? endif; ?>
 
 
 

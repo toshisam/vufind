@@ -57,33 +57,27 @@ class NationalLicences extends AbstractHelper
     protected $oxfordUrlCode;
     protected $nationalLicenceService;
 
-
     /**
      * NationalLicences constructor.
      *
-     * @param \VuFind\Config $config config
+     * @param ServiceManager $sm ServiceManager
      */
     public function __construct($sm)
     {
         $this->sm = $sm;
-        $this->config = $sm->getServiceLocator()->get('VuFind\Config')->get('config');
+        $this->config = $sm->getServiceLocator()->get('VuFind\Config')
+            ->get('config');
         $this->ipMatcher = new IpMatcher();
-        $this->validIps = explode(",", $this->config->SwissAcademicLibraries->patterns_ip);
-        //$RemoteAddress->setUseProxy();
-        /*
-        $this->nationalLicenceService = new NationalLicence(
-            $this->sm->get('Swissbib\SwitchApiService'),
-            $this->sm->get('Swissbib\EmailService'),
-            $this->sm->get('Config')
-        );
-        */
-        //$this->nationalLicenceService = $this->sm->get('VuFind\NationalLicences');
-        $this->nationalLicenceService = $this->sm->getServiceLocator()->get('Swissbib\NationalLicenceService');
+        $this->validIps = explode(",", $this->config
+            ->SwissAcademicLibraries->patterns_ip);
+        $this->nationalLicenceService = $this->sm->getServiceLocator()
+            ->get('Swissbib\NationalLicenceService');
 
         /*
-        Based on Oxford mapping : http://www.oxfordjournals.org/en/help/tech-info/linking.html
-         */
-        $this->oxfordUrlCode = array (
+        Based on Oxford mapping:
+           http://www.oxfordjournals.org/en/help/tech-info/linking.html
+        */
+        $this->oxfordUrlCode =  [
             "asjour" => "asj",
             "afrafj" => "afraf",
             "aibsbu" => "aibsbulletin",
@@ -243,14 +237,20 @@ class NationalLicences extends AbstractHelper
             "tlmsoc" => "tlms",
             "tweceb" => "tcbh",
             "vevolu" => "ve"
-        );
+        ];
     }
 
+    /**
+     * Checks if current user is in IP Range as defined in config-file
+     *
+     * @return bool
+     * @throws \Swissbib\TargetsProxy\Exception
+     */
     public function isUserInIpRange()
     {
         $remoteAddress = new RemoteAddress();
         $ipAddress = $remoteAddress->getIpAddress();
-        $isMatchingIp = $this->ipMatcher->isMatching( $ipAddress, $this->validIps );
+        $isMatchingIp = $this->ipMatcher->isMatching($ipAddress, $this->validIps);
         return $isMatchingIp;
     }
 
@@ -265,7 +265,9 @@ class NationalLicences extends AbstractHelper
     {
         $this->record = $record;
         $this->marcFields = $record->getNationalLicenceData();
-        if ($this->marcFields[0] !== "NATIONALLICENCE") return false;
+        if ($this->marcFields[0] !== "NATIONALLICENCE") {
+            return false;
+        }
 
         $issn = $this->marcFields[3];
         $enumeration = $this->marcFields[2];
@@ -283,28 +285,32 @@ class NationalLicences extends AbstractHelper
         $userInIpRange = $this->isUserInIpRange();
         if ($userInIpRange) {
             $userIsAuthorized = true;
-        }
-        else if ($this->isAuthenticatedWithSwissEduId()) {
-            $user = $this->nationalLicenceService->getOrCreateNationalLicenceUserIfNotExists($_SERVER['persistent-id']);
-            $userIsAuthorized = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
+        } else if ($this->isAuthenticatedWithSwissEduId()) {
+            $user = $this->nationalLicenceService
+                ->getOrCreateNationalLicenceUserIfNotExists(
+                    $_SERVER['persistent-id']);
+            $userIsAuthorized = $this->nationalLicenceService
+                ->hasAccessToNationalLicenceContent($user);
             if (!$userIsAuthorized) {
                 $urlhelper = $this->getView()->plugin("url");
                 $url = $urlhelper('national-licences');
                 return ['url' => $url , 'message' => ""];
             }
-        }
-        else if ( $this->getView()->auth()->getManager()->isLoggedIn() ) {
+        } else if ($this->getView()->auth()->getManager()->isLoggedIn()) {
             // we send them to info page asking them to use VPN
             $urlhelper = $this->getView()->plugin("url");
             $url = $urlhelper('national-licences');
             return ['url' => $url , 'message' => ""];
         }
 
-
-
-        $url = $this->buildUrl($userInIpRange, $issn, $volume, $issue, $page, $pii, $doi, $journalCode);
+        $url = $this->buildUrl($userInIpRange, $issn, $volume,
+            $issue, $page, $pii, $doi, $journalCode);
         if (!$userIsAuthorized) {
-            $url = 'https://login.eduid.ch/idp/profile/SAML2/Unsolicited/SSO?providerId=https%3A%2F%2F' . $_SERVER['HTTP_HOST'] . '%2Fshibboleth&target=https%3A%2F%2F' . $_SERVER['HTTP_HOST'] . '%2FMyResearchNationalLicenses%2FNlsignpost%3Fpublisher%3D' . urlencode(urlencode($url));
+            $url = 'https://login.eduid.ch/idp/profile/SAML2/Unsolicited/" .
+            "SSO?providerId=https%3A%2F%2F' . $_SERVER['HTTP_HOST'] .
+                '%2Fshibboleth&target=https%3A%2F%2F' . $_SERVER['HTTP_HOST'] .
+                '%2FMyResearchNationalLicenses%2FNlsignpost%3Fpublisher%3D' .
+                urlencode(urlencode($url));
         }
 
         return ['url' => $url , 'message' => $message];
@@ -324,7 +330,8 @@ class NationalLicences extends AbstractHelper
      *
      * @return null
      */
-    protected function buildUrl($userAuthorized, $issn, $volume, $issue, $sPage, $pii, $doi, $journalCode)
+    protected function buildUrl($userAuthorized, $issn, $volume,
+                                $issue, $sPage, $pii, $doi, $journalCode)
     {
         $url = $this->getPublisherBlueprintUrl($userAuthorized);
         $url = str_replace('{ISSN}', $issn, $url);
@@ -333,7 +340,8 @@ class NationalLicences extends AbstractHelper
         $url = str_replace('{SPAGE}', $sPage, $url);
         $url = str_replace('{PII}', $pii, $url);
         $url = str_replace('{DOI}', $doi, $url);
-        $url = str_replace('{JOURNAL-URL-CODE}', $this->getOxfordUrlCode($journalCode), $url);
+        $url = str_replace('{JOURNAL-URL-CODE}',
+            $this->getOxfordUrlCode($journalCode), $url);
         return $url;
     }
 
@@ -350,15 +358,15 @@ class NationalLicences extends AbstractHelper
         $publisher = $this->marcFields[1];
         switch ($publisher)
         {
-            case 'NL-gruyter':
-                $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
-                break;
-            case 'NL-cambridge':
-                $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
-                break;
-            case 'NL-oxford':
-                $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
-                break;
+        case 'NL-gruyter':
+            $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
+            break;
+        case 'NL-cambridge':
+            $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
+            break;
+        case 'NL-oxford':
+            $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
+            break;
         }
 
         $blueprintUrl = "";
@@ -370,7 +378,8 @@ class NationalLicences extends AbstractHelper
     }
 
     /**
-     * Return code to be inserted in the url based on the journal-code which is in the metadata (oxford).
+     * Return code to be inserted in the url based on the journal-code
+     * which is in the metadata (oxford).
      *
      * @param String $journalCode journalCode in the metadata
      *
@@ -380,19 +389,25 @@ class NationalLicences extends AbstractHelper
     {
         if (isset($this->oxfordUrlCode[$journalCode])) {
             return $this->oxfordUrlCode[$journalCode];
-        }
-        else {
+        } else {
             return $journalCode;
         }
 
     }
 
-    public function isAuthenticatedWithSwissEduId() {
+    /**
+     * Checks if current user is authenticated with swiss edu id.
+     *
+     * @return bool
+     */
+    public function isAuthenticatedWithSwissEduId()
+    {
         $idbName = $this->config->NationaLicensesWorkflow->swissEduIdIDP;
-        $persistentId = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : "";
-        return (isset($idbName) && !empty($_SERVER['persistent-id'])) ? count(preg_grep("/$idbName/", [$persistentId]))
+        $persistentId = isset($_SERVER['persistent-id']) ?
+            $_SERVER['persistent-id'] : "";
+        return (isset($idbName) && !empty($_SERVER['persistent-id'])) ?
+            count(preg_grep("/$idbName/", [$persistentId]))
             > 0 : false;
     }
-
 
 }

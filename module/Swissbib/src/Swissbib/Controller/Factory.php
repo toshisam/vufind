@@ -28,7 +28,6 @@
  */
 namespace Swissbib\Controller;
 
-use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -89,7 +88,5 @@ class Factory
             $sl->get('Swissbib\NationalLicenceService')
         );
     }
-
-
 
 }

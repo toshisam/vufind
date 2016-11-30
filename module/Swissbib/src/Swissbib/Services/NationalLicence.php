@@ -128,7 +128,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
             throw new \Exception('snl.mobilePhoneNumberIsNotSwissError' . $mobile);
         }
 
-        if($user->setTemporaryAccess($this->config['temporary_access_expiration_days'])) {
+        if ($user->setTemporaryAccess(
+            $this->config['temporary_access_expiration_days'])) {
             $this->switchApiService->setNationalCompliantFlag($user->getEduId());
 
             return true;
@@ -332,14 +333,14 @@ class NationalLicence implements ServiceLocatorAwareInterface
     /**
      * Check if the current user is compliant with the Swiss National Licence.
      *
-     * @param null $user
+     * @param null $user    user
      *
      * @return bool
      * @throws \Exception
      */
     public function isNationalLicenceCompliant($user = null)
     {
-        if(empty($user)) {
+        if (empty($user)) {
             $user = $this->getCurrentNationalLicenceUser();
         }
 
@@ -364,8 +365,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
             return false;
         }
         // Has requested a temporary access || Has a verified home postal address
-        $hasTemporaryAccess
-            = $user->hasAlreadyRequestedTemporaryAccess() && $this->isTemporaryAccessCurrentlyValid($user);
+        $hasTemporaryAccess = $user->hasAlreadyRequestedTemporaryAccess()
+            && $this->isTemporaryAccessCurrentlyValid($user);
 
         $hasVerifiedSwissAddress = $this->hasVerifiedSwissAddress($user);
 
@@ -385,7 +386,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
         if (new \DateTime() > $user->getExpirationDate()) {
             return false;
         }
-        if (!$this->switchApiService->userIsOnNationalCompliantSwitchGroup($user->getEduId())) {
+        if (!$this->switchApiService
+            ->userIsOnNationalCompliantSwitchGroup($user->getEduId())) {
             return false;
         }
 
@@ -411,7 +413,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
         $swissLibraryPersonResidence = $user->getSwissLibraryPersonResidence();
 
         if (!empty($swissLibraryPersonResidence)) {
-            if ($swissLibraryPersonResidence === 'CH' && $this->isVerifiedHomePostalAddress($user)
+            if ($swissLibraryPersonResidence === 'CH'
+                && $this->isVerifiedHomePostalAddress($user)
             ) {
                 return true;
             }
@@ -428,20 +431,20 @@ class NationalLicence implements ServiceLocatorAwareInterface
     }
 
     /**
-     * Checks if the user have a verified home postal address in their edu-ID account
-     *
-     * attribute viewer.
+     * Checks if the user have a verified home postal address in their edu-ID
+     * account attribute viewer.
      *
      * @param NationalLicenceUser $user Assurance level string.
      *
      * @return bool
      * @throws \Exception
      */
-    protected function isVerifiedHomePostalAddress($user = null) {
-        if(empty($user)) {
+    protected function isVerifiedHomePostalAddress($user = null)
+    {
+        if (empty($user)) {
             $user = $this->getCurrentNationalLicenceUser();
         }
-        if(empty($user->getHomePostalAddress())) {
+        if (empty($user->getHomePostalAddress())) {
             return false;
         }
 
@@ -450,19 +453,23 @@ class NationalLicence implements ServiceLocatorAwareInterface
         $qualityLevelString = null;
         foreach ($singleElements as $singleElement) {
             $parts = explode(":", $singleElement);
-            if($parts[0] === "homePostalAddress")
-                $qualityLevelString = $parts[count($parts)-1];
+            if ($parts[0] === "homePostalAddress") {
+                $qualityLevelString = $parts[count($parts) - 1];
+            }
         }
-        if(empty($qualityLevelString)) {
+        if (empty($qualityLevelString)) {
             throw new \Exception(
                 "Assurance level for 'homePostalAddress' attribute not found"
             );
         }
         $qualityLevel = substr($qualityLevelString, -4);
         //echo $qualityLevel;
-        if("loa1" === $qualityLevel) return false;
-        if("loa2" === $qualityLevel) return true;
-        if("loa3" === $qualityLevel) return true;
+        if ("loa1" === $qualityLevel) { return false;
+        }
+        if ("loa2" === $qualityLevel) { return true;
+        }
+        if ("loa3" === $qualityLevel) { return true;
+        }
         throw new \Exception("Assurance level format is incorrect");
     }
 
@@ -557,7 +564,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
      */
     public function sendExportEmail($to = null)
     {
-        if(empty($to)) {
+        if (empty($to)) {
             $to = $this->config['user_export_default_email_address_to'];
         }
         $users = $this->getListNationalLicenceUserWithVuFindUsers();
@@ -649,14 +656,16 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * @return string
      * @throws \Exception
      */
-    private function getExportTextEmail()
+    protected function getExportTextEmail()
     {
         $countLastTemporaryRequests = $this->getLastTemporaryRequestOfLastMonth();
         $countLastPermanentRequests = $this->getLastPermanentAccessOfLastMonth();
         $listBLockedUsers = $this->getLastBlockedUsersOfLastMonth();
 
-        $text = "This is an export of the National Licence users. You can find the exported users in the attached file. <br> In the last month there were <b>$countLastTemporaryRequests</b> temporary access requests ".
-        " and <b>$countLastPermanentRequests</b> permanent access requests.<br>";
+        $text = "This is an export of the National Licence users. You can find " .
+            "the exported users in the attached file. <br> In the last month" .
+            " there were <b>$countLastTemporaryRequests</b> temporary access requests " .
+            " and <b>$countLastPermanentRequests</b> permanent access requests.<br>";
 
         return $text . $this->userToText($listBLockedUsers);
     }
@@ -666,10 +675,11 @@ class NationalLicence implements ServiceLocatorAwareInterface
      *
      * @return int
      */
-    private function getLastTemporaryRequestOfLastMonth()
+    protected function getLastTemporaryRequestOfLastMonth()
     {
-        /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable */
-        $nationalLicenceUserTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
+        /* \Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable */
+        $nationalLicenceUserTable
+            = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
         return $nationalLicenceUserTable->getLastTemporaryRequest(1);
     }
 
@@ -678,9 +688,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
      *
      * @return int
      */
-    private function getLastPermanentAccessOfLastMonth()
+    protected function getLastPermanentAccessOfLastMonth()
     {
-        /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable */
+        /* \Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable */
         $nationalLicenceUserTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
         return $nationalLicenceUserTable->getNumberOfLastPermanentRequest(1);
     }
@@ -691,19 +701,23 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * @return array
      * @throws \Exception
      */
-    private function getLastBlockedUsersOfLastMonth()
+    protected function getLastBlockedUsersOfLastMonth()
     {
-        /** @var \Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable */
-        $nationalLicenceUserTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
+         /* \Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable */
+        $nationalLicenceUserTable
+            = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
         return $nationalLicenceUserTable->getLastBlockedUser(1);
     }
 
     /**
-     * @param array(NationalLicenceUser) $users
      *
-     * @return string
+     * User to text.
+     *
+     * @param array(NationalLicenceUser) $users array of users
+     *
+     * @return string   text of user array
      */
-    private function userToText($users)
+    protected function userToText($users)
     {
         $fieldsNationalLicenceUser = [
             'mobile',
@@ -716,8 +730,9 @@ class NationalLicence implements ServiceLocatorAwareInterface
             'email',
         ];
 
-        $str = "<br><br><p>List of last blocked users of the last month:</p><br><br>";
-        $str = $str. "Fields: ";
+        $str = "<br><br><p>List of last blocked users of the last month:" .
+            "</p><br><br>";
+        $str = $str . "Fields: ";
         foreach ($fieldVuFindUser as $field) {
             $str = $str . $field . ', ';
         }
@@ -752,7 +767,6 @@ class NationalLicence implements ServiceLocatorAwareInterface
      * edu-ID account and update
      * the flag accordingly.
      *
-     *
      * @return void
      * @throws \Exception
      */
@@ -776,14 +790,15 @@ class NationalLicence implements ServiceLocatorAwareInterface
             if (!$user->hasBeenActiveInLast12Month()) {
                 echo "User was not active in last 12 month.\r\n";
                 //If last_account_extension_request == null
-                if($this->isAccountExtensionEmailHasAlreadyBeenSent($user)) {
+                if ($this->isAccountExtensionEmailHasAlreadyBeenSent($user)) {
                     if ($this->isAccountExtensionRequestStillValid($user)) {
                         echo "Account extension request is still valid.\r\n";
                     } else {
                         //Else if last_account_extension_request < XX days ago
                         //Unset the national licence compliant flag
                         echo "Unset national compliant flag...\r\n";
-                        $this->switchApiService->unsetNationalCompliantFlag($user->id);
+                        $this->switchApiService
+                            ->unsetNationalCompliantFlag($user->id);
                     }
                 } else {
                     //Send and email to the user for extending their account
@@ -814,12 +829,15 @@ class NationalLicence implements ServiceLocatorAwareInterface
     }
 
     /**
-     * @param NationalLicenceUser $user
+     *
+     * Return true if the account extension email has already been sent
+     *
+     * @param NationalLicenceUser $user user
      *
      * @return bool
      * @throws \Exception
      */
-    private function isAccountExtensionEmailHasAlreadyBeenSent($user)
+    protected function isAccountExtensionEmailHasAlreadyBeenSent($user)
     {
         $dateRequest = $user->getLastAccountExtensionRequest();
         if (empty($dateRequest)) {
@@ -841,7 +859,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
         $dateRequest = $user->getLastAccountExtensionRequest();
         if (empty($dateRequest)) {
             throw new \Exception(
-                "Email request is not sent yet. Not possible to check if".
+                "Email request is not sent yet. Not possible to check if" .
                 " it's expired or not."
             );
         }

@@ -245,7 +245,6 @@ class NationalLicenceUser extends Gateway
         return $arr_resultSet;
     }
 
-
     /**
      * Get number of temporary access of the last x months.
      *
@@ -257,7 +256,7 @@ class NationalLicenceUser extends Gateway
     {
         $date = new \DateTime();
         $date->modify("-$months month");
-        $numberOfTemporaryRequests = $this->select (
+        $numberOfTemporaryRequests = $this->select(
             function (Select $select) use ($date) {
                 $select->where->greaterThan('request_temporary_access_created', $date->format('Y-m-d H:i:s'));
             }
@@ -265,7 +264,6 @@ class NationalLicenceUser extends Gateway
 
         return count($numberOfTemporaryRequests);
     }
-
 
     /**
      * Get number of last permanent access requests.
@@ -278,7 +276,7 @@ class NationalLicenceUser extends Gateway
     {
         $date = new \DateTime();
         $date->modify("-$months month");
-        $numberOfTemporaryRequests = $this->select (
+        $numberOfTemporaryRequests = $this->select(
             function (Select $select) use ($date) {
                 $select->where->greaterThan('request_permanent_access_created', $date->format('Y-m-d H:i:s'));
             }
@@ -297,10 +295,10 @@ class NationalLicenceUser extends Gateway
     {
         $date = new \DateTime();
         $date->modify("-$months month");
-        $lastBlockedUsers = $this->select (
+        $lastBlockedUsers = $this->select(
             function (Select $select) use ($date) {
                 $select->where->greaterThan('blocked_created', $date->format('Y-m-d H:i:s'))
-                              ->equalTo('blocked', true);
+                    ->equalTo('blocked', true);
             }
         );
 
@@ -327,7 +325,6 @@ class NationalLicenceUser extends Gateway
             $lastBlockedUser->setRelUser($user);
             $arr_resultSet[] = $lastBlockedUser;
         }
-
 
         return $arr_resultSet;
     }
