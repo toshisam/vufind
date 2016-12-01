@@ -388,8 +388,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
         if (new \DateTime() > $user->getExpirationDate()) {
             return false;
         }
-        if (!$this->switchApiService->userIsOnNationalCompliantSwitchGroup(
-            $user->getEduId())
+        if (!$this->switchApiService
+            ->userIsOnNationalCompliantSwitchGroup($user->getEduId())
         ) {
             return false;
         }

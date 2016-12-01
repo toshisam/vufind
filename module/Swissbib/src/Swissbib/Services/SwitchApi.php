@@ -152,11 +152,10 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $username = $this->config['auth_user'];
         $passw = $this->config['auth_password'];
         if (empty($username) || empty($passw)) {
-            if (
-                empty(getenv('SWITCH_API_USER')
+            if (empty(getenv('SWITCH_API_USER')
                 || empty(getenv('SWITCH_API_PASSW'))
-            )
-            ) {
+                )
+                ) {
                 throw new \Exception(
                     'Was not possible to find the SWITCH API credentials. ' .
                     'Make sure you have correctly setup the environment variables ' .
@@ -232,7 +231,7 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $switchUser = $this->getSwitchUserInfo($internalId);
         $id = 'national_licence_programme_group_id';
         foreach ($switchUser->groups as $group) {
-            if ( $group->value === $this->config[$id] ) {
+            if ($group->value === $this->config[$id]) {
                 return true;
             }
         }
