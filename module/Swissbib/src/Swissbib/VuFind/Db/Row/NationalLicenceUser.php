@@ -87,8 +87,10 @@ class NationalLicenceUser extends RowGateway
         $this->request_temporary_access = true;
         $this->request_temporary_access_created
             = (new \DateTime())->format('Y-m-d H:i:s');
-        $this->setExpirationDate((new \DateTime())
-            ->modify("+$numDaysExpiration day"));
+        $this->setExpirationDate(
+        (new \DateTime())
+        ->modify("+$numDaysExpiration day")
+        );
         $n = $this->save();
         if ($n > 0) {
             return true;

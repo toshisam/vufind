@@ -144,8 +144,10 @@ class NationalLicenceUser extends Gateway
                     $fieldsValues['active_last_12_month']
                         = $fieldsValues['active_last_12_month'] === 'TRUE';
                 } else {
-                    throw new \Exception("Impossible to read the " .
-                        "swissEduIdUsagely attributes. Format is incorrect.");
+                    throw new \Exception(
+                        "Impossible to read the " .
+                        "swissEduIdUsagely attributes. Format is incorrect."
+                    );
                 }
             }
         }
@@ -240,7 +242,8 @@ class NationalLicenceUser extends Gateway
              * @var \VuFind\Db\Row\User $user
              */
             $user = $userTable->getByUsername(
-                $nationalLicenceUser->getPersistentId());
+                $nationalLicenceUser->getPersistentId()
+            );
             $nationalLicenceUser->setRelUser($user);
             $arr_resultSet[] = $nationalLicenceUser;
         }
@@ -261,8 +264,10 @@ class NationalLicenceUser extends Gateway
         $date->modify("-$months month");
         $numberOfTemporaryRequests = $this->select(
             function (Select $select) use ($date) {
-                $select->where->greaterThan('request_temporary_access_created',
-                    $date->format('Y-m-d H:i:s'));
+                $select->where->greaterThan(
+                    'request_temporary_access_created',
+                    $date->format('Y-m-d H:i:s')
+                );
             }
         );
 
@@ -282,8 +287,10 @@ class NationalLicenceUser extends Gateway
         $date->modify("-$months month");
         $numberOfTemporaryRequests = $this->select(
             function (Select $select) use ($date) {
-                $select->where->greaterThan('request_permanent_access_created',
-                    $date->format('Y-m-d H:i:s'));
+                $select->where->greaterThan(
+                    'request_permanent_access_created',
+                    $date->format('Y-m-d H:i:s')
+                );
             }
         );
 

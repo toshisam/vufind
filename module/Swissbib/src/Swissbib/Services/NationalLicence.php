@@ -388,7 +388,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
         if (new \DateTime() > $user->getExpirationDate()) {
             return false;
         }
-        if (!$this->switchApiService->userIsOnNationalCompliantSwitchGroup($user->getEduId())
+        if (!$this->switchApiService->userIsOnNationalCompliantSwitchGroup(
+            $user->getEduId())
         ) {
             return false;
         }
@@ -697,7 +698,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
     protected function getLastPermanentAccessOfLastMonth()
     {
         /*\Swissbib\VuFind\Db\Table\NationalLicenceUser $nationalLicenceUserTable*/
-        $nationalLicenceUserTable = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
+        $nationalLicenceUserTable
+            = $this->getTable('\\Swissbib\\VuFind\\Db\\Table\\NationalLicenceUser');
         return $nationalLicenceUserTable->getNumberOfLastPermanentRequest(1);
     }
 
