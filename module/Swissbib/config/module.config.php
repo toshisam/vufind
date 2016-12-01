@@ -2,8 +2,6 @@
 
 namespace Swissbib\Module\Config;
 
-use Swissbib\Controller\NationalLicencesController;
-
 return [
     'router' => [
         'routes' => [
