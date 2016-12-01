@@ -95,7 +95,8 @@ class MyResearchNationalLicensesController extends MyResearchController
             $user = $this->initializeServiceInstance();
 
             //could we do that instead $user = $this->nationalLicenceService
-            //   ->getOrCreateNationalLicenceUserIfNotExists($_SERVER['persistent-id']);
+            //   ->getOrCreateNationalLicenceUserIfNotExists(
+            //     $_SERVER['persistent-id']);
 
             $hasAccessToNationalLicenceContent = $this->nationalLicenceService
                 ->hasAccessToNationalLicenceContent($user);
@@ -109,8 +110,9 @@ class MyResearchNationalLicensesController extends MyResearchController
             }
 
         } else {
-            //if the user is not logged in with swissEduId he/she is sent to the document but we can't guarentee
-            //correct access - user should be notified about this in advance on the surface
+            //if the user is not logged in with swissEduId he/she is sent to the
+            // document but we can't guarentee correct access - user should be
+            // notified about this in advance on the surface
             $tURL = $this->getDocumentProviderURL();
             $this->redirect()->toUrl($tURL);
 
@@ -119,40 +121,39 @@ class MyResearchNationalLicensesController extends MyResearchController
     }
 
     /**
-     *
-     * initialized the service instance
+     * Initialized the service instance
      *
      * @return NationalLicenceUser
      */
-    private function initializeServiceInstance()
+    protected function initializeServiceInstance()
     {
         // Get user information from the shibboleth attributes
-        $uniqueId =
-            isset($_SERVER['uniqueID']) ? $_SERVER['uniqueID'] : null;
-        $persistentId =
-            isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : null;
-        $givenName =
-            isset($_SERVER['givenName']) ? $_SERVER['givenName'] : null;
-        $surname =
-            isset($_SERVER['surname']) ? $_SERVER['surname'] : null;
-        $persistentId =
-            isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : null;
-        $homePostalAddress =
-            isset($_SERVER['homePostalAddress']) ? $_SERVER['homePostalAddress'] :
+        $uniqueId
+            = isset($_SERVER['uniqueID']) ? $_SERVER['uniqueID'] : null;
+        $persistentId
+            = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : null;
+        $givenName
+            = isset($_SERVER['givenName']) ? $_SERVER['givenName'] : null;
+        $surname
+            = isset($_SERVER['surname']) ? $_SERVER['surname'] : null;
+        $persistentId
+            = isset($_SERVER['persistent-id']) ? $_SERVER['persistent-id'] : null;
+        $homePostalAddress
+            = isset($_SERVER['homePostalAddress']) ? $_SERVER['homePostalAddress'] :
             null;
-        $mobile =
-            isset($_SERVER['mobile']) ? $_SERVER['mobile'] : null;
+        $mobile
+            = isset($_SERVER['mobile']) ? $_SERVER['mobile'] : null;
         $homeOrganizationType =
             isset($_SERVER['home_organization_type']) ? $_SERVER['home_organization_type'] :
             null;
-        $affiliation =
-            isset($_SERVER['affiliation']) ? $_SERVER['affiliation'] : null;
-        $swissLibraryPersonResidence =
-            isset($_SERVER['swissLibraryPersonResidence']) ? $_SERVER['swissLibraryPersonResidence'] : null;
-        $swissEduIDUsage1y =
-            isset($_SERVER['swissEduIDUsage1y']) ? $_SERVER['swissEduIDUsage1y'] : null;
-        $swissEduIdAssuranceLevel =
-            isset($_SERVER['swissEduIdAssuranceLevel']) ?
+        $affiliation
+            = isset($_SERVER['affiliation']) ? $_SERVER['affiliation'] : null;
+        $swissLibraryPersonResidence
+            = isset($_SERVER['swissLibraryPersonResidence']) ? $_SERVER['swissLibraryPersonResidence'] : null;
+        $swissEduIDUsage1y
+            = isset($_SERVER['swissEduIDUsage1y']) ? $_SERVER['swissEduIDUsage1y'] : null;
+        $swissEduIdAssuranceLevel
+            = isset($_SERVER['swissEduIdAssuranceLevel']) ?
             $_SERVER['swissEduIdAssuranceLevel'] : null;
 
         /**
@@ -191,8 +192,7 @@ class MyResearchNationalLicensesController extends MyResearchController
     }
 
     /**
-     *
-     * checks if current user is authenticated with swiss edu id
+     * Checks if current user is authenticated with swiss edu id
      *
      * @return boolean
      */

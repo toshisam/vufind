@@ -128,7 +128,8 @@ class NationalLicencesController extends BaseController
 
         // Compute the checks
         $isHomePostalAddressInSwitzerland
-            = $this->nationalLicenceService->isAddressInSwitzerland($homePostalAddress);
+            = $this->nationalLicenceService
+                ->isAddressInSwitzerland($homePostalAddress);
         $isSwissPhoneNumber
             = $this->nationalLicenceService->isSwissPhoneNumber($mobile);
         $isNationalLicenceCompliant
@@ -140,7 +141,8 @@ class NationalLicencesController extends BaseController
             = $this->nationalLicenceService->hasVerifiedSwissAddress();
         $hasPermanentAccess                 = $user->hasRequestPermanentAccess();
         $hasAccessToNationalLicenceContent
-            = $this->nationalLicenceService->hasAccessToNationalLicenceContent($user);
+            = $this->nationalLicenceService
+                ->hasAccessToNationalLicenceContent($user);
 
         if ($hasAccessToNationalLicenceContent) {
             $this->flashMessenger()->addSuccessMessage(

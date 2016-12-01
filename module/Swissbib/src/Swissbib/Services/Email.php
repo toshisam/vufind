@@ -77,7 +77,7 @@ class Email implements ServiceLocatorAwareInterface
      * @param string $attachmentFilePath File path of the file to attach
      * @param bool   $tls                tls
      *
-     * @returns void
+     * @return void
      * @throws \Exception
      */
     public function sendMail($to, $textMail, $attachmentFilePath, $tls = false)
@@ -145,12 +145,13 @@ class Email implements ServiceLocatorAwareInterface
      * @param string       $subject     Subject
      * @param bool         $tlsActive   Send with TLS encryption
      *
-     * @returns void
+     * @return void
      * @throws \Exception
      */
     public function sendMailWithAttachment(
-        $to, $mimeMessage, $subject, $tlsActive = false)
-    {
+        $to, $mimeMessage, $subject, $tlsActive = false
+    ) {
+    
         if (empty($to)) {
             throw new \Exception(
                 'Impossible to send the e-mail: recipient not given'
@@ -166,7 +167,8 @@ class Email implements ServiceLocatorAwareInterface
         if ($tlsActive) {
             $transport = new SmtpTransport();
             $options = new SmtpOptions(
-                $this->config['email_service']['smtp_options']);
+                $this->config['email_service']['smtp_options']
+            );
             $transport->setOptions($options);
         } else {
             $transport = new SendmailTransport();
@@ -210,7 +212,8 @@ class Email implements ServiceLocatorAwareInterface
             Mime\Mime::TYPE_HTML
         );
         $this->sendMailWithAttachment(
-            $toUser->email, $mimeMessage, 'Account extension');
+            $toUser->email, $mimeMessage, 'Account extension'
+        );
     }
 
     /**
