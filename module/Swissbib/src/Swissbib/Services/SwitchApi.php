@@ -153,7 +153,7 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $passw = $this->config['auth_password'];
         if (empty($username) || empty($passw)) {
             $c1 = getenv('SWITCH_API_USER') || empty(getenv('SWITCH_API_PASSW'));
-            if (empty( $c1 )) {
+            if (empty($c1)) {
                 throw new \Exception(
                     'Was not possible to find the SWITCH API credentials. ' .
                     'Make sure you have correctly setup the environment variables ' .
