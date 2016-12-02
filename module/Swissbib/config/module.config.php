@@ -2,8 +2,6 @@
 
 namespace Swissbib\Module\Config;
 
-use Swissbib\Controller\NationalLicencesController;
-
 return [
     'router' => [
         'routes' => [
@@ -492,13 +490,13 @@ return [
                 'name' => 'host',
                 //Change with production SMTP server host
                 'host' => 'smtp.gmail.com',
-                'port'=> 587,
+                'port' => 587,
                 'connection_class' => 'login',
                 'connection_config' => [
                     //Change with production SMTP credentials
                     'username' => "",
                     'password' => '',
-                    'ssl'=> 'tls',
+                    'ssl' => 'tls',
                 ]
             ]
         ],

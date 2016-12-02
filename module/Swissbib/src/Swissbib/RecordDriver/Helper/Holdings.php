@@ -1464,16 +1464,14 @@ class Holdings
         if (is_array($fields)) {
             foreach ($fields as $index => $field) {
                 $item = $this->extractFieldData($field, $mapping);
-                $institution = $item['institution_chb'];
+                $institution = $item['institution'];
+                $institution_chb = $item['institution_chb'];
 
-                if ($institution === $institutionCode) {
+                if ($institution === $institutionCode
+                    || $institution_chb === $institutionCode
+                ) {
                     $data[] = $item;
                 }
-                /*
-                else if ($item['institution'] === $institutionCode) {
-                    $data[] = $item;
-                }
-                */
             }
         }
 

@@ -78,15 +78,18 @@ class NationalLicenceUser extends RowGateway
     /**
      * Set the temporary access for 14 days.
      *
-     * @param $numDaysExpiration
+     * @param object $numDaysExpiration number of days for expiration
      *
      * @return bool
      */
     public function setTemporaryAccess($numDaysExpiration)
     {
         $this->request_temporary_access = true;
-        $this->request_temporary_access_created = (new \DateTime())->format('Y-m-d H:i:s');
-        $this->setExpirationDate((new \DateTime())->modify("+$numDaysExpiration day"));
+        $this->request_temporary_access_created
+            = (new \DateTime())->format('Y-m-d H:i:s');
+        $this->setExpirationDate(
+            (new \DateTime())->modify("+$numDaysExpiration day")
+        );
         $n = $this->save();
         if ($n > 0) {
             return true;
@@ -215,7 +218,8 @@ class NationalLicenceUser extends RowGateway
     public function setRequestPermanentAccess($bool = true)
     {
         $this->request_permanent_access = $bool;
-        $this->request_permanent_access_created = (new \DateTime())->format('Y-m-d H:i:s');
+        $this->request_permanent_access_created
+            = (new \DateTime())->format('Y-m-d H:i:s');
     }
 
     /**
@@ -347,6 +351,8 @@ class NationalLicenceUser extends RowGateway
      * Set if the user were active in the last 12 month.
      *
      * @param boolean $active_last_12_month User were active in the last 12 month
+     *
+     * @return void
      */
     public function setActiveLast12Month($active_last_12_month)
     {
@@ -368,6 +374,8 @@ class NationalLicenceUser extends RowGateway
      * Set assurance level string.
      *
      * @param string $assurance_level Assurance level string
+     *
+     * @return void
      */
     public function setAssuranceLevel($assurance_level)
     {
@@ -388,6 +396,8 @@ class NationalLicenceUser extends RowGateway
      * Set display name string.
      *
      * @param string $display_name Display name
+     *
+     * @return void
      */
     public function setDisplayName($display_name)
     {

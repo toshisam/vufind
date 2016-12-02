@@ -137,13 +137,17 @@ class NationalLicenceUser extends Gateway
         array $fieldsValuesRelation = null
     ) {
         //Check and convert in the right format
-        if(isset($fieldsValues['active_last_12_month'])) {
+        if (isset($fieldsValues['active_last_12_month'])) {
             $swissEduIdUsagely = $fieldsValues['active_last_12_month'];
             if (!is_bool($swissEduIdUsagely)) {
-                if(is_string($swissEduIdUsagely)) {
-                    $fieldsValues['active_last_12_month'] = $fieldsValues['active_last_12_month'] === 'TRUE';
+                if (is_string($swissEduIdUsagely)) {
+                    $fieldsValues['active_last_12_month']
+                        = $fieldsValues['active_last_12_month'] === 'TRUE';
                 } else {
-                    throw new \Exception("Impossible to read the swissEduIdUsagely attributes. Format is incorrect.");
+                    throw new \Exception(
+                        "Impossible to read the " .
+                        "swissEduIdUsagely attributes. Format is incorrect."
+                    );
                 }
             }
         }
@@ -237,7 +241,9 @@ class NationalLicenceUser extends Gateway
              *
              * @var \VuFind\Db\Row\User $user
              */
-            $user = $userTable->getByUsername($nationalLicenceUser->getPersistentId());
+            $user = $userTable->getByUsername(
+                $nationalLicenceUser->getPersistentId()
+            );
             $nationalLicenceUser->setRelUser($user);
             $arr_resultSet[] = $nationalLicenceUser;
         }
@@ -248,7 +254,7 @@ class NationalLicenceUser extends Gateway
     /**
      * Get number of temporary access of the last x months.
      *
-     * @param $months Number of the last months
+     * @param object $months Number of the last months
      *
      * @return int
      */
@@ -258,7 +264,10 @@ class NationalLicenceUser extends Gateway
         $date->modify("-$months month");
         $numberOfTemporaryRequests = $this->select(
             function (Select $select) use ($date) {
-                $select->where->greaterThan('request_temporary_access_created', $date->format('Y-m-d H:i:s'));
+                $select->where->greaterThan(
+                    'request_temporary_access_created',
+                    $date->format('Y-m-d H:i:s')
+                );
             }
         );
 
@@ -268,7 +277,7 @@ class NationalLicenceUser extends Gateway
     /**
      * Get number of last permanent access requests.
      *
-     * @param $months
+     * @param object $months months
      *
      * @return int
      */
@@ -278,7 +287,10 @@ class NationalLicenceUser extends Gateway
         $date->modify("-$months month");
         $numberOfTemporaryRequests = $this->select(
             function (Select $select) use ($date) {
-                $select->where->greaterThan('request_permanent_access_created', $date->format('Y-m-d H:i:s'));
+                $select->where->greaterThan(
+                    'request_permanent_access_created',
+                    $date->format('Y-m-d H:i:s')
+                );
             }
         );
 
@@ -286,7 +298,9 @@ class NationalLicenceUser extends Gateway
     }
 
     /**
-     * @param $months
+     * Gets last blocked user
+     *
+     * @param object $months months
      *
      * @return array
      * @throws \Exception
@@ -297,7 +311,8 @@ class NationalLicenceUser extends Gateway
         $date->modify("-$months month");
         $lastBlockedUsers = $this->select(
             function (Select $select) use ($date) {
-                $select->where->greaterThan('blocked_created', $date->format('Y-m-d H:i:s'))
+                $select->where
+                    ->greaterThan('blocked_created', $date->format('Y-m-d H:i:s'))
                     ->equalTo('blocked', true);
             }
         );

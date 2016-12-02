@@ -68,8 +68,10 @@ class NationalLicences extends AbstractHelper
         $this->config = $sm->getServiceLocator()->get('VuFind\Config')
             ->get('config');
         $this->ipMatcher = new IpMatcher();
-        $this->validIps = explode(",", $this->config
-            ->SwissAcademicLibraries->patterns_ip);
+        $this->validIps = explode(
+            ",", $this->config
+                ->SwissAcademicLibraries->patterns_ip
+        );
         $this->nationalLicenceService = $this->sm->getServiceLocator()
             ->get('Swissbib\NationalLicenceService');
 
@@ -288,7 +290,8 @@ class NationalLicences extends AbstractHelper
         } else if ($this->isAuthenticatedWithSwissEduId()) {
             $user = $this->nationalLicenceService
                 ->getOrCreateNationalLicenceUserIfNotExists(
-                    $_SERVER['persistent-id']);
+                    $_SERVER['persistent-id']
+                );
             $userIsAuthorized = $this->nationalLicenceService
                 ->hasAccessToNationalLicenceContent($user);
             if (!$userIsAuthorized) {
@@ -303,8 +306,10 @@ class NationalLicences extends AbstractHelper
             return ['url' => $url , 'message' => ""];
         }
 
-        $url = $this->buildUrl($userInIpRange, $issn, $volume,
-            $issue, $page, $pii, $doi, $journalCode);
+        $url = $this->buildUrl(
+            $userInIpRange, $issn, $volume,
+            $issue, $page, $pii, $doi, $journalCode
+        );
         if (!$userIsAuthorized) {
             $url = 'https://login.eduid.ch/idp/profile/SAML2/Unsolicited/" .
             "SSO?providerId=https%3A%2F%2F' . $_SERVER['HTTP_HOST'] .
@@ -331,8 +336,9 @@ class NationalLicences extends AbstractHelper
      * @return null
      */
     protected function buildUrl($userAuthorized, $issn, $volume,
-                                $issue, $sPage, $pii, $doi, $journalCode)
-    {
+        $issue, $sPage, $pii, $doi, $journalCode
+    ) {
+    
         $url = $this->getPublisherBlueprintUrl($userAuthorized);
         $url = str_replace('{ISSN}', $issn, $url);
         $url = str_replace('{VOLUME}', $volume, $url);
@@ -340,8 +346,10 @@ class NationalLicences extends AbstractHelper
         $url = str_replace('{SPAGE}', $sPage, $url);
         $url = str_replace('{PII}', $pii, $url);
         $url = str_replace('{DOI}', $doi, $url);
-        $url = str_replace('{JOURNAL-URL-CODE}',
-            $this->getOxfordUrlCode($journalCode), $url);
+        $url = str_replace(
+            '{JOURNAL-URL-CODE}',
+            $this->getOxfordUrlCode($journalCode), $url
+        );
         return $url;
     }
 
