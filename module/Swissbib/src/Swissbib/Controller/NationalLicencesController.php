@@ -59,7 +59,7 @@ class NationalLicencesController extends BaseController
     }
 
     /**
-     * Show the form for became compliant with the Swiss National Licences.
+     * Show the form to become compliant with the Swiss National Licences.
      *
      * @return mixed|ViewModel
      * @throws \Exception
