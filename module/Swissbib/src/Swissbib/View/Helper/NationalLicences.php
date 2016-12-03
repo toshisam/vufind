@@ -149,6 +149,7 @@ class NationalLicences extends AbstractHelper
             "jrlstu" => "jrls",
             "jncmon" => "jncimono",
             "jafeco" => "jae",
+            "jahist" => "jah",
             "japres" => "japr",
             "jbchem" => "jb",
             "jconsl" => "jcsl",
