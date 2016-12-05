@@ -56,6 +56,7 @@ class NationalLicences extends AbstractHelper
     protected $validIps;
     protected $oxfordUrlCode;
     protected $nationalLicenceService;
+    protected $remoteAddress;
 
     /**
      * NationalLicences constructor.
@@ -72,6 +73,13 @@ class NationalLicences extends AbstractHelper
             ",", $this->config
                 ->SwissAcademicLibraries->patterns_ip
         );
+        $this->remoteAddress = new RemoteAddress();
+        $this->remoteAddress->setUseProxy();
+
+        $trustedProxies = explode(
+            ',', $sm->getServiceLocator()->get('VuFind\Config')
+            ->get('TrustedProxy')->get('loadbalancer'));
+        $this->remoteAddress->setTrustedProxies($trustedProxies);
         $this->nationalLicenceService = $this->sm->getServiceLocator()
             ->get('Swissbib\NationalLicenceService');
 
@@ -250,8 +258,7 @@ class NationalLicences extends AbstractHelper
      */
     public function isUserInIpRange()
     {
-        $remoteAddress = new RemoteAddress();
-        $ipAddress = $remoteAddress->getIpAddress();
+        $ipAddress = $this->remoteAddress->getIpAddress();
         $isMatchingIp = $this->ipMatcher->isMatching($ipAddress, $this->validIps);
         return $isMatchingIp;
     }
@@ -311,11 +318,16 @@ class NationalLicences extends AbstractHelper
             $issue, $page, $pii, $doi, $journalCode
         );
         if (!$userIsAuthorized) {
-            $url = 'https://login.eduid.ch/idp/profile/SAML2/Unsolicited/" .
-            "SSO?providerId=https%3A%2F%2F' . $_SERVER['HTTP_HOST'] .
-                '%2Fshibboleth&target=https%3A%2F%2F' . $_SERVER['HTTP_HOST'] .
-                '%2FMyResearchNationalLicenses%2FNlsignpost%3Fpublisher%3D' .
+            $loginUrl = $this->config->NationaLicensesWorkflow->swissEduIdLoginLink;
+            $loginUrl = "https://login.eduid.ch/idp/profile/SAML2/Unsolicited/" .
+            "SSO?providerId=https%3A%2F%2F" . $_SERVER['HTTP_HOST'] .
+                "%2Fshibboleth&target=https%3A%2F%2F" . $_SERVER['HTTP_HOST'] .
+                "%2FMyResearchNationalLicenses%2FNlsignpost%3Fpublisher%3D" .
                 urlencode(urlencode($url));
+
+            $loginUrl = str_replace('{SERVER_HTTP_HOST}', $_SERVER['HTTP_HOST'], $loginUrl);
+            $loginUrl = str_replace('{PUBLISHER_URL}', urlencode(urlencode($url)), $loginUrl);
+            $url = $loginUrl;
         }
 
         return ['url' => $url , 'message' => $message];
