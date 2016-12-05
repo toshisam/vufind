@@ -75,7 +75,6 @@ class NationalLicences extends AbstractHelper
         );
         $this->remoteAddress = new RemoteAddress();
         $this->remoteAddress->setUseProxy();
-
         $trustedProxies = explode(
             ',', $sm->getServiceLocator()->get('VuFind\Config')
             ->get('TrustedProxy')->get('loadbalancer'));
@@ -157,6 +156,7 @@ class NationalLicences extends AbstractHelper
             "jrlstu" => "jrls",
             "jncmon" => "jncimono",
             "jafeco" => "jae",
+            "jahist" => "jah",
             "japres" => "japr",
             "jbchem" => "jb",
             "jconsl" => "jcsl",
@@ -319,12 +319,6 @@ class NationalLicences extends AbstractHelper
         );
         if (!$userIsAuthorized) {
             $loginUrl = $this->config->NationaLicensesWorkflow->swissEduIdLoginLink;
-            $loginUrl = "https://login.eduid.ch/idp/profile/SAML2/Unsolicited/" .
-            "SSO?providerId=https%3A%2F%2F" . $_SERVER['HTTP_HOST'] .
-                "%2Fshibboleth&target=https%3A%2F%2F" . $_SERVER['HTTP_HOST'] .
-                "%2FMyResearchNationalLicenses%2FNlsignpost%3Fpublisher%3D" .
-                urlencode(urlencode($url));
-
             $loginUrl = str_replace('{SERVER_HTTP_HOST}', $_SERVER['HTTP_HOST'], $loginUrl);
             $loginUrl = str_replace('{PUBLISHER_URL}', urlencode(urlencode($url)), $loginUrl);
             $url = $loginUrl;

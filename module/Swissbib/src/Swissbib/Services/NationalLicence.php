@@ -299,6 +299,11 @@ class NationalLicence implements ServiceLocatorAwareInterface
                 $persistentId,
                 $userFields
             );
+        } else {
+            $user = $userTable->updateRowByPersistentId(
+                $persistentId,
+                $userFields
+            );
         }
 
         return $user;
