@@ -97,7 +97,7 @@ class TranslateFacets extends SwissbibTranslate
                 substr(
                     $fieldToEvaluate,
                     strpos($fieldToEvaluate, ':') + 1
-                ) . '::' .   $facetValue
+                ) . '::' . $facetValue
             ) : $facetValue;
     }
 }

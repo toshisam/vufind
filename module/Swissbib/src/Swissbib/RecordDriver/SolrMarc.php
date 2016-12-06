@@ -1017,7 +1017,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Returns as array to use same template with foreach as normally
-     * 
+     *
      * @return array
      */
     public function getMostSpecificFormat()
@@ -2187,7 +2187,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     {
         $filter = array_key_exists('filter_str_mv', $this->fields) ?
             $this->fields['filter_str_mv'] : [];
-        return in_array('ONL', $filter)  ? true : false;
+        return in_array('ONL', $filter) ? true : false;
     }
 
     /**
