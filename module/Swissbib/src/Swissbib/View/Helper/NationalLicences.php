@@ -75,9 +75,10 @@ class NationalLicences extends AbstractHelper
         );
         $this->remoteAddress = new RemoteAddress();
         $this->remoteAddress->setUseProxy();
-        $trustedProxies = explode(
-            ',', $sm->getServiceLocator()->get('VuFind\Config')
-            ->get('TrustedProxy')->get('loadbalancer'));
+        $trustedProxies
+            = explode(',',$sm->getServiceLocator()->get('VuFind\Config')
+            ->get('TrustedProxy')->get('loadbalancer')
+        );
         $this->remoteAddress->setTrustedProxies($trustedProxies);
         $this->nationalLicenceService = $this->sm->getServiceLocator()
             ->get('Swissbib\NationalLicenceService');
@@ -319,8 +320,10 @@ class NationalLicences extends AbstractHelper
         );
         if (!$userIsAuthorized) {
             $loginUrl = $this->config->NationaLicensesWorkflow->swissEduIdLoginLink;
-            $loginUrl = str_replace('{SERVER_HTTP_HOST}', $_SERVER['HTTP_HOST'], $loginUrl);
-            $loginUrl = str_replace('{PUBLISHER_URL}', urlencode(urlencode($url)), $loginUrl);
+            $loginUrl = str_replace('{SERVER_HTTP_HOST}',
+                $_SERVER['HTTP_HOST'], $loginUrl);
+            $loginUrl = str_replace('{PUBLISHER_URL}',
+                urlencode(urlencode($url)), $loginUrl);
             $url = $loginUrl;
         }
 
