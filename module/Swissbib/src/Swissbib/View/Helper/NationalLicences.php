@@ -73,10 +73,10 @@ class NationalLicences extends AbstractHelper
     public function __construct($sm)
     {
         $this->sm = $sm;
-        $this->config = $sm->getServiceLocator()->get('VuFind\Config')->get('config');
+        $this->config = $sm->getServiceLocator()->get('VuFind\Config')->get('NationalLicences');
         $this->helperManager =  $sm->getServiceLocator()->get('viewhelpermanager');
         $this->ipMatcher = new IpMatcher();
-        $this->validIps = explode(",", $this->config->SwissAcademicLibraries->patterns_ip);
+        $this->validIps = explode(",", $sm->getServiceLocator()->get('VuFind\Config')->get('config')->SwissAcademicLibraries->patterns_ip);
         //$RemoteAddress->setUseProxy();
         /*
         $this->nationalLicenceService = new NationalLicence(

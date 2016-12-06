@@ -56,6 +56,13 @@ class SwitchApi implements ServiceLocatorAwareInterface
      *
      * @var array
      */
+    protected $configNL;
+
+    /**
+     * Swissbib configuration.
+     *
+     * @var array
+     */
     protected $config;
 
     /**
@@ -65,7 +72,8 @@ class SwitchApi implements ServiceLocatorAwareInterface
      */
     public function __construct($config)
     {
-        $this->config = $config['SwitchApi'];
+        $this->config   = $config->get('config');
+        $this->configNL = $config->get('NationalLicences')['SwitchApi'];
     }
 
     /**
@@ -134,7 +142,7 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $relPath = '', $basePath = null
     ) {
         if (empty($basePath)) {
-            $basePath = $this->config['base_endpoint_url'];
+            $basePath = $this->configNL['base_endpoint_url'];
         }
         $client = new Client(
             $basePath . $relPath, [
@@ -150,8 +158,8 @@ class SwitchApi implements ServiceLocatorAwareInterface
             ]
         );
         $client->setMethod($method);
-        $username = $this->config['auth_user'];
-        $passw = $this->config['auth_password'];
+        $username = $this->config['SwitchApi']['auth_user'];
+        $passw = $this->config['SwitchApi']['auth_password'];
         if(empty($username) || empty($passw)) {
             throw new \Exception('Was not possible to find the SWITCH API '.
                 'credentials. Make sure you have correctly configured the '.
@@ -177,19 +185,19 @@ class SwitchApi implements ServiceLocatorAwareInterface
     {
         $client = $this->getBaseClient(
             Request::METHOD_PATCH, '/Groups/' .
-            $this->config['national_licence_programme_group_id']
+            $this->configNL['national_licence_programme_group_id']
         );
         $params = [
             'schemas' => [
-                $this->config['schema_patch'],
+                $this->configNL['schema_patch'],
             ],
             'Operations' => [
                 [
-                    'op' => $this->config['operation_add'],
-                    'path' => $this->config['path_member'],
+                    'op' => $this->configNL['operation_add'],
+                    'path' => $this->configNL['path_member'],
                     'value' => [
                         [
-                            '$ref' => $this->config['base_endpoint_url'] .
+                            '$ref' => $this->configNL['base_endpoint_url'] .
                                 '/Users/' .
                                 $userInternalId,
                             'value' => $userInternalId,
@@ -223,7 +231,7 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $internalId = $this->createSwitchUser($userExternalId);
         $switchUser = $this->getSwitchUserInfo($internalId);
         foreach ($switchUser->groups as $group) {
-            $v = $this->config['national_licence_programme_group_id'];
+            $v = $this->configNL['national_licence_programme_group_id'];
             if ($group->value === $v)
             {
                 return true;
@@ -290,16 +298,16 @@ class SwitchApi implements ServiceLocatorAwareInterface
     {
         $client = $this->getBaseClient(
             Request::METHOD_PATCH,
-            '/Groups/' . $this->config['national_licence_programme_group_id']
+            '/Groups/' . $this->configNL['national_licence_programme_group_id']
         );
         $params = [
             'schemas' => [
-                $this->config['schema_patch'],
+                $this->configNL['schema_patch'],
             ],
             'Operations' => [
                 [
-                    'op' => $this->config['operation_remove'],
-                    'path' => $this->config['path_member'] .
+                    'op' => $this->configNL['operation_remove'],
+                    'path' => $this->configNL['path_member'] .
                         "[value eq \"$userInternalId\"]",
                 ],
             ],
@@ -397,12 +405,12 @@ class SwitchApi implements ServiceLocatorAwareInterface
          */
         $client = $this->getBaseClient(
             Request::METHOD_GET,
-            $this->config['back_channel_endpoint_path'],
-            $this->config['base_endpoint_url_back_channel']
+            $this->configNL['back_channel_endpoint_path'],
+            $this->configNL['base_endpoint_url_back_channel']
         );
         $client->setParameterGet(
             [
-                'entityID' => $this->config['back_channel_param_entityID'],
+                'entityID' => $this->configNL['back_channel_param_entityID'],
                 'nameId' => $nameId,
             ]
         );
