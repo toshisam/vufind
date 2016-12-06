@@ -153,9 +153,9 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $username = $this->config['auth_user'];
         $passw = $this->config['auth_password'];
         if(empty($username) || empty($passw)) {
-            throw new \Exception('Was not possible to find the SWITCH API credentials. '.
-                'Make sure you have correctly configured the '.
-                '"SWITCH_API_USER" and "SWITCH_API_PASSW" either in the'.
+            throw new \Exception('Was not possible to find the SWITCH API '.
+                'credentials. Make sure you have correctly configured the '.
+                '"SWITCH_API_USER" and "SWITCH_API_PASSW" either in the '.
                 'apache setup or before launching the script.'
             );
         }
@@ -223,8 +223,9 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $internalId = $this->createSwitchUser($userExternalId);
         $switchUser = $this->getSwitchUserInfo($internalId);
         foreach ($switchUser->groups as $group) {
-            if ($group->value === $this->config['national_licence_programme_group_id']
-            ) {
+            $v = $this->config['national_licence_programme_group_id'];
+            if ($group->value === $v)
+            {
                 return true;
             }
         }
@@ -409,8 +410,8 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $statusCode = $response->getStatusCode();
         $body = $response->getBody();
         if ($statusCode !== 200) {
-            throw new \Exception("There was a problem retrieving data for user with name " .
-                "id: $nameId. Status code: $statusCode result: $body");
+            throw new \Exception("There was a problem retrieving data for user " .
+                "with name id: $nameId. Status code: $statusCode result: $body");
         }
 
         return json_decode($body);

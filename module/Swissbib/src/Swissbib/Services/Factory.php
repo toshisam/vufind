@@ -225,7 +225,7 @@ class Factory
         return new NationalLicence(
             $sm->get('Swissbib\SwitchApiService'),
             $sm->get('Swissbib\EmailService'),
-            self::getLocalVuFindConfig()
+            $sm->get('VuFind\Config')->get('config')
         );
     }
 
@@ -238,7 +238,7 @@ class Factory
      */
     public static function getSwitchApiService(ServiceManager $sm)
     {
-        return new SwitchApi(self::getLocalVuFindConfig());
+        return new SwitchApi($sm->get('VuFind\Config')->get('config'));
     }
 
     /**
@@ -250,18 +250,6 @@ class Factory
      */
     public static function getEmailService(ServiceManager $sm)
     {
-        return new Email(self::getLocalVuFindConfig());
-    }
-
-    /**
-     * Function that provide the local VuFind configuration.
-     *
-     * @return array
-     */
-    protected static function getLocalVuFindConfig()
-    {
-        $privateConfig = (new Ini())->fromFile(getcwd() . '/local/config/vufind/config.ini');
-        $baseConfig = (new Ini())->fromFile(getcwd() . '/' . $privateConfig['Parent_Config']['path']);
-        return array_replace_recursive($baseConfig, $privateConfig);
+        return new Email($sm->get('VuFind\Config')->get('config'));
     }
 }

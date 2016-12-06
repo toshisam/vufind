@@ -59,6 +59,20 @@ return [
                     ],
                 ]
             ],
+            // Swiss National Licences
+            'national-licenses-signpost' => [
+                'type'    => 'segment',
+                'options' => [
+                    'route'    => '/MyResearchNationalLicenses[/:action]',
+                    'defaults' => [
+                        'controller' => 'national-licenses-signpost',
+                        'action'     => 'nlsignpost'
+                    ],
+                    'constraints' => [
+                        'action'   => '[a-zA-Z][a-zA-Z0-9_-]*'
+                    ],
+                ]
+            ],
             'help-page' => [
                 'type'    => 'segment',
                 'options' => [
@@ -235,6 +249,7 @@ return [
             'record' => 'Swissbib\Controller\Factory::getRecordController',
             'cart'   => 'VuFind\Controller\Factory::getCartController',
             'national-licences' => 'Swissbib\Controller\Factory::getNationalLicenceController',
+            'national-licenses-signpost' => 'Swissbib\Controller\Factory::getMyResearchNationalLicenceController',
         ]
     ],
     'service_manager' => [
