@@ -1017,6 +1017,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Returns as array to use same template with foreach as normally
+     * 
      * @return array
      */
     public function getMostSpecificFormat()
@@ -1326,6 +1327,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get Hierarchical level of record
+     *
      * @return String
      */
     public function getHierachicalLevel()
@@ -1387,6 +1389,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get biographical information or administrative history
+     *
      * @return array
      */
     public function getHistData()
@@ -1396,6 +1399,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get added entry geographic name
+     *
      * @return array
      */
     public function getPlaceNames()
@@ -1650,6 +1654,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get Physical Medium (MARC21: field 340)
+     *
      * @return array
      */
     public function getPhysicalMedium()
@@ -1722,6 +1727,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get language information
+     *
      * @return array
      */
     public function getLangData()
@@ -1731,6 +1737,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get Ownership and Custodial History Note (MARC21: field 561)
+     *
      * @return array
      */
     public function getOwnerNote()

@@ -522,6 +522,7 @@ class MyResearchController extends VuFindMyResearchController
     /**
      * Check if we are in lightbox mode such a method was removed by the core
      * we want to exclude Lightbox with Shibboleth authentication
+     * 
      * @return boolean
      */
     protected function checkInLightbox()

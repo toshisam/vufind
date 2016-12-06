@@ -202,6 +202,7 @@ class Params extends VuFindSolrParams
 
         /**
          * FavoriteInstitutions array
+         *
          * @var String[] $favoriteInstitutions
          */
         $favoriteInstitutions = $favoritesManger->getUserInstitutions();
