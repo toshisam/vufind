@@ -238,7 +238,6 @@ class Factory
      */
     public static function getSwitchApiService(ServiceManager $sm)
     {
-
         return new SwitchApi($sm->get('Config'));
     }
 
