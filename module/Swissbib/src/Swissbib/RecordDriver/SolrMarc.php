@@ -1816,7 +1816,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         }
 
         $journalCode = $this->getFieldArray('773', ['o']);
-        $nl = !empty($ref) && in_array("NATIONALLICENCE", $ref) ? $nl = "NATIONALLICENCE" : "";
+        $nl = !empty($ref) && in_array("NATIONALLICENCE", $ref) ?
+            $nl = "NATIONALLICENCE" : "";
         $nlData = [ $nl,
                     $publisher,
                     !empty($enum) ? $enum[0] : "",

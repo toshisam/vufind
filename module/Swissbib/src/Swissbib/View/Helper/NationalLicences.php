@@ -71,13 +71,13 @@ class NationalLicences extends AbstractHelper
         $this->ipMatcher = new IpMatcher();
         $this->validIps = explode(
             ",", $this->config
-            ->SwissAcademicLibraries->patterns_ip
+                ->SwissAcademicLibraries->patterns_ip
         );
         $this->remoteAddress = new RemoteAddress();
         $this->remoteAddress->setUseProxy();
         $trustedProxies = explode(
             ',', $sm->getServiceLocator()->get('VuFind\Config')
-            ->get('TrustedProxy')->get('loadbalancer')
+                ->get('TrustedProxy')->get('loadbalancer')
         );
         $this->remoteAddress->setTrustedProxies($trustedProxies);
         $this->nationalLicenceService = $this->sm->getServiceLocator()
@@ -281,7 +281,7 @@ class NationalLicences extends AbstractHelper
 
         $issn = $this->marcFields[3];
         $enumeration = $this->marcFields[2];
-        if ( strpos($enumeration, ':') !== FALSE ) {
+        if (strpos($enumeration, ':') !== false) {
             $splitted = explode(":", $enumeration);
             $volume = $splitted[0];
             $issuePage = explode("<", $splitted[1]);
@@ -356,7 +356,7 @@ class NationalLicences extends AbstractHelper
      * @return null
      */
     protected function buildUrl($userAuthorized, $issn, $volume,
-                                $issue, $sPage, $pii, $doi, $journalCode
+         $issue, $sPage, $pii, $doi, $journalCode
     ) {
 
         $url = $this->getPublisherBlueprintUrl($userAuthorized);
@@ -432,7 +432,9 @@ class NationalLicences extends AbstractHelper
      */
     public function isAuthenticatedWithSwissEduId()
     {
-        if (empty($this->config['NationaLicensesWorkflow'])) return false;
+        if (empty($this->config['NationaLicensesWorkflow'])) {
+            return false;
+        }
         $idbName = $this->config->NationaLicensesWorkflow->swissEduIdIDP;
         $persistentId = isset($_SERVER['persistent-id']) ?
             $_SERVER['persistent-id'] : "";
