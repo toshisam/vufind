@@ -281,11 +281,18 @@ class NationalLicences extends AbstractHelper
 
         $issn = $this->marcFields[3];
         $enumeration = $this->marcFields[2];
-        $splitted = explode(":", $enumeration);
-        $volume = $splitted[0];
-        $issuePage = explode("<", $splitted[1]);
-        $issue = $issuePage[0];
-        $page = $issuePage[1];
+        if ( strpos($enumeration, ':') !== FALSE ) {
+            $splitted = explode(":", $enumeration);
+            $volume = $splitted[0];
+            $issuePage = explode("<", $splitted[1]);
+            $issue = $issuePage[0];
+            $page = $issuePage[1];
+        } else {
+            $volumeIssue = explode("<", $enumeration);
+            $volume = $volumeIssue[0];
+            $issue = "";
+            $page = $volumeIssue[1];
+        }
         $doi = $record->getDOIs()[0];
         $journalCode = $this->marcFields[4];
         $pii = $this->marcFields[5];
