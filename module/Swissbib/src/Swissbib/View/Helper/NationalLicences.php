@@ -281,11 +281,18 @@ class NationalLicences extends AbstractHelper
 
         $issn = $this->marcFields[3];
         $enumeration = $this->marcFields[2];
-        $splitted = explode(":", $enumeration);
-        $volume = $splitted[0];
-        $issuePage = explode("<", $splitted[1]);
-        $issue = $issuePage[0];
-        $page = $issuePage[1];
+        if (strpos($enumeration, ':') !== false) {
+            $splitted = explode(":", $enumeration);
+            $volume = $splitted[0];
+            $issuePage = explode("<", $splitted[1]);
+            $issue = $issuePage[0];
+            $page = $issuePage[1];
+        } else {
+            $volumeIssue = explode("<", $enumeration);
+            $volume = $volumeIssue[0];
+            $issue = "";
+            $page = $volumeIssue[1];
+        }
         $doi = $record->getDOIs()[0];
         $journalCode = $this->marcFields[4];
         $pii = $this->marcFields[5];
@@ -318,7 +325,9 @@ class NationalLicences extends AbstractHelper
             $userInIpRange, $issn, $volume,
             $issue, $page, $pii, $doi, $journalCode
         );
-        if (!$userIsAuthorized) {
+        if (!$userIsAuthorized
+            && !empty($this->config['NationaLicensesWorkflow'])
+        ) {
             $loginUrl = $this->config->NationaLicensesWorkflow->swissEduIdLoginLink;
             $loginUrl = str_replace(
                 '{SERVER_HTTP_HOST}', $_SERVER['HTTP_HOST'], $loginUrl
@@ -347,9 +356,9 @@ class NationalLicences extends AbstractHelper
      * @return null
      */
     protected function buildUrl($userAuthorized, $issn, $volume,
-        $issue, $sPage, $pii, $doi, $journalCode
+         $issue, $sPage, $pii, $doi, $journalCode
     ) {
-    
+
         $url = $this->getPublisherBlueprintUrl($userAuthorized);
         $url = str_replace('{ISSN}', $issn, $url);
         $url = str_replace('{VOLUME}', $volume, $url);
@@ -377,19 +386,21 @@ class NationalLicences extends AbstractHelper
         $publisher = $this->marcFields[1];
         switch ($publisher)
         {
-        case 'NL-gruyter':
-            $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
-            break;
-        case 'NL-cambridge':
-            $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
-            break;
-        case 'NL-oxford':
-            $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
-            break;
+            case 'NL-gruyter':
+                $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
+                break;
+            case 'NL-cambridge':
+                $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
+                break;
+            case 'NL-oxford':
+                $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
+                break;
         }
 
         $blueprintUrl = "";
-        if (isset($this->config->PublisherUrls->$urlBlueprintKey)) {
+        if (!empty($this->config['PublisherUrls'])
+            && isset($this->config->PublisherUrls->$urlBlueprintKey)
+        ) {
             $blueprintUrl = $this->config->PublisherUrls->$urlBlueprintKey;
         }
 
@@ -421,6 +432,9 @@ class NationalLicences extends AbstractHelper
      */
     public function isAuthenticatedWithSwissEduId()
     {
+        if (empty($this->config['NationaLicensesWorkflow'])) {
+            return false;
+        }
         $idbName = $this->config->NationaLicensesWorkflow->swissEduIdIDP;
         $persistentId = isset($_SERVER['persistent-id']) ?
             $_SERVER['persistent-id'] : "";
