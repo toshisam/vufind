@@ -72,7 +72,7 @@ class NationalLicences extends AbstractHelper
         if (!empty($this->config['SwissAcademicLibraries'])) {
             $this->validIps = explode(
                 ",", $this->config
-                ->SwissAcademicLibraries->patterns_ip
+                    ->SwissAcademicLibraries->patterns_ip
             );
         }
         $this->remoteAddress = new RemoteAddress();
@@ -275,7 +275,9 @@ class NationalLicences extends AbstractHelper
      */
     public function getUrl(\VuFind\RecordDriver\SolrDefault $record)
     {
-        if (!($record instanceof \Swissbib\RecordDriver\SolrMarc)) return false;
+        if (!($record instanceof \Swissbib\RecordDriver\SolrMarc)) {
+            return false;
+        }
         $this->record = $record;
         $this->marcFields = $record->getNationalLicenceData();
         if ($this->marcFields[0] !== "NATIONALLICENCE") {
