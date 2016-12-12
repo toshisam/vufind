@@ -361,7 +361,7 @@ class NationalLicences extends AbstractHelper
      * @return null
      */
     protected function buildUrl($userAuthorized, $issn, $volume,
-         $issue, $sPage, $pii, $doi, $journalCode
+        $issue, $sPage, $pii, $doi, $journalCode
     ) {
 
         $url = $this->getPublisherBlueprintUrl($userAuthorized);
@@ -389,17 +389,16 @@ class NationalLicences extends AbstractHelper
     {
         $urlBlueprintKey = ($userAuthorized ? "" : "un") . "authorized";
         $publisher = $this->marcFields[1];
-        switch ($publisher)
-        {
-            case 'NL-gruyter':
-                $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
-                break;
-            case 'NL-cambridge':
-                $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
-                break;
-            case 'NL-oxford':
-                $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
-                break;
+        switch ($publisher) {
+        case 'NL-gruyter':
+            $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
+            break;
+        case 'NL-cambridge':
+            $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
+            break;
+        case 'NL-oxford':
+            $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
+            break;
         }
 
         $blueprintUrl = "";
