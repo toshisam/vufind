@@ -69,10 +69,12 @@ class NationalLicences extends AbstractHelper
         $this->config = $sm->getServiceLocator()->get('VuFind\Config')
             ->get('config');
         $this->ipMatcher = new IpMatcher();
-        $this->validIps = explode(
-            ",", $this->config
+        if (!empty($this->config['SwissAcademicLibraries'])) {
+            $this->validIps = explode(
+                ",", $this->config
                 ->SwissAcademicLibraries->patterns_ip
-        );
+            );
+        }
         $this->remoteAddress = new RemoteAddress();
         $this->remoteAddress->setUseProxy();
         $trustedProxies = explode(
@@ -267,12 +269,13 @@ class NationalLicences extends AbstractHelper
     /**
      * Return the url for the record if it's available with NL, otherwise false
      *
-     * @param SolrMarc $record the record object
+     * @param SolrDefault $record the record object
      *
      * @return bool|String
      */
-    public function getUrl(SolrMarc $record)
+    public function getUrl(\VuFind\RecordDriver\SolrDefault $record)
     {
+        if (!($record instanceof \Swissbib\RecordDriver\SolrMarc)) return false;
         $this->record = $record;
         $this->marcFields = $record->getNationalLicenceData();
         if ($this->marcFields[0] !== "NATIONALLICENCE") {
