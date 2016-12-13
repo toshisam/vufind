@@ -31,10 +31,8 @@
 namespace Swissbib\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
-use Swissbib\RecordDriver\SolrMarc;
 use Zend\Http\PhpEnvironment\RemoteAddress;
 use Swissbib\TargetsProxy\IpMatcher;
-use Swissbib\Services\NationalLicence;
 
 /**
  * Return URL for NationalLicence online access if applicable. Otherwise 'false'.
