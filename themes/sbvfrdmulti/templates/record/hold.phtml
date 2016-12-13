@@ -29,7 +29,7 @@ $unsetPickup[] = 'POPA';
 ?>
 <p class="lead"><?=$this->transEsc('request_place_text')?></p>
 <p><?=$this->transEsc('request_title') ?>: <a href="<?=$this->recordLink()->getUrl($this->driver) ?>" target="_blank"> <?= $this->escapeHtml($shortTitle) ?> <? if (!empty($responsible)): ?> <?=' / ' . $this->escapeHtml($responsible)?><? endif; ?></a><p>
-<p><?=$this->transEsc('hold_text4') ?> <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>" target="_blank"><?=$this->transEsc('hold_text5')?></a>.</p><br/>
+<p><?=$this->transEsc('hold_text4') ?> <a href="<?= $this->url('help-page', array('topic' => 'delivery')); ?>" target="_blank" data-lightbox-ignore><?=$this->transEsc('hold_text5')?></a>.</p><br/>
 <? if ($this->helpText): ?>
     <p class="helptext"><?=$this->helpText?></p>
 <? endif; ?>

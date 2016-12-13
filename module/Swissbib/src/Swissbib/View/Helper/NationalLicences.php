@@ -69,10 +69,12 @@ class NationalLicences extends AbstractHelper
         $this->config = $sm->getServiceLocator()->get('VuFind\Config')
             ->get('config');
         $this->ipMatcher = new IpMatcher();
-        $this->validIps = explode(
-            ",", $this->config
-                ->SwissAcademicLibraries->patterns_ip
-        );
+        if (!empty($this->config['SwissAcademicLibraries'])) {
+            $this->validIps = explode(
+                ",", $this->config
+                    ->SwissAcademicLibraries->patterns_ip
+            );
+        }
         $this->remoteAddress = new RemoteAddress();
         $this->remoteAddress->setUseProxy();
         $trustedProxies = explode(
@@ -267,12 +269,15 @@ class NationalLicences extends AbstractHelper
     /**
      * Return the url for the record if it's available with NL, otherwise false
      *
-     * @param SolrMarc $record the record object
+     * @param SolrDefault $record the record object
      *
      * @return bool|String
      */
-    public function getUrl(SolrMarc $record)
+    public function getUrl(\VuFind\RecordDriver\SolrDefault $record)
     {
+        if (!($record instanceof \Swissbib\RecordDriver\SolrMarc)) {
+            return false;
+        }
         $this->record = $record;
         $this->marcFields = $record->getNationalLicenceData();
         if ($this->marcFields[0] !== "NATIONALLICENCE") {
@@ -356,7 +361,7 @@ class NationalLicences extends AbstractHelper
      * @return null
      */
     protected function buildUrl($userAuthorized, $issn, $volume,
-         $issue, $sPage, $pii, $doi, $journalCode
+        $issue, $sPage, $pii, $doi, $journalCode
     ) {
 
         $url = $this->getPublisherBlueprintUrl($userAuthorized);
@@ -384,17 +389,16 @@ class NationalLicences extends AbstractHelper
     {
         $urlBlueprintKey = ($userAuthorized ? "" : "un") . "authorized";
         $publisher = $this->marcFields[1];
-        switch ($publisher)
-        {
-            case 'NL-gruyter':
-                $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
-                break;
-            case 'NL-cambridge':
-                $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
-                break;
-            case 'NL-oxford':
-                $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
-                break;
+        switch ($publisher) {
+        case 'NL-gruyter':
+            $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
+            break;
+        case 'NL-cambridge':
+            $urlBlueprintKey = 'nl-cambridge-' . $urlBlueprintKey;
+            break;
+        case 'NL-oxford':
+            $urlBlueprintKey = 'nl-oxford-' . $urlBlueprintKey;
+            break;
         }
 
         $blueprintUrl = "";
