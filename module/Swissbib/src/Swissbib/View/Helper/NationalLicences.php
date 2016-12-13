@@ -69,10 +69,12 @@ class NationalLicences extends AbstractHelper
         $this->config = $sm->getServiceLocator()->get('VuFind\Config')
             ->get('config');
         $this->ipMatcher = new IpMatcher();
-        $this->validIps = explode(
-            ",", $this->config
-                ->SwissAcademicLibraries->patterns_ip
-        );
+        if (!empty($this->config['SwissAcademicLibraries'])) {
+            $this->validIps = explode(
+                ",", $this->config
+                    ->SwissAcademicLibraries->patterns_ip
+            );
+        }
         $this->remoteAddress = new RemoteAddress();
         $this->remoteAddress->setUseProxy();
         $trustedProxies = explode(
@@ -267,12 +269,15 @@ class NationalLicences extends AbstractHelper
     /**
      * Return the url for the record if it's available with NL, otherwise false
      *
-     * @param SolrMarc $record the record object
+     * @param SolrDefault $record the record object
      *
      * @return bool|String
      */
-    public function getUrl(SolrMarc $record)
+    public function getUrl(\VuFind\RecordDriver\SolrDefault $record)
     {
+        if (!($record instanceof \Swissbib\RecordDriver\SolrMarc)) {
+            return false;
+        }
         $this->record = $record;
         $this->marcFields = $record->getNationalLicenceData();
         if ($this->marcFields[0] !== "NATIONALLICENCE") {
@@ -281,7 +286,7 @@ class NationalLicences extends AbstractHelper
 
         $issn = $this->marcFields[3];
         $enumeration = $this->marcFields[2];
-        if ( strpos($enumeration, ':') !== FALSE ) {
+        if (strpos($enumeration, ':') !== false) {
             $splitted = explode(":", $enumeration);
             $volume = $splitted[0];
             $issuePage = explode("<", $splitted[1]);
@@ -325,7 +330,9 @@ class NationalLicences extends AbstractHelper
             $userInIpRange, $issn, $volume,
             $issue, $page, $pii, $doi, $journalCode
         );
-        if (!$userIsAuthorized) {
+        if (!$userIsAuthorized
+            && !empty($this->config['NationaLicensesWorkflow'])
+        ) {
             $loginUrl = $this->config->NationaLicensesWorkflow->swissEduIdLoginLink;
             $loginUrl = str_replace(
                 '{SERVER_HTTP_HOST}', $_SERVER['HTTP_HOST'], $loginUrl
@@ -356,7 +363,7 @@ class NationalLicences extends AbstractHelper
     protected function buildUrl($userAuthorized, $issn, $volume,
         $issue, $sPage, $pii, $doi, $journalCode
     ) {
-    
+
         $url = $this->getPublisherBlueprintUrl($userAuthorized);
         $url = str_replace('{ISSN}', $issn, $url);
         $url = str_replace('{VOLUME}', $volume, $url);
@@ -382,8 +389,7 @@ class NationalLicences extends AbstractHelper
     {
         $urlBlueprintKey = ($userAuthorized ? "" : "un") . "authorized";
         $publisher = $this->marcFields[1];
-        switch ($publisher)
-        {
+        switch ($publisher) {
         case 'NL-gruyter':
             $urlBlueprintKey = 'nl-gruyter-' . $urlBlueprintKey;
             break;
@@ -396,7 +402,9 @@ class NationalLicences extends AbstractHelper
         }
 
         $blueprintUrl = "";
-        if (isset($this->config->PublisherUrls->$urlBlueprintKey)) {
+        if (!empty($this->config['PublisherUrls'])
+            && isset($this->config->PublisherUrls->$urlBlueprintKey)
+        ) {
             $blueprintUrl = $this->config->PublisherUrls->$urlBlueprintKey;
         }
 
@@ -428,6 +436,9 @@ class NationalLicences extends AbstractHelper
      */
     public function isAuthenticatedWithSwissEduId()
     {
+        if (empty($this->config['NationaLicensesWorkflow'])) {
+            return false;
+        }
         $idbName = $this->config->NationaLicensesWorkflow->swissEduIdIDP;
         $persistentId = isset($_SERVER['persistent-id']) ?
             $_SERVER['persistent-id'] : "";
