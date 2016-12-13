@@ -66,7 +66,7 @@ class Email implements ServiceLocatorAwareInterface
      */
     public function __construct($config)
     {
-        $this->config = $config['swissbib'];
+        $this->config = $config;
     }
 
     /**
@@ -161,14 +161,12 @@ class Email implements ServiceLocatorAwareInterface
         $message = new Message();
         $message->setBody($mimeMessage);
         $message->addTo($to)
-            ->addFrom($this->config['email_service']['default_email_address_from'])
+            ->addFrom($this->config->get('NationalLicences')['EmailService']['default_email_address_from'])
             ->setSubject($subject);
         $transport = null;
         if ($tlsActive) {
             $transport = new SmtpTransport();
-            $options = new SmtpOptions(
-                $this->config['email_service']['smtp_options']
-            );
+            $options = new SmtpOptions($this->config['EmailService']['SmtpOptions']);
             $transport->setOptions($options);
         } else {
             $transport = new SendmailTransport();
@@ -189,7 +187,7 @@ class Email implements ServiceLocatorAwareInterface
         $sl = $this->getServiceLocator();
         $vhm = $sl->get('viewhelpermanager');
         $url = $vhm->get('url');
-        $link = $this->config['national_licence_service']['base_domain_path'] .
+        $link = $this->config->get('NationalLicences')['NationalLicenceService']['base_domain_path'] .
             $url(
                 'national-licences',
                 ['action' => 'extend-account'],

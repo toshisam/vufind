@@ -66,24 +66,27 @@ class NationalLicences extends AbstractHelper
     public function __construct($sm)
     {
         $this->sm = $sm;
-        $this->config = $sm->getServiceLocator()->get('VuFind\Config')
-            ->get('config');
+        $this->config = $sm->getServiceLocator()->get('VuFind\Config')->get('NationalLicences');
+        $this->helperManager =  $sm->getServiceLocator()->get('viewhelpermanager');
         $this->ipMatcher = new IpMatcher();
-        if (!empty($this->config['SwissAcademicLibraries'])) {
+
+
+        if (!empty($sm->getServiceLocator()->get('VuFind\Config')->get('config')->SwissAcademicLibraries)) {
             $this->validIps = explode(
-                ",", $this->config
-                    ->SwissAcademicLibraries->patterns_ip
+                ",", $sm->getServiceLocator()->get('VuFind\Config')
+                ->get('config')->SwissAcademicLibraries->patterns_ip
             );
         }
         $this->remoteAddress = new RemoteAddress();
         $this->remoteAddress->setUseProxy();
         $trustedProxies = explode(
             ',', $sm->getServiceLocator()->get('VuFind\Config')
-                ->get('TrustedProxy')->get('loadbalancer')
+            ->get('TrustedProxy')->get('loadbalancer')
         );
         $this->remoteAddress->setTrustedProxies($trustedProxies);
         $this->nationalLicenceService = $this->sm->getServiceLocator()
             ->get('Swissbib\NationalLicenceService');
+
 
         /*
         Based on Oxford mapping:
