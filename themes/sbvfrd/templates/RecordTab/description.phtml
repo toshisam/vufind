@@ -218,6 +218,7 @@ $prevTitles      = $record->getPreviousTitles();
   $histData   = $record->getHistData();
   $langData   = $record->getLangData();
   $copynotes  = $record->getCopyNotes();
+  $binding    = $record->getBinding();
   $system     = $record->getSystemDetails();
   $medium     = $record->getPhysicalMedium();
   $acquisitionNote = $record->getAcquisitionNote();
@@ -229,7 +230,7 @@ $prevTitles      = $record->getPreviousTitles();
 
   <? if (!empty($notes) or !empty($freq) or !empty($contDates) or !empty($diss) or
       !empty($bib) or !empty($access) or !empty($related) or !empty($credits) or !empty($awards) or
-      !empty($citenotes) or !empty($orignotes) or !empty($copynotes) or !empty($histData) or
+      !empty($citenotes) or !empty($orignotes) or !empty($copynotes) or !empty($binding) or !empty($histData) or
       !empty($origtitle) or !empty($perfomer) or !empty($system) or !empty($relatedEntries) or
       !empty($langData) or !empty($audience) or !empty($eventNote) or !empty($fileNote) or !empty($publications) or
       !empty($exhibitions) or !empty($worktitle) or !empty($ownerNote) or !empty($acquisitionNote) or !empty($medium)): ?>
@@ -461,6 +462,18 @@ $prevTitles      = $record->getPreviousTitles();
               <? endforeach; ?>
           </td>
         </tr>
+      <? endif; ?>
+
+      <? /* Display binding (field 563) */ ?>
+      <? if (!empty($binding)): ?>
+          <tr>
+              <th><?= $this->transEsc('Binding') ?>: </th>
+              <td>
+                  <? foreach ($binding as $field): ?>
+                      <?= $this->escapeHtml($field) ?><br/>
+                  <? endforeach; ?>
+              </td>
+          </tr>
       <? endif; ?>
 
       <? /* Display system information note (field 538) */ ?>
