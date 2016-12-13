@@ -69,8 +69,10 @@ class NationalLicences extends AbstractHelper
         $this->helperManager =  $sm->getServiceLocator()->get('viewhelpermanager');
         $this->ipMatcher = new IpMatcher();
 
-        $sectionPresent = !empty($sm->getServiceLocator()
-            ->get('VuFind\Config')->get('config')->SwissAcademicLibraries);
+        $sectionPresent = !empty(
+            $sm->getServiceLocator()
+            ->get('VuFind\Config')->get('config')->SwissAcademicLibraries
+        );
         if ($sectionPresent) {
             $this->validIps = explode(
                 ",", $sm->getServiceLocator()->get('VuFind\Config')

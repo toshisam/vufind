@@ -130,8 +130,8 @@ class SwitchApi implements ServiceLocatorAwareInterface
     /**
      * Get an instance of the HTTP Client with some basic configuration.
      *
-     * @param string $method Method
-     * @param string $relPath Rel path
+     * @param string $method   Method
+     * @param string $relPath  Rel path
      * @param string $basePath the base path
      *
      * @return Client
@@ -420,8 +420,8 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $body = $response->getBody();
         if ($statusCode !== 200) {
             throw new \Exception(
-            "There was a problem retrieving data for user " .
-            "with name id: $nameId. Status code: $statusCode result: $body"
+                "There was a problem retrieving data for user " .
+                "with name id: $nameId. Status code: $statusCode result: $body"
             );
 
         }

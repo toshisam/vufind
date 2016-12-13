@@ -189,7 +189,8 @@ class Email implements ServiceLocatorAwareInterface
         $sl = $this->getServiceLocator();
         $vhm = $sl->get('viewhelpermanager');
         $url = $vhm->get('url');
-        $baseDomainPath = $this->config->get('NationalLicences')['NationalLicenceService']['base_domain_path'];
+        $baseDomainPath= $this->config
+            ->get('NationalLicences')['NationalLicenceService']['base_domain_path'];
         $link =  $baseDomainPath .
             $url(
                 'national-licences',
