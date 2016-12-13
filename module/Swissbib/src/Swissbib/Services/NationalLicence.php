@@ -82,7 +82,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
     {
         $this->switchApiService = $switchApiService;
         $this->emailService = $emailService;
-        $this->config = $config->get('NationalLicences')['NationalLicenceService'];
+        $this->config = $config['NationalLicenceService'];
     }
 
     /**

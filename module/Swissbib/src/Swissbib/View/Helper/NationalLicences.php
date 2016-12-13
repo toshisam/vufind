@@ -66,7 +66,8 @@ class NationalLicences extends AbstractHelper
     public function __construct($sm)
     {
         $this->sm = $sm;
-        $this->config = $sm->getServiceLocator()->get('VuFind\Config')->get('NationalLicences');
+        $this->config = $sm->getServiceLocator()->get('VuFind\Config')
+            ->get("NationalLicences");
         $this->helperManager =  $sm->getServiceLocator()->get('viewhelpermanager');
         $this->ipMatcher = new IpMatcher();
 

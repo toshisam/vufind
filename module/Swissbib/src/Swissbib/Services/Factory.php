@@ -225,7 +225,7 @@ class Factory
         return new NationalLicence(
             $sm->get('Swissbib\SwitchApiService'),
             $sm->get('Swissbib\EmailService'),
-            $sm->get('VuFind\Config')->get('config')
+            $sm->get('VuFind\Config')->get('NationalLicences')
         );
     }
 
