@@ -5,8 +5,11 @@ ChangeLog
 .\#*
 TAGS
 *~
+/downloads
+/solr/vendor
 /vendor
 composer.lock
 composer.phar
 import/solrmarc.log
-export/nationalLicence
+node_modules
+public/swagger-ui
