@@ -158,10 +158,12 @@ class Email implements ServiceLocatorAwareInterface
             );
         }
         // and finally we create the actual email
+        $emailAddressFrom = $this->config
+            ->get('NationalLicences')['EmailService']['default_email_address_from'];
         $message = new Message();
         $message->setBody($mimeMessage);
         $message->addTo($to)
-            ->addFrom($this->config->get('NationalLicences')['EmailService']['default_email_address_from'])
+            ->addFrom($emailAddressFrom)
             ->setSubject($subject);
         $transport = null;
         if ($tlsActive) {
@@ -187,7 +189,8 @@ class Email implements ServiceLocatorAwareInterface
         $sl = $this->getServiceLocator();
         $vhm = $sl->get('viewhelpermanager');
         $url = $vhm->get('url');
-        $link = $this->config->get('NationalLicences')['NationalLicenceService']['base_domain_path'] .
+        $baseDomainPath = $this->config->get('NationalLicences')['NationalLicenceService']['base_domain_path'];
+        $link =  $baseDomainPath .
             $url(
                 'national-licences',
                 ['action' => 'extend-account'],

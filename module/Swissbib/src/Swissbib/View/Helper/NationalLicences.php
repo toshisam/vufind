@@ -71,18 +71,19 @@ class NationalLicences extends AbstractHelper
         $this->helperManager =  $sm->getServiceLocator()->get('viewhelpermanager');
         $this->ipMatcher = new IpMatcher();
 
-
-        if (!empty($sm->getServiceLocator()->get('VuFind\Config')->get('config')->SwissAcademicLibraries)) {
+        $sectionPresent = !empty($sm->getServiceLocator()
+            ->get('VuFind\Config')->get('config')->SwissAcademicLibraries);
+        if ($sectionPresent) {
             $this->validIps = explode(
                 ",", $sm->getServiceLocator()->get('VuFind\Config')
-                ->get('config')->SwissAcademicLibraries->patterns_ip
+                    ->get('config')->SwissAcademicLibraries->patterns_ip
             );
         }
         $this->remoteAddress = new RemoteAddress();
         $this->remoteAddress->setUseProxy();
         $trustedProxies = explode(
             ',', $sm->getServiceLocator()->get('VuFind\Config')
-            ->get('TrustedProxy')->get('loadbalancer')
+                ->get('TrustedProxy')->get('loadbalancer')
         );
         $this->remoteAddress->setTrustedProxies($trustedProxies);
         $this->nationalLicenceService = $this->sm->getServiceLocator()
