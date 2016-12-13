@@ -232,13 +232,9 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $switchUser = $this->getSwitchUserInfo($internalId);
         $id = 'national_licence_programme_group_id';
         foreach ($switchUser->groups as $group) {
-<<<<<<< HEAD
-            if ($group->value === $this->config[$id]) {
-=======
             $v = $this->configNL['national_licence_programme_group_id'];
             if ($group->value === $v)
             {
->>>>>>> feature/Nationallicence_ini-file
                 return true;
             }
         }
