@@ -33,6 +33,8 @@ namespace Swissbib\View\Helper;
 use Zend\View\Helper\AbstractHelper;
 use Zend\Http\PhpEnvironment\RemoteAddress;
 use Swissbib\TargetsProxy\IpMatcher;
+use Zend\View\HelperPluginManager;
+use VuFind\RecordDriver\SolrDefault;
 
 /**
  * Return URL for NationalLicence online access if applicable. Otherwise 'false'.
@@ -46,6 +48,9 @@ use Swissbib\TargetsProxy\IpMatcher;
  */
 class NationalLicences extends AbstractHelper
 {
+    /**
+     * @var HelperPluginManager
+     */
     protected $sm;
     protected $config;
     protected $record;
@@ -59,7 +64,7 @@ class NationalLicences extends AbstractHelper
     /**
      * NationalLicences constructor.
      *
-     * @param ServiceManager $sm ServiceManager
+     * @param $sm HelperPluginManager
      */
     public function __construct($sm)
     {
@@ -266,8 +271,8 @@ class NationalLicences extends AbstractHelper
     public function isUserInIpRange()
     {
         $ipAddress = $this->remoteAddress->getIpAddress();
-        $isMatchingIp = $this->ipMatcher->isMatching($ipAddress, $this->validIps);
-        return $isMatchingIp;
+        return  $this->ipMatcher->isMatching($ipAddress, $this->validIps);
+        //return boolval($isMatchingIp);
     }
 
     /**
@@ -277,7 +282,7 @@ class NationalLicences extends AbstractHelper
      *
      * @return bool|String
      */
-    public function getUrl(\VuFind\RecordDriver\SolrDefault $record)
+    public function getUrl(SolrDefault $record)
     {
         if (!($record instanceof \Swissbib\RecordDriver\SolrMarc)) {
             return false;
