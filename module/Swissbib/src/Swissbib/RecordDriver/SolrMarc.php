@@ -1762,6 +1762,15 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get original version note for the record (MARC21: field 563)
+     *
+     * @return array
+     */
+    public function getBinding()
+    {
+        return $this->getFieldArray('563');
+    }
+    /**
      * Get publications about described materials note (581)
      *
      * @return array

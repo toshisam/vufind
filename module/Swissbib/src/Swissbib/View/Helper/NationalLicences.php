@@ -31,10 +31,8 @@
 namespace Swissbib\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
-use Swissbib\RecordDriver\SolrMarc;
 use Zend\Http\PhpEnvironment\RemoteAddress;
 use Swissbib\TargetsProxy\IpMatcher;
-use Swissbib\Services\NationalLicence;
 
 /**
  * Return URL for NationalLicence online access if applicable. Otherwise 'false'.
@@ -67,12 +65,18 @@ class NationalLicences extends AbstractHelper
     {
         $this->sm = $sm;
         $this->config = $sm->getServiceLocator()->get('VuFind\Config')
-            ->get('config');
+            ->get("NationalLicences");
+        $this->helperManager =  $sm->getServiceLocator()->get('viewhelpermanager');
         $this->ipMatcher = new IpMatcher();
-        if (!empty($this->config['SwissAcademicLibraries'])) {
+
+        $sectionPresent = !empty(
+            $sm->getServiceLocator()
+            ->get('VuFind\Config')->get('config')->SwissAcademicLibraries
+        );
+        if ($sectionPresent) {
             $this->validIps = explode(
-                ",", $this->config
-                    ->SwissAcademicLibraries->patterns_ip
+                ",", $sm->getServiceLocator()->get('VuFind\Config')
+                    ->get('config')->SwissAcademicLibraries->patterns_ip
             );
         }
         $this->remoteAddress = new RemoteAddress();
@@ -84,6 +88,7 @@ class NationalLicences extends AbstractHelper
         $this->remoteAddress->setTrustedProxies($trustedProxies);
         $this->nationalLicenceService = $this->sm->getServiceLocator()
             ->get('Swissbib\NationalLicenceService');
+
 
         /*
         Based on Oxford mapping:
