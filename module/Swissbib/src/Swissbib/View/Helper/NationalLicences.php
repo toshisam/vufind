@@ -89,7 +89,6 @@ class NationalLicences extends AbstractHelper
         $this->nationalLicenceService = $this->sm->getServiceLocator()
             ->get('Swissbib\NationalLicenceService');
 
-
         /*
         Based on Oxford mapping:
            http://www.oxfordjournals.org/en/help/tech-info/linking.html
