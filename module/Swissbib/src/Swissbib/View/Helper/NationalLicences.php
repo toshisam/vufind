@@ -83,7 +83,7 @@ class NationalLicences extends AbstractHelper
         $this->remoteAddress->setUseProxy();
         $trustedProxies = explode(
             ',', $sm->getServiceLocator()->get('VuFind\Config')
-                ->get('TrustedProxy')->get('loadbalancer')
+            ->get('TargetsProxy')->get('TrustedProxy')->get('loadbalancer')
         );
         $this->remoteAddress->setTrustedProxies($trustedProxies);
         $this->nationalLicenceService = $this->sm->getServiceLocator()
