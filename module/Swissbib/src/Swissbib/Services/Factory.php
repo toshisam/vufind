@@ -28,11 +28,8 @@
  */
 namespace Swissbib\Services;
 
-use Zend\Config\Reader\Ini;
 use Zend\ServiceManager\ServiceManager;
-
 use Swissbib\VuFind\Recommend\FavoriteFacets;
-use Zend\Config\Reader;
 /**
  * Factory for Services.
  *

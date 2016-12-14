@@ -71,7 +71,7 @@ class NationalLicences extends AbstractHelper
 
         $sectionPresent = !empty(
             $sm->getServiceLocator()
-            ->get('VuFind\Config')->get('config')->SwissAcademicLibraries
+                ->get('VuFind\Config')->get('config')->SwissAcademicLibraries
         );
         if ($sectionPresent) {
             $this->validIps = explode(
@@ -88,7 +88,6 @@ class NationalLicences extends AbstractHelper
         $this->remoteAddress->setTrustedProxies($trustedProxies);
         $this->nationalLicenceService = $this->sm->getServiceLocator()
             ->get('Swissbib\NationalLicenceService');
-
 
         /*
         Based on Oxford mapping:
