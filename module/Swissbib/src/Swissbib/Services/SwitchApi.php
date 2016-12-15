@@ -162,9 +162,9 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $passw = $this->config['SwitchApi']['auth_password'];
         if (empty($username) || empty($passw)) {
             throw new \Exception(
-                'Was not possible to find the SWITCH API '.
-                'credentials. Make sure you have correctly configured the '.
-                '"SWITCH_API_USER" and "SWITCH_API_PASSW" either in the '.
+                'Was not possible to find the SWITCH API ' .
+                'credentials. Make sure you have correctly configured the ' .
+                '"SWITCH_API_USER" and "SWITCH_API_PASSW" either in the ' .
                 'apache setup or before launching the script.'
             );
 
