@@ -171,7 +171,7 @@ class Email implements ServiceLocatorAwareInterface
             $options
                 = new SmtpOptions(
                     $this->config
-                    ->get('NationalLicences')['EmailService']['SmtpOptions']
+                      ->get('NationalLicences')['EmailService']['SmtpOptions']
                 );
             $transport->setOptions($options);
         } else {
