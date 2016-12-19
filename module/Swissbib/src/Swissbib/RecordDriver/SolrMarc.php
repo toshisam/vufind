@@ -1801,7 +1801,13 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         //gives always the same publisher in result list
         //$publisher = array_values($this->getHoldingsStructure())[0]['institution'];
 
-        $publisher = $this->getFieldArray('035', ['a'])[0];
+        $publisherArray = $this->getFieldArray('035', ['a']);
+        $publisher = "";
+        foreach ($publisherArray as $key => $val) {
+            if (strpos($key, '(NATIONALLICENCE)') !== 0) {
+                $publisher = $val;
+            }
+        }
         $publisher = explode("-", $publisher)[0];
         $publisher = str_replace("(NATIONALLICENCE)", "NL-", $publisher);
 
