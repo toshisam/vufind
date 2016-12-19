@@ -35,6 +35,7 @@ use Zend\Http\PhpEnvironment\RemoteAddress;
 use Swissbib\TargetsProxy\IpMatcher;
 use Zend\View\HelperPluginManager;
 use VuFind\RecordDriver\SolrDefault;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * Return URL for NationalLicence online access if applicable. Otherwise 'false'.
