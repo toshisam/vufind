@@ -66,7 +66,7 @@ class NationalLicences extends AbstractHelper
      *
      * @param $sm HelperPluginManager
      */
-    public function __construct($sm)
+    public function __construct(ServiceManager $sm)
     {
         $this->sm = $sm;
         $this->config = $sm->getServiceLocator()->get('VuFind\Config')
@@ -86,7 +86,7 @@ class NationalLicences extends AbstractHelper
         );
         $this->remoteAddress->setTrustedProxies($trustedProxies);
         $this->nationalLicenceService = $this->sm->getServiceLocator()
-            ->get('Swissbib\NationalLicenceService');
+                ->get('Swissbib\NationalLicenceService');
 
         /*
         Based on Oxford mapping:
