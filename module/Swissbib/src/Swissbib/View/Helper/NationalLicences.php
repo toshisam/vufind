@@ -48,9 +48,6 @@ use VuFind\RecordDriver\SolrDefault;
  */
 class NationalLicences extends AbstractHelper
 {
-    /**
-     * @var HelperPluginManager Helper Manager
-     */
     protected $sm;
     protected $config;
     protected $record;
