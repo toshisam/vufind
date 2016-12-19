@@ -49,7 +49,7 @@ use VuFind\RecordDriver\SolrDefault;
 class NationalLicences extends AbstractHelper
 {
     /**
-     * @var HelperPluginManager
+     * @var HelperPluginManager Helper Manager
      */
     protected $sm;
     protected $config;
@@ -64,7 +64,7 @@ class NationalLicences extends AbstractHelper
     /**
      * NationalLicences constructor.
      *
-     * @param $sm HelperPluginManager
+     * @param ServiceManager $sm HelperPluginManager
      */
     public function __construct(ServiceManager $sm)
     {
@@ -88,11 +88,11 @@ class NationalLicences extends AbstractHelper
         $this->remoteAddress->setUseProxy();
         $trustedProxies = explode(
             ',', $sm->getServiceLocator()->get('VuFind\Config')
-            ->get('TargetsProxy')->get('TrustedProxy')->get('loadbalancer')
+                ->get('TargetsProxy')->get('TrustedProxy')->get('loadbalancer')
         );
         $this->remoteAddress->setTrustedProxies($trustedProxies);
         $this->nationalLicenceService = $this->sm->getServiceLocator()
-                ->get('Swissbib\NationalLicenceService');
+            ->get('Swissbib\NationalLicenceService');
 
         /*
         Based on Oxford mapping:
