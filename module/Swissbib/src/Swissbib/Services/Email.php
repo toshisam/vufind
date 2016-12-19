@@ -168,7 +168,11 @@ class Email implements ServiceLocatorAwareInterface
         $transport = null;
         if ($tlsActive) {
             $transport = new SmtpTransport();
-            $options = new SmtpOptions($this->config['EmailService']['SmtpOptions']);
+            $options
+                = new SmtpOptions(
+                $this->config
+                    ->get('NationalLicences')['EmailService']['SmtpOptions']
+            );
             $transport->setOptions($options);
         } else {
             $transport = new SendmailTransport();
