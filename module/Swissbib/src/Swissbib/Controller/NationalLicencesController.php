@@ -235,8 +235,8 @@ class NationalLicencesController extends BaseController
         }
         if (!$accessCreatedSuccessfully) {
             $this->flashMessenger()->addMessage(
-                $this->translate('snl.wasNotPossibleToCreateTemporaryAccessError',
-                    'error'
+                $this->translate(
+                    'snl.wasNotPossibleToCreateTemporaryAccessError', 'error'
                 )
             );
             $this->redirect()->toRoute('national-licences');
@@ -263,8 +263,8 @@ class NationalLicencesController extends BaseController
         try {
             $this->nationalLicenceService->setNationalLicenceCompliantFlag();
             $this->flashMessenger()->addMessage(
-                $this->translate('snl.yourRequestPermanentAccessSuccessful',
-                'success'
+                $this->translate(
+                    'snl.yourRequestPermanentAccessSuccessful', 'success'
                 )
             );
         } catch (\Exception $e) {
