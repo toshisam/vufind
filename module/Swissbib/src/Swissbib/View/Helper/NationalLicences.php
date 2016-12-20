@@ -35,6 +35,7 @@ use Zend\Http\PhpEnvironment\RemoteAddress;
 use Swissbib\TargetsProxy\IpMatcher;
 use Zend\View\HelperPluginManager;
 use VuFind\RecordDriver\SolrDefault;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * Return URL for NationalLicence online access if applicable. Otherwise 'false'.
@@ -48,9 +49,6 @@ use VuFind\RecordDriver\SolrDefault;
  */
 class NationalLicences extends AbstractHelper
 {
-    /**
-     * @var HelperPluginManager
-     */
     protected $sm;
     protected $config;
     protected $record;
@@ -64,9 +62,9 @@ class NationalLicences extends AbstractHelper
     /**
      * NationalLicences constructor.
      *
-     * @param $sm HelperPluginManager
+     * @param ServiceManager $sm HelperPluginManager
      */
-    public function __construct($sm)
+    public function __construct(ServiceManager $sm)
     {
         $this->sm = $sm;
         $this->config = $sm->getServiceLocator()->get('VuFind\Config')
@@ -88,7 +86,7 @@ class NationalLicences extends AbstractHelper
         $this->remoteAddress->setUseProxy();
         $trustedProxies = explode(
             ',', $sm->getServiceLocator()->get('VuFind\Config')
-            ->get('TargetsProxy')->get('TrustedProxy')->get('loadbalancer')
+                ->get('TargetsProxy')->get('TrustedProxy')->get('loadbalancer')
         );
         $this->remoteAddress->setTrustedProxies($trustedProxies);
         $this->nationalLicenceService = $this->sm->getServiceLocator()

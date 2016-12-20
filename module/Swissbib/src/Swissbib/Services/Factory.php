@@ -247,6 +247,6 @@ class Factory
      */
     public static function getEmailService(ServiceManager $sm)
     {
-        return new Email($sm->get('VuFind\Config')->get('config'));
+        return new Email($sm->get('VuFind\Config'));
     }
 }

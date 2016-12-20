@@ -168,7 +168,11 @@ class Email implements ServiceLocatorAwareInterface
         $transport = null;
         if ($tlsActive) {
             $transport = new SmtpTransport();
-            $options = new SmtpOptions($this->config['EmailService']['SmtpOptions']);
+            $options
+                = new SmtpOptions(
+                    $this->config
+                        ->get('NationalLicences')['EmailService']['SmtpOptions']
+                );
             $transport->setOptions($options);
         } else {
             $transport = new SendmailTransport();
@@ -189,8 +193,7 @@ class Email implements ServiceLocatorAwareInterface
         $sl = $this->getServiceLocator();
         $vhm = $sl->get('viewhelpermanager');
         $url = $vhm->get('url');
-        $baseDomainPath = $this->config
-            ->get('NationalLicences')['NationalLicenceService']['base_domain_path'];
+        $baseDomainPath = $this->config->get('config')['Site']['url'];
         $link =  $baseDomainPath .
             $url(
                 'national-licences',
