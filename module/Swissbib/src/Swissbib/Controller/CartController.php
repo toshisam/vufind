@@ -54,8 +54,7 @@ class CartController extends VuFindCartController
         try {
             return parent::myresearchbulkAction();
         } catch (\Exception $e) {
-            $this->flashMessenger()->setNamespace('error')
-                ->addMessage($e->getMessage());
+            $this->flashMessenger()->addMessage($e->getMessage(), 'error');
 
             $target = $this->url()->fromRoute('myresearch-home');
 

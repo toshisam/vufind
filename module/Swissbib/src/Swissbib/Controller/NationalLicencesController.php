@@ -121,8 +121,8 @@ class NationalLicencesController extends BaseController
                     ]
                 );
         } catch (\Exception $e) {
-            $this->flashMessenger()->setNamespace('error')->addMessage(
-                $this->translate($e->getMessage())
+            $this->flashMessenger()->addMessage(
+                $this->translate($e->getMessage(), 'error')
             );
         }
 
@@ -207,8 +207,8 @@ class NationalLicencesController extends BaseController
         try {
             $this->nationalLicenceService->acceptTermsConditions();
         } catch (\Exception $e) {
-            $this->flashMessenger()->setNamespace('error')->addMessage(
-                $this->translate($e->getMessage())
+            $this->flashMessenger()->addMessage(
+                $this->translate($e->getMessage(), 'error')
             );
         }
         return $this->redirect()->toRoute('national-licences');
@@ -226,23 +226,28 @@ class NationalLicencesController extends BaseController
             $accessCreatedSuccessfully
                 = $this->nationalLicenceService->createTemporaryAccessForUser();
         } catch (\Exception $e) {
-            $this->flashMessenger()->setNamespace('error')->addMessage(
-                $this->translate($e->getMessage())
+            $this->flashMessenger()->addMessage(
+                $this->translate($e->getMessage(), 'error')
             );
             $this->redirect()->toRoute('national-licences');
 
             return;
         }
         if (!$accessCreatedSuccessfully) {
-            $this->flashMessenger()->setNamespace('error')->addMessage(
-                $this->translate('snl.wasNotPossibleToCreateTemporaryAccessError')
+            $this->flashMessenger()->addMessage(
+                $this->translate('snl.wasNotPossibleToCreateTemporaryAccessError',
+                    'error'
+                )
             );
             $this->redirect()->toRoute('national-licences');
 
             return;
         }
-        $this->flashMessenger()->setNamespace('success')->addMessage(
-            $this->translate('snl.yourTemporaryAccessWasCreatedSuccessfully')
+        $this->flashMessenger()->addMessage(
+            $this->translate(
+                'snl.yourTemporaryAccessWasCreatedSuccessfully',
+                'success'
+            )
         );
         $this->redirect()->toRoute('national-licences');
     }
@@ -257,12 +262,14 @@ class NationalLicencesController extends BaseController
     {
         try {
             $this->nationalLicenceService->setNationalLicenceCompliantFlag();
-            $this->flashMessenger()->setNamespace('success')->addMessage(
-                $this->translate('snl.yourRequestPermanentAccessSuccessful')
+            $this->flashMessenger()->addMessage(
+                $this->translate('snl.yourRequestPermanentAccessSuccessful',
+                'success'
+                )
             );
         } catch (\Exception $e) {
-            $this->flashMessenger()->setNamespace('error')->addMessage(
-                $this->translate($e->getMessage())
+            $this->flashMessenger()->addMessage(
+                $this->translate($e->getMessage(), 'error')
             );
         }
         $this->redirect()->toRoute('national-licences');
@@ -293,13 +300,13 @@ class NationalLicencesController extends BaseController
             $this->nationalLicenceService->extendAccountIfCompliant();
             if ($this->nationalLicenceService->isSetMessage()) {
                 $message = $this->nationalLicenceService->getMessage();
-                $this->flashMessenger()->setNamespace($message['type'])->addMessage(
-                    $this->translate($message['text'])
+                $this->flashMessenger()->addMessage(
+                    $this->translate($message['text'], $message['type'])
                 );
             }
         } catch (\Exception $e) {
-            $this->flashMessenger()->setNamespace('error')->addMessage(
-                $this->translate($e->getMessage())
+            $this->flashMessenger()->addMessage(
+                $this->translate($e->getMessage(), 'error')
             );
         }
         //redirect to home page

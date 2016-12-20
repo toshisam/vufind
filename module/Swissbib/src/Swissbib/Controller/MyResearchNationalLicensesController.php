@@ -184,8 +184,8 @@ class MyResearchNationalLicensesController extends MyResearchController
                     ]
                 );
         } catch (\Exception $e) {
-            $this->flashMessenger()->setNamespace('error')->addMessage(
-                $this->translate($e->getMessage())
+            $this->flashMessenger()->addMessage(
+                $this->translate($e->getMessage(), 'error')
             );
         }
 
