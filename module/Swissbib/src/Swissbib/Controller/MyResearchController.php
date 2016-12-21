@@ -168,8 +168,8 @@ class MyResearchController extends VuFindMyResearchController
 
             $user->save();
 
-            $this->flashMessenger()->setNamespace('success')->addMessage(
-                'save_settings_success'
+            $this->flashMessenger()->addMessage(
+                'save_settings_success', 'success'
             );
 
             setcookie('language', $language, time() + 3600 * 24 * 100, '/');
@@ -502,21 +502,21 @@ class MyResearchController extends VuFindMyResearchController
                         $address['z304-date-to'];
 
                     $this->getILS()->changeMyAddress($patron, $newAddress);
-                    $this->flashMessenger()->setNamespace('success')
-                        ->addMessage('save_address_success');
+                    $this->flashMessenger()
+                        ->addMessage('save_address_success', 'success');
                 } else {
-                    $this->flashMessenger()->setNamespace('error')
-                        ->addMessage('save_address_error');
+                    $this->flashMessenger()
+                        ->addMessage('save_address_error', 'error');
                 }
             } else {
                 $addressForm->setData($this->getILS()->getMyAddress($patron));
             }
         } catch (AlephRestfulException $e) {
-            $this->flashMessenger()->setNamespace('error')
-                ->addMessage('address_error');
+            $this->flashMessenger()
+                ->addMessage('address_error', 'error');
         } catch (ILS $e) {
-            $this->flashMessenger()->setNamespace('error')
-                ->addMessage('address_error');
+            $this->flashMessenger()
+                ->addMessage('address_error', 'error');
 
             return $this->createViewModel();
         }
