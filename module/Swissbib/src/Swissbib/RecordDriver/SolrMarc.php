@@ -1804,7 +1804,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
         $publisherArray = $this->getFieldArray('035', ['a']);
         $publisher = "";
         foreach ($publisherArray as $key => $val) {
-            if (strpos($key, '(NATIONALLICENCE)') !== 0) {
+            if (strpos($val, '(NATIONALLICENCE)') === 0) {
                 $publisher = $val;
             }
         }

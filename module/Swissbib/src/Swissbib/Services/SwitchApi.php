@@ -55,6 +55,13 @@ class SwitchApi implements ServiceLocatorAwareInterface
      *
      * @var array
      */
+    protected $configNL;
+
+    /**
+     * Swissbib configuration.
+     *
+     * @var array
+     */
     protected $config;
 
     /**
@@ -64,7 +71,8 @@ class SwitchApi implements ServiceLocatorAwareInterface
      */
     public function __construct($config)
     {
-        $this->config = $config['swissbib']['switch_api'];
+        $this->config   = $config->get('config');
+        $this->configNL = $config->get('NationalLicences')['SwitchApi'];
     }
 
     /**
@@ -124,16 +132,17 @@ class SwitchApi implements ServiceLocatorAwareInterface
      *
      * @param string $method   Method
      * @param string $relPath  Rel path
-     * @param string $basePath Base path
+     * @param string $basePath the base path
      *
      * @return Client
+     * @throws \Exception
      */
     protected function getBaseClient(
         $method = Request::METHOD_GET,
         $relPath = '', $basePath = null
     ) {
         if (empty($basePath)) {
-            $basePath = $this->config['base_endpoint_url'];
+            $basePath = $this->configNL['base_endpoint_url'];
         }
         $client = new Client(
             $basePath . $relPath, [
@@ -149,20 +158,16 @@ class SwitchApi implements ServiceLocatorAwareInterface
             ]
         );
         $client->setMethod($method);
-        $username = $this->config['auth_user'];
-        $passw = $this->config['auth_password'];
+        $username = $this->config['SwitchApi']['auth_user'];
+        $passw = $this->config['SwitchApi']['auth_password'];
         if (empty($username) || empty($passw)) {
-            $c1 = getenv('SWITCH_API_USER') || empty(getenv('SWITCH_API_PASSW'));
-            if (empty($c1)) {
-                throw new \Exception(
-                    'Was not possible to find the SWITCH API credentials. ' .
-                    'Make sure you have correctly setup the environment variables ' .
-                    '"SWITCH_API_USER" and "SWITCH_API_PASSW" either in the' .
-                    'apache setup or before launching the script.'
-                );
-            }
-            $username = getenv('SWITCH_API_USER');
-            $passw = getenv('SWITCH_API_PASSW');
+            throw new \Exception(
+                'Was not possible to find the SWITCH API ' .
+                'credentials. Make sure you have correctly configured the ' .
+                '"SWITCH_API_USER" and "SWITCH_API_PASSW" either in the ' .
+                'apache setup or before launching the script.'
+            );
+
         }
         $client->setAuth($username, $passw);
 
@@ -182,19 +187,19 @@ class SwitchApi implements ServiceLocatorAwareInterface
     {
         $client = $this->getBaseClient(
             Request::METHOD_PATCH, '/Groups/' .
-            $this->config['national_licence_programme_group_id']
+            $this->configNL['national_licence_programme_group_id']
         );
         $params = [
             'schemas' => [
-                $this->config['schema_patch'],
+                $this->configNL['schema_patch'],
             ],
             'Operations' => [
                 [
-                    'op' => $this->config['operation_add'],
-                    'path' => $this->config['path_member'],
+                    'op' => $this->configNL['operation_add'],
+                    'path' => $this->configNL['path_member'],
                     'value' => [
                         [
-                            '$ref' => $this->config['base_endpoint_url'] .
+                            '$ref' => $this->configNL['base_endpoint_url'] .
                                 '/Users/' .
                                 $userInternalId,
                             'value' => $userInternalId,
@@ -229,7 +234,8 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $switchUser = $this->getSwitchUserInfo($internalId);
         $id = 'national_licence_programme_group_id';
         foreach ($switchUser->groups as $group) {
-            if ($group->value === $this->config[$id]) {
+            $v = $this->configNL['national_licence_programme_group_id'];
+            if ($group->value === $v) {
                 return true;
             }
         }
@@ -294,16 +300,16 @@ class SwitchApi implements ServiceLocatorAwareInterface
     {
         $client = $this->getBaseClient(
             Request::METHOD_PATCH,
-            '/Groups/' . $this->config['national_licence_programme_group_id']
+            '/Groups/' . $this->configNL['national_licence_programme_group_id']
         );
         $params = [
             'schemas' => [
-                $this->config['schema_patch'],
+                $this->configNL['schema_patch'],
             ],
             'Operations' => [
                 [
-                    'op' => $this->config['operation_remove'],
-                    'path' => $this->config['path_member'] .
+                    'op' => $this->configNL['operation_remove'],
+                    'path' => $this->configNL['path_member'] .
                         "[value eq \"$userInternalId\"]",
                 ],
             ],
@@ -400,12 +406,12 @@ class SwitchApi implements ServiceLocatorAwareInterface
          */
         $client = $this->getBaseClient(
             Request::METHOD_GET,
-            $this->config['back_channel_endpoint_path'],
-            $this->config['base_endpoint_url_back_channel']
+            $this->configNL['back_channel_endpoint_path'],
+            $this->config['Site']['url']
         );
         $client->setParameterGet(
             [
-                'entityID' => $this->config['back_channel_param_entityID'],
+                'entityID' => $this->configNL['back_channel_param_entityID'],
                 'nameId' => $nameId,
             ]
         );
@@ -414,9 +420,10 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $body = $response->getBody();
         if ($statusCode !== 200) {
             throw new \Exception(
-                "There were a problem retrieving data for user with name " .
-                "id: $nameId. Status code: $statusCode result: $body"
+                "There was a problem retrieving data for user " .
+                "with name id: $nameId. Status code: $statusCode result: $body"
             );
+
         }
 
         return json_decode($body);
