@@ -15,6 +15,17 @@ before_script:
   - pear install phing/phing
   - phpenv config-rm xdebug.ini
   - phpenv rehash
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+  - rackup  # start a Web server
+  - sleep 3 # give Web server some time to bind to sockets, etc
 
 script:
   - phing composer phpunitfast phpcs-console php-cs-fixer-dryrun
+
+addons:
+  sauce_connect:
+    username: "swissbib"
+    access_key:
+      secure: "PuDeIma6K8xoixTc9Icxs/K5ddWX5GSiTGU5qfSZO62J9alG1Xowc+ZdTNfkOpd+k70OhOzZXUvF9ZjvvNeV2kM7wrt8gR/J+iIn57Z7RVRoYWEIToeUU67VhGRIGwWZA1pNJO4uDQQ0pyyGUoqQXLpHJXQChP0Yt1EcYJ+vjpg="
