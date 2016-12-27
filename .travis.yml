@@ -22,7 +22,7 @@ before_script:
   - sleep 3 # give Web server some time to bind to sockets, etc
 
 script:
-  - phing composer phpunitfast phpcs-console php-cs-fixer-dryrun
+  - phing composer phpunit phpcs-console php-cs-fixer-dryrun
 
 addons:
   sauce_connect:
