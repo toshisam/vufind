@@ -42,7 +42,6 @@ use Zend\ServiceManager\ServiceManager;
  */
 class Factory
 {
-
     /**
      * Construct the Shibboleth plugin.
      *
