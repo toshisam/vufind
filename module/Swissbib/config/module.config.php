@@ -357,10 +357,7 @@ return [
             ],
             'auth'                     => [
                 'factories' => [
-                    'shibbolethmock' => 'Swissbib\VuFind\Auth\Factory::getShibMock',
-                ],
-                'invokables' => [
-                    'shibboleth'    => 'Swissbib\VuFind\Auth\Shibboleth',
+                    'shibboleth' => 'Swissbib\VuFind\Auth\Factory::getShibboleth',
                 ],
             ],
             'autocomplete' => [
