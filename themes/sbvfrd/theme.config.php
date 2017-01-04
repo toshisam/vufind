@@ -8,14 +8,12 @@ return array(
   ),
 
   'css' => array(
-    //'typeahead.css'
   ),
 
   'js'      => array(
     'vendor/jquery/plugin/jquery.cookie.js',
     'vendor/jquery/plugin/loadmask/jquery.loadmask.js',
       'vendor/chosen/chosen.jquery.min.js',
-      //'vendor/typeahead.js',
 
     'vendor/jstorage/jstorage.min.js', //used for favorites - there is still some amount of JS code inline of the page -> Todo: Refactoring in upcoming Sprints
     'vendor/handlebars/handlebars.js', //wird in swissbib/AdvancedSearch.js verwendet
