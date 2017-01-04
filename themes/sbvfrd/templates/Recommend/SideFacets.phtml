@@ -121,7 +121,9 @@ JS;
                 </div>
               </div>
               <? if ($rangeFacets[$title]['type'] == 'date'): ?>
-                <div class="slider-container"><input type="text" class="hidden" id="<?=$this->escapeHtmlAttr($title)?><?=$this->escapeHtml($rangeFacets[$title]['type'])?>Slider"/></div>
+                  <? $this->headScript()->appendFile('vendor/bootstrap-slider.js'); ?>
+                  <? $this->headLink()->appendStylesheet('vendor/bootstrap-slider.min.css'); ?>
+                  <div class="slider-container"><input type="text" class="hidden" id="<?=$this->escapeHtmlAttr($title)?><?=$this->escapeHtml($rangeFacets[$title]['type'])?>Slider"/></div>
               <? endif; ?>
               <input class="btn btn-default" type="submit" value="<?=$this->transEsc('Set')?>"/>
             </form>
