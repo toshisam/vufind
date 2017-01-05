@@ -81,7 +81,7 @@ class Options extends \VuFind\Search\Base\Options
     protected $limiterOptions = [];
 
     /**
-     * Wheither or not to return available facets with the search response
+     * Whether or not to return available facets with the search response
      *
      * @var unknown
      */
@@ -89,7 +89,7 @@ class Options extends \VuFind\Search\Base\Options
 
     /**
      * Available Search Options from the API
-     * 
+     *
      * @var array
      */
     protected $apiInfo;

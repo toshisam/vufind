@@ -21,7 +21,8 @@
   <property name="pgsqlrootuser" value="postgres" />
   <property name="phpunit_extra_params" value="" />
   <property name="composer_extra_params" value="" />
-  <property name="mink_driver" value="zombiejs" /><!-- may also be set to selenium -->
+  <property name="mink_driver" value="selenium" />
+  <property name="selenium_browser" value="firefox" />
   <property name="snooze_multiplier" value="1" /><!-- can be used to slow down tests (selenium only) -->
   <property name="solr_startup_sleep" value="0" />
   <property name="solr_version" value="5.5.0" />
@@ -107,11 +108,22 @@
     <exec command="${srcdir}/vendor/bin/php-cs-fixer fix ${srcdir}/module --fixers=${php-cs-fixers} --dry-run --verbose --diff" passthru="true" escape="false" checkreturn="true" />
   </target>
 
+  <!-- ESLint -->
+  <target name="eslint">
+    <exec command="eslint -c ${srcdir}/.eslintrc.js ${srcdir}/themes/bootstrap3/js/*.js" escape="false" checkreturn="true" passthru="true" />
+  </target>
+  <target name="eslint-fix">
+    <exec command="eslint -c ${srcdir}/.eslintrc.js ${srcdir}/themes/bootstrap3/js/*.js --fix" escape="false" passthru="true" />
+  </target>
+  <target name="eslint-report">
+    <exec command="eslint -c ${srcdir}/.eslintrc.js ${srcdir}/themes/bootstrap3/js/*.js --format checkstyle -o ${builddir}/reports/eslint.xml" escape="false" />
+  </target>
+
   <!-- PHP API Documentation -->
   <target name="phpdoc">
     <mkdir dir="${builddir}/apidocs"/>
     <phpdoc2 title="VuFind API Documentation"
-             destdir="${builddir}/apidocs">
+      destdir="${builddir}/apidocs">
       <fileset dir=".">
         <include name="module/*/src/**/*.php" />
       </fileset>
@@ -120,82 +132,18 @@
 
   <!-- PHPUnit -->
   <target name="phpunit" description="Run tests">
-    <exec dir="${srcdir}/module/VuFind/tests" command="NODE_PATH=${nodepath} VUFIND_MINK_DRIVER=${mink_driver} VUFIND_SNOOZE_MULTIPLIER=${snooze_multiplier} VUFIND_LOCAL_DIR=${srcdir}/local VUFIND_URL=${vufindurl} ${srcdir}/vendor/bin/phpunit -dzend.enable_gc=0 --log-junit ${builddir}/reports/phpunit.xml --coverage-clover ${builddir}/reports/coverage/clover.xml --coverage-html ${builddir}/reports/coverage/ ${phpunit_extra_params}" passthru="true" checkreturn="true" />
+    <exec dir="${srcdir}/module/VuFind/tests" command="VUFIND_MINK_DRIVER=${mink_driver} VUFIND_SELENIUM_BROWSER=${selenium_browser} VUFIND_SNOOZE_MULTIPLIER=${snooze_multiplier} VUFIND_LOCAL_DIR=${srcdir}/local VUFIND_URL=${vufindurl} ${srcdir}/vendor/bin/phpunit -dzend.enable_gc=0 --log-junit ${builddir}/reports/phpunit.xml --coverage-clover ${builddir}/reports/coverage/clover.xml --coverage-html ${builddir}/reports/coverage/ ${phpunit_extra_params}" passthru="true" checkreturn="true" />
   </target>
 
   <!-- PHPUnit without logging output -->
   <target name="phpunitfast" description="Run tests">
-    <exec dir="${srcdir}/module/VuFind/tests" command="NODE_PATH=${nodepath} VUFIND_MINK_DRIVER=${mink_driver} VUFIND_SNOOZE_MULTIPLIER=${snooze_multiplier} VUFIND_LOCAL_DIR=${srcdir}/local VUFIND_URL=${vufindurl} ${srcdir}/vendor/bin/phpunit -dzend.enable_gc=0 ${phpunit_extra_params}" passthru="true" checkreturn="true" />
-  </target>
-
-  <target name="installsolr" description="Install Solr">
-    <!-- load previously installed version from marker file, if present -->
-    <if>
-      <available file="${srcdir}/solr/vendor/.installedVersion" />
-      <then>
-        <loadfile property="existing_solr_version" file="${srcdir}/solr/vendor/.installedVersion" />
-      </then>
-    </if>
-    <!-- only attempt to install Solr if the desired version is not already there -->
-    <if>
-      <not><equals arg1="${existing_solr_version}" arg2="${solr_version}" /></not>
-      <then>
-        <!-- make sure we don't run out of memory during installation: -->
-        <php expression="ini_set('memory_limit', '1G');" />
-
-        <!-- download from Apache if not already present in the downloads cache -->
-        <if>
-          <not><available file="${srcdir}/downloads/solr-${solr_version}.tgz" /></not>
-           <then>
-            <mkdir dir="${srcdir}/downloads" />
-            <httpget url="http://archive.apache.org/dist/lucene/solr/${solr_version}/solr-${solr_version}.tgz" dir="${srcdir}/downloads" />
-          </then>
-        </if>
-        <!-- unpack the archive into solr/vendor -->
-        <untar file="${srcdir}/downloads/solr-${solr_version}.tgz" todir="${srcdir}/solr" />
-        <delete dir="${srcdir}/solr/vendor" includeemptydirs="true" failonerror="false" />
-        <move file="${srcdir}/solr/solr-${solr_version}" tofile="${srcdir}/solr/vendor" />
-        <!-- make scripts executable -->
-        <chmod mode="0755">
-          <fileset dir="${srcdir}/solr/vendor/bin">
-            <include name="**/**" />
-            <exclude name="**/*.cmd" />
-          </fileset>
-        </chmod>
-        <!-- update the marker file with the installed version -->
-        <echo file="${srcdir}/solr/vendor/.installedVersion" message="${solr_version}" />
-      </then>
-    </if>
-  </target>
-
-  <target name="installswaggerui">
-    <delete dir="${srcdir}/public/swagger-ui" includeemptydirs="true" failonerror="false" />
-    <copy todir="${srcdir}/public/swagger-ui">
-      <fileset dir="${srcdir}/vendor/swagger-api/swagger-ui/dist" defaultexcludes="false" />
-    </copy>
-    <reflexive>
-      <fileset dir="${srcdir}/public/swagger-ui">
-        <include pattern="index.html" />
-      </fileset>
-      <filterchain>
-        <replaceregexp>
-          <regexp pattern="defaultModelRendering: 'schema'" replace="defaultModelRendering: 'model'" />
-          <regexp pattern="url = &quot;.*&quot;" replace="url = &quot;../api/v1?swagger&quot;" />
-        </replaceregexp>
-      </filterchain>
-    </reflexive>
+    <exec dir="${srcdir}/module/VuFind/tests" command="VUFIND_MINK_DRIVER=${mink_driver} VUFIND_SELENIUM_BROWSER=${selenium_browser} VUFIND_SNOOZE_MULTIPLIER=${snooze_multiplier} VUFIND_LOCAL_DIR=${srcdir}/local VUFIND_URL=${vufindurl} ${srcdir}/vendor/bin/phpunit -dzend.enable_gc=0 ${phpunit_extra_params}" passthru="true" checkreturn="true" />
   </target>
 
   <target name="composer" description="Install dependencies with Composer">
     <httpget url="https://getcomposer.org/composer.phar" sslVerifyPeer="false" dir="${srcdir}" />
     <echo message="Installing dependencies..." />
     <exec command="php ${srcdir}/composer.phar install ${composer_extra_params}" passthru="true" checkreturn="true" />
-  </target>
-
-  <target name="composer" description="Install dependencies with Composer">
-    <httpget url="https://getcomposer.org/composer.phar" sslVerifyPeer="false" dir="${srcdir}" />
-    <echo message="Installing dependencies..." />
-    <exec command="php ${srcdir}/composer.phar install" />
   </target>
 
   <!-- Install and Activate VuFind -->
