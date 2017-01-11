@@ -107,12 +107,15 @@ class Results extends VuFindSolrResults
 
         //we need this information especially for QueryFacets (Favorites) because
         //because VuFind is getting the configuration for facet entries out of the
-        //main facets colletion - we should analyze the whole topic facets to get rid of such specialities
+        //main facets colletion - we should analyze the whole topic facets to get rid
+        //of such specialities
         $configQueryFacetSettings = $this->getServiceLocator()->get('VuFind\Config')
             ->get($this->getOptions()->getFacetsIni())->QueryFacets_Settings->toArray();
 
         $orFacets = [];
-        if (count($configQueryFacetSettings) > 0 && array_key_exists('orFacets',$configQueryFacetSettings)) {
+        if (count($configQueryFacetSettings) > 0 && array_key_exists(
+            'orFacets', $configQueryFacetSettings
+        )) {
             $orFacets = explode(',', $configQueryFacetSettings['orFacets']);
         }
 
@@ -147,7 +150,7 @@ class Results extends VuFindSolrResults
                         ? $this->translate("$translateTextDomain::$value") : $value;
                     $currentSettings['count'] = $count['count'];
                     $currentSettings['operator']
-                        = in_array($field,$orFacets) ? 'OR' : 'AND';
+                        = in_array($field, $orFacets) ? 'OR' : 'AND';
                     $currentSettings['isApplied']
                         = $this->getParams()->hasFilter("$field:" . $value)
                         || $this->getParams()->hasFilter("~$field:" . $value);
