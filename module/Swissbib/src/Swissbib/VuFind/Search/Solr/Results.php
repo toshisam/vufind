@@ -95,7 +95,7 @@ class Results extends VuFindSolrResults
      * Get special facets
      * - User favorite institutions
      *
-     * @return Array[]
+     * @return array
      */
     public function getMyLibrariesFacets()
     {
@@ -110,7 +110,10 @@ class Results extends VuFindSolrResults
         //main facets colletion - we should analyze the whole topic facets to get rid
         //of such specialities
         $configQueryFacetSettings = $this->getServiceLocator()->get('VuFind\Config')
-            ->get($this->getOptions()->getFacetsIni())->QueryFacets_Settings->toArray();
+            ->get(
+                $this->getOptions(
+                )->getFacetsIni()
+            )->QueryFacets_Settings->toArray();
 
         $orFacets = [];
         if (count($configQueryFacetSettings) > 0 && array_key_exists(
