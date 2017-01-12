@@ -1,4 +1,9 @@
-<? $results = $this->recommend->getResults(); ?>
+<?
+$this->headScript()->appendFile('facets.js');
+
+$results = $this->recommend->getResults();
+$options = $this->searchOptions($this->searchClassId);
+?>
 <? if ($results->getResultTotal() > 0): ?>
   <h4><?=$this->transEsc(isset($this->overrideSideFacetCaption) ? $this->overrideSideFacetCaption : 'Narrow Search')?></h4>
 <? endif; ?>
@@ -121,7 +126,9 @@ JS;
                 </div>
               </div>
               <? if ($rangeFacets[$title]['type'] == 'date'): ?>
-                <div class="slider-container"><input type="text" class="hidden" id="<?=$this->escapeHtmlAttr($title)?><?=$this->escapeHtml($rangeFacets[$title]['type'])?>Slider"/></div>
+                  <? $this->headScript()->appendFile('vendor/bootstrap-slider.js'); ?>
+                  <? $this->headLink()->appendStylesheet('vendor/bootstrap-slider.min.css'); ?>
+                  <div class="slider-container"><input type="text" class="hidden" id="<?=$this->escapeHtmlAttr($title)?><?=$this->escapeHtml($rangeFacets[$title]['type'])?>Slider"/></div>
               <? endif; ?>
               <input class="btn btn-default" type="submit" value="<?=$this->transEsc('Set')?>"/>
             </form>
@@ -168,7 +175,7 @@ JS;
             ?>
             <? $moreClass = 'narrowGroupHidden-'.$this->escapeHtmlAttr($title).' hidden'; ?>
           <? if ( $i == $tLimit + 1): ?>
-            <a id="more-narrowGroupHidden-<?=$this->escapeHtmlAttr($title)?>" class="list-group-item" href="javascript:moreFacets('narrowGroupHidden-<?=$title ?>')"><?=$this->transEsc('more')?> ...</a>
+            <a id="more-narrowGroupHidden-<?=$this->escapeHtmlAttr($title)?>" class="list-group-item" href="#" onclick="return moreFacets('narrowGroupHidden-<?=$this->escapeHtmlAttr($title) ?>')" rel="nofollow"><?=$this->transEsc('more')?> ...</a>
           <? endif; ?>
           <? if ($thisFacet['isApplied']): ?>
             <a class="list-group-item active<? if ( $i > $tLimit): ?><?=$moreClass ?><?endif ?><? if (isset($thisFacet['operator']) && $thisFacet['operator'] == 'OR'): ?> facetOR applied<? endif ?>" href="<?=$this->currentPath().$results->getUrlQuery()->removeFacet($title, $thisFacet['value'], true, isset($thisFacet['operator']) ? $thisFacet['operator'] : null) ?>">
@@ -217,7 +224,7 @@ JS;
             <? endif; ?>
           <? endif; ?>
         <? endforeach; ?>
-          <? if ( $i > $tLimit): ?><a class="list-group-item <?=$moreClass ?>" href="javascript:lessFacets('narrowGroupHidden-<?=$title ?>')"><?=$this->transEsc('less')?> ...</a><? endif; ?>
+          <? if ( $i > $tLimit): ?><a class="list-group-item narrow-toggle <?=$moreClass ?>" href="#" onclick="return lessFacets('narrowGroupHidden-<?=$this->escapeHtmlAttr($title) ?>')"><?=$this->transEsc('less')?> ...</a><? endif; ?>
         <? endif; ?>
         <? if (in_array($title, $hierarchicalFacets)): ?>
           </noscript>
