@@ -224,7 +224,7 @@ JS;
             <? endif; ?>
           <? endif; ?>
         <? endforeach; ?>
-          <? if ( $i > $tLimit): ?><a class="list-group-item <?=$moreClass ?>" href="javascript:lessFacets('narrowGroupHidden-<?=$title ?>')"><?=$this->transEsc('less')?> ...</a><? endif; ?>
+          <? if ( $i > $tLimit): ?><a class="list-group-item narrow-toggle <?=$moreClass ?>" href="#" onclick="return lessFacets('narrowGroupHidden-<?=$this->escapeHtmlAttr($title) ?>')"><?=$this->transEsc('less')?> ...</a><? endif; ?>
         <? endif; ?>
         <? if (in_array($title, $hierarchicalFacets)): ?>
           </noscript>
