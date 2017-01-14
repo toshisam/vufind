@@ -379,6 +379,34 @@ ctrlnum:
     ctrlnum:
       - [ctrlnum, ~]
 
+GNDS:
+  DismaxFields:
+    - subpers_gnd
+    - subtitle_gnd
+    - subtime_gnd
+    - subtop_gnd
+    - subgeo_gnd
+    - subform_gnd
+  QueryFields:
+    subpers_gnd:
+      - [and, 100]
+      - [or, ~]
+    subtitle_gnd:
+      - [and, 100]
+      - [or, ~]
+    subtime_gnd:
+      - [and, 100]
+      - [or, ~]
+    subtop_gnd:
+      - [and, 100]
+      - [or, ~]
+    subgeo_gnd:
+      - [and, 100]
+      - [or, ~]
+    subform_gnd:
+      - [and, 100]
+      - [or, ~]
+
 music:
   DismaxFields:
     - submusic
