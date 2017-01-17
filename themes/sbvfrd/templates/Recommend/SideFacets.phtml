@@ -206,7 +206,7 @@ JS;
                $addURL = $this->currentPath().$results->getUrlQuery()->addFacet($title, $thisFacet['value'], !empty($tOperator) ? $tOperator : null);
             ?>
             <? if ($allowExclude): ?>
-              <li class="list-group-item facet<?=$thisFacet['operator'] ?><? if ( $i>$tLimit): ?> <?=$moreClass ?><?endif ?>">
+              <div class="list-group-item facet<?=$thisFacet['operator'] ?><? if ( $i>$tLimit): ?> <?=$moreClass ?><?endif ?>">
             <? else: ?>
               <? $tOperatorClass = isset($thisFacet['operator']) ? 'facet' . $thisFacet['operator'] : 'facet'; ?>
               <a href="<?=$addURL ?>" class="list-group-item <?=$tOperatorClass ?><? if ( $i > $tLimit): ?> <?=$moreClass ?><? endif ?>">
@@ -226,7 +226,7 @@ JS;
             <?=$this->escapeHtml($thisFacet['displayText'])?>
             <? if ($allowExclude): ?>
                 </a>
-              </li>
+              </div>
             <? else: ?>
               </a>
             <? endif; ?>
