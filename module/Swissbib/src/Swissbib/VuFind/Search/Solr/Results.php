@@ -95,21 +95,38 @@ class Results extends VuFindSolrResults
      * Get special facets
      * - User favorite institutions
      *
-     * @return Array[]
+     * @return array
      */
     public function getMyLibrariesFacets()
     {
         $queryFacets    = $this->getResultQueryFacets(true);
         $list = [];
 
-        $configQuerySettings = $this->getServiceLocator()->get('VuFind\Config')
+        $configQueryFacets = $this->getServiceLocator()->get('VuFind\Config')
             ->get($this->getOptions()->getFacetsIni())->QueryFacets->toArray();
 
-        if (count($queryFacets) > 0 && isset($configQuerySettings)) {
+        //we need this information especially for QueryFacets (Favorites) because
+        //because VuFind is getting the configuration for facet entries out of the
+        //main facets colletion - we should analyze the whole topic facets to get rid
+        //of such specialities
+        $configQueryFacetSettings = $this->getServiceLocator()->get('VuFind\Config')
+            ->get(
+                $this->getOptions(
+                )->getFacetsIni()
+            )->QueryFacets_Settings->toArray();
+
+        $orFacets = [];
+        if (count($configQueryFacetSettings) > 0 && array_key_exists(
+            'orFacets', $configQueryFacetSettings
+        )) {
+            $orFacets = explode(',', $configQueryFacetSettings['orFacets']);
+        }
+
+        if (count($queryFacets) > 0 && isset($configQueryFacets)) {
 
             $translatedFacets = $this->getOptions()->getTranslatedFacets();
 
-            foreach (array_keys($configQuerySettings) as $field) {
+            foreach (array_keys($configQueryFacets) as $field) {
                 $data = isset($queryFacets[$field]) ? $queryFacets[$field] : [];
                 // Skip empty arrays:
                 if (count($data) < 1) {
@@ -118,7 +135,7 @@ class Results extends VuFindSolrResults
                 // Initialize the settings for the current field
                 $list[$field] = [];
                 // Add the on-screen label
-                $list[$field]['label'] = $configQuerySettings[$field];
+                $list[$field]['label'] = $configQueryFacets[$field];
                 // Build our array of values for this field
                 $list[$field]['list']  = [];
                 // Should we translate values for the current facet?
@@ -136,7 +153,7 @@ class Results extends VuFindSolrResults
                         ? $this->translate("$translateTextDomain::$value") : $value;
                     $currentSettings['count'] = $count['count'];
                     $currentSettings['operator']
-                        = $this->getParams()->getFacetOperator($field);
+                        = in_array($field, $orFacets) ? 'OR' : 'AND';
                     $currentSettings['isApplied']
                         = $this->getParams()->hasFilter("$field:" . $value)
                         || $this->getParams()->hasFilter("~$field:" . $value);
