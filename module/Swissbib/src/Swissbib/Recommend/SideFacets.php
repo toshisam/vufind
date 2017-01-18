@@ -50,6 +50,15 @@ class SideFacets extends VFSideFacets
     protected $resultSettings = [];
 
     /**
+     * Stores QueryFacets from config
+     * which is later needed to create facet entries
+     * actually QueryFacets are not supported by VuFind
+     *
+     * @var array
+     */
+    protected $queryFacets = [];
+
+    /**
      * Returns libraries
      *
      * @return mixed
@@ -77,6 +86,49 @@ class SideFacets extends VFSideFacets
         $config = $this->configLoader->get($iniName);
         if (isset($config->Results_Settings)) {
             $this->resultSettings = $config->Results_Settings->toArray();
+        }
+
+        if (isset($config->QueryFacets_Settings->orFacets)) {
+            if (isset($this->orFacets)) {
+                $this->orFacets = array_merge(
+                    array_map(
+                        'trim', explode(
+                            ',', $config->QueryFacets_Settings->orFacets
+                        )
+                    ),
+                    $this->orFacets
+                );
+            } else {
+                $this->orFacets = array_map(
+                    'trim', explode(
+                        ',',
+                        $config->QueryFacets_Settings->orFacets
+                    )
+                );
+            }
+        }
+
+        if (isset($config->QueryFacets_Settings->exclude)) {
+            if (isset($this->excludableFacets)) {
+                $this->excludableFacets = array_merge(
+                    array_map(
+                        'trim',
+                        explode(',', $config->QueryFacets_Settings->exclude)
+                    ),
+                    $this->excludableFacets
+                );
+            } else {
+                $this->excludableFacets = array_map(
+                    'trim', explode(
+                        ',',
+                        $config->QueryFacets_Settings->exclude
+                    )
+                );
+            }
+        }
+
+        foreach ($config->QueryFacets as $facetKey => $facetValue) {
+            $this->queryFacets[$facetKey] = $facetValue;
         }
 
     }
