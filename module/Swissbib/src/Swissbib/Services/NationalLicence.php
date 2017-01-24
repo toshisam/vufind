@@ -792,7 +792,7 @@ class NationalLicence implements ServiceLocatorAwareInterface
          * @var NationalLicenceUser $user
          */
         foreach ($users as $user) {
-            echo 'Processing user ' . $user->getEduId() . ".\r\n";
+            echo "\r\n" . 'Processing user ' . $user->getEduId() . ".\r\n";
             //Update attributes from the edu-Id account
             try{
                 $user = $this->switchApiService->getUserUpdatedInformation(
@@ -802,29 +802,33 @@ class NationalLicence implements ServiceLocatorAwareInterface
                 echo $e->getMessage();
             }
 
-            //If last activity date < last 12 month
-            if (!$user->hasBeenActiveInLast12Month()) {
-                echo "User was not active in last 12 month.\r\n";
-                //If last_account_extension_request == null
-                if ($this->isAccountExtensionEmailHasAlreadyBeenSent($user)) {
-                    if ($this->isAccountExtensionRequestStillValid($user)) {
-                        echo "Account extension request is still valid.\r\n";
+            //for registered users who haven't used their Switch edu-ID in the last 12 months
+            //they need to renew by email
+            if ($this->hasAccessToNationalLicenceContent($user)) {
+                //If last activity date < last 12 month
+                if (!$user->hasBeenActiveInLast12Month()) {
+                    echo "User was not active in last 12 month.\r\n";
+                    //If last_account_extension_request == null
+                    if ($this->isAccountExtensionEmailHasAlreadyBeenSent($user)) {
+                        if ($this->isAccountExtensionRequestStillValid($user)) {
+                            echo "Account extension request is still valid.\r\n";
+                        } else {
+                            //Else if last_account_extension_request < XX days ago
+                            //Unset the national licence compliant flag
+                            echo "Unset national compliant flag...\r\n";
+                            $this->switchApiService
+                                ->unsetNationalCompliantFlag($user->id);
+                        }
                     } else {
-                        //Else if last_account_extension_request < XX days ago
-                        //Unset the national licence compliant flag
-                        echo "Unset national compliant flag...\r\n";
-                        $this->switchApiService
-                            ->unsetNationalCompliantFlag($user->id);
+                        //Send and email to the user for extending their account
+                        $this->emailService->sendAccountExtensionEmail(
+                            $user->getRelUser()
+                        );
+                        echo 'Email sent to ' . $user->getRelUser()->email . "\r\n";
+                        //Set the last_account_extension_request to now
+                        $user->setLastAccountExtensionRequest(new \DateTime());
+                        $user->save();
                     }
-                } else {
-                    //Send and email to the user for extending their account
-                    $this->emailService->sendAccountExtensionEmail(
-                        $user->getRelUser()
-                    );
-                    echo 'Email sent to ' . $user->getRelUser()->email . "\r\n";
-                    //Set the last_account_extension_request to now
-                    $user->setLastAccountExtensionRequest(new \DateTime());
-                    $user->save();
                 }
             }
             //if user is not anymore compliant with their homePostalAddress
@@ -832,8 +836,12 @@ class NationalLicence implements ServiceLocatorAwareInterface
             //Postal address not verified anymore --> remove user to national
             // compliant group
             //Postal address not in CH -->remove user to national compliant group
-            if (!$this->isNationalLicenceCompliant($user)) {
-                echo "Unset national compliant flag...\r\n";
+            // This also takes care of expired temporary accesses
+
+            $e = $user->getEduId();
+
+            if ($this->switchApiService->userIsOnNationalCompliantSwitchGroup($e) && !$this->isNationalLicenceCompliant($user)) {
+                echo "Unset national compliant flag.....\r\n";
                 //Unset the national licence compliant flag
                 $this->switchApiService->unsetNationalCompliantFlag(
                     $user->getEduId()
