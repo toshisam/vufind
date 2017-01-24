@@ -413,6 +413,8 @@ class SwitchApi implements ServiceLocatorAwareInterface
             [
                 'entityID' => $this->configNL['back_channel_param_entityID'],
                 'nameId' => $nameId,
+                'format' => "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
+                'encoding' => "JSON/CGI"
             ]
         );
         $response = $client->send();
