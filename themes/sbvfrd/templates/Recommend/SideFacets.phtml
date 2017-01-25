@@ -46,7 +46,8 @@ $options = $this->searchOptions($this->searchClassId);
         <a class="list-group-item active" href="<?=$removeLink?>">
           <span class="pull-right"><i class="fa fa-times"></i></span>
           <? if ($filter['operator'] == 'NOT') echo $this->transEsc('NOT') . ' ';
-             if ($filter['operator'] == 'OR' && $i > 0) echo $this->transEsc('OR') . ' '; ?>
+             if ($filter['operator'] == 'OR' && $i > 0) echo $this->transEsc('OR') . ' ';
+             if ($filter['operator'] == 'AND' && $i > 0) echo $this->transEsc('AND') . ' ';?>
              <?=$this->transEsc($field)?>:
              <?=$this->escapeHtml($this->translateFacets(array('facetName' => $filter['field'], 'facetValue' => $filter['value'])))?>
         </a>
