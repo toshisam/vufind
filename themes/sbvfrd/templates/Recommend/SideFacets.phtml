@@ -177,7 +177,7 @@ JS;
             ?>
             <? $moreClass = 'narrowGroupHidden-'.$this->escapeHtmlAttr($title).' hidden'; ?>
           <? if ( $i == $tLimit + 1): ?>
-            <? $idAndClass = 'id="more-narrowGroupHidden-'.$this->escapeHtmlAttr($title).'" class="list-group-item"'; ?>
+            <? $idAndClass = 'id="more-narrowGroupHidden-'.$this->escapeHtmlAttr($title).'" class="list-group-item controlElement"'; ?>
             <? if ($facetLightbox = $options->getFacetListAction()): ?>
                 <? $moreUrl = $this->url($facetLightbox) . $results->getUrlQuery()->getParams().'&amp;facet='.$title.'&amp;facetop='.$thisFacet['operator'].'&amp;facetexclude='.($allowExclude ? 1 : 0); ?>
             <? else: ?>
@@ -232,11 +232,11 @@ JS;
             <? endif; ?>
           <? endif; ?>
         <? endforeach; ?>
-          <? if ($showMoreInLightbox !== 'more' && $facetLightbox = $options->getFacetListAction()): ?>
+          <? if ($showMoreInLightbox === 'more' && $facetLightbox = $options->getFacetListAction()): ?>
             <? $moreUrl = $this->url($facetLightbox) . $results->getUrlQuery()->getParams().'&amp;facet='.$title.'&amp;facetop='.$thisFacet['operator'].'&amp;facetexclude='.($allowExclude ? 1 : 0); ?>
-            <a class="list-group-item <?=$moreClass ?>" data-lightbox href="<?=$moreUrl ?>" rel="nofollow"><?=$this->transEsc('see all')?> ...</a>
+            <a class="list-group-item controlElement <?=$moreClass ?>" data-lightbox href="<?=$moreUrl ?>" rel="nofollow"><?=$this->transEsc('see all')?> ...</a>
           <? endif; ?>
-            <? if ($i > $tLimit): ?><a class="list-group-item <?=$moreClass ?>" href="#" onclick="return lessFacets('narrowGroupHidden-<?=$this->escapeHtmlAttr($title) ?>')"><?=$this->transEsc('less')?> ...</a><? endif; ?>
+          <? if ($i > $tLimit): ?><a class="list-group-item controlElement <?=$moreClass ?>" href="#" onclick="return lessFacets('narrowGroupHidden-<?=$this->escapeHtmlAttr($title) ?>')"><?=$this->transEsc('less')?> ...</a><? endif; ?>
         <? endif; ?>
         <? if (in_array($title, $hierarchicalFacets)): ?>
           </noscript>
