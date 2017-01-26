@@ -67,7 +67,6 @@ $options = $this->searchOptions($this->searchClassId);
 -->
   <? $sideFacetSet = array_merge($this->recommend->getMyLibraries(),$this->recommend->getFacetSet()); $rangeFacets = $this->recommend->getAllRangeFacets(); ?>
 <? if (!empty($sideFacetSet) && $results->getResultTotal() > 0): ?>
-    <? $tLimits = $this->recommend->getFacetLimits(); ?>
   <? foreach ($sideFacetSet as $title => $cluster): ?>
     <? $tLimit = array_key_exists($title,$tLimits) ? $tLimits[$title] : $tLimits['default']; ?>
     <? $allowExclude = $this->recommend->excludeAllowed($title); ?>
@@ -176,7 +175,7 @@ JS;
               }
             ?>
             <? $moreClass = 'narrowGroupHidden-'.$this->escapeHtmlAttr($title).' hidden'; ?>
-          <? if ( $i == $tLimit + 1): ?>
+          <? if ( $i == $facets_before_more ): ?>
             <? $idAndClass = 'id="more-narrowGroupHidden-'.$this->escapeHtmlAttr($title).'" class="list-group-item controlElement"'; ?>
             <? if ($facetLightbox = $options->getFacetListAction()): ?>
                 <? $moreUrl = $this->url($facetLightbox) . $results->getUrlQuery()->getParams().'&amp;facet='.$title.'&amp;facetop='.$thisFacet['operator'].'&amp;facetexclude='.($allowExclude ? 1 : 0); ?>
@@ -191,7 +190,7 @@ JS;
             <? endif; ?>
           <? endif; ?>
           <? if ($thisFacet['isApplied']): ?>
-            <a class="list-group-item active<? if ( $i > $tLimit): ?><?=$moreClass ?><?endif ?><? if (isset($thisFacet['operator']) && $thisFacet['operator'] == 'OR'): ?> facetOR applied<? endif ?>" href="<?=$this->currentPath().$results->getUrlQuery()->removeFacet($title, $thisFacet['value'], true, isset($thisFacet['operator']) ? $thisFacet['operator'] : null) ?>">
+            <a class="list-group-item active<? if ( $i >= $facets_before_more): ?><?=$moreClass ?><?endif ?><? if (isset($thisFacet['operator']) && $thisFacet['operator'] == 'OR'): ?> facetOR applied<? endif ?>" href="<?=$this->currentPath().$results->getUrlQuery()->removeFacet($title, $thisFacet['value'], true, isset($thisFacet['operator']) ? $thisFacet['operator'] : null) ?>">
                 <? if(isset($thisFacet['operator']) && $thisFacet['operator'] == 'OR'): ?>
                 <i class="fa fa-check-square-o"></i>
               <? else: ?>
@@ -206,10 +205,10 @@ JS;
                $addURL = $this->currentPath().$results->getUrlQuery()->addFacet($title, $thisFacet['value'], !empty($tOperator) ? $tOperator : null);
             ?>
             <? if ($allowExclude): ?>
-              <div class="list-group-item facet<?=$thisFacet['operator'] ?><? if ( $i>$tLimit): ?> <?=$moreClass ?><?endif ?>">
+              <div class="list-group-item facet<?=$thisFacet['operator'] ?><? if ( $i >= $facets_before_more): ?> <?=$moreClass ?><?endif ?>">
             <? else: ?>
               <? $tOperatorClass = isset($thisFacet['operator']) ? 'facet' . $thisFacet['operator'] : 'facet'; ?>
-              <a href="<?=$addURL ?>" class="list-group-item <?=$tOperatorClass ?><? if ( $i > $tLimit): ?> <?=$moreClass ?><? endif ?>">
+              <a href="<?=$addURL ?>" class="list-group-item <?=$tOperatorClass ?><? if ( $i >= $facets_before_more): ?> <?=$moreClass ?><? endif ?>">
             <? endif; ?>
             <span class="badge">
               <?=$this->localizedNumber($thisFacet['count'])?>
@@ -236,7 +235,7 @@ JS;
             <? $moreUrl = $this->url($facetLightbox) . $results->getUrlQuery()->getParams().'&amp;facet='.$title.'&amp;facetop='.$thisFacet['operator'].'&amp;facetexclude='.($allowExclude ? 1 : 0); ?>
             <a class="list-group-item controlElement <?=$moreClass ?>" data-lightbox href="<?=$moreUrl ?>" rel="nofollow"><?=$this->transEsc('see all')?> ...</a>
           <? endif; ?>
-          <? if ($i > $tLimit): ?><a class="list-group-item controlElement <?=$moreClass ?>" href="#" onclick="return lessFacets('narrowGroupHidden-<?=$this->escapeHtmlAttr($title) ?>')"><?=$this->transEsc('less')?> ...</a><? endif; ?>
+          <? if ($i > $facets_before_more): ?><a class="list-group-item controlElement <?=$moreClass ?>" href="#" onclick="return lessFacets('narrowGroupHidden-<?=$this->escapeHtmlAttr($title) ?>')"><?=$this->transEsc('less')?> ...</a><? endif; ?>
         <? endif; ?>
         <? if (in_array($title, $hierarchicalFacets)): ?>
           </noscript>
