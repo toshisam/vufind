@@ -167,7 +167,8 @@ class NationalLicenceUser extends Gateway
             'swiss_library_person_residence'
         ];
 
-        //we need to check if the user removed these attributes from his Switch edu-ID account
+        //we need to check if the user removed these
+        //attributes from his Switch edu-ID account
         foreach ($importantKeys as $key) {
             if (!array_key_exists($key, $fieldsValues)) {
                 $nationalLicenceUser->$key = null;

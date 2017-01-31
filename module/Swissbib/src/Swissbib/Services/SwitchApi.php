@@ -400,11 +400,12 @@ class SwitchApi implements ServiceLocatorAwareInterface
     {
         /*Make http request to retrieve new edu-ID information usign the back-
         channel api
-        example : curl -k 'https://test.swissbib.ch/Shibboleth.sso/AttributeResolver
-                    ?entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth
-                    &nameId=AaduBHpQXrRs9BJqQcB7aLXgWTI%3D
-                    &format=urn%3Aoasis%3Anames%3Atc%3ASAML%3A2.0%3Anameid-format%3Apersistent
-                    &encoding=JSON%2FCGI'
+        example :
+        curl -k 'https://test.swissbib.ch/Shibboleth.sso/AttributeResolver
+            ?entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth
+            &nameId=AaduBHpQXrRs9BJqQcB7aLXgWTI%3D
+            &format=urn%3Aoasis%3Anames%3Atc%3ASAML%3A2.0%3Anameid-format%3Apersistent
+            &encoding=JSON%2FCGI'
         answer :
         {
             "mobile" : "+41 79 200 00 00",
@@ -437,8 +438,7 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $client = $this->getBaseClient(
             Request::METHOD_GET,
             $this->configNL['back_channel_endpoint_path'],
-            'localhost'
-            //$this->config['Site']['url']
+            $this->config['Site']['url']
         );
         $client->setParameterGet(
             [

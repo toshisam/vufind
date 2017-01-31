@@ -806,7 +806,8 @@ class NationalLicence implements ServiceLocatorAwareInterface
                     if (!$user->hasBeenActiveInLast12Month()) {
                         echo "User was not active in last 12 month.\r\n";
                         //If last_account_extension_request == null
-                        if ($this->isAccountExtensionEmailHasAlreadyBeenSent($user)) {
+                        if ($this->isAccountExtensionEmailHasAlreadyBeenSent($user)
+                        ) {
                             if ($this->isAccountExtensionRequestStillValid($user)) {
                                 echo "Account extension request is still valid.\r\n";
                             } else {
