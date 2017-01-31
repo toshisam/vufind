@@ -400,7 +400,11 @@ class SwitchApi implements ServiceLocatorAwareInterface
     {
         /*Make http request to retrieve new edu-ID information usign the back-
         channel api
-        example : curl -k 'https://test.swissbib.ch/Shibboleth.sso/AttributeResolver?entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth&nameId=AaduBHpQXrRs9BJqQcB7aLXgWTI%3D&format=urn%3Aoasis%3Anames%3Atc%3ASAML%3A2.0%3Anameid-format%3Apersistent&encoding=JSON%2FCGI'
+        example : curl -k 'https://test.swissbib.ch/Shibboleth.sso/AttributeResolver
+                    ?entityID=https%3A%2F%2Feduid.ch%2Fidp%2Fshibboleth
+                    &nameId=AaduBHpQXrRs9BJqQcB7aLXgWTI%3D
+                    &format=urn%3Aoasis%3Anames%3Atc%3ASAML%3A2.0%3Anameid-format%3Apersistent
+                    &encoding=JSON%2FCGI'
         answer :
         {
             "mobile" : "+41 79 200 00 00",
@@ -409,14 +413,20 @@ class SwitchApi implements ServiceLocatorAwareInterface
             "uniqueID" : "859735645906@eduid.ch",
             "homeOrganization" : "eduid.ch",
             "mail" : "myemail@test.ch",
-            "persistent-id" : "https://eduid.ch/idp/shibboleth!https://test.swissbib.ch/shibboleth!AaduBHpQXrRs9BJqQcB7aLXgWTI=",
-            "swissEduIdAssuranceLevel" : "mobile:https://eduid.ch/def/loa2;mail:https://eduid.ch/def/loa2;homePostalAddress:https://eduid.ch/def/loa2",
+            "persistent-id" :
+                "https://eduid.ch/idp/shibboleth!https://test.swissbib.ch/
+                shibboleth!AaduBHpQXrRs9BJqQcB7aLXgWTI=",
+            "swissEduIdAssuranceLevel" :
+                "mobile:https://eduid.ch/def/loa2;
+                 mail:https://eduid.ch/def/loa2;
+                 homePostalAddress:https://eduid.ch/def/loa2",
             "givenName" : "Hans",
             "surname" : "Mustermann",
             "homePostalAddress" : "Rue Neuve 5$1222 Geneve$Switzerland",
             "swissEduIDUsage1y" : "TRUE",
             "affiliation" : "affiliate",
-            "persistent-id" : "https://eduid.ch/idp/shibboleth!https://test.swissbib.ch/shibboleth!AaduBHpQXrRs9BJqQcB7aLXgWTI="
+            "persistent-id" : "https://eduid.ch/idp/shibboleth!
+                https://test.swissbib.ch/shibboleth!AaduBHpQXrRs9BJqQcB7aLXgWTI="
         }
 
         /**
@@ -427,7 +437,8 @@ class SwitchApi implements ServiceLocatorAwareInterface
         $client = $this->getBaseClient(
             Request::METHOD_GET,
             $this->configNL['back_channel_endpoint_path'],
-            $this->config['Site']['url']
+            'localhost'
+            //$this->config['Site']['url']
         );
         $client->setParameterGet(
             [
