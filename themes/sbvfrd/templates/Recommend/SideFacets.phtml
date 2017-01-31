@@ -68,7 +68,6 @@ $options = $this->searchOptions($this->searchClassId);
   <? $sideFacetSet = array_merge($this->recommend->getMyLibraries(),$this->recommend->getFacetSet()); $rangeFacets = $this->recommend->getAllRangeFacets(); ?>
 <? if (!empty($sideFacetSet) && $results->getResultTotal() > 0): ?>
   <? foreach ($sideFacetSet as $title => $cluster): ?>
-    <? $tLimit = array_key_exists($title,$tLimits) ? $tLimits[$title] : $tLimits['default']; ?>
     <? $allowExclude = $this->recommend->excludeAllowed($title); ?>
     <? $facets_before_more = $this->recommend->getShowMoreSetting($title); ?>
     <? $showMoreInLightbox = $this->recommend->getShowInLightboxSetting($title); ?>
