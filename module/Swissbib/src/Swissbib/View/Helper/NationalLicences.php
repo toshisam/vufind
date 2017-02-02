@@ -61,7 +61,7 @@ class NationalLicences extends AbstractHelper
     /**
      * NationalLicences constructor.
      *
-     * @param ServiceManager $sm HelperPluginManager
+     * @param ServiceManager $sm ServiceManager
      */
     public function __construct(ServiceManager $sm)
     {
