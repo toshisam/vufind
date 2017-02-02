@@ -13,7 +13,7 @@
     <label><?=$this->translate('Sort') ?></label>
     <div class="btn-group">
       <? foreach ($this->sortOptions as $key=>$sort): ?>
-        <? if (!($sort == "sort_alphabetic" && ($facet == "language" || $facet == "navSubform" || $facet == "institution"))): ?>
+        <? if (!($sort == "sort_alphabetic" && ($facet == "language" || $facet == "navSubform" || $facet == "institution" || $facet == "navDrsys"))): ?>
           <a href="<?=$urlBase . '&amp;facetpage=1&amp;facetsort=' . urlencode($key) ?>" class="btn btn-default js-facet-sort<? if($this->sort == $key): ?> active<? endif; ?>" data-sort="<?=$key ?>" data-lightbox-ignore><?=$this->translate($sort) ?></a>
         <? endif; ?>
       <? endforeach; ?>
