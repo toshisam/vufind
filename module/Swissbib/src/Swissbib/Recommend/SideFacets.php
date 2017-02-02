@@ -127,8 +127,10 @@ class SideFacets extends VFSideFacets
             }
         }
 
-        foreach ($config->QueryFacets as $facetKey => $facetValue) {
-            $this->queryFacets[$facetKey] = $facetValue;
+        if (!empty($config->QueryFacets)) {
+            foreach ($config->QueryFacets as $facetKey => $facetValue) {
+                $this->queryFacets[$facetKey] = $facetValue;
+            }
         }
 
     }
