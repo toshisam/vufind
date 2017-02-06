@@ -127,52 +127,11 @@ class SideFacets extends VFSideFacets
             }
         }
 
-        foreach ($config->QueryFacets as $facetKey => $facetValue) {
-            $this->queryFacets[$facetKey] = $facetValue;
-        }
-
-    }
-
-    /**
-     * Returns limits for facets in simple array structure for easy use.
-     *
-     * @return array
-     */
-    public function getFacetLimits()
-    {
-
-        $facetLimits = [];
-
-        foreach ($this->resultSettings as $k => $v) {
-            if (substr($k, 0, 12) === 'facet_limit_') {
-                $facetName = explode('_', $k)[2];
-                $facetLimits [$facetName] = $v;
+        if (!empty($config->QueryFacets)) {
+            foreach ($config->QueryFacets as $facetKey => $facetValue) {
+                $this->queryFacets[$facetKey] = $facetValue;
             }
         }
-
-        return $facetLimits;
-
-    }
-
-    /**
-     * Store the configuration of the recommendation module.
-     *
-     * @param string $facetField name of the facetField we are looking for the
-     *                           limit which should be displayed.
-     *
-     * @return integer
-     */
-    public function getFacetLimit($facetField)
-    {
-
-        if (isset($this->resultSettings['facet_limit_' . $facetField])) {
-            $limit = $this->resultSettings['facet_limit_' . $facetField];
-        } else {
-            $limit = isset($this->resultSettings['facet_limit_default']) ?
-                $this->resultSettings['facet_limit_default'] : 100;
-        }
-
-        return $limit;
 
     }
 

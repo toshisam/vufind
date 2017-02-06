@@ -1722,7 +1722,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getOriginalVersionNotes()
     {
-        return $this->getFieldArray('534', ['p', 't', 'c']);
+        return $this->getFieldArray('534', ['p', 't', 'b', 'c', 'n']);
     }
 
     /**
@@ -1788,6 +1788,108 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getExhibitions()
     {
         return $this->getFieldArray('585');
+    }
+
+    /**
+     * HAN  - Beschreibung - Description-Tab für HAN
+     * Get information for the record (HAN: field 254)
+     *
+     * @return array
+     */
+    public function getMusicPresentation()
+    {
+        return $this->getFieldArray('254');
+    }
+
+    /**
+     * HAN  - Beschreibung - Description-Tab für HAN
+     * Get information for the record (HAN: field 351 $a, $c)
+     *
+     * @return array
+     */
+    public function getOrderClassification()
+    {
+        $separator = isset($this->mainConfig->Record->marcPublicationInfoSeparator)
+            ? $this->mainConfig->Record->marcPublicationInfoSeparator : ' ';
+
+        return $this->getFieldArray('351', ['a', 'c'], true, $separator);
+    }
+
+    /**
+     * Get information for the record (HAN: field 355)
+     *
+     * @return array
+     */
+    public function getSecurityClassification()
+    {
+        return $this->getFieldArray('355');
+    }
+
+    /**
+     * Get information for the record (HAN: field 533)
+     *
+     * @return array
+     */
+    public function getReproduction()
+    {
+        $separator = isset($this->mainConfig->Record->marcPublicationInfoSeparator)
+            ? $this->mainConfig->Record->marcPublicationInfoSeparator : ' ';
+
+        return $this->getFieldArray('533', ['a', 'b', 'c', 'n'], true, $separator);
+    }
+
+    /**
+     * Get information for the record (HAN: field 533)
+     *
+     * @return array
+     */
+    public function getReproductionClassification()
+    {
+        return $this->getFieldArray('540', ['a',  'n',]);
+    }
+
+    /**
+     * Get information for the record (HAN: field 544)
+     *
+     * @return array
+     */
+    public function getArchivalLevel()
+    {
+        return $this->getFieldArray('544', ['a',  'n',]);
+    }
+
+    /**
+     * Get information for the record (HAN: field 555)
+     *
+     * @return array
+     */
+    public function getFindingAids()
+    {
+        return $this->getFieldArray('555');
+    }
+
+    /**
+     * Get information for the record (HAN: field 584)
+     *
+     * @return array
+     */
+    public function getAccumulationFrequency()
+    {
+        return $this->getFieldArray('584');
+    }
+    /**
+     * Get information for the record (HAN: field 730)
+     *
+     * @return array
+     */
+    public function getAddedWork()
+    {
+        $separator = isset($this->mainConfig->Record->marcPublicationInfoSeparator)
+            ? $this->mainConfig->Record->marcPublicationInfoSeparator : ' ';
+
+        return $this->getFieldArray(
+            '730', ['a', 'g', 'k', 'm', 'n', 'o', 'p','r', 's'], true, $separator
+        );
     }
 
     /**

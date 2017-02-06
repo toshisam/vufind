@@ -679,10 +679,10 @@ ul[aria-labelledby=dropdownLibraries] {
     //padding-left: 8px;
     padding-right: 8px;
   }
-  .list-group-item > a {
+  .facetOR > a , .facetAND > a {
     color: @font-color;
   }
-  .list-group-item:hover {
+  .facetOR:hover , .facetAND:hover {
     background-color: @list-group-hover-bg;
   }
   .list-group-item.title {
@@ -702,8 +702,9 @@ ul[aria-labelledby=dropdownLibraries] {
   }
   .collapse .list-group-item[id^=more],
   .collapsing .list-group-item[id^=more],
-  .collapse .list-group-item[class*=narrowGroupHidden]:last-child,
-  .collapsing .list-group-item[class*=narrowGroupHidden]:last-child {
+  .controlElement {
+  //.collapse .list-group-item[class*=narrowGroupHidden]:last-child,
+  //.collapsing .list-group-item[class*=narrowGroupHidden]:last-child {
     border-bottom-left-radius: 2px;
     border-bottom-right-radius: 2px;
     color: @link-color;
