@@ -377,7 +377,10 @@ $prevTitles      = $record->getPreviousTitles();
           <th><?= $this->transEsc('Citation_Note') ?>: </th>
           <td>
               <? foreach ($citenotes as $field): ?>
-                  <?= $this->escapeHtml($field) ?><br/>
+              <? $fieldDesc = $field['source'] . ', ' . $field['location']; ?>
+                  <a href="<?=$this->escapeHtmlAttr($this->proxyUrl($this->redirectProtocolWrapper()->getWrappedURL($field['url'])))?>" target="_blank">
+                      <?=$this->escapeHtml($fieldDesc)?>
+                  </a><br/>
               <? endforeach; ?>
           </td>
         </tr>
