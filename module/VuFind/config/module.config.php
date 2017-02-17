@@ -154,6 +154,7 @@ $config = [
     ],
     'controller_plugins' => [
         'factories' => [
+            'favorites' => 'VuFind\Controller\Plugin\Factory::getFavorites',
             'flashmessenger' => 'VuFind\Controller\Plugin\Factory::getFlashMessenger',
             'followup' => 'VuFind\Controller\Plugin\Factory::getFollowup',
             'holds' => 'VuFind\Controller\Plugin\Factory::getHolds',
@@ -166,7 +167,6 @@ $config = [
         ],
         'invokables' => [
             'db-upgrade' => 'VuFind\Controller\Plugin\DbUpgrade',
-            'favorites' => 'VuFind\Controller\Plugin\Favorites',
             'renewals' => 'VuFind\Controller\Plugin\Renewals',
         ]
     ],
@@ -382,21 +382,20 @@ $config = [
             'db_table' => [
                 'abstract_factories' => ['VuFind\Db\Table\PluginFactory'],
                 'factories' => [
+                    'changetracker' => 'VuFind\Db\Table\Factory::getChangeTracker',
+                    'comments' => 'VuFind\Db\Table\Factory::getComments',
+                    'externalsession' => 'VuFind\Db\Table\Factory::getExternalSession',
+                    'oairesumption' => 'VuFind\Db\Table\Factory::getOaiResumption',
+                    'record' => 'VuFind\Db\Table\Factory::getRecord',
                     'resource' => 'VuFind\Db\Table\Factory::getResource',
                     'resourcetags' => 'VuFind\Db\Table\Factory::getResourceTags',
+                    'search' => 'VuFind\Db\Table\Factory::getSearch',
+                    'session' => 'VuFind\Db\Table\Factory::getSession',
                     'tags' => 'VuFind\Db\Table\Factory::getTags',
                     'user' => 'VuFind\Db\Table\Factory::getUser',
+                    'usercard' => 'VuFind\Db\Table\Factory::getUserCard',
                     'userlist' => 'VuFind\Db\Table\Factory::getUserList',
-                ],
-                'invokables' => [
-                    'changetracker' => 'VuFind\Db\Table\ChangeTracker',
-                    'comments' => 'VuFind\Db\Table\Comments',
-                    'externalsession' => 'VuFind\Db\Table\ExternalSession',
-                    'oairesumption' => 'VuFind\Db\Table\OaiResumption',
-                    'record' => 'VuFind\Db\Table\Record',
-                    'search' => 'VuFind\Db\Table\Search',
-                    'session' => 'VuFind\Db\Table\Session',
-                    'userresource' => 'VuFind\Db\Table\UserResource',
+                    'userresource' => 'VuFind\Db\Table\Factory::getUserResource',
                 ],
             ],
             'hierarchy_driver' => [
@@ -603,12 +602,16 @@ $config = [
             ],
             'search_params' => [
                 'abstract_factories' => ['VuFind\Search\Params\PluginFactory'],
+                'factories' => [
+                    'solr' => 'VuFind\Search\Params\Factory::getSolr',
+                ],
             ],
             'search_results' => [
                 'abstract_factories' => ['VuFind\Search\Results\PluginFactory'],
                 'factories' => [
                     'favorites' => 'VuFind\Search\Results\Factory::getFavorites',
                     'solr' => 'VuFind\Search\Results\Factory::getSolr',
+                    'tags' => 'VuFind\Search\Results\Factory::getTags',
                 ],
             ],
             'session' => [
