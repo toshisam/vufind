@@ -42,8 +42,11 @@
             'libphonenumber_tooshort' => 'libphonenumber_tooshort',
             'libphonenumber_tooshortidd' => 'libphonenumber_tooshortidd',
             'loading' => 'Loading',
-            'sms_success' => 'sms_success',
-            'number_thousands_separator' => ['number_thousands_separator', null, ',']
+            'more' => 'more',
+            'number_thousands_separator' => [
+                'number_thousands_separator', null, ','
+            ],
+            'sms_success' => 'sms_success'
         )
     );
     if ($cart->isActive()) {
@@ -117,7 +120,7 @@ if (!isset($this->layout()->searchbox)) {
   <div class="container container-table-fix-md breadcrumbWrapper">
     <?= $this->render('layout/breadcrumb'); ?>
   </div>
-  <div class="container container-table-fix-md">
+  <div id="content" class="container container-table-fix-md">
     <div class="row row-table-fix-md table-sidebar">
       <div class="col-md-12 col-table-fix-md dirty-hack-column">
         <div class="row">

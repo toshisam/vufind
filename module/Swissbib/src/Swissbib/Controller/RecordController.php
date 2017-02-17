@@ -220,13 +220,13 @@ class RecordController extends VuFindRecordController
                 $gatheredDetails, $extraHoldFields, $requestGroups
             );
             if (!$valid) {
-                $this->flashMessenger()->setNamespace('error')
-                    ->addMessage('hold_invalid_request_group');
+                $this->flashMessenger()
+                    ->addMessage('hold_invalid_request_group', 'error');
             } elseif (!$this->holds()->validatePickUpInput(
                 $gatheredDetails['pickUpLocation'], $extraHoldFields, $pickup
             )) {
-                $this->flashMessenger()->setNamespace('error')
-                    ->addMessage('hold_invalid_pickup');
+                $this->flashMessenger()
+                    ->addMessage('hold_invalid_pickup', 'error');
             } else {
                 // If we made it this far, we're ready to place the hold;
                 // if successful, we will redirect and can stop here.
@@ -240,24 +240,19 @@ class RecordController extends VuFindRecordController
 
                 // Success: Go to Display Holds
                 if (isset($results['success']) && $results['success'] == true) {
-                    $this->flashMessenger()->setNamespace('success')
-                        ->addMessage('hold_place_success');
-                    if ($this->getRequest()->getQuery('layout', 'no') === 'lightbox'
-                        || 'layout/lightbox' == $this->layout()->getTemplate()
-                    ) {
-                        return false;
-                    }
+                    $this->flashMessenger()
+                        ->addMessage('hold_place_success', 'success');
                     return $this->redirectToRecord();
                 } else {
                     // Failure: use flash messenger to display messages, stay on
                     // the current form.
                     if (isset($results['status'])) {
-                        $this->flashMessenger()->setNamespace('error')
-                            ->addMessage($results['status']);
+                        $this->flashMessenger()
+                            ->addMessage($results['status'], 'error');
                     }
                     if (isset($results['sysMessage'])) {
-                        $this->flashMessenger()->setNamespace('error')
-                            ->addMessage($results['sysMessage']);
+                        $this->flashMessenger()
+                            ->addMessage($results['sysMessage'], 'error');
                     }
                 }
             }
@@ -346,17 +341,17 @@ class RecordController extends VuFindRecordController
                         $patron, $recordId, $itemId, $copyForm->getData()
                     );
 
-                    $this->flashMessenger()->setNamespace('success')
-                        ->addMessage('copy_place_success');
+                    $this->flashMessenger()
+                        ->addMessage('copy_place_success', 'success');
 
                     return $this->redirectToRecord();
                 } else {
-                    $this->flashMessenger()->setNamespace('error')
-                        ->addMessage('copy_place_error');
+                    $this->flashMessenger()
+                        ->addMessage('copy_place_error', 'error');
                 }
             }
         } catch (ILS $e) {
-            $this->flashMessenger()->setNamespace('error')->addMessage('copy_error');
+            $this->flashMessenger()->addMessage('copy_error', 'error');
 
             return $this->createViewModel();
         }

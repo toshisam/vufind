@@ -8,7 +8,7 @@
             hidingClass: 'hidden',
             highlight: true,
             loadingString: 'Loading...',
-            maxResults: 20,
+            maxResults: 999,
             minLength: 3
         };
 

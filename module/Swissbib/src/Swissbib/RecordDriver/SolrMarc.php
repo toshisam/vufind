@@ -1017,7 +1017,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Returns as array to use same template with foreach as normally
-     * 
+     *
      * @return array
      */
     public function getMostSpecificFormat()
@@ -1327,7 +1327,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get Hierarchical level of record
-     * 
+     *
      * @return String
      */
     public function getHierachicalLevel()
@@ -1389,7 +1389,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get biographical information or administrative history
-     * 
+     *
      * @return array
      */
     public function getHistData()
@@ -1399,7 +1399,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get added entry geographic name
-     * 
+     *
      * @return array
      */
     public function getPlaceNames()
@@ -1654,7 +1654,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get Physical Medium (MARC21: field 340)
-     * 
+     *
      * @return array
      */
     public function getPhysicalMedium()
@@ -1722,12 +1722,12 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
      */
     public function getOriginalVersionNotes()
     {
-        return $this->getFieldArray('534', ['p', 't', 'c']);
+        return $this->getFieldArray('534', ['p', 't', 'b', 'c', 'n']);
     }
 
     /**
      * Get language information
-     * 
+     *
      * @return array
      */
     public function getLangData()
@@ -1737,7 +1737,7 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
 
     /**
      * Get Ownership and Custodial History Note (MARC21: field 561)
-     * 
+     *
      * @return array
      */
     public function getOwnerNote()
@@ -1762,6 +1762,15 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     }
 
     /**
+     * Get original version note for the record (MARC21: field 563)
+     *
+     * @return array
+     */
+    public function getBinding()
+    {
+        return $this->getFieldArray('563');
+    }
+    /**
      * Get publications about described materials note (581)
      *
      * @return array
@@ -1779,6 +1788,161 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
     public function getExhibitions()
     {
         return $this->getFieldArray('585');
+    }
+
+    /**
+     * HAN  - Beschreibung - Description-Tab für HAN
+     * Get information for the record (HAN: field 254)
+     *
+     * @return array
+     */
+    public function getMusicPresentation()
+    {
+        return $this->getFieldArray('254');
+    }
+
+    /**
+     * HAN  - Beschreibung - Description-Tab für HAN
+     * Get information for the record (HAN: field 351 $a, $c)
+     *
+     * @return array
+     */
+    public function getOrderClassification()
+    {
+        $separator = isset($this->mainConfig->Record->marcPublicationInfoSeparator)
+            ? $this->mainConfig->Record->marcPublicationInfoSeparator : ' ';
+
+        return $this->getFieldArray('351', ['a', 'c'], true, $separator);
+    }
+
+    /**
+     * Get information for the record (HAN: field 355)
+     *
+     * @return array
+     */
+    public function getSecurityClassification()
+    {
+        return $this->getFieldArray('355');
+    }
+
+    /**
+     * Get information for the record (HAN: field 533)
+     *
+     * @return array
+     */
+    public function getReproduction()
+    {
+        $separator = isset($this->mainConfig->Record->marcPublicationInfoSeparator)
+            ? $this->mainConfig->Record->marcPublicationInfoSeparator : ' ';
+
+        return $this->getFieldArray('533', ['a', 'b', 'c', 'n'], true, $separator);
+    }
+
+    /**
+     * Get information for the record (HAN: field 533)
+     *
+     * @return array
+     */
+    public function getReproductionClassification()
+    {
+        return $this->getFieldArray('540', ['a',  'n',]);
+    }
+
+    /**
+     * Get information for the record (HAN: field 544)
+     *
+     * @return array
+     */
+    public function getArchivalLevel()
+    {
+        return $this->getFieldArray('544', ['a',  'n',]);
+    }
+
+    /**
+     * Get information for the record (HAN: field 555)
+     *
+     * @return array
+     */
+    public function getFindingAids()
+    {
+        return $this->getFieldArray('555');
+    }
+
+    /**
+     * Get information for the record (HAN: field 584)
+     *
+     * @return array
+     */
+    public function getAccumulationFrequency()
+    {
+        return $this->getFieldArray('584');
+    }
+    /**
+     * Get information for the record (HAN: field 730)
+     *
+     * @return array
+     */
+    public function getAddedWork()
+    {
+        $separator = isset($this->mainConfig->Record->marcPublicationInfoSeparator)
+            ? $this->mainConfig->Record->marcPublicationInfoSeparator : ' ';
+
+        return $this->getFieldArray('730', ['a', 'g', 'k', 'm', 'n', 'o', 'p',
+            'r', 's'], true, $separator);
+    }
+
+    /**
+     * Get data used for NationalLicences
+     *
+     * @return array
+     */
+    public function getNationalLicenceData()
+    {
+        $ref = $this->getFieldArray('949', ['F']);
+        //gives always the same publisher in result list
+        //$publisher = array_values($this->getHoldingsStructure())[0]['institution'];
+
+        $publisherArray = $this->getFieldArray('035', ['a']);
+        $publisher = "";
+        foreach ($publisherArray as $key => $val) {
+            if (strpos($val, '(NATIONALLICENCE)') === 0) {
+                $publisher = $val;
+            }
+        }
+        $publisher = explode("-", $publisher)[0];
+        $publisher = str_replace("(NATIONALLICENCE)", "NL-", $publisher);
+
+        $enum = $this->getFieldArray('773', ['q']);
+        $issn = $this->getFieldArray('773', ['x']);
+
+        $pii = "";
+        /* publisher identifier (needed for linking to cambridge)
+        stored in 024, with $2 pii */
+
+        $identifiers = $this->getFieldArray('024', ['a','2'], true, "$$$");
+        // example
+        // [0] => 10.1017/S1014233900003497$$$doi
+        // [1] => S1014233900003497$$$pii
+
+        foreach ($identifiers as $identifier) {
+            $result = explode("$$$", $identifier);
+            if (count($result) > 1 && $result[1] == "pii") {
+                $pii = $result[0];
+            }
+        }
+
+        $journalCode = $this->getFieldArray('773', ['o']);
+        $nl = !empty($ref) && in_array("NATIONALLICENCE", $ref) ?
+            $nl = "NATIONALLICENCE" : "";
+        $nlData = [ $nl,
+                    $publisher,
+                    !empty($enum) ? $enum[0] : "",
+                    !empty($issn) ? $issn[0] : "",
+                    !empty($journalCode) ? $journalCode[0] : "",
+                    $pii
+        ];
+
+        return $nlData;
     }
 
     /**
@@ -2028,6 +2192,8 @@ class SolrMarc extends VuFindSolrMarc implements SwissbibRecordDriver
             'd' => 'place',
             't' => 'title',
             'g' => 'related',
+            'q' => 'enumeration',
+            'x' => 'issn',
             ]
         );
     }

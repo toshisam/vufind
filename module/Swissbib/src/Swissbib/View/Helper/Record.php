@@ -84,6 +84,12 @@ class Record extends VuFindRecord
                 '956' => [
                     'x|^VIEW && y|^Porträt',
                     'B|^ECOD',
+                ],
+                '950' => [
+                    // we don't display doi links from National Licences,
+                    // only the special url's with authentication
+                    'B|^NATIONALLICENCE$',
+                    'P|^856$ && u|stub.unibe.ch',
                 ]
             ],
             'mergeLinksByDescription' => [
@@ -124,6 +130,9 @@ class Record extends VuFindRecord
                 ]
             ],
             'exclude' => [
+                '950' => [
+                    'P|^856$ && u|stub.unibe.ch'
+                ],
                 '956' => [
                     'x|^VIEW && y|^Porträt',
                     'x|^VIEW && y|^Vorschau zum Bild'
@@ -153,6 +162,9 @@ class Record extends VuFindRecord
                 ]
             ],
             'exclude' => [
+                '950' => [
+                    'P|^856$ && u|stub.unibe.ch'
+                ],
                 '956' => [
                     'x|^VIEW && y|^Porträt',
                     'B|^ECOD',

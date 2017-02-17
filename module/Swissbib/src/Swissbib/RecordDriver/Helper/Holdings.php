@@ -1248,6 +1248,26 @@ class Holdings
     }
 
     /**
+     * Get backlink for Renouvaud network (Primo on Alma)
+     * links only to result list as we have no usable identifier
+     *
+     * @param String $networkCode     Code of network
+     * @param String $institutionCode Code of Institution
+     * @param Array  $item            Item
+     * @param Array  $data            Data
+     *
+     * @return String
+     */
+    protected function getBackLinkVaud($networkCode, $institutionCode, array $item,
+        array $data
+    ) {
+        $values = [
+            'bib-system-number' => $item['bibsysnumber']
+        ];
+        return $this->compileString($data['pattern'], $values);
+    }
+
+    /**
      * Get backlink for SNL (helveticat)
      *
      * @param String $networkCode     Code of network
@@ -1464,9 +1484,12 @@ class Holdings
         if (is_array($fields)) {
             foreach ($fields as $index => $field) {
                 $item = $this->extractFieldData($field, $mapping);
-                $institution = $item['institution_chb'];
+                $institution = $item['institution'];
+                $institution_chb = $item['institution_chb'];
 
-                if ($institution === $institutionCode) {
+                if ($institution === $institutionCode
+                    || $institution_chb === $institutionCode
+                ) {
                     $data[] = $item;
                 }
             }
@@ -1489,7 +1512,8 @@ class Holdings
         $fields = $this->holdings ? $this->holdings->getFields($fieldName) : false;
         $mapping = [
             'B' => 'network',
-            'F' => 'institution_chb'
+            'F' => 'institution_chb',
+            'b' => 'institution'
         ];
 
         if (is_array($fields)) {
@@ -1497,6 +1521,7 @@ class Holdings
                 $item = $this->extractFieldData($field, $mapping);
                 $networkCode = $item['network'];
                 $institution = $item['institution_chb'];
+                $institution949b = $item['institution'];
                 $groupCode = $this->getGroup($institution);
 
                 // Prevent display of untranslated and ungrouped institutions
@@ -1515,7 +1540,8 @@ class Holdings
                     $data[$groupCode] = [
                         'label' => $groupCode,
                         'networkCode' => $networkCode,
-                        'institutions' => []
+                        'institutions' => [],
+                        'institution' => []
                     ];
                 }
 
@@ -1526,6 +1552,9 @@ class Holdings
                         'bibinfolink' => $this->getBibInfoLink($institution)
                     ];
                 }
+
+                // Make sure institution 949$b is present
+                $data[$groupCode]['institution'] = $institution949b;
             }
         }
 
@@ -1541,6 +1570,7 @@ class Holdings
      */
     public function getGroup($institutionCode)
     {
+        $institutionCode = $institutionCode;
         return isset($this->institution2group[$institutionCode]) ?
             $this->institution2group[$institutionCode] : 'unknown';
     }

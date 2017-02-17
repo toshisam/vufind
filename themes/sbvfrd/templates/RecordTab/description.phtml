@@ -218,6 +218,7 @@ $prevTitles      = $record->getPreviousTitles();
   $histData   = $record->getHistData();
   $langData   = $record->getLangData();
   $copynotes  = $record->getCopyNotes();
+  $binding    = $record->getBinding();
   $system     = $record->getSystemDetails();
   $medium     = $record->getPhysicalMedium();
   $acquisitionNote = $record->getAcquisitionNote();
@@ -225,14 +226,29 @@ $prevTitles      = $record->getPreviousTitles();
   $publications = $record->getPublications();
   $exhibitions = $record->getExhibitions();
   $relatedEntries = $record->getRelatedEntries();
+
+  $musicalPresentation    = $record->getMusicPresentation();
+  $orderClassification    = $record->getOrderClassification();
+  $securityclassification    = $record->getSecurityClassification();
+  $reproduction    = $record->getReproduction();
+  $reproductionClassification    = $record->getReproductionClassification();
+  $archivalLevel    = $record->getArchivalLevel();
+  $findingAids    = $record->getFindingAids();
+  $accumulationFrequency   = $record->getAccumulationFrequency();
+  $addedwork   = $record->getAddedWork();
+
+
   ?>
 
   <? if (!empty($notes) or !empty($freq) or !empty($contDates) or !empty($diss) or
       !empty($bib) or !empty($access) or !empty($related) or !empty($credits) or !empty($awards) or
-      !empty($citenotes) or !empty($orignotes) or !empty($copynotes) or !empty($histData) or
+      !empty($citenotes) or !empty($orignotes) or !empty($copynotes) or !empty($binding) or !empty($histData) or
       !empty($origtitle) or !empty($perfomer) or !empty($system) or !empty($relatedEntries) or
       !empty($langData) or !empty($audience) or !empty($eventNote) or !empty($fileNote) or !empty($publications) or
-      !empty($exhibitions) or !empty($worktitle) or !empty($ownerNote) or !empty($acquisitionNote) or !empty($medium)): ?>
+      !empty($exhibitions) or !empty($worktitle) or !empty($ownerNote) or !empty($acquisitionNote) or !empty($medium)
+      or !empty($musicalPresentation) or !empty($orderClassification) or !empty($securityclassification)
+      or !empty($reproduction) or !empty($reproductionClassification) or !empty($archivalLevel)
+      or !empty($findingAids) or !empty($accumulationFrequency) or !empty($addedwork)): ?>
     <? $contentDisplayed = true; ?>
 
       <? /* Display general notes (field 500) */ ?>
@@ -463,6 +479,18 @@ $prevTitles      = $record->getPreviousTitles();
         </tr>
       <? endif; ?>
 
+      <? /* Display binding (field 563) */ ?>
+      <? if (!empty($binding)): ?>
+          <tr>
+              <th><?= $this->transEsc('Binding') ?>: </th>
+              <td>
+                  <? foreach ($binding as $field): ?>
+                      <?= $this->escapeHtml($field) ?><br/>
+                  <? endforeach; ?>
+              </td>
+          </tr>
+      <? endif; ?>
+
       <? /* Display system information note (field 538) */ ?>
       <? if (!empty($system)): ?>
         <tr>
@@ -547,6 +575,114 @@ $prevTitles      = $record->getPreviousTitles();
         </tr>
       <? endif; ?>
   <? endif; ?>
+
+    <? /* Display "Musikalische Ausgabeformat" for HAN (field 254) */ ?>
+    <? if (!empty($musicalPresentation)): ?>
+        <tr>
+            <th><?= $this->transEsc('MusicPresentation') ?>: </th>
+            <td>
+                <? foreach ($musicalPresentation as $field): ?>
+                    <?= $this->escapeHtml($field) ?><br/>
+                <? endforeach; ?>
+            </td>
+        </tr>
+    <? endif; ?>
+
+    <? /* Display "Ordnung&Klassifikation" for HAN (field 351) */ ?>
+    <? if (!empty($orderClassification)): ?>
+        <tr>
+            <th><?= $this->transEsc('OrderClassification') ?>: </th>
+            <td>
+                <? foreach ($orderClassification as $field): ?>
+                    <?= $this->escapeHtml($field) ?><br/>
+                <? endforeach; ?>
+            </td>
+        </tr>
+    <? endif; ?>
+
+    <? /* Display "Zugangsbestimmungen" for HAN (field 351) */ ?>
+    <? if (!empty($securityclassification)): ?>
+        <th><?= $this->transEsc('SecurityClassification') ?>: </th>
+            <td>
+                <? foreach ($securityclassification as $field): ?>
+                    <?= $this->escapeHtml($field) ?><br/>
+                <? endforeach; ?>
+            </td>
+        </tr>
+    <? endif; ?>
+
+    <? /* Display "Reproduktion / Reproduktionen eines Originals" for HAN (field 533) */ ?>
+    <? if (!empty($reproduction)): ?>
+        <tr>
+            <th><?= $this->transEsc('Reproduction') ?>: </th>
+            <td>
+                <? foreach ($reproduction as $field): ?>
+                    <?= $this->escapeHtml($field) ?><br/>
+                <? endforeach; ?>
+            </td>
+        </tr>
+    <? endif; ?>
+
+    <? /* Display "Reproduktionsbestimmung" for HAN (field 540) */ ?>
+    <? if (!empty($reproductionClassification)): ?>
+        <tr>
+            <th><?= $this->transEsc('ReproductionClassification') ?>: </th>
+            <td>
+                <? foreach ($reproductionClassification as $field): ?>
+                    <?= $this->escapeHtml($field) ?><br/>
+                <? endforeach; ?>
+            </td>
+        </tr>
+    <? endif; ?>
+
+    <? /* Display "Verwandte Verzeichnungseinheit" for HAN (field 544) */ ?>
+    <? if (!empty($archivalLevel)): ?>
+        <tr>
+            <th><?= $this->transEsc('ArchivalLevel') ?>: </th>
+            <td>
+                <? foreach ($archivalLevel as $field): ?>
+                    <?= $this->escapeHtml($field) ?><br/>
+                <? endforeach; ?>
+            </td>
+        </tr>
+    <? endif; ?>
+
+    <? /* Display "Findhilfsmittel" for HAN (field 555) */ ?>
+    <? if (!empty($findingAids)): ?>
+        <tr>
+            <th><?= $this->transEsc('FindingAids') ?>: </th>
+            <td>
+                <? foreach ($findingAids as $field): ?>
+                    <?= $this->escapeHtml($field) ?><br/>
+                <? endforeach; ?>
+            </td>
+        </tr>
+    <? endif; ?>
+
+    <? /* Display "Ansammlung&Nutzungshäufigkeit" for HAN (field 584) */ ?>
+    <? if (!empty($accumulationFrequency)): ?>
+        <tr>
+            <th><?= $this->transEsc('AccumulationFrequency') ?>: </th>
+            <td>
+                <? foreach ($accumulationFrequency as $field): ?>
+                    <?= $this->escapeHtml($field) ?><br/>
+                <? endforeach; ?>
+            </td>
+        </tr>
+    <? endif; ?>
+
+
+    <? /* Display "Nebeneintragung/weiteres enthaltenes Werk" for HAN (field 730) */ ?>
+    <? if (!empty($addedwork)): ?>
+        <tr>
+            <th><?= $this->transEsc('AddedWork') ?>: </th>
+            <td>
+                <? foreach ($addedwork as $field): ?>
+                    <?= $this->escapeHtml($field) ?><br/>
+                <? endforeach; ?>
+            </td>
+        </tr>
+    <? endif; ?>
 
     <?
     /** == Rara-Elements (place name, special entries == */

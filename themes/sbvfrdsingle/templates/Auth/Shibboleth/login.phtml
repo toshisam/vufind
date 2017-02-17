@@ -2,7 +2,7 @@
 
 $encodedProviderID = urlencode($this->serverUrl() . "/" . "shibboleth");
 $encodedTarget = urlencode($this->serverUrl() . "/MyResearch/Home");
-$encodedprivateUserURL ="https://login.eduid.ch/idp/profile/SAML2/Unsolicited/SSO?providerId=" . $encodedProviderID . "&target=" . $encodedTarget;
+$encodedprivateUserURL = "https://login.eduid.ch/idp/profile/SAML2/Unsolicited/SSO?providerId=" . $encodedProviderID . "&target=" . $encodedTarget;
 ?>
 
 
@@ -110,7 +110,7 @@ $encodedprivateUserURL ="https://login.eduid.ch/idp/profile/SAML2/Unsolicited/SS
              -->
 
                 <input type="button" onclick="window.location = '<?= $encodedprivateUserURL ?>'"
-                       value="<?= $this->transEsc('login.guest') ?>"/>
+                       value="<?= $this->transEsc('login.guest2') ?>"/>
             </p>
         </td>
 

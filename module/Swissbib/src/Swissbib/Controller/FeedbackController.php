@@ -81,11 +81,11 @@ class FeedbackController extends VuFindFeedbackController
                 $this->sendMail($feedbackForm->getData());
                 $this->resetForm($feedbackForm);
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage('feedback.form.success');
+                $this->flashMessenger()
+                    ->addMessage('feedback.form.success', 'success');
             } else {
-                $this->flashMessenger()->setNamespace('error')
-                    ->addMessage('feedback.form.error');
+                $this->flashMessenger()
+                    ->addMessage('feedback.form.error', 'error');
             }
         }
 

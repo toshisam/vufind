@@ -50,6 +50,15 @@ class SideFacets extends VFSideFacets
     protected $resultSettings = [];
 
     /**
+     * Stores QueryFacets from config
+     * which is later needed to create facet entries
+     * actually QueryFacets are not supported by VuFind
+     *
+     * @var array
+     */
+    protected $queryFacets = [];
+
+    /**
      * Returns libraries
      *
      * @return mixed
@@ -79,48 +88,50 @@ class SideFacets extends VFSideFacets
             $this->resultSettings = $config->Results_Settings->toArray();
         }
 
-    }
-
-    /**
-     * Returns limits for facets in simple array structure for easy use.
-     *
-     * @return array
-     */
-    public function getFacetLimits()
-    {
-
-        $facetLimits = [];
-
-        foreach ($this->resultSettings as $k => $v) {
-            if (substr($k, 0, 12) === 'facet_limit_') {
-                $facetName = explode('_', $k)[2];
-                $facetLimits [$facetName] = $v;
+        if (isset($config->QueryFacets_Settings->orFacets)) {
+            if (isset($this->orFacets)) {
+                $this->orFacets = array_merge(
+                    array_map(
+                        'trim', explode(
+                            ',', $config->QueryFacets_Settings->orFacets
+                        )
+                    ),
+                    $this->orFacets
+                );
+            } else {
+                $this->orFacets = array_map(
+                    'trim', explode(
+                        ',',
+                        $config->QueryFacets_Settings->orFacets
+                    )
+                );
             }
         }
 
-        return $facetLimits;
-
-    }
-
-    /**
-     * Store the configuration of the recommendation module.
-     *
-     * @param string $facetField name of the facetField we are looking for the
-     *                           limit which should be displayed.
-     *
-     * @return integer
-     */
-    public function getFacetLimit($facetField)
-    {
-
-        if (isset($this->resultSettings['facet_limit_' . $facetField])) {
-            $limit = $this->resultSettings['facet_limit_' . $facetField];
-        } else {
-            $limit = isset($this->resultSettings['facet_limit_default']) ?
-                $this->resultSettings['facet_limit_default'] : 100;
+        if (isset($config->QueryFacets_Settings->exclude)) {
+            if (isset($this->excludableFacets)) {
+                $this->excludableFacets = array_merge(
+                    array_map(
+                        'trim',
+                        explode(',', $config->QueryFacets_Settings->exclude)
+                    ),
+                    $this->excludableFacets
+                );
+            } else {
+                $this->excludableFacets = array_map(
+                    'trim', explode(
+                        ',',
+                        $config->QueryFacets_Settings->exclude
+                    )
+                );
+            }
         }
 
-        return $limit;
+        if (!empty($config->QueryFacets)) {
+            foreach ($config->QueryFacets as $facetKey => $facetValue) {
+                $this->queryFacets[$facetKey] = $facetValue;
+            }
+        }
 
     }
 

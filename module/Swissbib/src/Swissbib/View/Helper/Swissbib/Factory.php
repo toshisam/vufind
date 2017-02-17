@@ -29,6 +29,7 @@
 namespace Swissbib\View\Helper\Swissbib;
 
 use Swissbib\View\Helper\FormatRelatedEntries;
+use Swissbib\View\Helper\NationalLicences;
 use Swissbib\VuFind\View\Helper\Root\Piwik;
 use Zend\ServiceManager\ServiceManager;
 
@@ -245,6 +246,20 @@ class Factory
         $customVars = isset($config->Piwik->custom_variables)
             ? $config->Piwik->custom_variables
             : false;
-        return new Piwik($url, $siteId, $customVars);
+        $request = $sm->getServiceLocator()->get('Request');
+        $router = $sm->getServiceLocator()->get('Router');
+        return new Piwik($url, $siteId, $customVars, $router, $request);
+    }
+
+    /**
+     * Construct NationalLicence Helper
+     *
+     * @param ServiceManager $sm Service manager.
+     *
+     * @return NationalLicences
+     */
+    public static function getNationalLicences(ServiceManager $sm)
+    {
+        return new NationalLicences($sm);
     }
 }

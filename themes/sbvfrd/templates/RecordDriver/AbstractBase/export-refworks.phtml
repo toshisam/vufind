@@ -53,11 +53,16 @@ if (!empty($journalTitle)) {
 
 $authors = $this->driver->tryMethod('getDeduplicatedAuthors');
 if (is_array($authors)) {
-    if (!empty($authors['main']))
+    if (!empty($authors['main'])) {
+        reset($authors['main']);
         echo "A1 " . key($authors['main']) . "\n";
-    if (!empty($authors['corporate']))
+    }
+    if (!empty($authors['corporate'])) {
+        reset($authors['corporate']);
         echo "A1 " . key($authors['corporate']) . "\n";
+    }
     if (is_array($authors['secondary']) && !empty($authors['secondary'])) {
+        reset($authors['secondary']);
         foreach ($authors['secondary'] as $current => $currentVal) {
             echo "A2 $current\n";
         }

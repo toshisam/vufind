@@ -90,4 +90,11 @@
       <a class="list-group-item help-link" data-lightbox href="<?=$this->url('help-home')?>?topic=search" title="<?=$this->transEsc('Help with Search Operators')?>"><?=$this->transEsc("Help with Search Operators")?></a>
     </ul>
   </div>
+  <div class="sidegroup">
+    <h4><?=$this->transEsc('Your Account')?></h4>
+    <ul class="list-group">
+      <a class="list-group-item" href="<?= $this->url('search-history')?>" title="<?= $this->transEsc('Search History')?>"><?=$this->transEsc('Search History')?></a>
+      <a class="list-group-item" href="<?=$this->url('myresearch-settings')?>" title="<?=$this->transEsc('My_Search_Settings')?>"><?=$this->transEsc('My_Search_Settings')?></a>
+    </ul>
+  </div>
 </div>

@@ -202,7 +202,7 @@ class Params extends VuFindSolrParams
 
         /**
          * FavoriteInstitutions array
-         * 
+         *
          * @var String[] $favoriteInstitutions
          */
         $favoriteInstitutions = $favoritesManger->getUserInstitutions();
@@ -236,7 +236,7 @@ class Params extends VuFindSolrParams
         case 'publishDate':
             return 'adv_search_year';
         default:
-            return parent::getFacetLabel($field);
+            return parent::getFacetLabel($field, $value);
         }
     }
 }

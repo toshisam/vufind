@@ -43,6 +43,34 @@ return [
                     ]
                 ]
             ],
+            // Swiss National Licences
+            'national-licences' => [
+                'type'    => 'segment',
+                'options' => [
+                    'route'    => '/NationalLicences[/:action]',
+                    'defaults' => [
+                        'controller' => 'national-licences',
+                        'action'     => 'index'
+                    ],
+                    'constraints' => [
+                        'action'   => '[a-zA-Z][a-zA-Z0-9_-]*'
+                    ],
+                ]
+            ],
+            // Swiss National Licences
+            'national-licenses-signpost' => [
+                'type'    => 'segment',
+                'options' => [
+                    'route'    => '/MyResearchNationalLicenses[/:action]',
+                    'defaults' => [
+                        'controller' => 'national-licenses-signpost',
+                        'action'     => 'nlsignpost'
+                    ],
+                    'constraints' => [
+                        'action'   => '[a-zA-Z][a-zA-Z0-9_-]*'
+                    ],
+                ]
+            ],
             'help-page' => [
                 'type'    => 'segment',
                 'options' => [
@@ -174,6 +202,24 @@ return [
                             'action'     => 'buildCache'
                         ]
                     ]
+                ],
+                'send-national-licence-users-export' => [
+                    'options' => [
+                        'route'    => 'send-national-licence-users-export',
+                        'defaults' => [
+                            'controller' => 'console',
+                            'action'     => 'sendNationalLicenceUsersExport'
+                        ]
+                    ]
+                ],
+                'update-national-licence-user-info' => [
+                    'options' => [
+                        'route'    => 'update-national-licence-user-info',
+                        'defaults' => [
+                            'controller' => 'console',
+                            'action'     => 'updateNationalLicenceUserInfo'
+                        ]
+                    ]
                 ]
             ]
         ]
@@ -195,17 +241,20 @@ return [
             'install'              => 'Swissbib\Controller\NoProductiveSupportController',
             'feedback'             => 'Swissbib\Controller\FeedbackController',
             'cover'                => 'Swissbib\Controller\CoverController',
+            'console'              => 'Swissbib\Controller\ConsoleController',
         ],
         'factories'  => [
             'record' => 'Swissbib\Controller\Factory::getRecordController',
             'cart'   => 'VuFind\Controller\Factory::getCartController',
+            'national-licences' => 'Swissbib\Controller\Factory::getNationalLicenceController',
+            'national-licenses-signpost' => 'Swissbib\Controller\Factory::getMyResearchNationalLicenceController',
         ]
     ],
     'service_manager' => [
         'invokables' => [
-            'VuFindTheme\ResourceContainer'       => 'Swissbib\VuFind\ResourceContainer',
-            'Swissbib\QRCode'                     => 'Swissbib\CRCode\QrCodeService',
-            'MarcFormatter'                     => 'Swissbib\XSLT\MARCFormatter'
+            'VuFindTheme\ResourceContainer'                 => 'Swissbib\VuFind\ResourceContainer',
+            'Swissbib\QRCode'                               => 'Swissbib\CRCode\QrCodeService',
+            'MarcFormatter'                                 => 'Swissbib\XSLT\MARCFormatter',
         ],
         'factories' => [
             'Swissbib\HoldingsHelper'                       =>  'Swissbib\RecordDriver\Helper\Factory::getHoldingsHelper',
@@ -237,7 +286,7 @@ return [
             'Swissbib\Hierarchy\SimpleTreeGenerator'        =>  'Swissbib\Hierarchy\Factory::getSimpleTreeGenerator',
             'Swissbib\Hierarchy\MultiTreeGenerator'         =>  'Swissbib\Hierarchy\Factory::getMultiTreeGenerator',
 
-        'VuFind\SearchOptionsPluginManager'                 => 'Swissbib\Services\Factory::getSearchOptionsPluginManager',
+            'VuFind\SearchOptionsPluginManager'             => 'Swissbib\Services\Factory::getSearchOptionsPluginManager',
             'VuFind\SearchParamsPluginManager'              => 'Swissbib\Services\Factory::getSearchParamsPluginManager',
             'VuFind\SearchResultsPluginManager'             => 'Swissbib\Services\Factory::getSearchResultsPluginManager',
 
@@ -246,6 +295,9 @@ return [
             'Swissbib\Record\Form\CopyForm'                 =>  'Swissbib\Record\Factory::getCopyForm',
             'Swissbib\MyResearch\Form\AddressForm'          =>  'Swissbib\MyResearch\Factory::getAddressForm',
             'Swissbib\Feedback\Form\FeedbackForm'           =>  'Swissbib\Feedback\Factory::getFeedbackForm',
+            'Swissbib\NationalLicenceService'               =>  'Swissbib\Services\Factory::getNationalLicenceService',
+            'Swissbib\SwitchApiService'                     =>  'Swissbib\Services\Factory::getSwitchApiService',
+            'Swissbib\EmailService'                         =>  'Swissbib\Services\Factory::getEmailService',
         ]
     ],
     'view_helpers'    => [
@@ -376,6 +428,13 @@ return [
             //'|jquery\.min.js|', // jquery 1.6
             //'|^jquery\.form\.js|',
         ],
+        'asset_manager' => [
+          'resolver_configs' => [
+              'paths' => [
+                    'Swissbib'
+              ]
+          ]
+        ],
         // This section contains service manager configurations for all Swissbib
         // pluggable components:
         'plugin_managers' => [
@@ -392,5 +451,11 @@ return [
                 ],
             ]
         ],
-    ]
+
+        'db_table' => [
+            'invokeables' => [
+                'nationallicence' => 'Swissbib\VuFind\Db\Table\NationalLicenceUser'
+            ]
+        ]
+    ],
 ];
